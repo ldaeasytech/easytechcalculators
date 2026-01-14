@@ -1,39 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Water Property Calculator</title>
-  <meta name="description" content="Engineering-grade water thermodynamic properties calculator using IAPWS-IF97">
+  <meta charset="UTF-8" />
+  <title>Water Properties Calculator | EasyTechCalculators</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Water Thermodynamic Property Calculator</h1>
+<header>
+  <h1>Water Thermodynamic Properties</h1>
+  <p>Ice • Liquid • Two-Phase • Steam</p>
+</header>
 
-<label>Input 1</label>
-<select id="i1n">
-  <option value="T">Temperature (K)</option>
-  <option value="P">Pressure (Pa)</option>
-  <option value="H">Enthalpy (J/kg)</option>
-  <option value="S">Entropy (J/kg·K)</option>
-</select>
-<input id="i1v" type="number">
+<section class="card">
+  <h2>Known Properties</h2>
 
-<label>Input 2</label>
-<select id="i2n">
-  <option value="P">Pressure (Pa)</option>
-  <option value="T">Temperature (K)</option>
-  <option value="H">Enthalpy (J/kg)</option>
-  <option value="S">Entropy (J/kg·K)</option>
-</select>
-<input id="i2v" type="number">
+  <label>Input Pair</label>
+  <select id="pair" onchange="updateInputs()">
+    <option value="PT">Temperature + Pressure</option>
+    <option value="Px">Pressure + Quality</option>
+    <option value="Tx">Temperature + Quality</option>
+    <option value="Ph">Pressure + Enthalpy</option>
+    <option value="Ps">Pressure + Entropy</option>
+    <option value="hs">Enthalpy + Entropy</option>
+    <option value="rhoT">Density + Temperature</option>
+  </select>
 
-<button onclick="solve()">Calculate</button>
+  <div id="inputs"></div>
 
-<pre id="output"></pre>
+  <button onclick="solve()">Calculate</button>
+</section>
 
-<p class="note">
-Based on IAPWS-IF97. For preliminary engineering design only.
-</p>
+<section class="card" id="output"></section>
+
+<footer>
+  <p>Based on IAPWS-IF97 • Engineering use only</p>
+</footer>
 
 <script src="app.js"></script>
 </body>
