@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>EasyTech Calculators</title>
+  <title>Water Property Calculator</title>
+  <meta name="description" content="Engineering-grade water thermodynamic properties calculator using IAPWS-IF97">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>EasyTech Calculators</h1>
-<ul>
-  <li>
-    <a href="thermodynamics/water-properties/">
-      Water Thermodynamic Property Calculator
-    </a>
-  </li>
-</ul>
+
+<h1>Water Thermodynamic Property Calculator</h1>
+
+<label>Input 1</label>
+<select id="i1n">
+  <option value="T">Temperature (K)</option>
+  <option value="P">Pressure (Pa)</option>
+  <option value="H">Enthalpy (J/kg)</option>
+  <option value="S">Entropy (J/kg·K)</option>
+</select>
+<input id="i1v" type="number">
+
+<label>Input 2</label>
+<select id="i2n">
+  <option value="P">Pressure (Pa)</option>
+  <option value="T">Temperature (K)</option>
+  <option value="H">Enthalpy (J/kg)</option>
+  <option value="S">Entropy (J/kg·K)</option>
+</select>
+<input id="i2v" type="number">
+
+<button onclick="solve()">Calculate</button>
+
+<pre id="output"></pre>
+
+<p class="note">
+Based on IAPWS-IF97. For preliminary engineering design only.
+</p>
+
+<script src="app.js"></script>
 </body>
 </html>
