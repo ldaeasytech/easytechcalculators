@@ -1,8 +1,11 @@
-const API =
-  "https://api.easytechcalculators.com/water/state";
-// or use Render URL if no custom domain yet
+const API = "https://api.easytechcalculators.com/water/state";
+
+function row(label, value, unit) {
+  return `<tr><td>${label}</td><td>${value.toFixed(5)}</td><td>${unit}</td></tr>`;
+}
 
 async function solve() {
+
   const body = {
     input1_name: document.getElementById("i1n").value,
     input1_value: parseFloat(document.getElementById("i1v").value),
@@ -16,7 +19,23 @@ async function solve() {
     body: JSON.stringify(body)
   });
 
-  const data = await res.json();
-  document.getElementById("output").textContent =
-    JSON.stringify(data, null, 2);
+  const d = await res.json();
+
+  document.getElementById("output").innerHTML = `
+    <h3>Results</h3>
+    <p><b>Phase:</b> ${d.phase}</p>
+    ${d.quality !== null ? `<p><b>Quality:</b> ${d.quality}</p>` : ""}
+    <table>
+      ${row("Temperature", d.T, "K")}
+      ${row("Pressure", d.P, "Pa")}
+      ${row("Density", d.density, "kg/m³")}
+      ${row("Specific Volume", d.specific_volume, "m³/kg")}
+      ${row("Cp", d.cp, "J/kg·K")}
+      ${row("Cv", d.cv, "J/kg·K")}
+      ${row("Entropy", d.entropy, "J/kg·K")}
+      ${row("Enthalpy", d.enthalpy, "J/kg")}
+      ${row("Conductivity", d.conductivity, "W/m·K")}
+      ${row("Viscosity", d.viscosity, "Pa·s")}
+    </table>
+  `;
 }
