@@ -15,6 +15,12 @@
 <section class="card">
   <h2>Known Properties</h2>
 
+  <label>Unit System</label>
+  <select id="unitSystem" onchange="updateInputs()">
+    <option value="SI">SI (K, Pa, J/kg)</option>
+    <option value="ENG">English (°F, psia, Btu/lbm)</option>
+  </select>
+
   <label>Input Pair</label>
   <select id="pair" onchange="updateInputs()">
     <option value="PT">Temperature + Pressure</option>
@@ -33,10 +39,17 @@
 
 <section class="card" id="output"></section>
 
+<section class="card">
+  <h2>Thermodynamic Charts</h2>
+  <canvas id="chartTS"></canvas>
+  <canvas id="chartHS"></canvas>
+</section>
+
 <footer>
   <p>Based on IAPWS-IF97 • Engineering use only</p>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
