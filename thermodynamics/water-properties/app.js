@@ -1,4 +1,4 @@
-const API = "https://api.easytechcalculators.com/water/state";
+const API = "https://https://easytechcalculators-api.onrender.com/";
 
 /* ================================
    UNIT HANDLING
