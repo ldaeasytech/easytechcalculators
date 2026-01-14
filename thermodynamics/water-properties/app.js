@@ -1,4 +1,4 @@
-const API = "https://https://easytechcalculators-api.onrender.com/";
+const API = "https://easytechcalculators-api.onrender.com/";
 
 /* ================================
    UNIT HANDLING
