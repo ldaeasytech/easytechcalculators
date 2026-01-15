@@ -1,195 +1,131 @@
+/***************************************
+ * CONFIG
+ ***************************************/
 const API_BASE = "https://api.easytechcalculators.com";
 
+/***************************************
+ * PROPERTY METADATA (DISPLAY CONTROL)
+ ***************************************/
+const PROPERTY_MAP = [
+  { key: "T", label: "Temperature", unit: "K" },
+  { key: "P", label: "Pressure", unit: "Pa" },
+  { key: "phase", label: "Phase", unit: "" },
+  { key: "quality", label: "Quality (x)", unit: "-" },
+  { key: "density", label: "Density", unit: "kg/m³" },
+  { key: "cp", label: "Cp", unit: "J/kg·K" },
+  { key: "cv", label: "Cv", unit: "J/kg·K" },
+  { key: "entropy", label: "Entropy", unit: "J/kg·K" },
+  { key: "enthalpy", label: "Enthalpy", unit: "J/kg" },
+  { key: "conductivity", label: "Thermal Conductivity", unit: "W/m·K" },
+  { key: "viscosity", label: "Viscosity", unit: "Pa·s" }
+];
+
+/***************************************
+ * BUILD REQUEST PAYLOAD
+ ***************************************/
+function buildPayload() {
+  return {
+    T: getNumber("inputT"),
+    P: getNumber("inputP"),
+    h: getNumber("inputH"),
+    s: getNumber("inputS"),
+    rho: getNumber("inputRho"),
+    quality: getNumber("inputX"),
+    phase: getSelect("inputPhase")
+  };
+}
+
+function getNumber(id) {
+  const el = document.getElementById(id);
+  if (!el || el.value === "") return null;
+  return Number(el.value);
+}
+
+function getSelect(id) {
+  const el = document.getElementById(id);
+  if (!el || el.value === "") return null;
+  return el.value;
+}
+
+/***************************************
+ * MAIN SOLVE FUNCTION
+ ***************************************/
 async function solve() {
+  clearResults();
+
+  const payload = buildPayload();
+
   try {
     const res = await fetch(`${API_BASE}/water/state`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload())
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
     });
 
     if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
+      throw new Error(`API error: ${res.status}`);
     }
 
     const data = await res.json();
     renderResults(data);
 
   } catch (err) {
-    console.error("API error:", err);
-    alert("Calculation failed. Please check inputs.");
+    console.error("Calculation failed:", err);
+    showError("Calculation failed. Please check inputs.");
   }
 }
 
-/* ================================
-   UNIT HANDLING
-================================ */
+/***************************************
+ * RENDER RESULTS TABLE
+ ***************************************/
+function renderResults(data) {
+  const tbody = document.getElementById("results-body");
+  tbody.innerHTML = "";
 
-const unitSystem = () => document.getElementById("unitSystem").value;
+  PROPERTY_MAP.forEach(prop => {
+    let value = data[prop.key];
 
-function toSI(name, value) {
-  if (unitSystem() === "SI") return value;
+    if (value === null || value === undefined) {
+      value = "—";
+    } else if (typeof value === "number") {
+      value = formatNumber(value);
+    }
 
-  switch (name) {
-    case "T": return (value - 32) * 5/9 + 273.15;
-    case "P": return value * 6894.76;
-    case "H": return value * 2326;
-    case "S": return value * 4186;
-    case "D": return value * 16.0185;
-    default: return value;
-  }
-}
-
-function fromSI(name, value) {
-  if (unitSystem() === "SI") return value;
-
-  switch (name) {
-    case "T": return (value - 273.15) * 9/5 + 32;
-    case "P": return value / 6894.76;
-    case "H": return value / 2326;
-    case "S": return value / 4186;
-    case "D": return value / 16.0185;
-    default: return value;
-  }
-}
-
-/* ================================
-   INPUT PAIRS
-================================ */
-
-const PAIRS = {
-  PT: [["T", "Temperature"], ["P", "Pressure"]],
-  Px: [["P", "Pressure"], ["X", "Quality (0–1)"]],
-  Tx: [["T", "Temperature"], ["X", "Quality (0–1)"]],
-  Ph: [["P", "Pressure"], ["H", "Enthalpy"]],
-  Ps: [["P", "Pressure"], ["S", "Entropy"]],
-  hs: [["H", "Enthalpy"], ["S", "Entropy"]],
-  rhoT: [["D", "Density"], ["T", "Temperature"]]
-};
-
-function unitLabel(name) {
-  if (unitSystem() === "SI") {
-    return {
-      T: "K", P: "Pa", H: "J/kg", S: "J/kg·K", D: "kg/m³"
-    }[name] || "";
-  }
-  return {
-    T: "°F", P: "psia", H: "Btu/lbm", S: "Btu/lbm·R", D: "lbm/ft³"
-  }[name] || "";
-}
-
-function updateInputs() {
-  const pair = document.getElementById("pair").value;
-  const container = document.getElementById("inputs");
-  container.innerHTML = "";
-
-  PAIRS[pair].forEach((p, i) => {
-    container.innerHTML += `
-      <label>${p[1]} (${unitLabel(p[0])})</label>
-      <input id="v${i}" type="number" step="any">
-      <input id="n${i}" type="hidden" value="${p[0]}">
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${prop.label}</td>
+      <td>${value}</td>
+      <td>${prop.unit}</td>
     `;
+    tbody.appendChild(row);
   });
 }
 
-updateInputs();
+/***************************************
+ * UTILITIES
+ ***************************************/
+function formatNumber(x) {
+  if (!isFinite(x)) return "—";
+  return x.toPrecision(6);
+}
 
-/* ================================
-   SOLVER
-================================ */
+function clearResults() {
+  const tbody = document.getElementById("results-body");
+  if (tbody) tbody.innerHTML = "";
+}
 
-async function solve() {
-  try {
-    const body = {
-      input1_name: document.getElementById("n0").value,
-      input1_value: toSI(
-        document.getElementById("n0").value,
-        parseFloat(document.getElementById("v0").value)
-      ),
-      input2_name: document.getElementById("n1").value,
-      input2_value: toSI(
-        document.getElementById("n1").value,
-        parseFloat(document.getElementById("v1").value)
-      )
-    };
+function showError(msg) {
+  alert(msg);
+}
 
-    if (isNaN(body.input1_value) || isNaN(body.input2_value)) {
-      throw new Error("Please enter valid numeric inputs");
-    }
-
-    const res = await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    if (!res.ok) {
-      const txt = await res.text();
-      throw new Error(`API error ${res.status}: ${txt}`);
-    }
-
-    const d = await res.json();
-
-    document.getElementById("output").innerHTML = `
-      <h2>Results</h2>
-      <p><b>Phase:</b> ${d.phase}</p>
-      ${d.quality !== null ? `<p><b>Quality:</b> ${d.quality}</p>` : ""}
-      <table>
-        <tr><td>Temperature</td><td>${fromSI("T", d.T).toFixed(2)} ${unitLabel("T")}</td></tr>
-        <tr><td>Pressure</td><td>${fromSI("P", d.P).toFixed(4)} ${unitLabel("P")}</td></tr>
-        <tr><td>Density</td><td>${fromSI("D", d.density).toFixed(4)} ${unitLabel("D")}</td></tr>
-        <tr><td>Entropy</td><td>${fromSI("S", d.entropy).toFixed(3)} ${unitLabel("S")}</td></tr>
-        <tr><td>Enthalpy</td><td>${fromSI("H", d.enthalpy).toFixed(2)} ${unitLabel("H")}</td></tr>
-      </table>
-    `;
-
-    plotCharts(d);
-
-  } catch (err) {
-    document.getElementById("output").innerHTML =
-      `<p style="color:red"><b>Error:</b> ${err.message}</p>`;
-    console.error(err);
+/***************************************
+ * BUTTON BINDING
+ ***************************************/
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("calculateBtn");
+  if (btn) {
+    btn.addEventListener("click", solve);
   }
-}
-
-
-/* ================================
-   CHARTS
-================================ */
-
-let chartTS = null;
-let chartHS = null;
-
-function plotCharts(d) {
-
-  const T = fromSI("T", d.T);
-  const s = fromSI("S", d.entropy);
-  const h = fromSI("H", d.enthalpy);
-
-  if (chartTS) chartTS.destroy();
-  if (chartHS) chartHS.destroy();
-
-  chartTS = new Chart(document.getElementById("chartTS"), {
-    type: "scatter",
-    data: { datasets: [{ data: [{ x: s, y: T }] }] },
-    options: {
-      plugins: { legend: { display: false }},
-      scales: {
-        x: { title: { display: true, text: "Entropy" }},
-        y: { title: { display: true, text: "Temperature" }}
-      }
-    }
-  });
-
-  chartHS = new Chart(document.getElementById("chartHS"), {
-    type: "scatter",
-    data: { datasets: [{ data: [{ x: s, y: h }] }] },
-    options: {
-      plugins: { legend: { display: false }},
-      scales: {
-        x: { title: { display: true, text: "Entropy" }},
-        y: { title: { display: true, text: "Enthalpy" }}
-      }
-    }
-  });
-}
+});
