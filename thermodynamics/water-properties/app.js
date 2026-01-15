@@ -1,4 +1,25 @@
-const API = "https://easytechcalculators-api.onrender.com/water/state";
+const API_BASE = "https://api.easytechcalculators.com";
+
+async function solve() {
+  try {
+    const res = await fetch(`${API_BASE}/water/state`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildPayload())
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    renderResults(data);
+
+  } catch (err) {
+    console.error("API error:", err);
+    alert("Calculation failed. Please check inputs.");
+  }
+}
 
 /* ================================
    UNIT HANDLING
