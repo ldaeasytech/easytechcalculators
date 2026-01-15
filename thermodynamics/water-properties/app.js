@@ -1,11 +1,45 @@
-/***************************************
+/*************************************************
  * CONFIG
- ***************************************/
+ *************************************************/
 const API_BASE = "https://api.easytechcalculators.com";
 
-/***************************************
- * PROPERTY METADATA (DISPLAY CONTROL)
- ***************************************/
+/*************************************************
+ * INPUT PAIR DEFINITIONS
+ *************************************************/
+const INPUT_PAIRS = {
+  TP: [
+    { id: "inputT", label: "Temperature", unit: "K" },
+    { id: "inputP", label: "Pressure", unit: "Pa" }
+  ],
+  Px: [
+    { id: "inputP", label: "Pressure", unit: "Pa" },
+    { id: "inputX", label: "Quality (x)", unit: "-" }
+  ],
+  Tx: [
+    { id: "inputT", label: "Temperature", unit: "K" },
+    { id: "inputX", label: "Quality (x)", unit: "-" }
+  ],
+  Ph: [
+    { id: "inputP", label: "Pressure", unit: "Pa" },
+    { id: "inputH", label: "Enthalpy", unit: "J/kg" }
+  ],
+  Ps: [
+    { id: "inputP", label: "Pressure", unit: "Pa" },
+    { id: "inputS", label: "Entropy", unit: "J/kg·K" }
+  ],
+  hs: [
+    { id: "inputH", label: "Enthalpy", unit: "J/kg" },
+    { id: "inputS", label: "Entropy", unit: "J/kg·K" }
+  ],
+  rhoT: [
+    { id: "inputRho", label: "Density", unit: "kg/m³" },
+    { id: "inputT", label: "Temperature", unit: "K" }
+  ]
+};
+
+/*************************************************
+ * RESULT PROPERTY MAP
+ *************************************************/
 const PROPERTY_MAP = [
   { key: "T", label: "Temperature", unit: "K" },
   { key: "P", label: "Pressure", unit: "Pa" },
@@ -20,36 +54,55 @@ const PROPERTY_MAP = [
   { key: "viscosity", label: "Viscosity", unit: "Pa·s" }
 ];
 
-/***************************************
- * BUILD REQUEST PAYLOAD
- ***************************************/
+/*************************************************
+ * RENDER INPUTS BASED ON INPUT PAIR
+ *************************************************/
+function renderInputs(pairKey) {
+  const container = document.getElementById("dynamic-inputs");
+  container.innerHTML = "";
+
+  INPUT_PAIRS[pairKey].forEach(input => {
+    const div = document.createElement("div");
+    div.className = "input-row";
+
+    div.innerHTML = `
+      <label>
+        ${input.label} (${input.unit})
+        <input id="${input.id}" type="number" step="any">
+      </label>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+/*************************************************
+ * BUILD API PAYLOAD FROM VISIBLE INPUTS
+ *************************************************/
 function buildPayload() {
-  return {
-    T: getNumber("inputT"),
-    P: getNumber("inputP"),
-    h: getNumber("inputH"),
-    s: getNumber("inputS"),
-    rho: getNumber("inputRho"),
-    quality: getNumber("inputX"),
-    phase: getSelect("inputPhase")
-  };
+  const payload = {};
+
+  [
+    "inputT",
+    "inputP",
+    "inputH",
+    "inputS",
+    "inputRho",
+    "inputX"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value !== "") {
+      const key = id.replace("input", "").toLowerCase();
+      payload[key === "rho" ? "density" : key] = Number(el.value);
+    }
+  });
+
+  return payload;
 }
 
-function getNumber(id) {
-  const el = document.getElementById(id);
-  if (!el || el.value === "") return null;
-  return Number(el.value);
-}
-
-function getSelect(id) {
-  const el = document.getElementById(id);
-  if (!el || el.value === "") return null;
-  return el.value;
-}
-
-/***************************************
- * MAIN SOLVE FUNCTION
- ***************************************/
+/*************************************************
+ * MAIN SOLVER
+ *************************************************/
 async function solve() {
   clearResults();
 
@@ -58,9 +111,7 @@ async function solve() {
   try {
     const res = await fetch(`${API_BASE}/water/state`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
 
@@ -72,14 +123,14 @@ async function solve() {
     renderResults(data);
 
   } catch (err) {
-    console.error("Calculation failed:", err);
-    showError("Calculation failed. Please check inputs.");
+    console.error(err);
+    alert("Calculation failed. Please check inputs.");
   }
 }
 
-/***************************************
+/*************************************************
  * RENDER RESULTS TABLE
- ***************************************/
+ *************************************************/
 function renderResults(data) {
   const tbody = document.getElementById("results-body");
   tbody.innerHTML = "";
@@ -103,9 +154,9 @@ function renderResults(data) {
   });
 }
 
-/***************************************
+/*************************************************
  * UTILITIES
- ***************************************/
+ *************************************************/
 function formatNumber(x) {
   if (!isFinite(x)) return "—";
   return x.toPrecision(6);
@@ -116,16 +167,18 @@ function clearResults() {
   if (tbody) tbody.innerHTML = "";
 }
 
-function showError(msg) {
-  alert(msg);
-}
-
-/***************************************
- * BUTTON BINDING
- ***************************************/
+/*************************************************
+ * INITIALIZATION
+ *************************************************/
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("calculateBtn");
-  if (btn) {
-    btn.addEventListener("click", solve);
-  }
+  const pairSelect = document.getElementById("inputPair");
+  const calcBtn = document.getElementById("calculateBtn");
+
+  renderInputs(pairSelect.value);
+
+  pairSelect.addEventListener("change", () => {
+    renderInputs(pairSelect.value);
+  });
+
+  calcBtn.addEventListener("click", solve);
 });
