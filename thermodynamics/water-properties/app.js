@@ -74,6 +74,18 @@ function updateInputs() {
 updateInputs();
 
 /* ================================
+   FORMAT HELPERS
+================================ */
+
+function fmt(val, digits = 4) {
+  return typeof val === "number" && isFinite(val) ? val.toFixed(digits) : "N/A";
+}
+
+function fmtExp(val, digits = 4) {
+  return typeof val === "number" && isFinite(val) ? val.toExponential(digits) : "N/A";
+}
+
+/* ================================
    SOLVER
 ================================ */
 
@@ -91,35 +103,48 @@ async function solve() {
     )
   };
 
-  const res = await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
 
-  const d = await res.json();
+    const d = await res.json();
 
-  document.getElementById("output").innerHTML = `
-    <h2>Results</h2>
-    <p><b>Phase:</b> ${d.phase}</p>
-    ${d.quality !== null ? `<p><b>Quality:</b> ${d.quality}</p>` : ""}
-    <table>
-      <tr><td>Temperature</td><td>${fromSI("T", d.T).toFixed(2)} ${unitLabel("T")}</td></tr>
-      <tr><td>Pressure</td><td>${fromSI("P", d.P).toFixed(4)} ${unitLabel("P")}</td></tr>
-      <tr><td>Density</td><td>${fromSI("D", d.density).toFixed(4)} ${unitLabel("D")}</td></tr>
-      <tr><td>Specific Volume</td><td>${(1/d.density).toExponential(4)} m³/kg</td></tr>
-      <tr><td>cp</td><td>${d.cp.toFixed(2)} J/kg·K</td></tr>
-      <tr><td>cv</td><td>${d.cv.toFixed(2)} J/kg·K</td></tr>
-      <tr><td>Entropy</td><td>${fromSI("S", d.entropy).toFixed(3)} ${unitLabel("S")}</td></tr>
-      <tr><td>Enthalpy</td><td>${fromSI("H", d.enthalpy).toFixed(2)} ${unitLabel("H")}</td></tr>
-      <tr><td>Conductivity</td><td>${d.conductivity.toFixed(4)} W/m·K</td></tr>
-      ${d.viscosity !== null
-        ? `<tr><td>Viscosity</td><td>${d.viscosity.toExponential(4)} Pa·s</td></tr>`
-        : ""}
-    </table>
-  `;
+    if (!res.ok) {
+      throw new Error(d.detail || d.error || "Calculation failed.");
+    }
 
-  plotCharts(d);
+    document.getElementById("output").innerHTML = `
+      <h2>Results</h2>
+      <p><b>Phase:</b> ${d.phase}</p>
+      ${d.quality !== null && d.quality !== undefined ? `<p><b>Quality:</b> ${fmt(d.quality, 4)}</p>` : ""}
+      <table>
+        <tr><td>Temperature</td><td>${fmt(fromSI("T", d.T), 2)} ${unitLabel("T")}</td></tr>
+        <tr><td>Pressure</td><td>${fmt(fromSI("P", d.P), 4)} ${unitLabel("P")}</td></tr>
+        <tr><td>Density</td><td>${fmt(fromSI("D", d.density), 4)} ${unitLabel("D")}</td></tr>
+        <tr><td>Specific Volume</td><td>${fmtExp(1 / d.density, 4)} m³/kg</td></tr>
+        <tr><td>cp</td><td>${fmt(d.cp, 2)} J/kg·K</td></tr>
+        <tr><td>cv</td><td>${fmt(d.cv, 2)} J/kg·K</td></tr>
+        <tr><td>Entropy</td><td>${fmt(fromSI("S", d.entropy), 3)} ${unitLabel("S")}</td></tr>
+        <tr><td>Enthalpy</td><td>${fmt(fromSI("H", d.enthalpy), 2)} ${unitLabel("H")}</td></tr>
+        <tr><td>Conductivity</td><td>${fmt(d.conductivity, 4)} W/m·K</td></tr>
+        ${d.viscosity !== null && d.viscosity !== undefined
+          ? `<tr><td>Viscosity</td><td>${fmtExp(d.viscosity, 4)} Pa·s</td></tr>`
+          : ""}
+      </table>
+    `;
+
+    plotCharts(d);
+
+  } catch (err) {
+    document.getElementById("output").innerHTML = `
+      <div class="error-box">
+        ⚠️ ${err.message}
+      </div>
+    `;
+  }
 }
 
 /* ================================
@@ -130,7 +155,6 @@ let chartTS = null;
 let chartHS = null;
 
 function plotCharts(d) {
-
   const T = fromSI("T", d.T);
   const s = fromSI("S", d.entropy);
   const h = fromSI("H", d.enthalpy);
