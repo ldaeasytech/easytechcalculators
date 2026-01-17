@@ -4,6 +4,7 @@ import { convertToSI, convertFromSI } from "./unitConverter.js";
 import { solveIF97 } from "./if97/if97.js";
 import { viscosity } from "./if97/viscosity.js";
 import { conductivity } from "./if97/conductivity.js";
+import { latentHeat } from "./latentHeat.js";
 
 /**
  * Main solver entry point
@@ -36,7 +37,6 @@ export async function solve(userInputs, unitSystem = "SI") {
     };
   }
 
-  // Extract primary properties
   const {
     T,
     P,
@@ -50,18 +50,33 @@ export async function solve(userInputs, unitSystem = "SI") {
     cv
   } = result;
 
-  // Compute transport properties
-  const mu = viscosity(T, density); // Pa·s
-  const k = conductivity(T, density); // W/(m·K)
+  // Transport properties
+  const mu = viscosity(T, density);
+  const k = conductivity(T, density);
 
-  // Attach transport properties
+  // Enthalpy of vaporization (only meaningful on saturation line)
+  let h_fg = null;
+  let h_fg_note = null;
+
+  if (phase === "saturated" || phase === "two-phase") {
+    try {
+      h_fg = latentHeat(T, P);
+    } catch {
+      h_fg = null;
+      h_fg_note = "Unable to compute latent heat for this state.";
+    }
+  } else {
+    h_fg_note = "Latent heat is defined only for saturated or two-phase states.";
+  }
+
   const resultsSI = {
     ...result,
     viscosity: mu,
-    thermalConductivity: k
+    thermalConductivity: k,
+    enthalpyOfVaporization: h_fg,
+    enthalpyOfVaporizationNote: h_fg_note
   };
 
-  // Convert back to user units
   const resultsUser = convertFromSI(resultsSI, unitSystem);
 
   return {
