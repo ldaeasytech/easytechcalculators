@@ -2,54 +2,116 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Water Properties Calculator | EasyTechCalculators</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Water & Steam Property Calculator | EasyTech Calculators</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Professional-grade thermodynamic property calculator for water and steam with IF97 reference accuracy." />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <header>
+    <h1>Water & Steam Property Calculator</h1>
+    <p class="subtitle">Engineering handbook–level accuracy (IAPWS-IF97)</p>
+  </header>
 
-<header>
-  <h1>Water Thermodynamic Properties</h1>
-  <p>Ice • Liquid • Two-Phase • Steam</p>
-</header>
+  <main>
+    <form id="calcForm" class="calculator-form">
 
-<section class="card">
-  <h2>Known Properties</h2>
+      <!-- Unit System -->
+      <section class="form-section">
+        <label for="unitSystem">Unit System:</label>
+        <select id="unitSystem">
+          <option value="SI">SI</option>
+          <option value="Imperial">Imperial</option>
+        </select>
+      </section>
 
-  <label>Unit System</label>
-  <select id="unitSystem" onchange="updateInputs()">
-    <option value="SI">SI (K, Pa, J/kg)</option>
-    <option value="ENG">English (°F, psia, Btu/lbm)</option>
-  </select>
+      <!-- Phase -->
+      <section class="form-section">
+        <label for="phase">Phase:</label>
+        <select id="phase">
+          <option value="">Auto</option>
+          <option value="ice">Ice</option>
+          <option value="liquid">Subcooled Liquid</option>
+          <option value="saturated">Saturated (Two-Phase)</option>
+          <option value="vapor">Superheated Vapor</option>
+        </select>
+      </section>
 
-  <label>Input Pair</label>
-  <select id="pair" onchange="updateInputs()">
-    <option value="PT">Temperature + Pressure</option>
-    <option value="Px">Pressure + Quality</option>
-    <option value="Tx">Temperature + Quality</option>
-    <option value="Ph">Pressure + Enthalpy</option>
-    <option value="Ps">Pressure + Entropy</option>
-    <option value="hs">Enthalpy + Entropy</option>
-    <option value="rhoT">Density + Temperature</option>
-  </select>
+      <!-- Primary Inputs -->
+      <section class="form-section grid">
+        <label id="tempLabel" for="temperature">Temperature (K):
+          <input id="temperature" type="number" step="any" />
+        </label>
 
-  <div id="inputs"></div>
+        <label id="pressLabel" for="pressure">Pressure (Pa):
+          <input id="pressure" type="number" step="any" />
+        </label>
 
-  <button onclick="solve()">Calculate</button>
-</section>
+        <label id="hLabel" for="enthalpy">Enthalpy:
+          <input id="enthalpy" type="number" step="any" />
+        </label>
 
-<section class="card" id="output"></section>
+        <label id="sLabel" for="entropy">Entropy:
+          <input id="entropy" type="number" step="any" />
+        </label>
 
-<section class="card">
-  <h2>Thermodynamic Charts</h2>
-  <canvas id="chartTS"></canvas>
-  <canvas id="chartHS"></canvas>
-</section>
+        <label id="rhoLabel" for="density">Density:
+          <input id="density" type="number" step="any" />
+        </label>
 
-<footer>
-  <p>Based on IAPWS-IF97 • Engineering use only</p>
-</footer>
+        <label id="vLabel" for="specificVolume">Specific Volume:
+          <input id="specificVolume" type="number" step="any" />
+        </label>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="app.js"></script>
+        <label id="cpLabel" for="cp">Cp:
+          <input id="cp" type="number" step="any" />
+        </label>
+
+        <label id="cvLabel" for="cv">Cv:
+          <input id="cv" type="number" step="any" />
+        </label>
+
+        <label id="muLabel" for="viscosity">Viscosity:
+          <input id="viscosity" type="number" step="any" />
+        </label>
+
+        <label id="kLabel" for="conductivity">Thermal Conductivity:
+          <input id="conductivity" type="number" step="any" />
+        </label>
+
+        <label for="quality">Quality (x):
+          <input id="quality" type="number" step="any" min="0" max="1" />
+        </label>
+      </section>
+
+      <!-- Action -->
+      <section class="form-section">
+        <button type="submit" class="calculate-btn">Calculate Properties</button>
+      </section>
+
+    </form>
+
+    <!-- Status & Feedback -->
+    <section class="status-section">
+      <div id="loading" class="loading" style="display:none;">🔄 Calculating… Please wait.</div>
+      <div id="errors" class="errors"></div>
+      <div id="warnings" class="warnings"></div>
+      <div id="suggestions" class="suggestions"></div>
+      <div id="autoFixes" class="auto-fixes"></div>
+    </section>
+
+    <!-- Output -->
+    <section class="output-section">
+      <h2>Results</h2>
+      <pre id="output" class="output-box"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 EasyTech Calculators • Based on IAPWS-IF97</p>
+  </footer>
+
+  <!-- App Script -->
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
