@@ -1,76 +1,166 @@
+/* =====================================================
+   Global Reset & Base Styling
+   ===================================================== */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: system-ui, sans-serif;
-  background: #f4f6f8;
   margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f4f7fa;
+  color: #1f2937;
+  line-height: 1.5;
 }
 
+/* =====================================================
+   Layout
+   ===================================================== */
 header {
-  background: #0d47a1;
-  color: white;
-  padding: 20px;
-  text-align: center;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 1.5rem 2rem;
+  border-bottom: 4px solid #2563eb;
 }
 
-.card {
-  background: white;
-  margin: 20px auto;
-  padding: 20px;
-  max-width: 760px;
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: #cbd5f5;
+}
+
+main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* =====================================================
+   Form Styling
+   ===================================================== */
+.calculator-form {
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  padding: 2rem;
 }
 
-label {
-  display: block;
-  margin-top: 12px;
-  font-weight: bold;
+.form-section {
+  margin-bottom: 1.5rem;
 }
 
-select, input {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
+.form-section label {
+  font-weight: 600;
+  margin-right: 0.75rem;
 }
 
-button {
-  margin-top: 20px;
-  padding: 12px;
-  width: 100%;
-  background: #0d47a1;
-  color: white;
-  border: none;
+.form-section select,
+.form-section input {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #cbd5e1;
   border-radius: 4px;
-  font-size: 16px;
+  background-color: #ffffff;
+  color: #0f172a;
+  min-width: 140px;
+}
+
+.form-section select:focus,
+.form-section input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.3);
+}
+
+.form-section.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.form-section.grid label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+}
+
+.form-section.grid input {
+  margin-top: 0.25rem;
+}
+
+/* =====================================================
+   Buttons
+   ===================================================== */
+.calculate-btn {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.15s ease-in-out, transform 0.05s ease-in-out;
 }
 
-button:hover {
-  background: #08306b;
+.calculate-btn:hover {
+  background-color: #1d4ed8;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
+.calculate-btn:active {
+  transform: translateY(1px);
 }
 
-td {
-  border: 1px solid #ddd;
-  padding: 8px;
+.auto-fixes button {
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #7dd3fc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
 }
 
-td:first-child {
-  font-weight: bold;
-  background: #f1f1f1;
+.auto-fixes button:hover {
+  background-color: #bae6fd;
 }
 
-canvas {
-  margin-top: 20px;
-  max-width: 100%;
+/* =====================================================
+   Status & Messaging
+   ===================================================== */
+.status-section {
+  margin-top: 1.5rem;
 }
 
-footer {
-  text-align: center;
-  color: #555;
-  padding: 15px;
+.loading {
+  font-style: italic;
+  color: #334155;
+  margin-bottom: 0.75rem;
 }
+
+.errors {
+  color: #b91c1c;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.warnings {
+  color: #c2410c;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.suggestions {
+  color: #065f46;
+  font-style: italic;
