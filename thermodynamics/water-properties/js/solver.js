@@ -1,53 +1,74 @@
-import { Tsat } from "./regions/saturation.js";
-import * as liquid from "./regions/liquid.js";
-import * as vapor from "./regions/vapor.js";
+import { validateInputs } from "./validator.js";
 import { computeQuality } from "./quality.js";
+import { convertToSI, convertFromSI } from "./unitConverter.js";
+import { solveIF97 } from "./if97/if97.js";
+import { viscosity } from "./if97/viscosity.js";
+import { conductivity } from "./if97/conductivity.js";
 
-export function solveFromTwoProperties(targets, phase = null) {
-  const tol = 1e-6;
-  const maxIter = 100;
+/**
+ * Main solver entry point
+ */
+export async function solve(userInputs, unitSystem = "SI") {
+  // Convert all inputs to SI
+  const inputsSI = convertToSI(userInputs, unitSystem);
 
-  // Initial guess
-  let T = 500;
-  let P = 1e6;
-  let x = null;
-
-  for (let i = 0; i < maxIter; i++) {
-    const Ts = Tsat(P);
-    let props;
-
-    if (phase === "saturated") {
-      x = computeQuality({ T, P, ...targets });
-      props = saturatedProps(T, P, x);
-    } else if (phase === "liquid" || T < Ts) {
-      props = liquid.compute(T, P);
-    } else {
-      props = vapor.compute(T, P);
-    }
-
-    const residuals = {};
-    let err = 0;
-
-    for (const key in targets) {
-      residuals[key] = props[key] - targets[key];
-      err += Math.abs(residuals[key]);
-    }
-
-    if (err < tol) break;
-
-    // Simple Newton-like adjustment
-    T -= 0.001 * residuals.enthalpy || 0;
-    P -= 0.001 * residuals.specificVolume || 0;
+  // Validate inputs
+  const validation = validateInputs(inputsSI);
+  if (validation.fatal) {
+    return {
+      status: "fatal",
+      errors: validation.errors,
+      warnings: validation.warnings,
+      suggestions: validation.suggestions
+    };
   }
 
-  return { T, P, quality: x };
-}
+  // Indicate calculation in progress (for UI)
+  let result;
+  try {
+    result = await solveIF97(inputsSI);
+  } catch (err) {
+    return {
+      status: "fatal",
+      errors: ["Solver failed: " + err.message],
+      warnings: [],
+      suggestions: ["Try different input pair or set phase = saturated."]
+    };
+  }
 
-function saturatedProps(T, P, x) {
-  const L = liquid.compute(T, P);
-  const V = vapor.compute(T, P);
-  const mix = {};
-  for (const key in L) mix[key] = (1 - x) * L[key] + x * V[key];
-  return mix;
-}
+  // Extract primary properties
+  const {
+    T,
+    P,
+    phase,
+    quality,
+    density,
+    specificVolume,
+    enthalpy,
+    entropy,
+    cp,
+    cv
+  } = result;
 
+  // Compute transport properties
+  const mu = viscosity(T, density); // Pa·s
+  const k = conductivity(T, density); // W/(m·K)
+
+  // Attach transport properties
+  const resultsSI = {
+    ...result,
+    viscosity: mu,
+    thermalConductivity: k
+  };
+
+  // Convert back to user units
+  const resultsUser = convertFromSI(resultsSI, unitSystem);
+
+  return {
+    status: "ok",
+    results: resultsUser,
+    errors: validation.errors || [],
+    warnings: validation.warnings || [],
+    suggestions: validation.suggestions || []
+  };
+}
