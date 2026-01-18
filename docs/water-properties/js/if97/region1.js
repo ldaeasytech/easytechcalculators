@@ -1,5 +1,9 @@
 // IAPWS-IF97 Region 1 (compressed / subcooled liquid)
 // Valid for: 273.15 K ≤ T ≤ 623.15 K, Psat(T) ≤ P ≤ 100 MPa
+// INTERNAL UNITS:
+//   T → K
+//   P → MPa
+//   R → kJ/(kg·K)
 
 import { R } from "./constants.js";
 
@@ -86,21 +90,18 @@ export function region1(T, P) {
   }
 
   /* ============================================================
-     PRIMARY PROPERTY EQUATIONS (CORRECT IF97 FORMS)
+     IF97 PROPERTY RELATIONS (CORRECT)
      ============================================================ */
 
-  // ✔ FIX #1: NO extra 1000 factor
-  // v = (R * T / P) * π * (∂γ/∂π)
-  const v = (R * T / P) * pi * g_pi;
-  const rho = 1 / v;
+  // ✅ FIXED: NO extra π factor here
+  // v = (R * T / P) * (∂γ/∂π)
+  const specificVolume = (R * T / P) * g_pi;
+  const density = 1 / specificVolume;
 
-  const u = R * T * (tau * g_tau - pi * g_pi);
-  const h = R * T * tau * g_tau;
-  const s = R * (tau * g_tau - g);
+  const enthalpy = R * T * tau * g_tau;
+  const entropy  = R * (tau * g_tau - g);
 
-  // ✔ FIX #2: Correct Cp & Cv expressions
   const cp = -R * tau * tau * g_tautau;
-
   const cv = R * (
     -tau * tau * g_tautau +
     Math.pow(g_pi - tau * g_pitau, 2) / g_pipi
@@ -111,10 +112,10 @@ export function region1(T, P) {
     phase: "subcooled liquid",
     T,
     P,
-    density: rho,
-    specificVolume: v,
-    enthalpy: h,
-    entropy: s,
+    density,
+    specificVolume,
+    enthalpy,
+    entropy,
     cp,
     cv
   };
