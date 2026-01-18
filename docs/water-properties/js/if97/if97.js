@@ -11,11 +11,12 @@ import { Psat } from "./region4.js";
 import { viscosity } from "./viscosity.js";
 import { conductivity } from "./conductivity.js";
 
-// IF97 boundaries
-const T23 = 623.15;      // K
-const P23 = 16.529;      // MPa
-const T5  = 1073.15;     // K
-const EPS = 1e-6;
+// IF97 constants (MPa, K)
+const T23 = 623.15;     // K
+const P23 = 16.529;     // MPa (boundary at T23)
+const T5  = 1073.15;    // K
+const PMAX = 100.0;     // MPa
+const EPS = 1e-8;
 
 /**
  * Compute thermodynamic + transport properties using IF97
@@ -26,18 +27,20 @@ const EPS = 1e-6;
 export function computeIF97(T, P) {
   let state;
 
-  /* ---------- Region selection ---------- */
-
-  // Region 5: high-temperature steam
+  /* ============================================================
+     Region 5: very high temperature steam
+     ============================================================ */
   if (T >= T5) {
     state = region5(T, P);
   }
 
-  // Below Region 3 boundary
-  else if (T < T23) {
+  /* ============================================================
+     Region 1 / 2 / 4: T ≤ 623.15 K
+     ============================================================ */
+  else if (T <= T23) {
     const Ps = Psat(T);
 
-    // Two-phase (Region 4)
+    // Saturation line (Region 4)
     if (Math.abs(P - Ps) < EPS) {
       return {
         region: 4,
@@ -48,25 +51,39 @@ export function computeIF97(T, P) {
       };
     }
 
-    state = (P > Ps)
-      ? region1(T, P)
-      : region2(T, P);
+    // Compressed liquid
+    if (P > Ps && P <= PMAX) {
+      state = region1(T, P);
+    }
+    // Superheated vapor
+    else if (P < Ps) {
+      state = region2(T, P);
+    }
+    else {
+      throw new Error("Pressure out of IF97 Region 1 bounds.");
+    }
   }
 
-  // Above Region 3 boundary
+  /* ============================================================
+     Region 2 / 3: 623.15 K < T < 1073.15 K
+     ============================================================ */
   else {
-    state = (P > P23)
-      ? region3(T, P)
-      : region2(T, P);
+    if (P <= P23) {
+      state = region2(T, P);
+    } else {
+      state = region3(T, P);
+    }
   }
 
-  /* ---------- Transport properties (REFPROP-level) ---------- */
+  /* ============================================================
+     Transport properties (IAPWS)
+     ============================================================ */
 
   // Dynamic viscosity [Pa·s]
   state.viscosity = viscosity(T, state.density);
 
   // Thermal conductivity [W/(m·K)]
-  // cp must be in J/(kg·K) → IF97 gives kJ/(kg·K)
+  // cp from IF97 is kJ/(kg·K) → convert to J/(kg·K)
   state.thermalConductivity = conductivity(
     T,
     state.density,
