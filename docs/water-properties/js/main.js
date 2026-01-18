@@ -3,11 +3,12 @@
  * UI wiring for Water & Steam Properties Calculator
  */
 
-import { computeProperties } from "./solver.js";
+import { solve } from "./solver.js";
+import { validateState } from "./validator.js";
+import { toSI, fromSI } from "./unitConverter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const unitSystemSelect = document.getElementById("unitSystem");
-  const phaseSelect = document.getElementById("phaseSelect");
   const calculateBtn = document.getElementById("calculateBtn");
 
   const inputs = {
@@ -15,42 +16,90 @@ document.addEventListener("DOMContentLoaded", () => {
     pressure: document.getElementById("pressure"),
     enthalpy: document.getElementById("enthalpy"),
     entropy: document.getElementById("entropy"),
+    specificVolume: document.getElementById("specificVolume"),
+    quality: document.getElementById("quality")
+  };
+
+  const outputs = {
     density: document.getElementById("density"),
     specificVolume: document.getElementById("specificVolume"),
+    enthalpy: document.getElementById("enthalpy"),
+    entropy: document.getElementById("entropy"),
     cp: document.getElementById("cp"),
     cv: document.getElementById("cv"),
     viscosity: document.getElementById("viscosity"),
-    thermalConductivity: document.getElementById("thermalConductivity"),
+    thermalConductivity: document.getElementById("thermalConductivity")
   };
 
   calculateBtn.addEventListener("click", () => {
-    const T = parseFloat(inputs.temperature.value);
-    const P = parseFloat(inputs.pressure.value);
-    const phase = phaseSelect.value;
+    const unitSystem = unitSystemSelect.value;
 
-    if (isNaN(T) || isNaN(P)) {
-      alert("Please enter valid Temperature and Pressure values.");
+    // --- Collect raw UI inputs ---
+    const rawInputs = readInputs(inputs);
+
+    // --- Convert to internal units ---
+    const siInputs = toSI(rawInputs, unitSystem);
+
+    // --- Validate ---
+    const validation = validateState(siInputs);
+    if (!validation.valid) {
+      alert(validation.errors.join("\n"));
       return;
     }
 
-    const results = computeProperties(T, P, phase);
+    // --- Solve ---
+    let state;
+    try {
+      state = solve(siInputs);
+    } catch (err) {
+      alert(err.message);
+      return;
+    }
 
-    displayResults(results);
+    // --- Convert back to UI units ---
+    const uiState = fromSI(state, unitSystem);
+
+    // --- Display ---
+    displayResults(uiState, outputs);
   });
-
-  function displayResults(results) {
-    inputs.density.value = format(results.density);
-    inputs.specificVolume.value = format(results.specificVolume);
-    inputs.enthalpy.value = format(results.enthalpy);
-    inputs.entropy.value = format(results.entropy);
-    inputs.cp.value = format(results.cp);
-    inputs.cv.value = format(results.cv);
-    inputs.viscosity.value = format(results.viscosity);
-    inputs.thermalConductivity.value = format(results.thermalConductivity);
-  }
-
-  function format(value) {
-    if (value === undefined || value === null || isNaN(value)) return "—";
-    return value.toFixed(4);
-  }
 });
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+
+function readInputs(fields) {
+  const data = {};
+
+  for (const key in fields) {
+    const el = fields[key];
+    if (!el) continue;
+
+    const val = parseFloat(el.value);
+    if (!isNaN(val)) {
+      // Map UI names to solver names
+      if (key === "temperature") data.T = val;
+      else if (key === "pressure") data.P = val;
+      else if (key === "enthalpy") data.h = val;
+      else if (key === "entropy") data.s = val;
+      else if (key === "specificVolume") data.v = val;
+      else if (key === "quality") data.x = val;
+    }
+  }
+
+  return data;
+}
+
+function displayResults(state, fields) {
+  for (const key in fields) {
+    if (!fields[key]) continue;
+    fields[key].value = format(state[key]);
+  }
+}
+
+function format(value) {
+  if (value === undefined || value === null || !isFinite(value)) {
+    return "—";
+  }
+  return value.toFixed(5);
+}
