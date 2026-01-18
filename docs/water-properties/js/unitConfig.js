@@ -1,7 +1,10 @@
+// unitConfig.js
+// Display unit definitions (internal units remain fixed)
+
 export const unitSets = {
   SI: {
     temperature: "Temperature (K)",
-    pressure: "Pressure (Pa)",
+    pressure: "Pressure (MPa)",
     enthalpy: "Enthalpy (kJ/kg)",
     entropy: "Entropy (kJ/kg·K)",
     density: "Density (kg/m³)",
@@ -11,6 +14,7 @@ export const unitSets = {
     viscosity: "Viscosity (Pa·s)",
     conductivity: "Thermal Conductivity (W/m·K)"
   },
+
   Imperial: {
     temperature: "Temperature (°F)",
     pressure: "Pressure (psia)",
@@ -24,4 +28,3 @@ export const unitSets = {
     conductivity: "Thermal Conductivity (Btu/hr·ft·R)"
   }
 };
-
