@@ -1,105 +1,41 @@
-/**
- * main.js
- * UI wiring for Water & Steam Properties Calculator
- */
+let inputMode = "TP";
 
-import { solve } from "./solver.js";
-import { validateState } from "./validator.js";
-import { toSI, fromSI } from "./unitConverter.js";
+const tabHelpText = {
+  TP: "Enter Temperature and Pressure (most common case).",
+  Ph: "Enter Pressure and Enthalpy (energy balance).",
+  Ps: "Enter Pressure and Entropy (turbines, compressors).",
+  Tx: "Enter Temperature and Quality for saturated mixtures."
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-  const unitSystemSelect = document.getElementById("unitSystem");
-  const calculateBtn = document.getElementById("calculateBtn");
-
-  const inputs = {
-    temperature: document.getElementById("temperature"),
-    pressure: document.getElementById("pressure"),
-    enthalpy: document.getElementById("enthalpy"),
-    entropy: document.getElementById("entropy"),
-    specificVolume: document.getElementById("specificVolume"),
-    quality: document.getElementById("quality")
-  };
-
-  const outputs = {
-    density: document.getElementById("density"),
-    specificVolume: document.getElementById("specificVolume"),
-    enthalpy: document.getElementById("enthalpy"),
-    entropy: document.getElementById("entropy"),
-    cp: document.getElementById("cp"),
-    cv: document.getElementById("cv"),
-    viscosity: document.getElementById("viscosity"),
-    thermalConductivity: document.getElementById("thermalConductivity")
-  };
-
-  calculateBtn.addEventListener("click", () => {
-    const unitSystem = unitSystemSelect.value;
-
-    // --- Collect raw UI inputs ---
-    const rawInputs = readInputs(inputs);
-
-    // --- Convert to internal units ---
-    const siInputs = toSI(rawInputs, unitSystem);
-
-    // --- Validate ---
-    const validation = validateState(siInputs);
-    if (!validation.valid) {
-      alert(validation.errors.join("\n"));
-      return;
-    }
-
-    // --- Solve ---
-    let state;
-    try {
-      state = solve(siInputs);
-    } catch (err) {
-      alert(err.message);
-      return;
-    }
-
-    // --- Convert back to UI units ---
-    const uiState = fromSI(state, unitSystem);
-
-    // --- Display ---
-    displayResults(uiState, outputs);
+document.querySelectorAll(".input-tabs .tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    setInputMode(tab.dataset.mode);
   });
 });
 
-/* ============================================================
-   Helpers
-   ============================================================ */
+function setInputMode(mode) {
+  inputMode = mode;
+  document.getElementById("tabHelp").textContent = tabHelpText[mode];
 
-function readInputs(fields) {
-  const data = {};
+  const all = ["temperature","pressure","enthalpy","entropy","specificVolume","quality"];
+  const enabled = {
+    TP:["temperature","pressure"],
+    Ph:["pressure","enthalpy"],
+    Ps:["pressure","entropy"],
+    Tx:["temperature","quality"]
+  };
 
-  for (const key in fields) {
-    const el = fields[key];
-    if (!el) continue;
-
-    const val = parseFloat(el.value);
-    if (!isNaN(val)) {
-      // Map UI names to solver names
-      if (key === "temperature") data.T = val;
-      else if (key === "pressure") data.P = val;
-      else if (key === "enthalpy") data.h = val;
-      else if (key === "entropy") data.s = val;
-      else if (key === "specificVolume") data.v = val;
-      else if (key === "quality") data.x = val;
+  all.forEach(id => {
+    const el = document.getElementById(id);
+    if (!enabled[mode].includes(id)) {
+      el.value = "";
+      el.disabled = true;
+    } else {
+      el.disabled = false;
     }
-  }
-
-  return data;
+  });
 }
 
-function displayResults(state, fields) {
-  for (const key in fields) {
-    if (!fields[key]) continue;
-    fields[key].value = format(state[key]);
-  }
-}
-
-function format(value) {
-  if (value === undefined || value === null || !isFinite(value)) {
-    return "—";
-  }
-  return value.toFixed(5);
-}
+setInputMode("TP");
