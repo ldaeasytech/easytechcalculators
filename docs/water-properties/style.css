@@ -1,50 +1,20 @@
-/* =========================
-   Global Reset & Base
-   ========================= */
-
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: #f4f6f8;
-  color: #222;
-  line-height: 1.5;
+  font-family: system-ui, sans-serif;
+  background: #111;
+  color: #ddd;
 }
-
-/* =========================
-   Header / Footer
-   ========================= */
 
 .app-header {
   background: linear-gradient(135deg, #004e92, #000428);
+  padding: 1.5rem;
+  text-align: center;
   color: white;
-  padding: 1.5rem 1rem;
-  text-align: center;
 }
 
-.app-header h1 {
-  margin: 0;
-  font-size: 1.6rem;
-}
-
-.subtitle {
-  font-size: 0.9rem;
-  opacity: 0.9;
-}
-
-.app-footer {
-  text-align: center;
-  font-size: 0.75rem;
-  color: #555;
-  padding: 1rem;
-}
-
-/* =========================
-   Layout
-   ========================= */
+.subtitle { font-size: 0.85rem; opacity: 0.9; }
 
 .container {
   max-width: 1100px;
@@ -55,30 +25,43 @@ body {
 }
 
 @media (min-width: 900px) {
-  .container {
-    grid-template-columns: 1fr 1fr;
-  }
+  .container { grid-template-columns: 1fr 1fr; }
 }
-
-/* =========================
-   Cards
-   ========================= */
 
 .card {
-  background: white;
+  background: #1e1e1e;
   border-radius: 10px;
-  padding: 1.25rem;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  padding: 1.2rem;
 }
 
-.card h2 {
-  margin-top: 0;
-  font-size: 1.2rem;
+.input-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
-/* =========================
-   Form
-   ========================= */
+.tab {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  background: #333;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #004e92;
+  color: white;
+}
+
+.tab-help {
+  font-size: 0.8rem;
+  background: rgba(0,78,146,0.15);
+  padding: 0.6rem;
+  border-left: 4px solid #004e92;
+  margin-bottom: 1rem;
+}
 
 .grid-form {
   display: grid;
@@ -86,128 +69,62 @@ body {
 }
 
 @media (min-width: 600px) {
-  .grid-form {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .grid-form { grid-template-columns: repeat(2, 1fr); }
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
+.field label {
   font-size: 0.75rem;
-  margin-bottom: 0.25rem;
-  color: #555;
+  color: #aaa;
 }
 
-input,
-select {
+input, select {
   padding: 0.55rem;
-  font-size: 0.9rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #eee;
 }
 
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #004e92;
+input:disabled {
+  opacity: 0.4;
 }
 
 button.primary {
   grid-column: 1 / -1;
   padding: 0.7rem;
-  margin-top: 0.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
   background: #004e92;
   border: none;
   border-radius: 8px;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
 }
 
-button.primary:hover {
-  background: #003366;
-}
-
-/* =========================
-   Output
-   ========================= */
-
-.loading {
-  display: none;
+.results-table table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 0.85rem;
-  color: #666;
 }
 
-.output-box {
-  background: #111;
+.results-table th, .results-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #333;
+}
+
+.results-table td.value {
+  font-family: monospace;
   color: #0f0;
+}
+
+.loading { display: none; font-size: 0.85rem; }
+
+.errors { color: #ff5c5c; }
+.warnings { color: #ffb300; }
+.suggestions { color: #4fc3f7; }
+
+.app-footer {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #777;
   padding: 1rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  max-height: 350px;
-  overflow: auto;
-}
-
-/* =========================
-   Messages
-   ========================= */
-
-.messages {
-  margin-top: 0.75rem;
-  font-size: 0.8rem;
-}
-
-.errors {
-  color: #b00020;
-}
-
-.warnings {
-  color: #d17b00;
-}
-
-.suggestions {
-  color: #004e92;
-}
-
-.autofixes button {
-  margin-top: 0.4rem;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.75rem;
-  border-radius: 6px;
-  border: 1px solid #004e92;
-  background: white;
-  color: #004e92;
-  cursor: pointer;
-}
-
-/* =========================
-   Dark Mode Ready (Optional)
-   ========================= */
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #121212;
-    color: #ddd;
-  }
-
-  .card {
-    background: #1e1e1e;
-  }
-
-  .output-box {
-    background: #000;
-    color: #0f0;
-  }
-
-  input,
-  select {
-    background: #2a2a2a;
-    color: #eee;
-    border-color: #444;
-  }
 }
