@@ -1,19 +1,11 @@
 // app.js
-// AUTHORITATIVE solver input controller
+// AUTHORITATIVE solver input controller (FIXED)
 
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
 import { toSI, fromSI } from "./unitConverter.js";
 import { estimateConfidence } from "./confidence.js";
-
-/* ============================================================
-   Determine active input mode
-   ============================================================ */
-
-function getInputMode() {
-  const active = document.querySelector(".input-tabs .tab.active");
-  return active ? active.dataset.mode : "TP";
-}
+import { getInputMode } from "./main.js";
 
 /* ============================================================
    Form handler
@@ -28,26 +20,42 @@ document.getElementById("calcForm").addEventListener("submit", e => {
 
   try {
     const unitSystem = document.getElementById("unitSystem").value;
+
+    // ✅ SINGLE SOURCE OF TRUTH FOR MODE
     const mode = getInputMode();
 
-    // 🔒 AUTHORITATIVE INPUT SELECTION
+    // ✅ Read only inputs valid for the active mode
     const rawInputs = readInputsByMode(mode);
-    const siInputs = rawInputs; // TEMP: bypass unit conversion
 
+    // ✅ HARD VALIDATION: prevent NaN / zero / empty
+    for (const [k, v] of Object.entries(rawInputs)) {
+      if (!Number.isFinite(v)) {
+        throw new Error(`Invalid or missing input: ${k}`);
+      }
+    }
 
+    // ✅ Unit conversion (safe even if SI)
+    const siInputs = toSI(rawInputs, unitSystem);
+
+    // Validation layer
     const validation = validateState(siInputs);
     renderValidation(validation);
     if (!validation.valid) return;
 
+    // Solve thermodynamic state
     const stateSI = solve(siInputs);
+
+    // Convert back to UI units
     const stateUI = fromSI(stateSI, unitSystem);
 
+    // Confidence estimation
     const confidence = {};
     for (const k in stateUI) {
       confidence[k] = estimateConfidence(k, stateUI.phase);
     }
 
     renderResultsTable(stateUI, confidence);
+
   } catch (err) {
     document.getElementById("errors").textContent =
       "❌ " + err.message;
@@ -57,7 +65,7 @@ document.getElementById("calcForm").addEventListener("submit", e => {
 });
 
 /* ============================================================
-   INPUT MODE WHITELIST (CRITICAL FIX)
+   INPUT MODE WHITELIST (AUTHORITATIVE)
    ============================================================ */
 
 function readInputsByMode(mode) {
@@ -65,19 +73,31 @@ function readInputsByMode(mode) {
 
   switch (mode) {
     case "TP":
-      return { T: num("temperature"), P: num("pressure") };
+      return {
+        T: num("temperature"),
+        P: num("pressure")
+      };
 
     case "Ph":
-      return { P: num("pressure"), h: num("enthalpy") };
+      return {
+        P: num("pressure"),
+        h: num("enthalpy")
+      };
 
     case "Ps":
-      return { P: num("pressure"), s: num("entropy") };
+      return {
+        P: num("pressure"),
+        s: num("entropy")
+      };
 
     case "Tx":
-      return { T: num("temperature"), x: num("quality") };
+      return {
+        T: num("temperature"),
+        x: num("quality")
+      };
 
     default:
-      throw new Error("Unknown input mode.");
+      throw new Error(`Unsupported input mode: ${mode}`);
   }
 }
 
@@ -138,11 +158,13 @@ function renderValidation({ errors, warnings, suggestions }) {
 }
 
 function clearMessages() {
-  ["errors", "warnings", "suggestions"].forEach(id =>
-    document.getElementById(id).innerHTML = ""
-  );
+  ["errors", "warnings", "suggestions"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = "";
+  });
 }
 
 function clearResults() {
-  document.getElementById("resultsTable").innerHTML = "";
+  const el = document.getElementById("resultsTable");
+  if (el) el.innerHTML = "";
 }
