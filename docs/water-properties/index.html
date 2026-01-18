@@ -2,136 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Water & Steam Properties Calculator — IF97</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Water & Steam Properties Calculator (IF97)</title>
 
-  <!-- Correct relative path -->
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <header>
+  <header class="app-header">
     <h1>Water & Steam Properties Calculator</h1>
-    <p class="subtitle">IAPWS-IF97 • Engineering Handbook Accuracy</p>
+    <p class="subtitle">
+      IF97 + IAPWS Transport Properties · Engineering-grade accuracy
+    </p>
   </header>
 
   <main class="container">
-
-    <!-- Controls -->
-    <section class="controls">
-      <div class="control-row">
-        <label>
-          Unit System
-          <select id="unitSystem">
-            <option value="SI" selected>SI (kPa, °C, kJ/kg)</option>
-            <option value="Imperial">Imperial (psia, °F, Btu/lbm)</option>
-          </select>
-        </label>
-
-        <label>
-          Phase (optional)
-          <select id="phase">
-            <option value="">Auto-detect</option>
-            <option value="ice">Ice</option>
-            <option value="subcooled">Subcooled Liquid</option>
-            <option value="saturated">Saturated</option>
-            <option value="two-phase">Two-Phase Mixture</option>
-            <option value="superheated">Superheated Vapor</option>
-          </select>
-        </label>
-      </div>
-    </section>
-
-    <!-- Input Section -->
-    <section class="card input-card">
+    <!-- ================= INPUT PANEL ================= -->
+    <section class="card">
       <h2>Inputs</h2>
-      <p class="hint">Enter any <strong>two independent properties</strong>. Others will be computed automatically.</p>
 
-      <div class="input-grid">
-        <label>
-          Temperature
-          <input type="number" id="temperature" step="any" />
-          <span class="unit" id="temperatureUnit">°C</span>
-        </label>
+      <form id="calcForm" class="grid-form">
+        <div class="field">
+          <label id="temperatureLabel" for="temperature">Temperature (K)</label>
+          <input id="temperature" type="number" step="any" placeholder="e.g. 500" />
+        </div>
 
-        <label>
-          Pressure
-          <input type="number" id="pressure" step="any" />
-          <span class="unit" id="pressureUnit">kPa</span>
-        </label>
+        <div class="field">
+          <label id="pressureLabel" for="pressure">Pressure (MPa)</label>
+          <input id="pressure" type="number" step="any" placeholder="e.g. 10" />
+        </div>
 
-        <label>
-          Enthalpy
-          <input type="number" id="enthalpy" step="any" />
-          <span class="unit" id="enthalpyUnit">kJ/kg</span>
-        </label>
+        <div class="field">
+          <label id="enthalpyLabel" for="enthalpy">Enthalpy (kJ/kg)</label>
+          <input id="enthalpy" type="number" step="any" />
+        </div>
 
-        <label>
-          Entropy
-          <input type="number" id="entropy" step="any" />
-          <span class="unit" id="entropyUnit">kJ/kg·K</span>
-        </label>
+        <div class="field">
+          <label id="entropyLabel" for="entropy">Entropy (kJ/kg·K)</label>
+          <input id="entropy" type="number" step="any" />
+        </div>
 
-        <label>
-          Density
-          <input type="number" id="density" step="any" />
-          <span class="unit" id="densityUnit">kg/m³</span>
-        </label>
+        <div class="field">
+          <label id="specificVolumeLabel" for="specificVolume">Specific Volume (m³/kg)</label>
+          <input id="specificVolume" type="number" step="any" />
+        </div>
 
-        <label>
-          Specific Volume
-          <input type="number" id="specificVolume" step="any" />
-          <span class="unit" id="specificVolumeUnit">m³/kg</span>
-        </label>
+        <div class="field">
+          <label for="quality">Quality x (0–1)</label>
+          <input id="quality" type="number" step="any" />
+        </div>
 
-        <label>
-          Cp
-          <input type="number" id="cp" step="any" />
-          <span class="unit" id="cpUnit">kJ/kg·K</span>
-        </label>
+        <div class="field">
+          <label for="unitSystem">Unit System</label>
+          <select id="unitSystem">
+            <option value="SI">SI</option>
+            <option value="Imperial">Imperial</option>
+          </select>
+        </div>
 
-        <label>
-          Cv
-          <input type="number" id="cv" step="any" />
-          <span class="unit" id="cvUnit">kJ/kg·K</span>
-        </label>
-
-        <label>
-          Viscosity
-          <input type="number" id="viscosity" step="any" />
-          <span class="unit" id="viscosityUnit">Pa·s</span>
-        </label>
-
-        <label>
-          Thermal Conductivity
-          <input type="number" id="thermalConductivity" step="any" />
-          <span class="unit" id="thermalConductivityUnit">W/m·K</span>
-        </label>
-      </div>
-
-      <button id="calculateBtn" class="primary-btn">Calculate Properties</button>
-
-      <!-- Messages -->
-      <div id="errorBox" class="message error"></div>
-      <div id="warningBox" class="message warning"></div>
-      <div id="suggestionBox" class="message suggestion"></div>
-      <div id="autoFixBox" class="message autofix"></div>
+        <button id="calculateBtn" type="submit" class="primary">
+          Calculate
+        </button>
+      </form>
     </section>
 
-    <!-- Output Section -->
-    <section class="card output-card">
+    <!-- ================= OUTPUT PANEL ================= -->
+    <section class="card">
       <h2>Results</h2>
-      <div id="outputBox" class="output-grid">
-        <p class="placeholder">Computed properties will appear here.</p>
+
+      <div id="loading" class="loading">Calculating…</div>
+
+      <pre id="output" class="output-box">—</pre>
+
+      <div class="messages">
+        <div id="errors" class="errors"></div>
+        <div id="warnings" class="warnings"></div>
+        <div id="suggestions" class="suggestions"></div>
+        <div id="autoFixes" class="autofixes"></div>
       </div>
     </section>
-
   </main>
 
-  <footer>
-    <p>© 2026 EasyTechCalculators.com • Based on IAPWS-IF97 and IAPWS transport property correlations.</p>
+  <footer class="app-footer">
+    <p>
+      Based on IAPWS-IF97 and IAPWS transport formulations.<br />
+      Results provided for engineering use. Always verify critical designs.
+    </p>
   </footer>
 
-  <!-- Correct relative path -->
-  <script type="module" src="./js/main.js"></script>
+  <!-- App scripts -->
+  <script type="module" src="main.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
