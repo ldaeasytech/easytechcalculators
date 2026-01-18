@@ -95,7 +95,7 @@ export function region1(T, P) {
 
   // ✅ FIXED: NO extra π factor here
   // v = (R * T / P) * (∂γ/∂π)
-  const specificVolume = (R * T / P) * g_pi;
+  const specificVolume = (R * T / P) * (-g_pi);
   const density = 1 / specificVolume;
 
   const enthalpy = R * T * tau * g_tau;
