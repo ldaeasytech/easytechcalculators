@@ -1,107 +1,123 @@
-import { Tsat } from "./regions/saturation.js";
-import * as liquid from "./regions/liquid.js";
-import * as vapor from "./regions/vapor.js";
+// validator.js
+// Input validation and state consistency checks
+// INTERNAL UNITS:
+//   T  → K
+//   P  → MPa
+//   h  → kJ/kg
+//   s  → kJ/(kg·K)
+//   v  → m3/kg
+//   x  → quality [0–1]
 
-export function validateState(T, P, props = {}, phase = null, quality = null) {
+import { Tc, Pc, Tt } from "./if97/constants.js";
+import { Psat } from "./if97/region4.js";
+
+export function validateState(inputs) {
   const errors = [];
   const warnings = [];
   const suggestions = [];
   const fixes = [];
 
-  const Ts = !isNaN(P) ? Tsat(P) : null;
+  const { T, P, h, s, v, x } = inputs;
 
-  if (!isNaN(T) && (T < 173.15 || T > 1500)) {
-    errors.push("Temperature is outside the valid range for water (173 K – 1500 K).");
-    suggestions.push("Enter a temperature within 173 K to 1500 K.");
+  /* ============================================================
+     Basic range checks
+     ============================================================ */
+
+  if (T !== undefined) {
+    if (T < Tt || T > 2273.15) {
+      errors.push("Temperature is outside the valid IF97 range.");
+      suggestions.push("Use 273.16 K ≤ T ≤ 2273.15 K.");
+    }
   }
 
-  if (!isNaN(P) && (P < 611 || P > 1e9)) {
-    errors.push("Pressure is outside the valid range for water (611 Pa – 1000 MPa).");
-    suggestions.push("Enter a pressure between 611 Pa and 1000 MPa.");
+  if (P !== undefined) {
+    if (P <= 0 || P > 100) {
+      errors.push("Pressure is outside the valid IF97 range.");
+      suggestions.push("Use 0 < P ≤ 100 MPa.");
+    }
   }
 
-  if (!isNaN(quality) && (quality < 0 || quality > 1)) {
-    errors.push("Quality must be between 0 and 1.");
-    suggestions.push("Enter a quality between 0 and 1.");
+  if (x !== undefined) {
+    if (x < 0 || x > 1) {
+      errors.push("Quality must be between 0 and 1.");
+      suggestions.push("Use 0 ≤ x ≤ 1.");
+    }
   }
 
-  if (!isNaN(props.density) && props.density <= 0) {
-    errors.push("Density must be positive.");
-    suggestions.push("Check density input — must be > 0.");
-  }
-
-  if (!isNaN(props.specificVolume) && props.specificVolume <= 0) {
+  if (v !== undefined && v <= 0) {
     errors.push("Specific volume must be positive.");
-    suggestions.push("Check specific volume input — must be > 0.");
   }
 
-  if (Ts !== null && !isNaN(T)) {
-    if (T < Ts && phase === "vapor") {
-      errors.push("Temperature is below saturation — vapor state is impossible.");
-      suggestions.push("Try setting phase to liquid or saturated.");
-      fixes.push({ label: "Set phase = saturated", action: { phase: "saturated" } });
-    }
+  /* ============================================================
+     Two-phase logic (NO property computation)
+     ============================================================ */
 
-    if (T > Ts && phase === "liquid") {
-      errors.push("Temperature is above saturation — liquid state is impossible.");
-      suggestions.push("Try setting phase to vapor or saturated.");
-      fixes.push({ label: "Set phase = vapor", action: { phase: "vapor" } });
-    }
-
-    if (Math.abs(T - Ts) < 0.1 && phase && phase !== "saturated") {
-      warnings.push("Temperature is near saturation, but phase is not set to saturated.");
-      suggestions.push("Try setting phase to saturated.");
-      fixes.push({ label: "Set phase = saturated", action: { phase: "saturated" } });
+  if (x !== undefined) {
+    if (T === undefined && P === undefined) {
+      errors.push("Quality requires either temperature or pressure.");
+      suggestions.push("Provide T or P together with quality.");
     }
   }
 
-  if (quality !== null && phase !== "saturated") {
-    warnings.push("Quality is only meaningful for saturated two-phase states.");
-    suggestions.push("Try setting phase to saturated.");
-    fixes.push({ label: "Set phase = saturated", action: { phase: "saturated" } });
-  }
+  if (T !== undefined && P !== undefined) {
+    const Ps = Psat(T);
 
-  if (!isNaN(props.enthalpy) && (props.enthalpy < -500 || props.enthalpy > 5000)) {
-    warnings.push("Enthalpy is outside typical physical limits for water.");
-    suggestions.push("Verify enthalpy or adjust temperature/pressure.");
-  }
-
-  if (!isNaN(props.entropy) && (props.entropy < 0 || props.entropy > 15)) {
-    warnings.push("Entropy is outside typical physical limits for water.");
-    suggestions.push("Verify entropy or adjust temperature/pressure.");
-  }
-
-  if (Ts !== null && !isNaN(P)) {
-    const rhoL = liquid.densityLiquid(Ts);
-    const rhoV = vapor.densityVapor(Ts, P);
-    const vL = 1 / rhoL;
-    const vV = 1 / rhoV;
-
-    const hL = liquid.enthalpyLiquid(Ts);
-    const hV = vapor.enthalpyVapor(Ts);
-
-    const sL = liquid.entropyLiquid(Ts);
-    const sV = vapor.entropyVapor(Ts, P);
-
-    if (!isNaN(props.enthalpy) && props.enthalpy > hL && props.enthalpy < hV && phase !== "saturated") {
-      warnings.push("Enthalpy lies in the two-phase region.");
-      suggestions.push("Try setting phase to saturated or provide quality.");
-      fixes.push({ label: "Set phase = saturated", action: { phase: "saturated" } });
-    }
-
-    if (!isNaN(props.entropy) && props.entropy > sL && props.entropy < sV && phase !== "saturated") {
-      warnings.push("Entropy lies in the two-phase region.");
-      suggestions.push("Try setting phase to saturated or provide quality.");
-      fixes.push({ label: "Set phase = saturated", action: { phase: "saturated" } });
-    }
-
-    if (!isNaN(props.specificVolume) && props.specificVolume > vL && props.specificVolume < vV && phase !== "saturated") {
-      warnings.push("Specific volume lies in the two-phase region.");
-      suggestions.push("Try setting phase to saturated or provide quality.");
-      fixes.push({ label: "Set phase = saturated", action: { phase: "saturated" } });
+    if (Math.abs(P - Ps) / Ps < 1e-4) {
+      warnings.push(
+        "State lies on the saturation line. Two-phase behavior possible."
+      );
+      suggestions.push("Provide quality x to fully define the state.");
     }
   }
 
-  return { errors, warnings, suggestions, fixes };
+  /* ============================================================
+     Property sanity checks (order-of-magnitude only)
+     ============================================================ */
+
+  if (h !== undefined) {
+    if (h < -1000 || h > 6000) {
+      warnings.push("Enthalpy is outside typical physical bounds.");
+      suggestions.push("Verify enthalpy value and units (kJ/kg).");
+    }
+  }
+
+  if (s !== undefined) {
+    if (s < 0 || s > 15) {
+      warnings.push("Entropy is outside typical physical bounds.");
+      suggestions.push("Verify entropy value and units (kJ/kg·K).");
+    }
+  }
+
+  /* ============================================================
+     Over-specified / ambiguous input detection
+     ============================================================ */
+
+  const defined = Object.entries({ T, P, h, s, v, x })
+    .filter(([, val]) => val !== undefined)
+    .map(([key]) => key);
+
+  if (defined.length < 2) {
+    errors.push("At least two independent properties are required.");
+  }
+
+  if (defined.length > 2 && x === undefined) {
+    warnings.push(
+      "More than two properties specified. System may be over-specified."
+    );
+    suggestions.push("Remove redundant inputs.");
+  }
+
+  if (defined.includes("x") && defined.length > 2) {
+    warnings.push(
+      "Quality already defines the two-phase state. Extra properties may conflict."
+    );
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+    warnings,
+    suggestions,
+    fixes
+  };
 }
-
