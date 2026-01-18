@@ -120,7 +120,7 @@ function renderResultsTable(state, confidence) {
   };
 
   const rows = Object.keys(labels)
-    .filter(k => Number.isFinite(state[k]))
+    .filter(k => state[k] !== undefined && !Number.isNaN(state[k]))
     .map(k => `
       <tr>
         <td>${labels[k]}</td>
