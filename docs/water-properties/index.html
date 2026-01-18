@@ -2,138 +2,136 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Water Properties Calculator — IF97 Engineering Grade</title>
+  <title>Water & Steam Properties Calculator — IF97</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Professional thermodynamic property calculator for water and steam using IAPWS-IF97. Supports any two inputs, two-phase mixtures, and transport properties." />
 
-  <link rel="stylesheet" href="styles.css" />
+  <!-- Correct relative path -->
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <header>
     <h1>Water & Steam Properties Calculator</h1>
-    <div class="subtitle">IAPWS-IF97 • Engineering Handbook Accuracy</div>
+    <p class="subtitle">IAPWS-IF97 • Engineering Handbook Accuracy</p>
   </header>
 
-  <main>
-    <form id="calculatorForm" class="calculator-form">
+  <main class="container">
 
-      <!-- Unit System -->
-      <section class="form-section">
-        <label for="unitSystem">Unit System:</label>
-        <select id="unitSystem">
-          <option value="SI" selected>SI (kPa, °C, kJ/kg)</option>
-          <option value="Imperial">Imperial (psia, °F, Btu/lbm)</option>
-        </select>
-      </section>
+    <!-- Controls -->
+    <section class="controls">
+      <div class="control-row">
+        <label>
+          Unit System
+          <select id="unitSystem">
+            <option value="SI" selected>SI (kPa, °C, kJ/kg)</option>
+            <option value="Imperial">Imperial (psia, °F, Btu/lbm)</option>
+          </select>
+        </label>
 
-      <!-- Phase Selection -->
-      <section class="form-section">
-        <label for="phase">Phase (optional):</label>
-        <select id="phase">
-          <option value="">Auto-detect</option>
-          <option value="ice">Ice</option>
-          <option value="subcooled">Subcooled Liquid</option>
-          <option value="saturated">Saturated (Liquid/Vapor)</option>
-          <option value="two-phase">Two-Phase Mixture</option>
-          <option value="superheated">Superheated Vapor</option>
-        </select>
-      </section>
+        <label>
+          Phase (optional)
+          <select id="phase">
+            <option value="">Auto-detect</option>
+            <option value="ice">Ice</option>
+            <option value="subcooled">Subcooled Liquid</option>
+            <option value="saturated">Saturated</option>
+            <option value="two-phase">Two-Phase Mixture</option>
+            <option value="superheated">Superheated Vapor</option>
+          </select>
+        </label>
+      </div>
+    </section>
 
-      <!-- Input Grid -->
-      <section class="form-section grid">
+    <!-- Input Section -->
+    <section class="card input-card">
+      <h2>Inputs</h2>
+      <p class="hint">Enter any <strong>two independent properties</strong>. Others will be computed automatically.</p>
 
+      <div class="input-grid">
         <label>
           Temperature
           <input type="number" id="temperature" step="any" />
-          <span class="unit-label" id="temperatureUnit">K</span>
+          <span class="unit" id="temperatureUnit">°C</span>
         </label>
 
         <label>
           Pressure
           <input type="number" id="pressure" step="any" />
-          <span class="unit-label" id="pressureUnit">kPa</span>
-        </label>
-
-        <label>
-          Density
-          <input type="number" id="density" step="any" />
-          <span class="unit-label" id="densityUnit">kg/m³</span>
-        </label>
-
-        <label>
-          Specific Volume
-          <input type="number" id="specificVolume" step="any" />
-          <span class="unit-label" id="specificVolumeUnit">m³/kg</span>
+          <span class="unit" id="pressureUnit">kPa</span>
         </label>
 
         <label>
           Enthalpy
           <input type="number" id="enthalpy" step="any" />
-          <span class="unit-label" id="enthalpyUnit">kJ/kg</span>
+          <span class="unit" id="enthalpyUnit">kJ/kg</span>
         </label>
 
         <label>
           Entropy
           <input type="number" id="entropy" step="any" />
-          <span class="unit-label" id="entropyUnit">kJ/kg·K</span>
+          <span class="unit" id="entropyUnit">kJ/kg·K</span>
+        </label>
+
+        <label>
+          Density
+          <input type="number" id="density" step="any" />
+          <span class="unit" id="densityUnit">kg/m³</span>
+        </label>
+
+        <label>
+          Specific Volume
+          <input type="number" id="specificVolume" step="any" />
+          <span class="unit" id="specificVolumeUnit">m³/kg</span>
         </label>
 
         <label>
           Cp
           <input type="number" id="cp" step="any" />
-          <span class="unit-label" id="cpUnit">kJ/kg·K</span>
+          <span class="unit" id="cpUnit">kJ/kg·K</span>
         </label>
 
         <label>
           Cv
           <input type="number" id="cv" step="any" />
-          <span class="unit-label" id="cvUnit">kJ/kg·K</span>
+          <span class="unit" id="cvUnit">kJ/kg·K</span>
         </label>
 
         <label>
           Viscosity
           <input type="number" id="viscosity" step="any" />
-          <span class="unit-label" id="viscosityUnit">Pa·s</span>
+          <span class="unit" id="viscosityUnit">Pa·s</span>
         </label>
 
         <label>
           Thermal Conductivity
           <input type="number" id="thermalConductivity" step="any" />
-          <span class="unit-label" id="thermalConductivityUnit">W/m·K</span>
+          <span class="unit" id="thermalConductivityUnit">W/m·K</span>
         </label>
+      </div>
 
-      </section>
+      <button id="calculateBtn" class="primary-btn">Calculate Properties</button>
 
-      <!-- Submit -->
-      <section class="form-section">
-        <button type="submit" class="calculate-btn">Calculate Properties</button>
-      </section>
+      <!-- Messages -->
+      <div id="errorBox" class="message error"></div>
+      <div id="warningBox" class="message warning"></div>
+      <div id="suggestionBox" class="message suggestion"></div>
+      <div id="autoFixBox" class="message autofix"></div>
+    </section>
 
-      <!-- Status / Messages -->
-      <section class="status-section">
-        <div id="errorBox" class="errors"></div>
-        <div id="warningBox" class="warnings"></div>
-        <div id="suggestionBox" class="suggestions"></div>
-        <div id="autoFixBox" class="auto-fixes"></div>
-      </section>
-
-    </form>
-
-    <!-- Output -->
-    <section class="output-section">
+    <!-- Output Section -->
+    <section class="card output-card">
       <h2>Results</h2>
-      <div class="output-box" id="outputBox"></div>
+      <div id="outputBox" class="output-grid">
+        <p class="placeholder">Computed properties will appear here.</p>
+      </div>
     </section>
 
   </main>
 
   <footer>
-    <p>
-      © 2026 EasyTechCalculators.com • Based on IAPWS-IF97 and IAPWS transport property correlations.
-    </p>
+    <p>© 2026 EasyTechCalculators.com • Based on IAPWS-IF97 and IAPWS transport property correlations.</p>
   </footer>
 
-  <!-- Main Script -->
-  <script type="module" src="js/app.js"></script>
+  <!-- Correct relative path -->
+  <script type="module" src="./js/main.js"></script>
 </body>
 </html>
