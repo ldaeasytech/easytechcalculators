@@ -1,158 +1,90 @@
-// app.js
-// Application-level UI orchestration (NO PHYSICS)
-
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
 import { toSI, fromSI } from "./unitConverter.js";
-import { unitSets } from "./unitConfig.js";
 import { estimateConfidence } from "./confidence.js";
-import { compareToIF97 } from "./compare.js";
 
-/* ============================================================
-   DOM elements
-   ============================================================ */
-
-const form = document.getElementById("calcForm");
-const output = document.getElementById("output");
-const loading = document.getElementById("loading");
-
-const errorsEl = document.getElementById("errors");
-const warningsEl = document.getElementById("warnings");
-const suggestionsEl = document.getElementById("suggestions");
-const autoFixesEl = document.getElementById("autoFixes");
-
-const unitSelect = document.getElementById("unitSystem");
-
-/* ============================================================
-   Unit labels
-   ============================================================ */
-
-function updateLabels(system) {
-  const labels = unitSets[system];
-  for (const key in labels) {
-    const el = document.getElementById(`${key}Label`);
-    if (el) el.textContent = labels[key];
-  }
-}
-
-unitSelect.addEventListener("change", () =>
-  updateLabels(unitSelect.value)
-);
-updateLabels(unitSelect.value);
-
-/* ============================================================
-   Form submission
-   ============================================================ */
-
-form.addEventListener("submit", async e => {
+document.getElementById("calcForm").addEventListener("submit", e => {
   e.preventDefault();
 
-  clearUI();
-  loading.style.display = "block";
-
-  await new Promise(r => setTimeout(r, 10)); // allow spinner paint
+  clearMessages();
+  document.getElementById("loading").style.display = "block";
 
   try {
-    /* --- Read UI inputs --- */
-    const rawInputs = readInputs();
+    const inputs = readInputs();
+    const unitSystem = document.getElementById("unitSystem").value;
 
-    /* --- Convert to internal units --- */
-    const siInputs = toSI(rawInputs, unitSelect.value);
+    const si = toSI(inputs, unitSystem);
+    const validation = validateState(si);
 
-    /* --- Validate --- */
-    const validation = validateState(siInputs);
-    renderValidation(validation);
-    if (!validation.valid) return;
-
-    /* --- Solve --- */
-    const stateSI = solve(siInputs);
-
-    /* --- Convert back to UI units --- */
-    const stateUI = fromSI(stateSI, unitSelect.value);
-
-    /* --- Confidence estimation --- */
-    const confidence = {};
-    for (const key in stateUI) {
-      confidence[key] = estimateConfidence(key, stateUI.phase);
+    if (!validation.valid) {
+      show(validation);
+      return;
     }
 
-    /* --- IF97 reference comparison --- */
-    const reference = compareToIF97(
-      stateSI.T,
-      stateSI.P,
-      stateSI
-    );
+    const stateSI = solve(si);
+    const stateUI = fromSI(stateSI, unitSystem);
 
-    /* --- Display result --- */
-    output.textContent = JSON.stringify(
-      { ...stateUI, confidence, IF97_reference: reference },
-      null,
-      2
-    );
+    const confidence = {};
+    for (const k in stateUI) {
+      confidence[k] = estimateConfidence(k, stateUI.phase);
+    }
+
+    renderResults(stateUI, confidence);
   } catch (err) {
-    errorsEl.textContent = "❌ " + err.message;
+    document.getElementById("errors").textContent = err.message;
   } finally {
-    loading.style.display = "none";
+    document.getElementById("loading").style.display = "none";
   }
 });
 
-/* ============================================================
-   Helpers
-   ============================================================ */
-
 function readInputs() {
-  const fields = [
-    "temperature",
-    "pressure",
-    "enthalpy",
-    "entropy",
-    "specificVolume",
-    "quality"
-  ];
-
-  const inputs = {};
-
-  for (const id of fields) {
+  const map = {
+    temperature:"T", pressure:"P", enthalpy:"h",
+    entropy:"s", specificVolume:"v", quality:"x"
+  };
+  const data = {};
+  for (const id in map) {
     const el = document.getElementById(id);
-    if (!el) continue;
-
-    const val = parseFloat(el.value);
-    if (!isNaN(val)) {
-      if (id === "temperature") inputs.T = val;
-      else if (id === "pressure") inputs.P = val;
-      else if (id === "enthalpy") inputs.h = val;
-      else if (id === "entropy") inputs.s = val;
-      else if (id === "specificVolume") inputs.v = val;
-      else if (id === "quality") inputs.x = val;
+    if (!el.disabled && el.value !== "") {
+      data[map[id]] = parseFloat(el.value);
     }
   }
-
-  return inputs;
+  return data;
 }
 
-function renderValidation({ errors, warnings, suggestions, fixes }) {
-  errorsEl.innerHTML = errors.map(e => "❌ " + e).join("<br>");
-  warningsEl.innerHTML = warnings.map(w => "⚠️ " + w).join("<br>");
-  suggestionsEl.innerHTML = suggestions.map(s => "💡 " + s).join("<br>");
+function renderResults(state, confidence) {
+  const labels = {
+    density:"Density", specificVolume:"Specific Volume",
+    enthalpy:"Enthalpy", entropy:"Entropy",
+    cp:"Cp", cv:"Cv",
+    viscosity:"Viscosity",
+    thermalConductivity:"Thermal Conductivity"
+  };
 
-  autoFixesEl.innerHTML = "";
-  fixes.forEach(fix => {
-    const btn = document.createElement("button");
-    btn.textContent = fix.label;
-    btn.onclick = () => {
-      for (const key in fix.action) {
-        const el = document.getElementById(key);
-        if (el) el.value = fix.action[key];
-      }
-    };
-    autoFixesEl.appendChild(btn);
-  });
+  const rows = Object.keys(labels)
+    .filter(k => state[k] !== undefined)
+    .map(k => `
+      <tr>
+        <td>${labels[k]}</td>
+        <td class="value">${state[k].toFixed(6)}</td>
+        <td>${confidence[k]?.confidence_band ?? "—"}</td>
+      </tr>`).join("");
+
+  document.getElementById("resultsTable").innerHTML = `
+    <table>
+      <tr><th>Property</th><th>Value</th><th>Confidence</th></tr>
+      ${rows}
+    </table>`;
 }
 
-function clearUI() {
-  output.textContent = "";
-  errorsEl.textContent = "";
-  warningsEl.textContent = "";
-  suggestionsEl.textContent = "";
-  autoFixesEl.innerHTML = "";
+function show(v) {
+  document.getElementById("errors").innerHTML = v.errors.join("<br>");
+  document.getElementById("warnings").innerHTML = v.warnings.join("<br>");
+  document.getElementById("suggestions").innerHTML = v.suggestions.join("<br>");
+}
+
+function clearMessages() {
+  ["errors","warnings","suggestions"].forEach(id =>
+    document.getElementById(id).innerHTML = ""
+  );
 }
