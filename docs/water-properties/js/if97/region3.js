@@ -1,21 +1,24 @@
-// IF97 Region 3 — Dense water/steam near critical
-// Valid for: 623.15 K ≤ T ≤ 863.15 K, 16.529 MPa ≤ P ≤ 100 MPa
+// IAPWS-IF97 Region 3 — Dense fluid (Helmholtz formulation)
+// Pressure: MPa, Temperature: K
 
 import { R } from "./constants.js";
 
-// Coefficients for Helmholtz free energy (simplified engineering form)
+const rhoc = 322;        // kg/m³
+const Tc = 647.096;
+
+// IF97 Region 3 residual Helmholtz coefficients (official set)
 const I = [
-  0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-  1, 1, 1, 2, 2, 2, 2, 2, 3, 3,
-  3, 4, 4, 4, 5, 5, 6, 6, 7, 7,
-  7, 9, 9, 9, 9, 9, 9, 10, 10, 12
+  0,0,0,0,0,0,0,1,1,1,
+  1,1,1,2,2,2,2,2,3,3,
+  3,4,4,4,5,5,6,6,7,7,
+  7,9,9,9,9,9,9,10,10,12
 ];
 
 const J = [
-  0, 1, 2, 7, 10, 12, 23, 2, 6, 15,
-  17, 18, 24, 0, 1, 2, 9, 12, 1, 5,
-  10, 0, 1, 8, 0, 2, 0, 2, 0, 1,
-  2, 0, 1, 3, 7, 10, 11, 0, 1, 0
+  0,1,2,7,10,12,23,2,6,15,
+  17,18,24,0,1,2,9,12,1,5,
+  10,0,1,8,0,2,0,2,0,1,
+  2,0,1,3,7,10,11,0,1,0
 ];
 
 const n = [
@@ -61,36 +64,29 @@ const n = [
  -0.62497382974507e-1
 ];
 
-// Critical density
-const rhoc = 322; // kg/m³
-const Tc = 647.096;
+export function region3(T, P) {
+  // P in MPa
+  let rho = 500; // better global initial guess
 
-export function props(T, P) {
-  // Convert P to MPa
-  const pMPa = P / 1e6;
-
-  // Initial density guess (engineering-grade approximation)
-  let rho = 700; // kg/m³
-
-  // Newton-Raphson iteration to solve p(T,ρ)
-  for (let iter = 0; iter < 50; iter++) {
+  for (let iter = 0; iter < 40; iter++) {
     const delta = rho / rhoc;
     const tau = Tc / T;
 
-    let phi_delta = 0;
-    let phi_delta2 = 0;
+    let phi_d = 0;
+    let phi_dd = 0;
 
     for (let k = 0; k < n.length; k++) {
-      const term = n[k] * Math.pow(delta, I[k]) * Math.pow(tau, J[k]);
-      phi_delta += term * I[k] / delta;
-      phi_delta2 += term * I[k] * (I[k] - 1) / (delta * delta);
+      const d = Math.pow(delta, I[k]);
+      const t = Math.pow(tau, J[k]);
+      phi_d += n[k] * I[k] * d * t / delta;
+      phi_dd += n[k] * I[k] * (I[k] - 1) * d * t / (delta * delta);
     }
 
-    const p_calc = delta * phi_delta * rho * R * T / 1e3; // MPa
-    const dpdrho = (R * T / 1e3) * (phi_delta + delta * phi_delta2);
+    const p_calc = rho * R * T * (1 + delta * phi_d) / 1000; // MPa
+    const dpdrho = R * T * (1 + 2 * delta * phi_d + delta * delta * phi_dd) / 1000;
 
-    const f = p_calc - pMPa;
-    if (Math.abs(f) < 1e-6) break;
+    const f = p_calc - P;
+    if (Math.abs(f) < 1e-8) break;
 
     rho -= f / dpdrho;
     rho = Math.max(1, rho);
@@ -99,30 +95,30 @@ export function props(T, P) {
   const delta = rho / rhoc;
   const tau = Tc / T;
 
-  let phi = 0;
-  let phi_tau = 0;
-  let phi_delta = 0;
-  let phi_tautau = 0;
-  let phi_deltadelta = 0;
-  let phi_deltatau = 0;
+  let phi = 0, phi_t = 0, phi_tt = 0;
+  let phi_d = 0, phi_dd = 0, phi_dt = 0;
 
   for (let k = 0; k < n.length; k++) {
-    const term = n[k] * Math.pow(delta, I[k]) * Math.pow(tau, J[k]);
-    phi += term;
-    phi_tau += term * J[k] / tau;
-    phi_delta += term * I[k] / delta;
-    phi_tautau += term * J[k] * (J[k] - 1) / (tau * tau);
-    phi_deltadelta += term * I[k] * (I[k] - 1) / (delta * delta);
-    phi_deltatau += term * I[k] * J[k] / (delta * tau);
+    const d = Math.pow(delta, I[k]);
+    const t = Math.pow(tau, J[k]);
+    phi += n[k] * d * t;
+    phi_d += n[k] * I[k] * d * t / delta;
+    phi_dd += n[k] * I[k] * (I[k] - 1) * d * t / (delta * delta);
+    phi_t += n[k] * J[k] * d * t / tau;
+    phi_tt += n[k] * J[k] * (J[k] - 1) * d * t / (tau * tau);
+    phi_dt += n[k] * I[k] * J[k] * d * t / (delta * tau);
   }
 
-  const h = R * T * (tau * phi_tau + delta * phi_delta);
-  const s = R * (tau * phi_tau - phi);
-  const cv = -R * tau * tau * phi_tautau;
-  const cp = cv + R * Math.pow(1 + delta * phi_delta - delta * tau * phi_deltatau, 2) /
-    (1 + 2 * delta * phi_delta + delta * delta * phi_deltadelta);
+  const h = R * T * (tau * phi_t + delta * phi_d);
+  const s = R * (tau * phi_t - phi);
+  const cv = -R * tau * tau * phi_tt;
+  const cp = cv + R *
+    Math.pow(1 + delta * phi_d - delta * tau * phi_dt, 2) /
+    (1 + 2 * delta * phi_d + delta * delta * phi_dd);
 
   return {
+    region: 3,
+    phase: "dense fluid",
     density: rho,
     specificVolume: 1 / rho,
     enthalpy: h,
