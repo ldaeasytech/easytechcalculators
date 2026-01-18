@@ -32,7 +32,8 @@ document.getElementById("calcForm").addEventListener("submit", e => {
 
     // 🔒 AUTHORITATIVE INPUT SELECTION
     const rawInputs = readInputsByMode(mode);
-    const siInputs = toSI(rawInputs, unitSystem);
+    const siInputs = rawInputs; // TEMP: bypass unit conversion
+
 
     const validation = validateState(siInputs);
     renderValidation(validation);
