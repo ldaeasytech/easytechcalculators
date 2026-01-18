@@ -1,10 +1,19 @@
 // app.js
-// UI orchestration only — NO PHYSICS
+// AUTHORITATIVE solver input controller
 
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
 import { toSI, fromSI } from "./unitConverter.js";
 import { estimateConfidence } from "./confidence.js";
+
+/* ============================================================
+   Determine active input mode
+   ============================================================ */
+
+function getInputMode() {
+  const active = document.querySelector(".input-tabs .tab.active");
+  return active ? active.dataset.mode : "TP";
+}
 
 /* ============================================================
    Form handler
@@ -15,80 +24,64 @@ document.getElementById("calcForm").addEventListener("submit", e => {
 
   clearMessages();
   clearResults();
-
-  const loading = document.getElementById("loading");
-  loading.style.display = "block";
+  document.getElementById("loading").style.display = "block";
 
   try {
-    // 1️⃣ Read fresh inputs (HARD RESET)
-    const rawInputs = readInputs();
-
-    // 2️⃣ Unit conversion
     const unitSystem = document.getElementById("unitSystem").value;
+    const mode = getInputMode();
+
+    // 🔒 AUTHORITATIVE INPUT SELECTION
+    const rawInputs = readInputsByMode(mode);
     const siInputs = toSI(rawInputs, unitSystem);
 
-    // 3️⃣ Validation
     const validation = validateState(siInputs);
     renderValidation(validation);
     if (!validation.valid) return;
 
-    // 4️⃣ Solve
     const stateSI = solve(siInputs);
-
-    // 5️⃣ Convert back to UI units
     const stateUI = fromSI(stateSI, unitSystem);
 
-    // 6️⃣ Confidence estimation
     const confidence = {};
-    for (const key in stateUI) {
-      confidence[key] = estimateConfidence(key, stateUI.phase);
+    for (const k in stateUI) {
+      confidence[k] = estimateConfidence(k, stateUI.phase);
     }
 
-    // 7️⃣ Render results table
     renderResultsTable(stateUI, confidence);
   } catch (err) {
     document.getElementById("errors").textContent =
       "❌ " + err.message;
   } finally {
-    loading.style.display = "none";
+    document.getElementById("loading").style.display = "none";
   }
 });
 
 /* ============================================================
-   Input handling (CRITICAL FIX)
+   INPUT MODE WHITELIST (CRITICAL FIX)
    ============================================================ */
 
-function readInputs() {
-  // HARD RESET — prevents stale values from previous runs
-  const data = {};
+function readInputsByMode(mode) {
+  const num = id => parseFloat(document.getElementById(id).value);
 
-  const map = {
-    temperature: "T",
-    pressure: "P",
-    enthalpy: "h",
-    entropy: "s",
-    specificVolume: "v",
-    quality: "x"
-  };
+  switch (mode) {
+    case "TP":
+      return { T: num("temperature"), P: num("pressure") };
 
-  for (const id in map) {
-    const el = document.getElementById(id);
-    if (!el) continue;
+    case "Ph":
+      return { P: num("pressure"), h: num("enthalpy") };
 
-    // Only read ENABLED fields
-    if (el.disabled) continue;
+    case "Ps":
+      return { P: num("pressure"), s: num("entropy") };
 
-    const value = parseFloat(el.value);
-    if (!isNaN(value)) {
-      data[map[id]] = value;
-    }
+    case "Tx":
+      return { T: num("temperature"), x: num("quality") };
+
+    default:
+      throw new Error("Unknown input mode.");
   }
-
-  return data;
 }
 
 /* ============================================================
-   Results rendering
+   Results table
    ============================================================ */
 
 function renderResultsTable(state, confidence) {
@@ -106,12 +99,12 @@ function renderResultsTable(state, confidence) {
   };
 
   const rows = Object.keys(labels)
-    .filter(key => state[key] !== undefined && isFinite(state[key]))
-    .map(key => `
+    .filter(k => Number.isFinite(state[k]))
+    .map(k => `
       <tr>
-        <td>${labels[key]}</td>
-        <td class="value">${format(state[key])}</td>
-        <td>${confidence[key]?.confidence_band ?? "—"}</td>
+        <td>${labels[k]}</td>
+        <td class="value">${state[k].toFixed(6)}</td>
+        <td>${confidence[k]?.confidence_band ?? "—"}</td>
       </tr>
     `)
     .join("");
@@ -125,40 +118,30 @@ function renderResultsTable(state, confidence) {
           <th>Confidence</th>
         </tr>
       </thead>
-      <tbody>
-        ${rows}
-      </tbody>
+      <tbody>${rows}</tbody>
     </table>
   `;
 }
 
 /* ============================================================
-   Validation & UI helpers
+   UI helpers
    ============================================================ */
 
 function renderValidation({ errors, warnings, suggestions }) {
   document.getElementById("errors").innerHTML =
     errors.map(e => "❌ " + e).join("<br>");
-
   document.getElementById("warnings").innerHTML =
     warnings.map(w => "⚠️ " + w).join("<br>");
-
   document.getElementById("suggestions").innerHTML =
     suggestions.map(s => "💡 " + s).join("<br>");
 }
 
 function clearMessages() {
-  ["errors", "warnings", "suggestions"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = "";
-  });
+  ["errors", "warnings", "suggestions"].forEach(id =>
+    document.getElementById(id).innerHTML = ""
+  );
 }
 
 function clearResults() {
-  const table = document.getElementById("resultsTable");
-  if (table) table.innerHTML = "";
-}
-
-function format(value) {
-  return Number(value).toFixed(6);
+  document.getElementById("resultsTable").innerHTML = "";
 }
