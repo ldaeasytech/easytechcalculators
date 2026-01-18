@@ -1,5 +1,6 @@
 // main.js
 // UI-only: input mode selection & field enable/disable
+// Ensures solver always receives valid, intentional inputs
 
 const tabHelpText = {
   TP: "Enter Temperature and Pressure (most common case).",
@@ -8,6 +9,9 @@ const tabHelpText = {
   Tx: "Enter Temperature and Quality for saturated mixtures."
 };
 
+// Track active mode explicitly
+let currentMode = "TP";
+
 document.querySelectorAll(".input-tabs .tab").forEach(tab => {
   tab.addEventListener("click", () => {
     document
@@ -15,12 +19,22 @@ document.querySelectorAll(".input-tabs .tab").forEach(tab => {
       .forEach(t => t.classList.remove("active"));
 
     tab.classList.add("active");
-    setInputMode(tab.dataset.mode);
+
+    const mode = tab.dataset.mode;
+    if (!tabHelpText[mode]) {
+      console.error("Unknown input mode:", mode);
+      return;
+    }
+
+    setInputMode(mode);
   });
 });
 
 function setInputMode(mode) {
-  document.getElementById("tabHelp").textContent = tabHelpText[mode];
+  currentMode = mode;
+
+  const help = document.getElementById("tabHelp");
+  if (help) help.textContent = tabHelpText[mode];
 
   const allFields = [
     "temperature",
@@ -45,11 +59,27 @@ function setInputMode(mode) {
     if (enabledByMode[mode].includes(id)) {
       el.disabled = false;
     } else {
+      // IMPORTANT: clear value AND prevent submission
       el.value = "";
       el.disabled = true;
     }
   });
 }
 
-// Default mode
-setInputMode("TP");
+// Expose current mode for solver/app.js
+export function getInputMode() {
+  return currentMode;
+}
+
+// Initialize default mode explicitly
+document.addEventListener("DOMContentLoaded", () => {
+  const defaultTab = document.querySelector(
+    '.input-tabs .tab[data-mode="TP"]'
+  );
+
+  if (defaultTab) {
+    defaultTab.classList.add("active");
+  }
+
+  setInputMode("TP");
+});
