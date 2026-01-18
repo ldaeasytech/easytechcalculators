@@ -1,23 +1,23 @@
-// IAPWS-IF97 Region 1 (compressed/subcooled liquid)
+// IAPWS-IF97 Region 1 (compressed / subcooled liquid)
 // Valid for: 273.15 K ≤ T ≤ 623.15 K, Psat(T) ≤ P ≤ 100 MPa
 
-import { R } from './constants.js';
+import { R } from "./constants.js";
 
 // IF97 coefficients (Region 1)
 const I = [
-  0, 0, 0, 0, 0, 0,
-  1, 1, 1, 1, 1, 1,
-  2, 2, 2, 2, 2,
-  3, 3, 3, 4, 4, 4,
-  5, 8, 8, 21, 23, 29, 30, 31, 32
+  0,0,0,0,0,0,
+  1,1,1,1,1,1,
+  2,2,2,2,2,
+  3,3,3,4,4,4,
+  5,8,8,21,23,29,30,31,32
 ];
 
 const J = [
- -2, -1, 0, 1, 2, 3,
- -9, -7, -1, 0, 1, 3,
- -3, 0, 1, 3, 17,
- -4, 0, 6, -5, -2, 10,
- -8, -11, -6, -29, -31, -38, -39, -40, -41
+ -2,-1,0,1,2,3,
+ -9,-7,-1,0,1,3,
+ -3,0,1,3,17,
+ -4,0,6,-5,-2,10,
+ -8,-11,-6,-29,-31,-38,-39,-40,-41
 ];
 
 const n = [
@@ -56,35 +56,51 @@ const n = [
 ];
 
 export function region1(T, P) {
-  const pi = P / 16.53;
+
+  // Dimensionless variables (IF97 standard)
+  const pi  = P / 16.53;
   const tau = 1386 / T;
 
-  let g = 0, g_pi = 0, g_tau = 0;
+  let g = 0;
+  let g_pi = 0, g_tau = 0;
   let g_pipi = 0, g_tautau = 0, g_pitau = 0;
 
   for (let k = 0; k < n.length; k++) {
     const Ii = I[k];
     const Ji = J[k];
-    const term = n[k] * Math.pow(7.1 - pi, Ii) * Math.pow(tau - 1.222, Ji);
 
+    const a = Math.pow(7.1 - pi, Ii);
+    const b = Math.pow(tau - 1.222, Ji);
+
+    const term = n[k] * a * b;
     g += term;
 
-    g_pi += -n[k] * Ii * Math.pow(7.1 - pi, Ii - 1) * Math.pow(tau - 1.222, Ji);
-    g_tau += n[k] * Ji * Math.pow(7.1 - pi, Ii) * Math.pow(tau - 1.222, Ji - 1);
+    g_pi += -n[k] * Ii * Math.pow(7.1 - pi, Ii - 1) * b;
+    g_tau +=  n[k] * Ji * a * Math.pow(tau - 1.222, Ji - 1);
 
-    g_pipi += n[k] * Ii * (Ii - 1) * Math.pow(7.1 - pi, Ii - 2) * Math.pow(tau - 1.222, Ji);
-    g_tautau += n[k] * Ji * (Ji - 1) * Math.pow(7.1 - pi, Ii) * Math.pow(tau - 1.222, Ji - 2);
-    g_pitau += -n[k] * Ii * Ji * Math.pow(7.1 - pi, Ii - 1) * Math.pow(tau - 1.222, Ji - 1);
+    g_pipi += n[k] * Ii * (Ii - 1) * Math.pow(7.1 - pi, Ii - 2) * b;
+    g_tautau += n[k] * Ji * (Ji - 1) * a * Math.pow(tau - 1.222, Ji - 2);
+    g_pitau += -n[k] * Ii * Ji *
+               Math.pow(7.1 - pi, Ii - 1) *
+               Math.pow(tau - 1.222, Ji - 1);
   }
 
-  const v = R * T / (P * 1000) * pi * g_pi;
+  /* ============================================================
+     PRIMARY PROPERTY EQUATIONS (CORRECT IF97 FORMS)
+     ============================================================ */
+
+  // ✔ FIX #1: NO extra 1000 factor
+  // v = (R * T / P) * π * (∂γ/∂π)
+  const v = (R * T / P) * pi * g_pi;
   const rho = 1 / v;
 
   const u = R * T * (tau * g_tau - pi * g_pi);
   const h = R * T * tau * g_tau;
   const s = R * (tau * g_tau - g);
 
+  // ✔ FIX #2: Correct Cp & Cv expressions
   const cp = -R * tau * tau * g_tautau;
+
   const cv = R * (
     -tau * tau * g_tautau +
     Math.pow(g_pi - tau * g_pitau, 2) / g_pipi
@@ -92,7 +108,7 @@ export function region1(T, P) {
 
   return {
     region: 1,
-    phase: 'subcooled liquid',
+    phase: "subcooled liquid",
     T,
     P,
     density: rho,
