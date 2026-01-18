@@ -1,4 +1,5 @@
-let inputMode = "TP";
+// main.js
+// UI-only: input mode selection & field enable/disable
 
 const tabHelpText = {
   TP: "Enter Temperature and Pressure (most common case).",
@@ -9,33 +10,46 @@ const tabHelpText = {
 
 document.querySelectorAll(".input-tabs .tab").forEach(tab => {
   tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document
+      .querySelectorAll(".input-tabs .tab")
+      .forEach(t => t.classList.remove("active"));
+
     tab.classList.add("active");
     setInputMode(tab.dataset.mode);
   });
 });
 
 function setInputMode(mode) {
-  inputMode = mode;
   document.getElementById("tabHelp").textContent = tabHelpText[mode];
 
-  const all = ["temperature","pressure","enthalpy","entropy","specificVolume","quality"];
-  const enabled = {
-    TP:["temperature","pressure"],
-    Ph:["pressure","enthalpy"],
-    Ps:["pressure","entropy"],
-    Tx:["temperature","quality"]
+  const allFields = [
+    "temperature",
+    "pressure",
+    "enthalpy",
+    "entropy",
+    "specificVolume",
+    "quality"
+  ];
+
+  const enabledByMode = {
+    TP: ["temperature", "pressure"],
+    Ph: ["pressure", "enthalpy"],
+    Ps: ["pressure", "entropy"],
+    Tx: ["temperature", "quality"]
   };
 
-  all.forEach(id => {
+  allFields.forEach(id => {
     const el = document.getElementById(id);
-    if (!enabled[mode].includes(id)) {
+    if (!el) return;
+
+    if (enabledByMode[mode].includes(id)) {
+      el.disabled = false;
+    } else {
       el.value = "";
       el.disabled = true;
-    } else {
-      el.disabled = false;
     }
   });
 }
 
+// Default mode
 setInputMode("TP");
