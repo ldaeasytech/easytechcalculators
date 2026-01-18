@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Water & Steam Properties Calculator (IF97)</title>
-
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -17,92 +16,85 @@
   </header>
 
   <main class="container">
-    <!-- ================= INPUT PANEL ================= -->
+    <!-- INPUT CARD -->
     <section class="card">
       <h2>Inputs</h2>
 
+      <!-- Input mode tabs -->
+      <div class="input-tabs">
+        <button type="button" class="tab active" data-mode="TP">T–P</button>
+        <button type="button" class="tab" data-mode="Ph">P–h</button>
+        <button type="button" class="tab" data-mode="Ps">P–s</button>
+        <button type="button" class="tab" data-mode="Tx">T–x</button>
+      </div>
+
+      <!-- Helper text -->
+      <div id="tabHelp" class="tab-help">
+        Enter Temperature and Pressure to compute all properties.
+      </div>
+
       <form id="calcForm" class="grid-form">
         <div class="field">
-          <label id="temperatureLabel" for="temperature">Temperature (K)</label>
-          <input
-            id="temperature"
-            type="number"
-            step="any"
-            placeholder="e.g. 500"
-          />
+          <label id="temperatureLabel">Temperature (K)</label>
+          <input id="temperature" type="number" step="any" />
         </div>
 
         <div class="field">
-          <label id="pressureLabel" for="pressure">Pressure (MPa)</label>
-          <input
-            id="pressure"
-            type="number"
-            step="any"
-            placeholder="e.g. 10"
-          />
+          <label id="pressureLabel">Pressure (MPa)</label>
+          <input id="pressure" type="number" step="any" />
         </div>
 
         <div class="field">
-          <label id="enthalpyLabel" for="enthalpy">Enthalpy (kJ/kg)</label>
+          <label id="enthalpyLabel">Enthalpy (kJ/kg)</label>
           <input id="enthalpy" type="number" step="any" />
         </div>
 
         <div class="field">
-          <label id="entropyLabel" for="entropy">Entropy (kJ/kg·K)</label>
+          <label id="entropyLabel">Entropy (kJ/kg·K)</label>
           <input id="entropy" type="number" step="any" />
         </div>
 
         <div class="field">
-          <label id="specificVolumeLabel" for="specificVolume">
-            Specific Volume (m³/kg)
-          </label>
+          <label id="specificVolumeLabel">Specific Volume (m³/kg)</label>
           <input id="specificVolume" type="number" step="any" />
         </div>
 
         <div class="field">
-          <label for="quality">Quality x (0–1)</label>
+          <label>Quality x (0–1)</label>
           <input id="quality" type="number" step="any" />
         </div>
 
         <div class="field">
-          <label for="unitSystem">Unit System</label>
+          <label>Unit System</label>
           <select id="unitSystem">
             <option value="SI">SI</option>
             <option value="Imperial">Imperial</option>
           </select>
         </div>
 
-        <button id="calculateBtn" type="submit" class="primary">
-          Calculate
-        </button>
+        <button id="calculateBtn" class="primary">Calculate</button>
       </form>
     </section>
 
-    <!-- ================= OUTPUT PANEL ================= -->
+    <!-- RESULTS CARD -->
     <section class="card">
       <h2>Results</h2>
 
       <div id="loading" class="loading">Calculating…</div>
-
-      <pre id="output" class="output-box">—</pre>
+      <div id="resultsTable" class="results-table"></div>
 
       <div class="messages">
         <div id="errors" class="errors"></div>
         <div id="warnings" class="warnings"></div>
         <div id="suggestions" class="suggestions"></div>
-        <div id="autoFixes" class="autofixes"></div>
       </div>
     </section>
   </main>
 
   <footer class="app-footer">
-    <p>
-      Based on IAPWS-IF97 and IAPWS transport formulations.<br />
-      Results provided for engineering use. Always verify critical designs.
-    </p>
+    Based on IAPWS-IF97 and IAPWS transport formulations.
   </footer>
 
-  <!-- ✅ Corrected script paths -->
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
