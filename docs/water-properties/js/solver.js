@@ -1,74 +1,96 @@
 // solver.js
-// Robust thermodynamic state solver built on IF97 core
+// Central thermodynamic state solver (IF97)
 // INTERNAL UNITS:
-//   T  → K
-//   P  → MPa
-//   h  → kJ/kg
-//   s  → kJ/(kg·K)
+//   temperature → K
+//   pressure    → MPa
+//   enthalpy    → kJ/kg
+//   entropy     → kJ/(kg·K)
 
-import { computeIF97 } from "./if97/if97.js";
+import {
+  T_MIN,
+  T_MAX,
+  T_R1_MAX,
+  T_R5_MIN,
+  P_R5_MAX,
+  EPS
+} from "./constants.js";
+
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
+import { region3 } from "./if97/region3.js";
+import { region5 } from "./if97/region5.js";
 import { Psat, Tsat } from "./if97/region4.js";
-import { T_MIN, T_MAX } from "./if97/constants.js";
 
 const MAX_ITER = 60;
-const TOL = 1e-8;
 
 /* ============================================================
    Utility: normalize solver inputs
    ============================================================ */
-
 function normalizeInputs(raw) {
   return {
-    T: raw.T ?? raw.temperature,
-    P: raw.P ?? raw.pressure,
-    h: raw.h ?? raw.enthalpy,
-    s: raw.s ?? raw.entropy,
-    x: raw.x ?? raw.quality
+    temperature: raw.temperature ?? raw.T,
+    pressure: raw.pressure ?? raw.P,
+    enthalpy: raw.enthalpy ?? raw.h,
+    entropy: raw.entropy ?? raw.s,
+    quality: raw.quality ?? raw.x
   };
 }
 
 /* ============================================================
-   Direct solvers
+   Region selection for (T, P)
    ============================================================ */
+function solveTP(T, P) {
+  const Ps = Psat(T);
 
-export function solveTP(T, P) {
-  return computeIF97(T, P);
+  if (T >= T_R5_MIN && P <= P_R5_MAX) {
+    return { T, P, ...region5(T, P) };
+  }
+
+  if (Math.abs(P - Ps) / Ps < 1e-6) {
+    // Saturation line → default to vapor side
+    return { T, P, ...region2(T, P) };
+  }
+
+  if (T <= T_R1_MAX && P > Ps) {
+    return { T, P, ...region1(T, P) };
+  }
+
+  if (T <= T_R1_MAX && P < Ps) {
+    return { T, P, ...region2(T, P) };
+  }
+
+  // Dense fluid region
+  return { T, P, ...region3(T, P) };
 }
 
-/**
- * Solve from (T, x) — saturated mixture only
- */
-export function solveTx(T, x) {
-  if (!Number.isFinite(x) || x < 0 || x > 1) {
-    throw new Error("Quality x must be between 0 and 1");
+/* ============================================================
+   Saturated mixture (T, x)
+   ============================================================ */
+function solveTx(T, x) {
+  if (x < 0 || x > 1) {
+    throw new Error("Quality must be between 0 and 1");
   }
 
   const P = Psat(T);
 
-  // Saturated liquid → Region 1
   const satL = region1(T, P);
-
-  // Saturated vapor → Region 2 (EXPLICIT, no pressure fudge)
   const satV = region2(T, P);
 
-  const v =
-    satL.specificVolume +
-    x * (satV.specificVolume - satL.specificVolume);
+  const mix = (a, b) => a + x * (b - a);
 
   return {
     region: 4,
-    phase: "two-phase",
+    phase: "two_phase",
     T,
     P,
     quality: x,
-    specificVolume: v,
-    density: 1 / v,
-    enthalpy:
-      satL.enthalpy + x * (satV.enthalpy - satL.enthalpy),
-    entropy:
-      satL.entropy + x * (satV.entropy - satL.entropy),
+    density: 1 / mix(satL.specificVolume, satV.specificVolume),
+    specificVolume: mix(
+      satL.specificVolume,
+      satV.specificVolume
+    ),
+    enthalpy: mix(satL.enthalpy, satV.enthalpy),
+    entropy: mix(satL.entropy, satV.entropy),
     cp: NaN,
     cv: NaN
   };
@@ -77,14 +99,13 @@ export function solveTx(T, x) {
 /* ============================================================
    Inverse solvers
    ============================================================ */
-
-export function solvePH(P, hTarget) {
+function solvePH(P, hTarget) {
   const Ts = Tsat(P);
 
   let Tlow = T_MIN;
   let Thigh = T_MAX;
 
-  if (isFinite(Ts)) {
+  if (Number.isFinite(Ts)) {
     const hL = region1(Ts, P).enthalpy;
     const hV = region2(Ts, P).enthalpy;
 
@@ -100,35 +121,31 @@ export function solvePH(P, hTarget) {
   let T = 0.5 * (Tlow + Thigh);
 
   for (let i = 0; i < MAX_ITER; i++) {
-    const state = computeIF97(T, P);
+    const state = solveTP(T, P);
     const f = state.enthalpy - hTarget;
 
-    if (Math.abs(f) < TOL) return state;
+    if (Math.abs(f) < EPS) return state;
 
     const dHdT = state.cp;
-    if (!isFinite(dHdT) || dHdT <= 0) break;
+    if (!Number.isFinite(dHdT) || dHdT <= 0) break;
 
-    let Tnew = T - f / dHdT;
-    if (Tnew <= Tlow || Tnew >= Thigh) {
-      Tnew = 0.5 * (Tlow + Thigh);
-    }
+    const Tnew = T - f / dHdT;
 
+    T = Math.min(Math.max(Tnew, Tlow), Thigh);
     if (f > 0) Thigh = T;
     else Tlow = T;
-
-    T = Tnew;
   }
 
   throw new Error("solvePH did not converge");
 }
 
-export function solvePS(P, sTarget) {
+function solvePS(P, sTarget) {
   const Ts = Tsat(P);
 
   let Tlow = T_MIN;
   let Thigh = T_MAX;
 
-  if (isFinite(Ts)) {
+  if (Number.isFinite(Ts)) {
     const sL = region1(Ts, P).entropy;
     const sV = region2(Ts, P).entropy;
 
@@ -144,34 +161,35 @@ export function solvePS(P, sTarget) {
   let T = 0.5 * (Tlow + Thigh);
 
   for (let i = 0; i < MAX_ITER; i++) {
-    const state = computeIF97(T, P);
+    const state = solveTP(T, P);
     const f = state.entropy - sTarget;
 
-    if (Math.abs(f) < TOL) return state;
+    if (Math.abs(f) < EPS) return state;
 
     const dSdT = state.cp / T;
-    if (!isFinite(dSdT) || dSdT <= 0) break;
+    if (!Number.isFinite(dSdT) || dSdT <= 0) break;
 
-    let Tnew = T - f / dSdT;
-    if (Tnew <= Tlow || Tnew >= Thigh) {
-      Tnew = 0.5 * (Tlow + Thigh);
-    }
+    const Tnew = T - f / dSdT;
 
+    T = Math.min(Math.max(Tnew, Tlow), Thigh);
     if (f > 0) Thigh = T;
     else Tlow = T;
-
-    T = Tnew;
   }
 
   throw new Error("solvePS did not converge");
 }
 
 /* ============================================================
-   Generic dispatcher (ROBUST)
+   Public dispatcher
    ============================================================ */
-
 export function solve(rawInputs) {
-  const { T, P, h, s, x } = normalizeInputs(rawInputs);
+  const {
+    temperature: T,
+    pressure: P,
+    enthalpy: h,
+    entropy: s,
+    quality: x
+  } = normalizeInputs(rawInputs);
 
   if (Number.isFinite(T) && Number.isFinite(P)) {
     return solveTP(T, P);
