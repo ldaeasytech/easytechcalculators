@@ -18,6 +18,11 @@ const W_MK_TO_BTUPH_FT_R = 0.577789;
 /* ============================================================
    Convert UI → Internal (SI / IF97)
    ============================================================ */
+// Normalize IF97 aliases
+if (inputs.T !== undefined) inputs.temperature = inputs.T;
+if (inputs.P !== undefined) inputs.pressure = inputs.P;
+if (inputs.h !== undefined) inputs.enthalpy = inputs.h;
+if (inputs.s !== undefined) inputs.entropy = inputs.s;
 
 export function toSI(inputs, system) {
 
@@ -66,6 +71,12 @@ export function toSI(inputs, system) {
 /* ============================================================
    Convert Internal (IF97) → UI
    ============================================================ */
+// Preserve IF97 aliases
+if (out.temperature !== undefined) out.T = out.temperature;
+if (out.pressure !== undefined) out.P = out.pressure;
+if (out.enthalpy !== undefined) out.h = out.enthalpy;
+if (out.entropy !== undefined) out.s = out.entropy;
+
 
 export function fromSI(outputs, system) {
 
