@@ -6,7 +6,7 @@
 // OUTPUT:
 //   viscosity [Pa·s]
 
-import { Tc, rhoc, EPS } from "./constants.js";
+import { Tc, rhoc, EPS } from "../constants.js";
 
 // Dimensionless coefficients (IAPWS)
 const H = [
