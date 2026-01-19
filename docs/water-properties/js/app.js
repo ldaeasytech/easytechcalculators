@@ -1,5 +1,5 @@
 // app.js
-// AUTHORITATIVE solver input controller (FIXED)
+// UI ↔ Solver orchestration layer (AUTHORITATIVE)
 
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
@@ -19,25 +19,29 @@ document.getElementById("calcForm").addEventListener("submit", e => {
   document.getElementById("loading").style.display = "block";
 
   try {
-    const unitSystem = document.getElementById("unitSystem").value;
+    const unitSystem =
+      document.getElementById("unitSystem")?.value ?? "SI";
 
-    // ✅ SINGLE SOURCE OF TRUTH FOR MODE
+    // Single source of truth for mode
     const mode = getInputMode();
 
-    // ✅ Read only inputs valid for the active mode
+    // Read only inputs enabled by mode
     const rawInputs = readInputsByMode(mode);
 
-    // ✅ HARD VALIDATION: prevent NaN / zero / empty
+    // Hard numeric validation
     for (const [k, v] of Object.entries(rawInputs)) {
       if (!Number.isFinite(v)) {
         throw new Error(`Invalid or missing input: ${k}`);
       }
     }
 
-    // ✅ Unit conversion (safe even if SI)
-    const siInputs = toSI(rawInputs, unitSystem);
+    // Normalize to canonical keys before unit conversion
+    const canonicalInputs = normalizeInputs(rawInputs);
 
-    // Validation layer
+    // Convert UI → internal IF97 units
+    const siInputs = toSI(canonicalInputs, unitSystem);
+
+    // Physical validation
     const validation = validateState(siInputs);
     renderValidation(validation);
     if (!validation.valid) return;
@@ -48,83 +52,95 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     // Convert back to UI units
     const stateUI = fromSI(stateSI, unitSystem);
 
-    // Confidence estimation
+    // Confidence (only for physical properties)
     const confidence = {};
-    for (const k in stateUI) {
-      confidence[k] = estimateConfidence(k, stateUI.phase);
+    for (const k of COMPARABLE_PROPERTIES) {
+      if (k in stateUI) {
+        confidence[k] = estimateConfidence(k, stateUI.phase);
+      }
     }
 
     renderResultsTable(stateUI, confidence);
 
   } catch (err) {
     document.getElementById("errors").textContent =
-      "❌ " + err.message;
+      "❌ " + (err?.message ?? "Unknown error");
   } finally {
     document.getElementById("loading").style.display = "none";
   }
 });
 
 /* ============================================================
-   INPUT MODE WHITELIST (AUTHORITATIVE)
+   Input handling
    ============================================================ */
 
 function readInputsByMode(mode) {
-  const num = id => parseFloat(document.getElementById(id).value);
+  const num = id =>
+    parseFloat(document.getElementById(id)?.value);
 
   switch (mode) {
     case "TP":
-      return {
-        T: num("temperature"),
-        P: num("pressure")
-      };
+      return { temperature: num("temperature"), pressure: num("pressure") };
 
     case "Ph":
-      return {
-        P: num("pressure"),
-        h: num("enthalpy")
-      };
+      return { pressure: num("pressure"), enthalpy: num("enthalpy") };
 
     case "Ps":
-      return {
-        P: num("pressure"),
-        s: num("entropy")
-      };
+      return { pressure: num("pressure"), entropy: num("entropy") };
 
     case "Tx":
-      return {
-        T: num("temperature"),
-        x: num("quality")
-      };
+      return { temperature: num("temperature"), quality: num("quality") };
 
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
   }
 }
 
+function normalizeInputs(obj) {
+  return {
+    temperature: obj.temperature,
+    pressure: obj.pressure,
+    enthalpy: obj.enthalpy,
+    entropy: obj.entropy,
+    quality: obj.quality
+  };
+}
+
 /* ============================================================
    Results table
    ============================================================ */
 
+const COMPARABLE_PROPERTIES = [
+  "density",
+  "specificVolume",
+  "enthalpy",
+  "entropy",
+  "cp",
+  "cv",
+  "viscosity",
+  "conductivity"
+];
+
+const LABELS = {
+  density: "Density",
+  specificVolume: "Specific Volume",
+  enthalpy: "Enthalpy",
+  entropy: "Entropy",
+  cp: "Cp",
+  cv: "Cv",
+  viscosity: "Viscosity",
+  conductivity: "Thermal Conductivity"
+};
+
 function renderResultsTable(state, confidence) {
   const container = document.getElementById("resultsTable");
 
-  const labels = {
-    density: "Density",
-    specificVolume: "Specific Volume",
-    enthalpy: "Enthalpy",
-    entropy: "Entropy",
-    cp: "Cp",
-    cv: "Cv",
-    viscosity: "Viscosity",
-    thermalConductivity: "Thermal Conductivity"
-  };
-
-  const rows = Object.keys(labels)
-    .filter(k => state[k] !== undefined && !Number.isNaN(state[k]))
+  const rows = COMPARABLE_PROPERTIES
+    .filter(k => Number.isFinite(state[k]))
     .map(k => `
       <tr>
-        <td>${labels[k]}</td>
-        <td class="value">${state[k].toFixed(6)}</td>
+        <td>${LABELS[k]}</td>
+        <td class="value">${formatNumber(state[k])}</td>
         <td>${confidence[k]?.confidence_band ?? "—"}</td>
       </tr>
     `)
@@ -142,6 +158,12 @@ function renderResultsTable(state, confidence) {
       <tbody>${rows}</tbody>
     </table>
   `;
+}
+
+function formatNumber(x) {
+  if (!Number.isFinite(x)) return "—";
+  if (Math.abs(x) < 1e-6) return x.toExponential(3);
+  return x.toFixed(6);
 }
 
 /* ============================================================
