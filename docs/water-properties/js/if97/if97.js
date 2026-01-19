@@ -1,8 +1,10 @@
 // if97/if97.js
-// Core IF97 dispatcher + transport properties integration
+// Core IF97 dispatcher with diagnostic-safe density handling
 // INTERNAL UNITS:
 //   T → K
 //   P → MPa
+//   h → kJ/kg
+//   s → kJ/(kg·K)
 
 import { region1 } from "./region1.js";
 import { region2 } from "./region2.js";
@@ -12,41 +14,34 @@ import { Psat } from "./region4.js";
 
 import { viscosity } from "./viscosity.js";
 import { conductivity } from "./conductivity.js";
-import { RHO_MIN } from "./constants.js";
+import { RHO_MIN, RHO_MAX } from "./constants.js";
 
 // IF97 boundaries
 const T23 = 623.15;      // K
-const P23 = 16.5292;    // MPa (Region 2–3 boundary)
+const P23 = 16.5292;    // MPa
 const T5  = 1073.15;    // K
 const PMAX = 100.0;     // MPa
 const EPS = 1e-7;
 
-/**
- * Compute thermodynamic + transport properties using IF97
- * @param {number} T - Temperature [K]
- * @param {number} P - Pressure [MPa]
- * @returns {object} state
- */
+/* ============================================================
+   MAIN IF97 SOLVER
+   ============================================================ */
+
 export function computeIF97(T, P) {
   let state;
 
-  /* ============================================================
-     Region 5: very high temperature steam
-     ============================================================ */
+  /* ------------------------------------------------------------
+     REGION SELECTION (STRICT IF97)
+  ------------------------------------------------------------ */
+
   if (T >= T5) {
-    if (P > PMAX) {
-      throw new Error("Pressure exceeds IF97 Region 5 limits.");
-    }
     state = region5(T, P);
   }
 
-  /* ============================================================
-     Region 1 / 2 / 4: T ≤ 623.15 K
-     ============================================================ */
   else if (T <= T23) {
     const Ps = Psat(T);
 
-    // Saturation line: do NOT evaluate transport here
+    // Two-phase boundary (do not compute properties here)
     if (Math.abs(P - Ps) < EPS) {
       return {
         region: 4,
@@ -57,19 +52,16 @@ export function computeIF97(T, P) {
       };
     }
 
-    // Compressed / subcooled liquid
+    // Liquid
     if (P > Ps) {
       state = region1(T, P);
     }
-    // Superheated vapor
+    // Vapor
     else {
       state = region2(T, P);
     }
   }
 
-  /* ============================================================
-     Region 2 / 3: 623.15 K < T < 1073.15 K
-     ============================================================ */
   else {
     if (P <= P23) {
       state = region2(T, P);
@@ -78,33 +70,54 @@ export function computeIF97(T, P) {
     }
   }
 
-  /* ============================================================
-     Sanity guards (prevents transport blow-up)
-     ============================================================ */
+  /* ------------------------------------------------------------
+     DIAGNOSTIC DENSITY HANDLING (NO THROW)
+  ------------------------------------------------------------ */
 
-  if (!isFinite(state.density) || state.density <= RHO_MIN) {
-    throw new Error("Invalid density computed in IF97 core.");
+  let densityFlag = "ok";
+
+  if (!isFinite(state.density)) {
+    densityFlag = "nan";
+  } else if (state.density <= 0) {
+    densityFlag = "negative";
+  } else if (state.density < RHO_MIN) {
+    densityFlag = "too-small";
+  } else if (state.density > RHO_MAX) {
+    densityFlag = "too-large";
   }
 
-  if (!isFinite(state.cp) || state.cp <= 0) {
-    throw new Error("Invalid Cp computed in IF97 core.");
+  // Attach diagnostics (always returned)
+  state._diagnostics = {
+    densityFlag,
+    rawDensity: state.density
+  };
+
+  /* ------------------------------------------------------------
+     TRANSPORT PROPERTIES (SAFE MODE)
+     Only compute if density & Cp are physically usable
+  ------------------------------------------------------------ */
+
+  if (
+    densityFlag === "ok" &&
+    isFinite(state.cp) &&
+    state.cp > 0
+  ) {
+    // Dynamic viscosity [Pa·s]
+    state.viscosity = viscosity(T, state.density);
+
+    // Thermal conductivity [W/(m·K)]
+    state.thermalConductivity = conductivity(
+      T,
+      state.density,
+      state.cp * 1000,   // kJ → J
+      state.viscosity
+    );
+  } else {
+    // Skip transport if state is not physically valid
+    state.viscosity = NaN;
+    state.thermalConductivity = NaN;
+    state._diagnostics.transportSkipped = true;
   }
-
-  /* ============================================================
-     Transport properties (IAPWS)
-     ============================================================ */
-
-  // Dynamic viscosity [Pa·s]
-  state.viscosity = viscosity(T, state.density);
-
-  // Thermal conductivity [W/(m·K)]
-  // cp from IF97 is kJ/(kg·K) → convert to J/(kg·K)
-  state.thermalConductivity = conductivity(
-    T,
-    state.density,
-    state.cp * 1000,
-    state.viscosity
-  );
 
   return state;
 }
