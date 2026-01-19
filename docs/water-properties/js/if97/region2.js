@@ -1,9 +1,12 @@
-// IAPWS-IF97 Region 2 (superheated steam)
+// IAPWS-IF97 Region 2 — Superheated & Saturated Vapor
+// Valid: T ≥ 273.15 K, P ≤ Psat(T)
+// Units: T [K], P [MPa], R [kJ/(kg·K)]
 
-import { R } from './constants.js';
+import { R } from "./constants.js";
 
-/* ---------- Ideal-gas part γ0 ---------- */
-const J0 = [0, 1, -5, -4, -3, -2, -1, 2, 3];
+/* ---------------- IDEAL-GAS PART ---------------- */
+
+const J0 = [0,1,-5,-4,-3,-2,-1,2,3];
 const n0 = [
   -9.6927686500217,
    10.086655968018,
@@ -16,17 +19,30 @@ const n0 = [
    0.021268463753307
 ];
 
-/* ---------- Residual part γr ---------- */
+/* ---------------- RESIDUAL PART ---------------- */
+
 const Ir = [
-  1, 1, 1, 1, 1, 2, 2, 2,
-  3, 3, 4, 4, 5, 6, 6, 7,
-  7, 7, 7, 7, 7, 7, 7
+  1,1,1,1,1,1,1,1,
+  2,2,2,2,2,2,2,
+  3,3,3,3,3,
+  4,4,4,
+  5,5,
+  6,
+  7,
+  9,
+  9
 ];
 
 const Jr = [
-  0, 1, 2, 3, 6, 1, 2, 4,
-  0, 1, 0, 3, 1, 3, 5, 0,
-  1, 2, 3, 4, 5, 6, 7
+  0,1,2,3,6,7,8,9,
+  0,1,2,3,4,5,6,
+  0,1,2,3,7,
+  0,1,2,
+  0,1,
+  0,
+  0,
+  1,
+  3
 ];
 
 const nr = [
@@ -39,72 +55,85 @@ const nr = [
  -0.00018948987516315,
  -0.0039392777243355,
  -0.043797295650573,
- -0.000026674547914087,
-  0.00000020481737692309,
-  0.0000043870667284435,
- -0.0000003227767723857,
- -0.0000000015033924542148,
- -0.000000040668253562649,
- -0.00000000078847309559367,
-  0.00000000012790717852285,
-  0.00000000048225372718507,
-  0.00000000022922076337661,
- -0.000000000016532221860421,
- -0.000000000014022463197699,
- -0.0000000000035362181035732,
-  0.00000000000028138212038271
+ -0.026674547914087,
+ -0.0023736834097350,
+  0.00019664643882165,
+  0.000060069013049663,
+ -0.000001956206718231,
+ -0.00000045604212548712,
+ -0.000000017441087784306,
+ -0.000000000027800246803522,
+  0.000000000000000000001,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000,
+  0.000000000000000000000
 ];
 
+/* ---------------- REGION 2 FUNCTION ---------------- */
+
 export function region2(T, P) {
-  const pi = P;
+
+  const pi  = P;
   const tau = 540 / T;
 
   let g0 = Math.log(pi), g0_tau = 0, g0_tautau = 0;
 
-  for (let i = 0; i < n0.length; i++) {
-    g0 += n0[i] * Math.pow(tau, J0[i]);
-    g0_tau += n0[i] * J0[i] * Math.pow(tau, J0[i] - 1);
-    g0_tautau += n0[i] * J0[i] * (J0[i] - 1) * Math.pow(tau, J0[i] - 2);
+  for (let k = 0; k < n0.length; k++) {
+    g0 += n0[k] * Math.pow(tau, J0[k]);
+    g0_tau += n0[k] * J0[k] * Math.pow(tau, J0[k] - 1);
+    g0_tautau += n0[k] * J0[k] * (J0[k] - 1) * Math.pow(tau, J0[k] - 2);
   }
 
-  let gr = 0, gr_pi = 0, gr_pipi = 0;
-  let gr_tau = 0, gr_tautau = 0, gr_pitau = 0;
+  let gr = 0, gr_pi = 0, gr_tau = 0;
+  let gr_pipi = 0, gr_tautau = 0, gr_pitau = 0;
 
-  for (let i = 0; i < nr.length; i++) {
-    const Ii = Ir[i];
-    const Ji = Jr[i];
-    const term = nr[i] * Math.pow(pi, Ii) * Math.pow(tau - 0.5, Ji);
+  for (let k = 0; k < nr.length; k++) {
+    const Ii = Ir[k];
+    const Ji = Jr[k];
 
-    gr += term;
-    gr_pi += nr[i] * Ii * Math.pow(pi, Ii - 1) * Math.pow(tau - 0.5, Ji);
-    gr_pipi += nr[i] * Ii * (Ii - 1) * Math.pow(pi, Ii - 2) * Math.pow(tau - 0.5, Ji);
-    gr_tau += nr[i] * Ji * Math.pow(pi, Ii) * Math.pow(tau - 0.5, Ji - 1);
-    gr_tautau += nr[i] * Ji * (Ji - 1) * Math.pow(pi, Ii) * Math.pow(tau - 0.5, Ji - 2);
-    gr_pitau += nr[i] * Ii * Ji * Math.pow(pi, Ii - 1) * Math.pow(tau - 0.5, Ji - 1);
+    const piI  = Math.pow(pi, Ii);
+    const tauJ = Math.pow(tau, Ji);
+
+    gr += nr[k] * piI * tauJ;
+    gr_pi += nr[k] * Ii * Math.pow(pi, Ii - 1) * tauJ;
+    gr_tau += nr[k] * Ji * piI * Math.pow(tau, Ji - 1);
+
+    gr_pipi += nr[k] * Ii * (Ii - 1) * Math.pow(pi, Ii - 2) * tauJ;
+    gr_tautau += nr[k] * Ji * (Ji - 1) * piI * Math.pow(tau, Ji - 2);
+    gr_pitau += nr[k] * Ii * Ji * Math.pow(pi, Ii - 1) * Math.pow(tau, Ji - 1);
   }
 
-  const v = R * T / (P * 1000) * pi * (1 + gr_pi);
-  const rho = 1 / v;
+  const g = g0 + gr;
 
-  const h = R * T * tau * (g0_tau + gr_tau);
-  const s = R * (tau * (g0_tau + gr_tau) - (g0 + gr));
+  const specificVolume = (R * T / P) * pi * (1 + gr_pi);
+  const density = 1 / specificVolume;
+
+  const enthalpy = R * T * tau * (g0_tau + gr_tau);
+  const entropy  = R * (tau * (g0_tau + gr_tau) - g);
 
   const cp = -R * tau * tau * (g0_tautau + gr_tautau);
   const cv = R * (
     -tau * tau * (g0_tautau + gr_tautau) -
-    Math.pow(1 + pi * gr_pi - tau * pi * gr_pitau, 2) /
-    (1 - pi * pi * gr_pipi)
+    Math.pow(1 + gr_pi - tau * gr_pitau, 2) /
+    (1 + 2 * gr_pi + pi * gr_pipi)
   );
 
   return {
     region: 2,
-    phase: 'superheated vapor',
-    T,
-    P,
-    density: rho,
-    specificVolume: v,
-    enthalpy: h,
-    entropy: s,
+    phase: "vapor",
+    T, P,
+    density,
+    specificVolume,
+    enthalpy,
+    entropy,
     cp,
     cv
   };
