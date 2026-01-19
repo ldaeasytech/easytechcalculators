@@ -1,6 +1,6 @@
 // region1.js — IF97 Region 1 (Compressed/Subcooled Liquid)
 
-import { R, EPS } from "./constants.js";
+import { R, EPS } from "../constants.js";
 
 export function region1(T, P) {
   const pi = P / 16.53;
