@@ -1,6 +1,6 @@
 // region3.js — IF97 Region 3 (Dense Fluid)
 
-import { R, Tc, rhoc, EPS } from "./constants.js";
+import { R, Tc, rhoc, EPS } from "../constants.js";
 
 export function region3(T, P) {
   let rho = rhoc; // safer initial guess
