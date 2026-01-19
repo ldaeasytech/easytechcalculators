@@ -1,6 +1,6 @@
 // region5.js — IF97 Region 5 (High-T Steam)
 
-import { R, EPS } from "./constants.js";
+import { R, EPS } from "../constants.js";
 
 export function region5(T, P) {
   const tau = 1000 / T;
