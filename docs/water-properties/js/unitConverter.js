@@ -1,6 +1,6 @@
 // unitConverter.js
 // Converts between UI units and internal IF97 units
-// INTERNAL UNITS:
+// INTERNAL UNITS (STRICT):
 //   T  → K
 //   P  → MPa
 //   h  → kJ/kg
@@ -16,17 +16,23 @@ const PA_S_TO_LBM_FT_S = 0.020885434;
 const W_MK_TO_BTUPH_FT_R = 0.577789;
 
 /* ============================================================
-   Convert UI → Internal (SI)
+   Convert UI → Internal (SI / IF97)
    ============================================================ */
 
 export function toSI(inputs, system) {
-  if (system === "SI") return { ...inputs };
 
+  // SI mode: values are ALREADY in IF97 units
+  if (system === "SI") {
+    return { ...inputs };
+  }
+
+  // English / Imperial → IF97
   const out = { ...inputs };
 
   if (!isNaN(out.temperature))
     out.temperature = (out.temperature + 459.67) / K_TO_R;
 
+  // psia → MPa
   if (!isNaN(out.pressure))
     out.pressure = out.pressure / MPa_TO_PSIA;
 
@@ -58,17 +64,22 @@ export function toSI(inputs, system) {
 }
 
 /* ============================================================
-   Convert Internal (SI) → UI
+   Convert Internal (IF97) → UI
    ============================================================ */
 
 export function fromSI(outputs, system) {
-  if (system === "SI") return { ...outputs };
+
+  // SI mode: return as-is
+  if (system === "SI") {
+    return { ...outputs };
+  }
 
   const out = { ...outputs };
 
   if (!isNaN(out.temperature))
     out.temperature = out.temperature * K_TO_R - 459.67;
 
+  // MPa → psia
   if (!isNaN(out.pressure))
     out.pressure = out.pressure * MPa_TO_PSIA;
 
