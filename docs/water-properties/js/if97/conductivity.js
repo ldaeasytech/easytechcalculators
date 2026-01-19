@@ -8,7 +8,7 @@
 // OUTPUT:
 //   conductivity [W/(m·K)]
 
-import { Tc, rhoc, EPS } from "./constants.js";
+import { Tc, rhoc, EPS } from "../constants.js";
 
 const kB = 1.380649e-23;
 
