@@ -9,8 +9,20 @@ const tabHelpText = {
   Tx: "Enter Temperature and Quality for saturated mixtures."
 };
 
-// Track active mode explicitly
+// Canonical mapping to solver expectations
+const MODE_TO_KEYS = {
+  TP: ["temperature", "pressure"],
+  Ph: ["pressure", "enthalpy"],
+  Ps: ["pressure", "entropy"],
+  Tx: ["temperature", "quality"]
+};
+
+// Track active mode explicitly (deterministic default)
 let currentMode = "TP";
+
+/* ============================================================
+   Tab click handling
+   ============================================================ */
 
 document.querySelectorAll(".input-tabs .tab").forEach(tab => {
   tab.addEventListener("click", () => {
@@ -21,7 +33,7 @@ document.querySelectorAll(".input-tabs .tab").forEach(tab => {
     tab.classList.add("active");
 
     const mode = tab.dataset.mode;
-    if (!tabHelpText[mode]) {
+    if (!MODE_TO_KEYS[mode]) {
       console.error("Unknown input mode:", mode);
       return;
     }
@@ -29,6 +41,10 @@ document.querySelectorAll(".input-tabs .tab").forEach(tab => {
     setInputMode(mode);
   });
 });
+
+/* ============================================================
+   Enable / disable fields by mode
+   ============================================================ */
 
 function setInputMode(mode) {
   currentMode = mode;
@@ -41,37 +57,52 @@ function setInputMode(mode) {
     "pressure",
     "enthalpy",
     "entropy",
-    "specificVolume",
+    "specificVolume", // intentionally unsupported as input
     "quality"
   ];
 
-  const enabledByMode = {
-    TP: ["temperature", "pressure"],
-    Ph: ["pressure", "enthalpy"],
-    Ps: ["pressure", "entropy"],
-    Tx: ["temperature", "quality"]
-  };
+  const enabled = MODE_TO_KEYS[mode];
 
   allFields.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
 
-    if (enabledByMode[mode].includes(id)) {
+    // Enforce numeric-only input at UI level
+    el.inputMode = "decimal";
+    el.step = "any";
+
+    if (enabled.includes(id)) {
       el.disabled = false;
     } else {
-      // IMPORTANT: clear value AND prevent submission
       el.value = "";
       el.disabled = true;
     }
   });
+
+  // Explicitly lock unsupported inverse properties
+  const v = document.getElementById("specificVolume");
+  if (v) {
+    v.value = "";
+    v.disabled = true;
+  }
 }
 
-// Expose current mode for solver/app.js
+/* ============================================================
+   Public API for app.js
+   ============================================================ */
+
 export function getInputMode() {
   return currentMode;
 }
 
-// Initialize default mode explicitly
+export function getEnabledKeys() {
+  return MODE_TO_KEYS[currentMode];
+}
+
+/* ============================================================
+   Initialization
+   ============================================================ */
+
 document.addEventListener("DOMContentLoaded", () => {
   const defaultTab = document.querySelector(
     '.input-tabs .tab[data-mode="TP"]'
