@@ -1,19 +1,10 @@
-// IAPWS-IF97 Region 1 (Compressed / Subcooled Liquid)
-// Valid for: 273.15 K ≤ T ≤ 623.15 K, Psat(T) ≤ P ≤ 100 MPa
-//
-// INTERNAL UNITS (STRICT):
-//   T → K
-//   P → MPa
-//   R → kJ/(kg·K)
-//
-// Formulation: Dimensionless Gibbs free energy γ(π,τ)
-// Reference: IAPWS-IF97 (2007), Section 5.1
+// IAPWS-IF97 Region 1 — Compressed / Subcooled Liquid
+// Valid: 273.15 K ≤ T ≤ 623.15 K, Psat(T) ≤ P ≤ 100 MPa
+// Units: T [K], P [MPa], R [kJ/(kg·K)]
 
 import { R } from "./constants.js";
 
-/* ------------------------------------------------------------
-   IF97 REGION 1 COEFFICIENTS (OFFICIAL)
------------------------------------------------------------- */
+/* ---------------- IF97 COEFFICIENTS ---------------- */
 
 const I = [
   0,0,0,0,0,0,
@@ -72,82 +63,55 @@ const n = [
   -1.1947622640071e-23
 ];
 
-/* ------------------------------------------------------------
-   REGION 1 SOLVER
------------------------------------------------------------- */
+/* ---------------- REGION 1 FUNCTION ---------------- */
 
 export function region1(T, P) {
 
-  // Dimensionless variables (OFFICIAL)
   const pi  = P / 16.53;
   const tau = 1386 / T;
 
-  let g = 0;
-  let g_pi = 0;
-  let g_tau = 0;
-  let g_pipi = 0;
-  let g_tautau = 0;
-  let g_pitau = 0;
+  let g = 0, g_pi = 0, g_tau = 0;
+  let g_pipi = 0, g_tautau = 0, g_pitau = 0;
 
   for (let k = 0; k < n.length; k++) {
-    const Ii = I[k];
-    const Ji = J[k];
-
     const dpi  = 7.1 - pi;
     const dtau = tau - 1.222;
 
-    const dpi_I  = Math.pow(dpi, Ii);
-    const dtau_J = Math.pow(dtau, Ji);
+    const Ii = I[k];
+    const Ji = J[k];
 
-    g += n[k] * dpi_I * dtau_J;
+    const dpiI  = Math.pow(dpi, Ii);
+    const dtauJ = Math.pow(dtau, Ji);
 
-    // ∂γ / ∂π  (OFFICIAL SIGN)
-    g_pi += -n[k] * Ii * Math.pow(dpi, Ii - 1) * dtau_J;
+    g += n[k] * dpiI * dtauJ;
 
-    // ∂γ / ∂τ
-    g_tau +=  n[k] * Ji * dpi_I * Math.pow(dtau, Ji - 1);
+    g_pi += -n[k] * Ii * Math.pow(dpi, Ii - 1) * dtauJ;
+    g_tau +=  n[k] * Ji * dpiI * Math.pow(dtau, Ji - 1);
 
-    // ∂²γ / ∂π²
-    g_pipi += n[k] * Ii * (Ii - 1) * Math.pow(dpi, Ii - 2) * dtau_J;
-
-    // ∂²γ / ∂τ²
-    g_tautau += n[k] * Ji * (Ji - 1) * dpi_I * Math.pow(dtau, Ji - 2);
-
-    // ∂²γ / ∂π∂τ
-    g_pitau += -n[k] * Ii * Ji *
-               Math.pow(dpi, Ii - 1) *
-               Math.pow(dtau, Ji - 1);
+    g_pipi   += n[k] * Ii * (Ii - 1) * Math.pow(dpi, Ii - 2) * dtauJ;
+    g_tautau += n[k] * Ji * (Ji - 1) * dpiI * Math.pow(dtau, Ji - 2);
+    g_pitau  += -n[k] * Ii * Ji *
+                Math.pow(dpi, Ii - 1) *
+                Math.pow(dtau, Ji - 1);
   }
 
-  /* ------------------------------------------------------------
-     THERMODYNAMIC PROPERTIES (IF97 EXACT)
-  ------------------------------------------------------------ */
-
-  // Specific volume [m³/kg]
-  // v = (R T / P) · ( − ∂γ/∂π )
+  // IF97 property relations
   const specificVolume = (R * T / P) * (-g_pi);
   const density = 1 / specificVolume;
 
-  // Enthalpy [kJ/kg]
   const enthalpy = R * T * tau * g_tau;
+  const entropy  = R * (tau * g_tau - g);
 
-  // Entropy [kJ/(kg·K)]
-  const entropy = R * (tau * g_tau - g);
-
-  // Isochoric heat capacity [kJ/(kg·K)]
+  const cp = -R * tau * tau * g_tautau;
   const cv = R * (
     -tau * tau * g_tautau +
     Math.pow(g_pi - tau * g_pitau, 2) / g_pipi
   );
 
-  // Isobaric heat capacity [kJ/(kg·K)]
-  const cp = -R * tau * tau * g_tautau;
-
   return {
     region: 1,
-    phase: "subcooled liquid",
-    T,
-    P,
+    phase: "liquid",
+    T, P,
     density,
     specificVolume,
     enthalpy,
