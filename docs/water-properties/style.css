@@ -1,23 +1,38 @@
-* { box-sizing: border-box; }
+/* ================================
+   GLOBAL
+================================ */
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #111;
-  color: #ddd;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0f1115;
+  color: #e0e0e0;
+  line-height: 1.4;
 }
 
+/* ================================
+   HEADER
+================================ */
 .app-header {
   background: linear-gradient(135deg, #004e92, #000428);
-  padding: 1.5rem;
+  padding: 1.5rem 1rem;
   text-align: center;
   color: white;
 }
 
-.subtitle { font-size: 0.85rem; opacity: 0.9; }
+.subtitle {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
 
+/* ================================
+   LAYOUT
+================================ */
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
   padding: 1rem;
   display: grid;
@@ -25,15 +40,26 @@ body {
 }
 
 @media (min-width: 900px) {
-  .container { grid-template-columns: 1fr 1fr; }
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .card {
-  background: #1e1e1e;
-  border-radius: 10px;
+  background: #1b1e24;
+  border-radius: 12px;
   padding: 1.2rem;
+  box-shadow: 0 0 0 1px #262a33 inset;
 }
 
+.card h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+/* ================================
+   INPUT TABS
+================================ */
 .input-tabs {
   display: flex;
   gap: 0.5rem;
@@ -42,62 +68,86 @@ body {
 
 .tab {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.55rem;
   border: none;
-  border-radius: 6px;
-  background: #333;
+  border-radius: 8px;
+  background: #2a2f3a;
   color: #ccc;
   cursor: pointer;
+  font-size: 0.85rem;
 }
 
 .tab.active {
   background: #004e92;
-  color: white;
+  color: #fff;
 }
 
+/* ================================
+   HELP TEXT
+================================ */
 .tab-help {
   font-size: 0.8rem;
-  background: rgba(0,78,146,0.15);
+  background: rgba(0, 78, 146, 0.15);
   padding: 0.6rem;
   border-left: 4px solid #004e92;
   margin-bottom: 1rem;
 }
 
+/* ================================
+   FORM
+================================ */
 .grid-form {
   display: grid;
   gap: 0.75rem;
 }
 
 @media (min-width: 600px) {
-  .grid-form { grid-template-columns: repeat(2, 1fr); }
+  .grid-form {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .field label {
   font-size: 0.75rem;
   color: #aaa;
+  display: block;
+  margin-bottom: 0.25rem;
 }
 
-input, select {
-  padding: 0.55rem;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #2a2a2a;
+input,
+select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #3a3f4b;
+  background: #242832;
   color: #eee;
 }
 
 input:disabled {
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
 button.primary {
   grid-column: 1 / -1;
-  padding: 0.7rem;
+  padding: 0.8rem;
   background: #004e92;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   color: white;
   font-size: 1rem;
   cursor: pointer;
+}
+
+button.primary:hover {
+  background: #0063c7;
+}
+
+/* ================================
+   RESULTS
+================================ */
+.results-table {
+  overflow-x: auto;
 }
 
 .results-table table {
@@ -106,25 +156,52 @@ button.primary {
   font-size: 0.85rem;
 }
 
-.results-table th, .results-table td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #333;
+.results-table th,
+.results-table td {
+  padding: 0.55rem;
+  border-bottom: 1px solid #2c313d;
+}
+
+.results-table th {
+  text-align: left;
+  font-weight: 600;
 }
 
 .results-table td.value {
-  font-family: monospace;
-  color: #0f0;
+  font-family: ui-monospace, monospace;
+  color: #4caf50;
 }
 
-.loading { display: none; font-size: 0.85rem; }
+/* ================================
+   STATUS / MESSAGES
+================================ */
+.loading {
+  display: none;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
 
-.errors { color: #ff5c5c; }
-.warnings { color: #ffb300; }
-.suggestions { color: #4fc3f7; }
+.errors {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+}
 
+.warnings {
+  color: #ffb300;
+  font-size: 0.8rem;
+}
+
+.suggestions {
+  color: #4fc3f7;
+  font-size: 0.8rem;
+}
+
+/* ================================
+   FOOTER
+================================ */
 .app-footer {
   text-align: center;
   font-size: 0.7rem;
-  color: #777;
+  color: #888;
   padding: 1rem;
 }
