@@ -1,6 +1,6 @@
 // region2.js — IF97 Region 2 (Superheated / Saturated Vapor)
 
-import { R, EPS } from "./constants.js";
+import { R, EPS } from "../constants.js";
 
 export function region2(T, P) {
   const pi = P; // P / 1 MPa (dimensionless)
