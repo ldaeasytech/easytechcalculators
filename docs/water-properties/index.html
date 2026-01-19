@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Water & Steam Properties Calculator (IF97)</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -11,76 +12,77 @@
   <header class="app-header">
     <h1>Water & Steam Properties Calculator</h1>
     <p class="subtitle">
-      IF97 + IAPWS Transport Properties · Engineering-grade accuracy
+      IF97 Thermodynamics · IAPWS Transport Properties
     </p>
   </header>
 
   <main class="container">
-    <!-- INPUT CARD -->
+    <!-- INPUTS -->
     <section class="card">
       <h2>Inputs</h2>
 
-      <!-- Input mode tabs -->
-      <div class="input-tabs">
+      <div class="input-tabs" role="tablist">
         <button type="button" class="tab active" data-mode="TP">T–P</button>
         <button type="button" class="tab" data-mode="Ph">P–h</button>
         <button type="button" class="tab" data-mode="Ps">P–s</button>
         <button type="button" class="tab" data-mode="Tx">T–x</button>
       </div>
 
-      <!-- Helper text -->
       <div id="tabHelp" class="tab-help">
         Enter Temperature and Pressure to compute all properties.
       </div>
 
-      <form id="calcForm" class="grid-form">
+      <form id="calcForm" class="grid-form" novalidate>
         <div class="field">
-          <label id="temperatureLabel">Temperature (K)</label>
-          <input id="temperature" type="number" step="any" />
+          <label for="temperature">Temperature (K)</label>
+          <input id="temperature" type="number" step="any" inputmode="decimal" />
         </div>
 
         <div class="field">
-          <label id="pressureLabel">Pressure (MPa)</label>
-          <input id="pressure" type="number" step="any" />
+          <label for="pressure">Pressure (MPa)</label>
+          <input id="pressure" type="number" step="any" inputmode="decimal" />
         </div>
 
         <div class="field">
-          <label id="enthalpyLabel">Enthalpy (kJ/kg)</label>
-          <input id="enthalpy" type="number" step="any" />
+          <label for="enthalpy">Enthalpy (kJ/kg)</label>
+          <input id="enthalpy" type="number" step="any" inputmode="decimal" />
         </div>
 
         <div class="field">
-          <label id="entropyLabel">Entropy (kJ/kg·K)</label>
-          <input id="entropy" type="number" step="any" />
+          <label for="entropy">Entropy (kJ/kg·K)</label>
+          <input id="entropy" type="number" step="any" inputmode="decimal" />
         </div>
 
         <div class="field">
-          <label id="specificVolumeLabel">Specific Volume (m³/kg)</label>
-          <input id="specificVolume" type="number" step="any" />
+          <label for="specificVolume">Specific Volume (m³/kg)</label>
+          <input id="specificVolume" type="number" step="any" disabled />
         </div>
 
         <div class="field">
-          <label>Quality x (0–1)</label>
-          <input id="quality" type="number" step="any" />
+          <label for="quality">Quality x (0–1)</label>
+          <input id="quality" type="number" step="any" inputmode="decimal" />
         </div>
 
         <div class="field">
-          <label>Unit System</label>
+          <label for="unitSystem">Unit System</label>
           <select id="unitSystem">
             <option value="SI">SI</option>
             <option value="Imperial">Imperial</option>
           </select>
         </div>
 
-        <button id="calculateBtn" class="primary">Calculate</button>
+        <button type="submit" class="primary">
+          Calculate Properties
+        </button>
       </form>
     </section>
 
-    <!-- RESULTS CARD -->
+    <!-- RESULTS -->
     <section class="card">
       <h2>Results</h2>
 
       <div id="loading" class="loading">Calculating…</div>
+
       <div id="resultsTable" class="results-table"></div>
 
       <div class="messages">
@@ -92,7 +94,7 @@
   </main>
 
   <footer class="app-footer">
-    Based on IAPWS-IF97 and IAPWS transport formulations.
+    Based on IAPWS-IF97, IAPWS-2008 (Viscosity), IAPWS-2011 (Conductivity)
   </footer>
 
   <script type="module" src="js/main.js"></script>
