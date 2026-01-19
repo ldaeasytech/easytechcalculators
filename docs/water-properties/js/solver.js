@@ -7,6 +7,8 @@
 //   s  → kJ/(kg·K)
 
 import { computeIF97 } from "./if97/if97.js";
+import { region1 } from "./if97/region1.js";
+import { region2 } from "./if97/region2.js";
 import { Psat, Tsat } from "./if97/region4.js";
 import { T_MIN, T_MAX } from "./if97/constants.js";
 
@@ -14,12 +16,23 @@ const MAX_ITER = 60;
 const TOL = 1e-8;
 
 /* ============================================================
+   Utility: normalize solver inputs
+   ============================================================ */
+
+function normalizeInputs(raw) {
+  return {
+    T: raw.T ?? raw.temperature,
+    P: raw.P ?? raw.pressure,
+    h: raw.h ?? raw.enthalpy,
+    s: raw.s ?? raw.entropy,
+    x: raw.x ?? raw.quality
+  };
+}
+
+/* ============================================================
    Direct solvers
    ============================================================ */
 
-/**
- * Solve from (T, P)
- */
 export function solveTP(T, P) {
   return computeIF97(T, P);
 }
@@ -28,15 +41,17 @@ export function solveTP(T, P) {
  * Solve from (T, x) — saturated mixture only
  */
 export function solveTx(T, x) {
-  if (x < 0 || x > 1) {
+  if (!Number.isFinite(x) || x < 0 || x > 1) {
     throw new Error("Quality x must be between 0 and 1");
   }
 
   const P = Psat(T);
 
-  // Force single-phase evaluation on each side of saturation
-  const satL = computeIF97(T, P * 1.000001);
-  const satV = computeIF97(T, P * 0.999999);
+  // Saturated liquid → Region 1
+  const satL = region1(T, P);
+
+  // Saturated vapor → Region 2 (EXPLICIT, no pressure fudge)
+  const satV = region2(T, P);
 
   const v =
     satL.specificVolume +
@@ -60,26 +75,20 @@ export function solveTx(T, x) {
 }
 
 /* ============================================================
-   Inverse solvers (bracketed Newton)
+   Inverse solvers
    ============================================================ */
 
-/**
- * Solve from (P, h)
- */
 export function solvePH(P, hTarget) {
   const Ts = Tsat(P);
 
-  // Bracket temperature safely
   let Tlow = T_MIN;
   let Thigh = T_MAX;
 
-  // Improve initial bracket using saturation
   if (isFinite(Ts)) {
-    const hL = computeIF97(Ts * 0.999, P).enthalpy;
-    const hV = computeIF97(Ts * 1.001, P).enthalpy;
+    const hL = region1(Ts, P).enthalpy;
+    const hV = region2(Ts, P).enthalpy;
 
     if (hTarget > hL && hTarget < hV) {
-      // Two-phase
       const x = (hTarget - hL) / (hV - hL);
       return solveTx(Ts, x);
     }
@@ -96,13 +105,10 @@ export function solvePH(P, hTarget) {
 
     if (Math.abs(f) < TOL) return state;
 
-    // Newton step
     const dHdT = state.cp;
     if (!isFinite(dHdT) || dHdT <= 0) break;
 
     let Tnew = T - f / dHdT;
-
-    // Enforce bracketing
     if (Tnew <= Tlow || Tnew >= Thigh) {
       Tnew = 0.5 * (Tlow + Thigh);
     }
@@ -116,9 +122,6 @@ export function solvePH(P, hTarget) {
   throw new Error("solvePH did not converge");
 }
 
-/**
- * Solve from (P, s)
- */
 export function solvePS(P, sTarget) {
   const Ts = Tsat(P);
 
@@ -126,8 +129,8 @@ export function solvePS(P, sTarget) {
   let Thigh = T_MAX;
 
   if (isFinite(Ts)) {
-    const sL = computeIF97(Ts * 0.999, P).entropy;
-    const sV = computeIF97(Ts * 1.001, P).entropy;
+    const sL = region1(Ts, P).entropy;
+    const sV = region2(Ts, P).entropy;
 
     if (sTarget > sL && sTarget < sV) {
       const x = (sTarget - sL) / (sV - sL);
@@ -150,7 +153,6 @@ export function solvePS(P, sTarget) {
     if (!isFinite(dSdT) || dSdT <= 0) break;
 
     let Tnew = T - f / dSdT;
-
     if (Tnew <= Tlow || Tnew >= Thigh) {
       Tnew = 0.5 * (Tlow + Thigh);
     }
@@ -165,28 +167,29 @@ export function solvePS(P, sTarget) {
 }
 
 /* ============================================================
-   Generic dispatcher
+   Generic dispatcher (ROBUST)
    ============================================================ */
 
-export function solve(inputs) {
-  const keys = Object.keys(inputs).sort().join(",");
+export function solve(rawInputs) {
+  const { T, P, h, s, x } = normalizeInputs(rawInputs);
 
-  switch (keys) {
-    case "P,T":
-      return solveTP(inputs.T, inputs.P);
-
-    case "P,h":
-      return solvePH(inputs.P, inputs.h);
-
-    case "P,s":
-      return solvePS(inputs.P, inputs.s);
-
-    case "T,x":
-      return solveTx(inputs.T, inputs.x);
-
-    default:
-      throw new Error(
-        "Unsupported property pair. Allowed: (T,P), (P,h), (P,s), (T,x)"
-      );
+  if (Number.isFinite(T) && Number.isFinite(P)) {
+    return solveTP(T, P);
   }
+
+  if (Number.isFinite(P) && Number.isFinite(h)) {
+    return solvePH(P, h);
+  }
+
+  if (Number.isFinite(P) && Number.isFinite(s)) {
+    return solvePS(P, s);
+  }
+
+  if (Number.isFinite(T) && Number.isFinite(x)) {
+    return solveTx(T, x);
+  }
+
+  throw new Error(
+    "Unsupported property pair. Allowed: (T,P), (P,h), (P,s), (T,x)"
+  );
 }
