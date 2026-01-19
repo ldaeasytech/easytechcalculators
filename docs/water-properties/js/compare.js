@@ -1,9 +1,10 @@
 // compare.js
-// Compare a given state against IF97 reference values
-// Assumes INTERNAL UNITS (K, MPa, kJ/kg, etc.)
+// Property-by-property comparison between two thermodynamic states
+// ASSUMES INTERNAL UNITS (K, MPa, kJ/kg, etc.)
 
-import { computeIF97 } from "./if97/if97.js";
+import { EPS } from "./constants.js";
 
+// Canonical property keys used across the app
 const COMPARABLE_KEYS = [
   "density",
   "specificVolume",
@@ -12,41 +13,37 @@ const COMPARABLE_KEYS = [
   "cp",
   "cv",
   "viscosity",
-  "thermalConductivity"
+  "conductivity"
 ];
 
 /**
- * Compare supplied properties to IF97 reference at (T, P)
+ * Compare two property sets
  *
- * @param {number} T - Temperature [K]
- * @param {number} P - Pressure [MPa]
- * @param {object} props - Properties to compare
+ * @param {object} model - Computed properties (user / solver result)
+ * @param {object} reference - Reference properties (IF97 baseline)
  * @returns {object} comparison report
  */
-export function compareToIF97(T, P, props) {
-  const ref = computeIF97(T, P);
+export function compareProperties(model, reference) {
   const comparison = {};
 
   for (const key of COMPARABLE_KEYS) {
-    const modelVal = props[key];
-    const refVal = ref[key];
+    const modelVal = model?.[key];
+    const refVal = reference?.[key];
 
     if (
-      typeof modelVal === "number" &&
-      typeof refVal === "number" &&
-      isFinite(modelVal) &&
-      isFinite(refVal)
+      Number.isFinite(modelVal) &&
+      Number.isFinite(refVal)
     ) {
       const absError = modelVal - refVal;
 
-      let relErrorPercent = null;
-      if (Math.abs(refVal) > 1e-12) {
-        relErrorPercent = (absError / refVal) * 100;
-      }
+      const relErrorPercent =
+        Math.abs(refVal) > EPS
+          ? (absError / refVal) * 100
+          : null;
 
       comparison[key] = {
         model: modelVal,
-        IF97: refVal,
+        reference: refVal,
         absError,
         relErrorPercent
       };
