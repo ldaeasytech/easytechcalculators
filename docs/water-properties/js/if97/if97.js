@@ -1,10 +1,25 @@
 // if97/if97.js
-// Core IF97 dispatcher with diagnostic-safe density handling
+// IF97 T–P property evaluator (PURE DISPATCHER)
+//
 // INTERNAL UNITS:
 //   T → K
 //   P → MPa
 //   h → kJ/kg
 //   s → kJ/(kg·K)
+//
+// RESPONSIBILITY:
+//   - Select correct IF97 region for (T, P)
+//   - Compute thermodynamic + transport properties
+//   - NO inverse solving
+//   - NO UI logic
+//   - NO diagnostics
+
+import {
+  T_R1_MAX,
+  T_R5_MIN,
+  P_R5_MAX,
+  EPS
+} from "../constants.js";
 
 import { region1 } from "./region1.js";
 import { region2 } from "./region2.js";
@@ -14,45 +29,39 @@ import { Psat } from "./region4.js";
 
 import { viscosity } from "./viscosity.js";
 import { conductivity } from "./conductivity.js";
-import { RHO_MIN, RHO_MAX } from "./constants.js";
-
-// IF97 boundaries
-const T23 = 623.15;      // K
-const P23 = 16.5292;    // MPa
-const T5  = 1073.15;    // K
-const PMAX = 100.0;     // MPa
-const EPS = 1e-7;
 
 /* ============================================================
-   MAIN IF97 SOLVER
+   Compute properties from (T, P)
    ============================================================ */
 
 export function computeIF97(T, P) {
   let state;
 
   /* ------------------------------------------------------------
-     REGION SELECTION (STRICT IF97)
+     Region selection (explicit, solver-safe)
   ------------------------------------------------------------ */
 
-  if (T >= T5) {
+  // Region 5: high-temperature steam
+  if (T >= T_R5_MIN && P <= P_R5_MAX) {
     state = region5(T, P);
   }
 
-  else if (T <= T23) {
+  // Regions 1 & 2 (below 623.15 K)
+  else if (T <= T_R1_MAX) {
     const Ps = Psat(T);
 
-    // Two-phase boundary (do not compute properties here)
-    if (Math.abs(P - Ps) < EPS) {
+    // Exactly on saturation line → undefined without quality
+    if (Math.abs(P - Ps) / Ps < 1e-7) {
       return {
         region: 4,
-        phase: "two-phase",
+        phase: "two_phase",
         T,
         P,
         message: "Two-phase state: specify quality x"
       };
     }
 
-    // Liquid
+    // Compressed / subcooled liquid
     if (P > Ps) {
       state = region1(T, P);
     }
@@ -62,61 +71,45 @@ export function computeIF97(T, P) {
     }
   }
 
+  // Region 2 or 3 above 623.15 K
   else {
-    if (P <= P23) {
+    // Region 2 (superheated)
+    if (P <= 16.5292) {
       state = region2(T, P);
-    } else {
+    }
+    // Region 3 (dense fluid)
+    else {
       state = region3(T, P);
     }
   }
 
   /* ------------------------------------------------------------
-     DIAGNOSTIC DENSITY HANDLING (NO THROW)
+     Attach state variables
   ------------------------------------------------------------ */
 
-  let densityFlag = "ok";
-
-  if (!isFinite(state.density)) {
-    densityFlag = "nan";
-  } else if (state.density <= 0) {
-    densityFlag = "negative";
-  } else if (state.density < RHO_MIN) {
-    densityFlag = "too-small";
-  } else if (state.density > RHO_MAX) {
-    densityFlag = "too-large";
-  }
-
-  // Attach diagnostics (always returned)
-  state._diagnostics = {
-    densityFlag,
-    rawDensity: state.density
-  };
+  state.T = T;
+  state.P = P;
 
   /* ------------------------------------------------------------
-     TRANSPORT PROPERTIES (SAFE MODE)
-     Only compute if density & Cp are physically usable
+     Transport properties (engineering-safe)
   ------------------------------------------------------------ */
 
   if (
-    densityFlag === "ok" &&
-    isFinite(state.cp) &&
+    Number.isFinite(state.density) &&
+    state.density > 0 &&
+    Number.isFinite(state.cp) &&
     state.cp > 0
   ) {
-    // Dynamic viscosity [Pa·s]
     state.viscosity = viscosity(T, state.density);
-
-    // Thermal conductivity [W/(m·K)]
-    state.thermalConductivity = conductivity(
+    state.conductivity = conductivity(
       T,
       state.density,
-      state.cp * 1000,   // kJ → J
+      state.cp,
       state.viscosity
     );
   } else {
-    // Skip transport if state is not physically valid
     state.viscosity = NaN;
-    state.thermalConductivity = NaN;
-    state._diagnostics.transportSkipped = true;
+    state.conductivity = NaN;
   }
 
   return state;
