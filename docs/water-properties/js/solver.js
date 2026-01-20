@@ -1,20 +1,21 @@
 // solver.js
 // Central thermodynamic solver (IF97-compliant)
 
-// solver.js
-// Central thermodynamic solver (IF97-compliant)
-
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
-import {
-  saturationPressure,
-  saturationTemperature
-} from "./if97/region4.js";
-import { region5 } from "./if97/region5.js";
 
+// ✅ CORRECT imports from region4.js
+import { Psat, Tsat } from "./if97/region4.js";
+
+import { region5 } from "./if97/region5.js";
 import { computeQuality } from "./quality.js";
 import { T_R1_MAX, T_R5_MIN, P_R5_MAX } from "./constants.js";
+
+// ✅ Alias to names used throughout solver
+const saturationPressure = Psat;
+const saturationTemperature = Tsat;
+
 
 /* ============================================================
    Public solver entry
