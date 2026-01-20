@@ -1,18 +1,10 @@
 // unitConverter.js
 // UI ⇄ IF97 unit conversion
-// INTERNAL IF97 UNITS (FIXED):
-//   temperature → K
-//   pressure    → MPa
-//   enthalpy    → kJ/kg
-//   entropy     → kJ/(kg·K)
-//   density     → kg/m³
-//   specificVolume → m³/kg
-//   cp, cv      → kJ/(kg·K)
 
 import { UNIT_SYSTEMS } from "./unitConfig.js";
 
-const K_TO_R = 1.8;
 const MPa_TO_PSIA = 145.0377377;
+const K_TO_R = 1.8;
 const KJPKG_TO_BTU_LBM = 0.429922614;
 const KGPM3_TO_LBMFT3 = 0.06242796;
 
@@ -25,10 +17,6 @@ export function toSI(raw, system = "SI") {
   }
 
   const out = { ...raw };
-
-  // Normalize aliases
-  if (out.T !== undefined) out.temperature = out.T;
-  if (out.P !== undefined) out.pressure = out.P;
 
   if (system === "SI") return out;
 
