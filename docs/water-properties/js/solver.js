@@ -1,5 +1,5 @@
 // solver.js
-// Central thermodynamic solver (IF97-compliant)
+// Central thermodynamic solver (IF97-compliant) 
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
