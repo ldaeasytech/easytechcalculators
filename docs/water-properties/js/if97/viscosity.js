@@ -1,4 +1,4 @@
-// if97/viscosity.js
+// viscosity.js
 // IAPWS 2008 dynamic viscosity of water and steam
 // INPUTS:
 //   T   [K]
@@ -8,7 +8,7 @@
 
 import { Tc, rhoc, EPS } from "../constants.js";
 
-// Dimensionless coefficients (IAPWS)
+/* IAPWS 2008 coefficients */
 const H = [
   [0.5132047, 0.3205656, 0, 0, 0, 0],
   [0.2151778, 0.7317883, 1.241044, 1.476783, 0, 0],
@@ -22,7 +22,7 @@ export function viscosity(T, rho) {
   const rhobar = rho / rhoc;
 
   /* ------------------------------------------------------------
-     μ0 : dilute-gas contribution
+     μ0 — dilute gas contribution
      ------------------------------------------------------------ */
   const mu0 =
     1e-6 *
@@ -36,7 +36,7 @@ export function viscosity(T, rho) {
     );
 
   /* ------------------------------------------------------------
-     μ1 : residual contribution
+     μ1 — residual contribution
      ------------------------------------------------------------ */
   let sum = 0;
   for (let i = 0; i < H.length; i++) {
@@ -53,10 +53,7 @@ export function viscosity(T, rho) {
   const mu1 = Math.exp(rhobar * sum);
 
   /* ------------------------------------------------------------
-     Critical enhancement (ENGINEERING-SAFE)
+     μ = μ0 · μ1  (NO artificial critical enhancement)
      ------------------------------------------------------------ */
-  const deltaT = Math.abs(T - Tc) / Tc;
-  const mu2 = 1 + 0.02 / Math.max(deltaT, 1e-3);
-
-  return mu0 * mu1 * mu2;
+  return mu0 * mu1;
 }
