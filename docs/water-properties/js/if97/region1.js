@@ -41,7 +41,7 @@ export function region1(T, P) {
     gpt -= n[k]*I[k]*J[k]*Math.pow(dpi,I[k]-1)*Math.pow(dt,J[k]-1);
   }
 
-  const v = (R*T/P)*(-gpi);
+  const v = (R*T/P)*pi*(-gpi);
   return {
     region:1,
     phase:"compressed_liquid",
