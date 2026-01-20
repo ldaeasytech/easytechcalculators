@@ -1,11 +1,6 @@
 // region4.js — IF97 Saturation Line
-// Provides BOTH Psat(T) and Tsat(P)
 
 import { EPS } from "../constants.js";
-
-/* ============================================================
-   IF97 Region 4 coefficients (as per standard)
-   ============================================================ */
 
 const n = [
   0.11670521452767e4,
@@ -20,10 +15,6 @@ const n = [
   0.65017534844798e3
 ];
 
-/* ============================================================
-   Saturation pressure Psat(T)
-   T [K] → P [MPa]
-   ============================================================ */
 export function Psat(T) {
   const theta = T + n[8] / (T - n[9]);
 
@@ -31,29 +22,18 @@ export function Psat(T) {
   const B = n[2] * theta * theta + n[3] * theta + n[4];
   const C = n[5] * theta * theta + n[6] * theta + n[7];
 
-  const disc = Math.max(B * B - 4 * A * C, EPS);
-
-  return Math.pow((2 * C) / (-B + Math.sqrt(disc)), 4);
+  return Math.pow((2 * C) / (-B + Math.sqrt(Math.max(B * B - 4 * A * C, EPS))), 4);
 }
 
-/* ============================================================
-   Saturation temperature Tsat(P)
-   P [MPa] → T [K]
-   (Numerical inversion of Psat)
-   ============================================================ */
 export function Tsat(P) {
   let Tlow = 273.15;
   let Thigh = 647.096;
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 60; i++) {
     const Tmid = 0.5 * (Tlow + Thigh);
     const f = Psat(Tmid) - P;
-
-    if (Math.abs(f) < 1e-8) return Tmid;
-
-    if (f > 0) Thigh = Tmid;
-    else Tlow = Tmid;
+    if (Math.abs(f) < EPS) return Tmid;
+    f > 0 ? (Thigh = Tmid) : (Tlow = Tmid);
   }
-
-  return NaN; // non-convergent (should not happen in valid range)
+  return NaN;
 }
