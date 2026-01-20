@@ -79,7 +79,7 @@ export function region2(T, P) {
   }
 
   // === SPECIFIC VOLUME (kJ + MPa → m³/kg needs 1e-3) ===
-  const specificVolume = 1e-3 * (R * T / P) * (1 + grp);
+  const specificVolume = 1e-3 * (R * T / P) * (1 + pi*grp);
   const density = 1 / Math.max(specificVolume, EPS);
 
   const enthalpy = R * T * tau * (g0t + grt);
