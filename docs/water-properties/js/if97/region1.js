@@ -25,32 +25,59 @@ export function region1(T, P) {
   const pi = P / 16.53;
   const tau = 1386 / T;
 
-  let g=0, gpi=0, gt=0, gpp=0, gtt=0, gpt=0;
+  const dpi = 7.1 - pi;
+  const dt = tau - 1.222;
 
-  for (let k=0;k<n.length;k++){
-    const dpi = 7.1 - pi;
-    const dt = tau - 1.222;
+  let g = 0;
+  let gpi = 0;
+  let gt = 0;
+  let gpp = 0;
+  let gtt = 0;
+  let gpt = 0;
+
+  for (let k = 0; k < n.length; k++) {
     const dI = Math.pow(dpi, I[k]);
     const dJ = Math.pow(dt, J[k]);
 
-    g += n[k]*dI*dJ;
-    gpi -= n[k]*I[k]*Math.pow(dpi,I[k]-1)*dJ;
-    gt += n[k]*J[k]*dI*Math.pow(dt,J[k]-1);
-    gpp += n[k]*I[k]*(I[k]-1)*Math.pow(dpi,I[k]-2)*dJ;
-    gtt += n[k]*J[k]*(J[k]-1)*dI*Math.pow(dt,J[k]-2);
-    gpt -= n[k]*I[k]*J[k]*Math.pow(dpi,I[k]-1)*Math.pow(dt,J[k]-1);
+    g += n[k] * dI * dJ;
+
+    gpi += -n[k] * I[k] * Math.pow(dpi, I[k] - 1) * dJ;
+    gt  +=  n[k] * J[k] * dI * Math.pow(dt, J[k] - 1);
+
+    gpp +=  n[k] * I[k] * (I[k] - 1) * Math.pow(dpi, I[k] - 2) * dJ;
+    gtt +=  n[k] * J[k] * (J[k] - 1) * dI * Math.pow(dt, J[k] - 2);
+    gpt += -n[k] * I[k] * J[k] *
+            Math.pow(dpi, I[k] - 1) *
+            Math.pow(dt, J[k] - 1);
   }
 
-  const v = (R*T/P)*pi*(-gpi);
+  // === CORRECT IF97 FORMULAS ===
+
+  const specificVolume = (R * T / P) * pi * gpi;
+  const density = 1 / Math.max(specificVolume, EPS);
+
+  const enthalpy = R * T * tau * gt;
+  const entropy  = R * (tau * gt - g);
+
+  const cp = -R * tau * tau * gtt;
+
+  const denom = 1 - pi * pi * gpp;
+  const cv =
+    cp -
+    R *
+      Math.pow(1 + pi * gpi - tau * pi * gpt, 2) /
+      Math.max(denom, EPS);
+
   return {
-    region:1,
-    phase:"compressed_liquid",
-    T,P,
-    specificVolume:v,
-    density:1/Math.max(v,EPS),
-    enthalpy:R*T*tau*gt,
-    entropy:R*(tau*gt-g),
-    cp:-R*tau*tau*gtt,
-    cv:R*(-tau*tau*gtt+Math.pow(gpi-tau*gpt,2)/Math.max(gpp,EPS))
+    region: 1,
+    phase: "compressed_liquid",
+    T,
+    P,
+    density,
+    specificVolume,
+    enthalpy,
+    entropy,
+    cp,
+    cv
   };
 }
