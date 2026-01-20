@@ -1,5 +1,13 @@
 // unitConverter.js
 // UI ⇄ IF97 unit conversion
+// INTERNAL IF97 UNITS (FIXED):
+//   temperature → K
+//   pressure    → MPa
+//   enthalpy    → kJ/kg
+//   entropy     → kJ/(kg·K)
+//   density     → kg/m³
+//   specificVolume → m³/kg
+//   cp, cv      → kJ/(kg·K)
 
 import { UNIT_SYSTEMS } from "./unitConfig.js";
 
@@ -57,6 +65,7 @@ export function fromSI(raw, system = "SI") {
 
   const out = { ...raw };
 
+  // 🚨 CRITICAL: SI → SI MUST DO NOTHING
   if (system === "SI") return out;
 
   if (Number.isFinite(out.temperature)) {
