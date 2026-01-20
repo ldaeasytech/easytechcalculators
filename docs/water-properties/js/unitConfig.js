@@ -1,10 +1,8 @@
 // unitConfig.js
 // Display + canonical unit definitions
-// INTERNAL UNITS NEVER CHANGE
 
 export const UNIT_SYSTEMS = ["SI", "Imperial"];
 
-// Canonical property keys (used everywhere)
 export const PROPERTY_KEYS = {
   temperature: "temperature",
   pressure: "pressure",
@@ -18,40 +16,40 @@ export const PROPERTY_KEYS = {
   conductivity: "conductivity"
 };
 
-// Phase labels (UI + solver-safe)
+// MUST match solver outputs exactly
 export const PHASES = {
-  ICE: "ice",
-  SUBCOOLED: "subcooled_liquid",
+  COMPRESSED: "compressed_liquid",
   SAT_LIQ: "saturated_liquid",
   SAT_VAP: "saturated_vapor",
-  SUPERHEATED: "superheated_steam"
+  SUPERHEATED: "superheated_vapor",
+  DENSE: "dense_fluid",
+  TWO_PHASE: "two_phase"
 };
 
-// Display units only (NO conversion logic here)
 export const unitSets = {
   SI: {
-    temperature: { label: "Temperature", unit: "K" },
-    pressure: { label: "Pressure", unit: "MPa" },
-    enthalpy: { label: "Enthalpy", unit: "kJ/kg" },
-    entropy: { label: "Entropy", unit: "kJ/kg·K" },
-    density: { label: "Density", unit: "kg/m³" },
-    specificVolume: { label: "Specific Volume", unit: "m³/kg" },
-    cp: { label: "Cp", unit: "kJ/kg·K" },
-    cv: { label: "Cv", unit: "kJ/kg·K" },
-    viscosity: { label: "Viscosity", unit: "Pa·s" },
-    conductivity: { label: "Thermal Conductivity", unit: "W/m·K" }
+    temperature: { unit: "K" },
+    pressure: { unit: "MPa" },
+    enthalpy: { unit: "kJ/kg" },
+    entropy: { unit: "kJ/kg·K" },
+    density: { unit: "kg/m³" },
+    specificVolume: { unit: "m³/kg" },
+    cp: { unit: "kJ/kg·K" },
+    cv: { unit: "kJ/kg·K" },
+    viscosity: { unit: "Pa·s" },
+    conductivity: { unit: "W/m·K" }
   },
 
   Imperial: {
-    temperature: { label: "Temperature", unit: "°F" },
-    pressure: { label: "Pressure", unit: "psia" },
-    enthalpy: { label: "Enthalpy", unit: "Btu/lbm" },
-    entropy: { label: "Entropy", unit: "Btu/lbm·R" },
-    density: { label: "Density", unit: "lbm/ft³" },
-    specificVolume: { label: "Specific Volume", unit: "ft³/lbm" },
-    cp: { label: "Cp", unit: "Btu/lbm·R" },
-    cv: { label: "Cv", unit: "Btu/lbm·R" },
-    viscosity: { label: "Viscosity", unit: "lbm/ft·s" },
-    conductivity: { label: "Thermal Conductivity", unit: "Btu/hr·ft·R" }
+    temperature: { unit: "°F" },
+    pressure: { unit: "psia" },
+    enthalpy: { unit: "Btu/lbm" },
+    entropy: { unit: "Btu/lbm·R" },
+    density: { unit: "lbm/ft³" },
+    specificVolume: { unit: "ft³/lbm" },
+    cp: { unit: "Btu/lbm·R" },
+    cv: { unit: "Btu/lbm·R" },
+    viscosity: { unit: "lbm/ft·s" },
+    conductivity: { unit: "Btu/hr·ft·R" }
   }
 };
