@@ -78,7 +78,7 @@ export function region2(T, P) {
     grpt += nr[k] * Ir[k] * Jr[k] * piI * tauJ / (pi * tau);
   }
 
-  const v = (R * T / P) * (1 + grp);
+  const v = 1e-3 * (R * T / P) * (1 + grp);
   const density = 1 / Math.max(v, EPS);
 
   const enthalpy = R * T * tau * (g0t + grt);
