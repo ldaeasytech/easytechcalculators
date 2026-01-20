@@ -1,231 +1,195 @@
 // solver.js
-// Central thermodynamic state solver (IF97)
-// INTERNAL UNITS:
-//   temperature → K
-//   pressure    → MPa
-//   enthalpy    → kJ/kg
-//   entropy     → kJ/(kg·K)
-
-import {
-  T_MIN,
-  T_MAX,
-  T_R1_MAX,
-  T_R5_MIN,
-  P_R5_MAX,
-  EPS
-} from "./constants.js";
+// Central thermodynamic solver (IF97-compliant)
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
+import { region4, saturationPressure, saturationTemperature } from "./if97/region4.js";
 import { region5 } from "./if97/region5.js";
-import { Psat, Tsat } from "./if97/region4.js";
 
-const MAX_ITER = 80;
+import { computeQuality } from "./quality.js";
+import { T_R1_MAX, T_R5_MIN, P_R5_MAX } from "./constants.js";
 
 /* ============================================================
-   Normalize inputs
+   Public solver entry
    ============================================================ */
-function normalizeInputs(raw) {
-  return {
-    temperature: raw.temperature ?? raw.T,
-    pressure: raw.pressure ?? raw.P,
-    enthalpy: raw.enthalpy ?? raw.h,
-    entropy: raw.entropy ?? raw.s,
-    quality: raw.quality ?? raw.x
-  };
+
+export function solve(inputs) {
+  if ("quality" in inputs && "temperature" in inputs) {
+    return solveTx(inputs);
+  }
+
+  if ("temperature" in inputs && "pressure" in inputs) {
+    return solveTP(inputs.temperature, inputs.pressure);
+  }
+
+  if ("pressure" in inputs && "enthalpy" in inputs) {
+    return solvePh(inputs);
+  }
+
+  if ("pressure" in inputs && "entropy" in inputs) {
+    return solvePs(inputs);
+  }
+
+  throw new Error("Unsupported input combination.");
 }
 
 /* ============================================================
-   Region selection for (T, P)
+   T–P (most common)
    ============================================================ */
+
 function solveTP(T, P) {
-  const Ps = Psat(T);
+  const Tsat = saturationTemperature(P);
 
-  // Region 5: high temperature vapor
+  if (T < Tsat - 1e-6) {
+    return region1(T, P);
+  }
+
+  if (Math.abs(T - Tsat) <= 1e-6) {
+    const satL = region1(T, P);
+    const satV = region2(T, P);
+    return {
+      region: 4,
+      phase: "two_phase",
+      T,
+      P,
+      quality: null,
+      satL,
+      satV
+    };
+  }
+
   if (T >= T_R5_MIN && P <= P_R5_MAX) {
-    return {
-      T,
-      P,
-      phase: "superheated_vapor",
-      ...region5(T, P)
-    };
+    return region5(T, P);
   }
 
-  // Saturation line (default → vapor side)
-  if (Math.abs(P - Ps) / Ps < 1e-7) {
-    return {
-      T,
-      P,
-      phase: "saturated_vapor",
-      ...region2(T, P)
-    };
+  if (T > T_R1_MAX) {
+    return region2(T, P);
   }
 
-  // Compressed / subcooled liquid
-  if (T <= T_R1_MAX && P > Ps) {
-    return {
-      T,
-      P,
-      phase: "compressed_liquid",
-      ...region1(T, P)
-    };
-  }
-
-  // Superheated vapor (Region 2)
-  if (T <= T_R1_MAX && P < Ps) {
-    return {
-      T,
-      P,
-      phase: "superheated_vapor",
-      ...region2(T, P)
-    };
-  }
-
-  // Dense fluid / near critical (Region 3)
-  return {
-    T,
-    P,
-    phase: "dense_fluid",
-    ...region3(T, P)
-  };
+  return region3(T, P);
 }
 
 /* ============================================================
-   Saturated mixture (T, x)
+   T–x (QUALITY) — FIXED
    ============================================================ */
-function solveTx(T, x) {
-  if (x < 0 || x > 1) {
-    throw new Error("Quality must be between 0 and 1");
+
+function solveTx({ temperature, quality }) {
+  if (quality < 0 || quality > 1) {
+    throw new Error("Quality x must be between 0 and 1.");
   }
 
-  const P = Psat(T);
+  const T = temperature;
+  const P = saturationPressure(T);
 
   const satL = region1(T, P);
   const satV = region2(T, P);
 
-  const mix = (a, b) => a + x * (b - a);
+  // Endpoints MUST be returned directly
+  if (quality === 0) {
+    return {
+      ...satL,
+      phase: "saturated_liquid",
+      quality: 0
+    };
+  }
 
-  return {
+  if (quality === 1) {
+    return {
+      ...satV,
+      phase: "saturated_vapor",
+      quality: 1
+    };
+  }
+
+  // Two-phase mixture
+  const mix = {
     region: 4,
     phase: "two_phase",
     T,
     P,
-    quality: x,
-    density: 1 / mix(satL.specificVolume, satV.specificVolume),
-    specificVolume: mix(
-      satL.specificVolume,
-      satV.specificVolume
-    ),
-    enthalpy: mix(satL.enthalpy, satV.enthalpy),
-    entropy: mix(satL.entropy, satV.entropy),
-    cp: NaN,
-    cv: NaN,
-    viscosity: NaN,
-    conductivity: NaN
+    quality,
+
+    specificVolume:
+      satL.specificVolume +
+      quality * (satV.specificVolume - satL.specificVolume),
+
+    enthalpy:
+      satL.enthalpy +
+      quality * (satV.enthalpy - satL.enthalpy),
+
+    entropy:
+      satL.entropy +
+      quality * (satV.entropy - satL.entropy)
   };
+
+  mix.density = 1 / mix.specificVolume;
+
+  return mix;
 }
 
 /* ============================================================
-   Inverse solvers
+   P–h
    ============================================================ */
-function solvePH(P, hTarget) {
-  const Ts = Tsat(P);
 
-  let Tlow = T_MIN;
-  let Thigh = T_MAX;
+function solvePh({ pressure, enthalpy }) {
+  const P = pressure;
+  const Tsat = saturationTemperature(P);
 
-  if (Number.isFinite(Ts)) {
-    const hL = region1(Ts, P).enthalpy;
-    const hV = region2(Ts, P).enthalpy;
+  const satL = region1(Tsat, P);
+  const satV = region2(Tsat, P);
 
-    if (hTarget > hL && hTarget < hV) {
-      const x = (hTarget - hL) / (hV - hL);
-      return solveTx(Ts, x);
-    }
-
-    if (hTarget <= hL) Thigh = Ts;
-    if (hTarget >= hV) Tlow = Ts;
+  if (enthalpy < satL.enthalpy) {
+    return region1(findT(P, enthalpy, region1), P);
   }
 
-  let T = 0.5 * (Tlow + Thigh);
-
-  for (let i = 0; i < MAX_ITER; i++) {
-    const state = solveTP(T, P);
-    const f = state.enthalpy - hTarget;
-
-    if (Math.abs(f) < EPS) return state;
-
-    if (!Number.isFinite(state.cp) || state.cp <= 0) {
-      break;
-    }
-
-    const Tnew = T - f / state.cp;
-    T = Math.min(Math.max(Tnew, Tlow), Thigh);
-
-    f > 0 ? (Thigh = T) : (Tlow = T);
+  if (enthalpy > satV.enthalpy) {
+    return region2(findT(P, enthalpy, region2), P);
   }
 
-  throw new Error("solvePH did not converge");
-}
+  const x = computeQuality(satL, satV, { enthalpy });
 
-function solvePS(P, sTarget) {
-  const Ts = Tsat(P);
-
-  let Tlow = T_MIN;
-  let Thigh = T_MAX;
-
-  if (Number.isFinite(Ts)) {
-    const sL = region1(Ts, P).entropy;
-    const sV = region2(Ts, P).entropy;
-
-    if (sTarget > sL && sTarget < sV) {
-      const x = (sTarget - sL) / (sV - sL);
-      return solveTx(Ts, x);
-    }
-
-    if (sTarget <= sL) Thigh = Ts;
-    if (sTarget >= sV) Tlow = Ts;
-  }
-
-  let T = 0.5 * (Tlow + Thigh);
-
-  for (let i = 0; i < MAX_ITER; i++) {
-    const state = solveTP(T, P);
-    const f = state.entropy - sTarget;
-
-    if (Math.abs(f) < EPS) return state;
-
-    const dSdT = state.cp / T;
-    if (!Number.isFinite(dSdT) || dSdT <= 0) break;
-
-    const Tnew = T - f / dSdT;
-    T = Math.min(Math.max(Tnew, Tlow), Thigh);
-
-    f > 0 ? (Thigh = T) : (Tlow = T);
-  }
-
-  throw new Error("solvePS did not converge");
+  return solveTx({ temperature: Tsat, quality: x });
 }
 
 /* ============================================================
-   Public dispatcher
+   P–s
    ============================================================ */
-export function solve(rawInputs) {
-  const {
-    temperature: T,
-    pressure: P,
-    enthalpy: h,
-    entropy: s,
-    quality: x
-  } = normalizeInputs(rawInputs);
 
-  if (Number.isFinite(T) && Number.isFinite(P)) return solveTP(T, P);
-  if (Number.isFinite(P) && Number.isFinite(h)) return solvePH(P, h);
-  if (Number.isFinite(P) && Number.isFinite(s)) return solvePS(P, s);
-  if (Number.isFinite(T) && Number.isFinite(x)) return solveTx(T, x);
+function solvePs({ pressure, entropy }) {
+  const P = pressure;
+  const Tsat = saturationTemperature(P);
 
-  throw new Error(
-    "Unsupported property pair. Allowed: (T,P), (P,h), (P,s), (T,x)"
-  );
+  const satL = region1(Tsat, P);
+  const satV = region2(Tsat, P);
+
+  if (entropy < satL.entropy) {
+    return region1(findT(P, entropy, region1, "entropy"), P);
+  }
+
+  if (entropy > satV.entropy) {
+    return region2(findT(P, entropy, region2, "entropy"), P);
+  }
+
+  const x = computeQuality(satL, satV, { entropy });
+
+  return solveTx({ temperature: Tsat, quality: x });
+}
+
+/* ============================================================
+   Root finder (generic)
+   ============================================================ */
+
+function findT(P, target, regionFn, key = "enthalpy") {
+  let Tlow = 250;
+  let Thigh = 2000;
+
+  for (let i = 0; i < 50; i++) {
+    const Tmid = 0.5 * (Tlow + Thigh);
+    const state = regionFn(Tmid, P);
+    if (state[key] > target) Thigh = Tmid;
+    else Tlow = Tmid;
+  }
+
+  return 0.5 * (Tlow + Thigh);
 }
