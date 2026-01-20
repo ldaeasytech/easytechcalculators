@@ -3,6 +3,9 @@
 // Single entry point for the application
 
 // IMPORTANT: ensure main.js executes first (UI initialization)
+
+import { unitSets } from "./unitConfig.js";
+
 import "./main.js";
 
 import { solve } from "./solver.js";
@@ -64,15 +67,45 @@ document.getElementById("calcForm").addEventListener("submit", e => {
       }
     }
 
-    renderResultsTable(stateUI, confidence);
+    function renderResultsTable(state, confidence) {
+  const container = document.getElementById("resultsTable");
+  const unitSystem =
+    document.getElementById("unitSystem")?.value ?? "SI";
 
-  } catch (err) {
-    document.getElementById("errors").textContent =
-      "❌ " + (err?.message ?? "Unknown error");
-  } finally {
-    document.getElementById("loading").style.display = "none";
-  }
-});
+  const units = unitSets[unitSystem];
+
+  const rows = COMPARABLE_PROPERTIES
+    .filter(k => Number.isFinite(state[k]))
+    .map(k => {
+      const unit = units?.[k]?.unit ?? "";
+      return `
+        <tr>
+          <td>${LABELS[k]}</td>
+          <td class="value">
+            ${formatNumber(state[k])}
+            <span class="unit">${unit}</span>
+          </td>
+          <td>${confidence[k]?.confidence_band ?? "—"}</td>
+        </tr>
+      `;
+    })
+    .join("");
+
+  container.innerHTML = `
+    ${renderPhaseBanner(state)}
+    <table>
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Value</th>
+          <th>Confidence</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
 
 /* ============================================================
    Input handling
