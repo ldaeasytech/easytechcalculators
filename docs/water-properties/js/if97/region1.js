@@ -53,7 +53,7 @@ export function region1(T, P) {
 
   // === CORRECT IF97 FORMULAS ===
 
-  const specificVolume = (R * T / P) * pi * gpi;
+  const specificVolume = 1e-3 * (R * T / P) * pi * gpi;
   const density = 1 / Math.max(specificVolume, EPS);
 
   const enthalpy = R * T * tau * gt;
