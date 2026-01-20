@@ -82,7 +82,10 @@ function solveTP(T, P) {
    ============================================================ */
 
 function solveTx({ temperature, quality }) {
-  if (quality < 0 || quality > 1) {
+  // 🔴 CRITICAL FIX: force numeric quality
+  const x = Number(quality);
+
+  if (!Number.isFinite(x) || x < 0 || x > 1) {
     throw new Error("Quality x must be between 0 and 1.");
   }
 
@@ -92,8 +95,10 @@ function solveTx({ temperature, quality }) {
   const satL = region1(T, P);
   const satV = region2(T, P);
 
-  // Endpoints MUST be returned directly
-  if (quality === 0) {
+  const EPS_X = 1e-9;
+
+  // Saturated liquid
+  if (x <= EPS_X) {
     return {
       ...satL,
       phase: "saturated_liquid",
@@ -101,7 +106,8 @@ function solveTx({ temperature, quality }) {
     };
   }
 
-  if (quality === 1) {
+  // Saturated vapor
+  if (x >= 1 - EPS_X) {
     return {
       ...satV,
       phase: "saturated_vapor",
@@ -110,30 +116,31 @@ function solveTx({ temperature, quality }) {
   }
 
   // Two-phase mixture
-  const mix = {
+  const specificVolume =
+    satL.specificVolume +
+    x * (satV.specificVolume - satL.specificVolume);
+
+  const enthalpy =
+    satL.enthalpy +
+    x * (satV.enthalpy - satL.enthalpy);
+
+  const entropy =
+    satL.entropy +
+    x * (satV.entropy - satL.entropy);
+
+  return {
     region: 4,
     phase: "two_phase",
     T,
     P,
-    quality,
-
-    specificVolume:
-      satL.specificVolume +
-      quality * (satV.specificVolume - satL.specificVolume),
-
-    enthalpy:
-      satL.enthalpy +
-      quality * (satV.enthalpy - satL.enthalpy),
-
-    entropy:
-      satL.entropy +
-      quality * (satV.entropy - satL.entropy)
+    quality: x,
+    specificVolume,
+    density: 1 / specificVolume,
+    enthalpy,
+    entropy
   };
-
-  mix.density = 1 / mix.specificVolume;
-
-  return mix;
 }
+
 
 /* ============================================================
    P–h
