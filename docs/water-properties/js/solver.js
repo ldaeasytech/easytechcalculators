@@ -21,10 +21,10 @@ import { region3 } from "./if97/region3.js";
 import { region5 } from "./if97/region5.js";
 import { Psat, Tsat } from "./if97/region4.js";
 
-const MAX_ITER = 60;
+const MAX_ITER = 80;
 
 /* ============================================================
-   Utility: normalize solver inputs
+   Normalize inputs
    ============================================================ */
 function normalizeInputs(raw) {
   return {
@@ -42,25 +42,53 @@ function normalizeInputs(raw) {
 function solveTP(T, P) {
   const Ps = Psat(T);
 
+  // Region 5: high temperature vapor
   if (T >= T_R5_MIN && P <= P_R5_MAX) {
-    return { T, P, ...region5(T, P) };
+    return {
+      T,
+      P,
+      phase: "superheated_vapor",
+      ...region5(T, P)
+    };
   }
 
-  if (Math.abs(P - Ps) / Ps < 1e-6) {
-    // Saturation line → default to vapor side
-    return { T, P, ...region2(T, P) };
+  // Saturation line (default → vapor side)
+  if (Math.abs(P - Ps) / Ps < 1e-7) {
+    return {
+      T,
+      P,
+      phase: "saturated_vapor",
+      ...region2(T, P)
+    };
   }
 
+  // Compressed / subcooled liquid
   if (T <= T_R1_MAX && P > Ps) {
-    return { T, P, ...region1(T, P) };
+    return {
+      T,
+      P,
+      phase: "compressed_liquid",
+      ...region1(T, P)
+    };
   }
 
+  // Superheated vapor (Region 2)
   if (T <= T_R1_MAX && P < Ps) {
-    return { T, P, ...region2(T, P) };
+    return {
+      T,
+      P,
+      phase: "superheated_vapor",
+      ...region2(T, P)
+    };
   }
 
-  // Dense fluid region
-  return { T, P, ...region3(T, P) };
+  // Dense fluid / near critical (Region 3)
+  return {
+    T,
+    P,
+    phase: "dense_fluid",
+    ...region3(T, P)
+  };
 }
 
 /* ============================================================
@@ -92,7 +120,9 @@ function solveTx(T, x) {
     enthalpy: mix(satL.enthalpy, satV.enthalpy),
     entropy: mix(satL.entropy, satV.entropy),
     cp: NaN,
-    cv: NaN
+    cv: NaN,
+    viscosity: NaN,
+    conductivity: NaN
   };
 }
 
@@ -126,14 +156,14 @@ function solvePH(P, hTarget) {
 
     if (Math.abs(f) < EPS) return state;
 
-    const dHdT = state.cp;
-    if (!Number.isFinite(dHdT) || dHdT <= 0) break;
+    if (!Number.isFinite(state.cp) || state.cp <= 0) {
+      break;
+    }
 
-    const Tnew = T - f / dHdT;
-
+    const Tnew = T - f / state.cp;
     T = Math.min(Math.max(Tnew, Tlow), Thigh);
-    if (f > 0) Thigh = T;
-    else Tlow = T;
+
+    f > 0 ? (Thigh = T) : (Tlow = T);
   }
 
   throw new Error("solvePH did not converge");
@@ -170,10 +200,9 @@ function solvePS(P, sTarget) {
     if (!Number.isFinite(dSdT) || dSdT <= 0) break;
 
     const Tnew = T - f / dSdT;
-
     T = Math.min(Math.max(Tnew, Tlow), Thigh);
-    if (f > 0) Thigh = T;
-    else Tlow = T;
+
+    f > 0 ? (Thigh = T) : (Tlow = T);
   }
 
   throw new Error("solvePS did not converge");
@@ -191,21 +220,10 @@ export function solve(rawInputs) {
     quality: x
   } = normalizeInputs(rawInputs);
 
-  if (Number.isFinite(T) && Number.isFinite(P)) {
-    return solveTP(T, P);
-  }
-
-  if (Number.isFinite(P) && Number.isFinite(h)) {
-    return solvePH(P, h);
-  }
-
-  if (Number.isFinite(P) && Number.isFinite(s)) {
-    return solvePS(P, s);
-  }
-
-  if (Number.isFinite(T) && Number.isFinite(x)) {
-    return solveTx(T, x);
-  }
+  if (Number.isFinite(T) && Number.isFinite(P)) return solveTP(T, P);
+  if (Number.isFinite(P) && Number.isFinite(h)) return solvePH(P, h);
+  if (Number.isFinite(P) && Number.isFinite(s)) return solvePS(P, s);
+  if (Number.isFinite(T) && Number.isFinite(x)) return solveTx(T, x);
 
   throw new Error(
     "Unsupported property pair. Allowed: (T,P), (P,h), (P,s), (T,x)"
