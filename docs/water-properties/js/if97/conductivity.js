@@ -1,18 +1,14 @@
-// if97/conductivity.js
+// conductivity.js
 // IAPWS 2011 thermal conductivity of water and steam
 // INPUTS:
 //   T   [K]
 //   rho [kg/m³]
-//   cp  [kJ/(kg·K)]
-//   mu  [Pa·s]
 // OUTPUT:
 //   conductivity [W/(m·K)]
 
 import { Tc, rhoc, EPS } from "../constants.js";
 
-const kB = 1.380649e-23;
-
-// Polynomial coefficients
+/* IAPWS 2011 coefficients */
 const L = [
   [1.60397357, 2.33771842, 2.19650529, -1.21051378, -2.7203370],
   [2.78843778, -1.64647687, -2.91093611, 1.55548907, 0.0],
@@ -20,17 +16,12 @@ const L = [
   [0.0, 0.0, 0.0, 0.0, 0.0]
 ];
 
-export function conductivity(T, rho, cp, mu) {
+export function conductivity(T, rho) {
   const Tbar = T / Tc;
   const rhobar = rho / rhoc;
 
   /* ------------------------------------------------------------
-     Convert units
-     ------------------------------------------------------------ */
-  const cpSI = cp * 1000; // kJ/kg·K → J/kg·K
-
-  /* ------------------------------------------------------------
-     λ0 : dilute-gas term
+     λ0 — dilute gas contribution
      ------------------------------------------------------------ */
   const lambda0 =
     1.67752 +
@@ -39,7 +30,7 @@ export function conductivity(T, rho, cp, mu) {
     0.241605 / (Tbar ** 3);
 
   /* ------------------------------------------------------------
-     λ1 : residual term
+     λ1 — residual contribution
      ------------------------------------------------------------ */
   let sum = 0;
   for (let i = 0; i < L.length; i++) {
@@ -56,14 +47,7 @@ export function conductivity(T, rho, cp, mu) {
   const lambda1 = Math.exp(rhobar * sum);
 
   /* ------------------------------------------------------------
-     λ2 : critical enhancement (clamped)
+     λ = λ0 · λ1  (NO critical enhancement in web calculator)
      ------------------------------------------------------------ */
-  const deltaT = Math.abs(T - Tc) / Tc;
-  const xi = Math.max(deltaT, 1e-3);
-
-  const lambda2 =
-    (kB * T * T * rho * rho * cpSI) /
-    (6 * Math.PI * Math.max(mu, EPS) * xi);
-
-  return lambda0 * lambda1 + lambda2;
+  return lambda0 * lambda1;
 }
