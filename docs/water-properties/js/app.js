@@ -2,12 +2,10 @@
 // UI ↔ Solver orchestration layer (AUTHORITATIVE)
 // Single entry point for the application
 
-// IMPORTANT: ensure main.js executes first (UI initialization)
-
-import { unitSets } from "./unitConfig.js";
-
+// Ensure main.js executes first (UI initialization)
 import "./main.js";
 
+import { unitSets } from "./unitConfig.js";
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
 import { toSI, fromSI } from "./unitConverter.js";
@@ -42,13 +40,13 @@ document.getElementById("calcForm").addEventListener("submit", e => {
       }
     }
 
-    // Remove undefined / non-finite inputs explicitly
+    // Remove undefined / non-finite inputs
     const canonicalInputs = normalizeInputs(rawInputs);
 
-    // Convert UI → internal IF97 SI units
+    // Convert UI → internal IF97 units
     const siInputs = toSI(canonicalInputs, unitSystem);
 
-    // Physical and logical validation
+    // Physical validation
     const validation = validateState(siInputs);
     renderValidation(validation);
     if (!validation.valid) return;
@@ -59,7 +57,7 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     // Convert back to UI units
     const stateUI = fromSI(stateSI, unitSystem);
 
-    // Estimate confidence bands (phase-aware)
+    // Confidence bands
     const confidence = {};
     for (const k of COMPARABLE_PROPERTIES) {
       if (Number.isFinite(stateUI[k])) {
@@ -67,45 +65,15 @@ document.getElementById("calcForm").addEventListener("submit", e => {
       }
     }
 
-    function renderResultsTable(state, confidence) {
-  const container = document.getElementById("resultsTable");
-  const unitSystem =
-    document.getElementById("unitSystem")?.value ?? "SI";
+    renderResultsTable(stateUI, confidence);
 
-  const units = unitSets[unitSystem];
-
-  const rows = COMPARABLE_PROPERTIES
-    .filter(k => Number.isFinite(state[k]))
-    .map(k => {
-      const unit = units?.[k]?.unit ?? "";
-      return `
-        <tr>
-          <td>${LABELS[k]}</td>
-          <td class="value">
-            ${formatNumber(state[k])}
-            <span class="unit">${unit}</span>
-          </td>
-          <td>${confidence[k]?.confidence_band ?? "—"}</td>
-        </tr>
-      `;
-    })
-    .join("");
-
-  container.innerHTML = `
-    ${renderPhaseBanner(state)}
-    <table>
-      <thead>
-        <tr>
-          <th>Property</th>
-          <th>Value</th>
-          <th>Confidence</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
-}
-
+  } catch (err) {
+    document.getElementById("errors").textContent =
+      "❌ " + (err?.message ?? "Unknown error");
+  } finally {
+    document.getElementById("loading").style.display = "none";
+  }
+});
 
 /* ============================================================
    Input handling
@@ -146,8 +114,7 @@ function readInputsByMode(mode) {
 }
 
 /**
- * Removes undefined, null, and non-finite values.
- * Ensures solver only receives intentional inputs.
+ * Removes undefined and non-finite values.
  */
 function normalizeInputs(obj) {
   const out = {};
@@ -187,16 +154,26 @@ const LABELS = {
 
 function renderResultsTable(state, confidence) {
   const container = document.getElementById("resultsTable");
+  const unitSystem =
+    document.getElementById("unitSystem")?.value ?? "SI";
+
+  const units = unitSets[unitSystem];
 
   const rows = COMPARABLE_PROPERTIES
     .filter(k => Number.isFinite(state[k]))
-    .map(k => `
-      <tr>
-        <td>${LABELS[k]}</td>
-        <td class="value">${formatNumber(state[k])}</td>
-        <td>${confidence[k]?.confidence_band ?? "—"}</td>
-      </tr>
-    `)
+    .map(k => {
+      const unit = units?.[k]?.unit ?? "";
+      return `
+        <tr>
+          <td>${LABELS[k]}</td>
+          <td class="value">
+            ${formatNumber(state[k])}
+            <span class="unit">${unit}</span>
+          </td>
+          <td>${confidence[k]?.confidence_band ?? "—"}</td>
+        </tr>
+      `;
+    })
     .join("");
 
   container.innerHTML = `
