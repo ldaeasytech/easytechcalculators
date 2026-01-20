@@ -25,7 +25,7 @@ export function region5(T, P) {
     gtt += n[i] * J[i] * (J[i] - 1) * t / (tau * tau);
   }
 
-  const v = R * T / P;
+  const v = 1e-3 * R * T / P;
   const density = 1 / Math.max(v, EPS);
   const enthalpy = R * T * tau * gt;
   const entropy = R * (tau * gt - g);
