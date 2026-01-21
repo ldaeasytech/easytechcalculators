@@ -1,46 +1,54 @@
-// solver.js
+// solver.js — IF97 dispatcher (FIXED)
+
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
-import { saturationPressure_T } from "./if97/region4.js";
+import { Psat } from "./if97/region4.js";
+
+const SAT_OFFSET = 5.0; // K — IAPWS recommended
 
 export function solveState({ mode, T, P, x }) {
 
-  // ================================
-  // T – P MODE
-  // ================================
+  /* ============================
+     T – P MODE
+     ============================ */
   if (mode === "TP") {
 
-    // saturation pressure at T
-    const Psat = saturationPressure_T(T);
+    const Ps = Psat(T);
 
-    // compressed liquid
-    if (P > Psat) {
+    // Compressed / subcooled liquid
+    if (P > Ps) {
       return {
         phase: "compressed_liquid",
         ...region1(T, P)
       };
     }
 
-    // saturated vapor or superheated vapor
+    // Saturated vapor → shift into Region 2
+    if (Math.abs(P - Ps) < 1e-6) {
+      return {
+        phase: "saturated_vapor",
+        ...region2(T + SAT_OFFSET, Ps)
+      };
+    }
+
+    // Superheated vapor
     return {
-      phase: P === Psat ? "saturated_vapor" : "superheated_vapor",
+      phase: "superheated_vapor",
       ...region2(T, P)
     };
   }
 
-  // ================================
-  // T – x MODE (Region 4 handled CORRECTLY)
-  // ================================
+  /* ============================
+     T – x MODE (TRUE Region 4)
+     ============================ */
   if (mode === "Tx") {
 
-    // 1. Get saturation pressure
-    const Psat = saturationPressure_T(T);
+    const Ps = Psat(T);
 
-    // 2. Saturated liquid and vapor properties
-    const satL = region1(T, Psat);
-    const satV = region2(T, Psat);
+    const satL = region1(T, Ps);
+    const satV = region2(T + SAT_OFFSET, Ps);
 
-    // ----- Saturated liquid -----
+    // Saturated liquid
     if (x === 0) {
       return {
         phase: "saturated_liquid",
@@ -48,7 +56,7 @@ export function solveState({ mode, T, P, x }) {
       };
     }
 
-    // ----- Saturated vapor -----
+    // Saturated vapor
     if (x === 1) {
       return {
         phase: "saturated_vapor",
@@ -56,24 +64,23 @@ export function solveState({ mode, T, P, x }) {
       };
     }
 
-    // ----- Two-phase mixture -----
-    const mix = {
+    // Two-phase mixture
+    return {
+      phase: "two_phase",
       density:
         1 / ((1 - x) / satL.density + x / satV.density),
 
       specificVolume:
-        (1 - x) * satL.specificVolume + x * satV.specificVolume,
+        (1 - x) * satL.specificVolume +
+        x * satV.specificVolume,
 
       enthalpy:
-        (1 - x) * satL.enthalpy + x * satV.enthalpy,
+        (1 - x) * satL.enthalpy +
+        x * satV.enthalpy,
 
       entropy:
-        (1 - x) * satL.entropy + x * satV.entropy
-    };
-
-    return {
-      phase: "two_phase",
-      ...mix
+        (1 - x) * satL.entropy +
+        x * satV.entropy
     };
   }
 
