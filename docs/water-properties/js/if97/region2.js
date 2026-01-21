@@ -1,9 +1,10 @@
-// region2.js — IF97 Region 2 (Superheated / Saturated Vapor)
+// region2.js — IF97 Region 2 (Superheated & Saturated Vapor)
+// FIXED: Correct reduced pressure π = P / 1 MPa
 
 import { R, EPS } from "../constants.js";
 
 /* Ideal-gas part coefficients */
-const J0 = [0,1,-5,-4,-3,-2,-1,2,3];
+const J0 = [0, 1, -5, -4, -3, -2, -1, 2, 3];
 const n0 = [
   -9.6927686500217,
   10.086655968018,
@@ -51,9 +52,11 @@ const nr = [
 ];
 
 export function region2(T, P) {
-  const pi = P;
+  // 🔒 REDUCED VARIABLES (IF97-DEFINITIVE)
+  const pi = P / 1.0;        // MPa / 1 MPa
   const tau = 540 / T;
 
+  /* Ideal-gas part */
   let g0 = Math.log(pi);
   let g0t = 0, g0tt = 0;
 
@@ -64,6 +67,7 @@ export function region2(T, P) {
     g0tt += n0[k] * J0[k] * (J0[k] - 1) * t / (tau * tau);
   }
 
+  /* Residual part */
   let gr = 0, grp = 0, grpp = 0, grt = 0, grtt = 0, grpt = 0;
 
   for (let k = 0; k < nr.length; k++) {
@@ -78,27 +82,26 @@ export function region2(T, P) {
     grpt += nr[k] * Ir[k] * Jr[k] * piI * tauJ / (pi * tau);
   }
 
-  // === SPECIFIC VOLUME (kJ + MPa → m³/kg needs 1e-3) ===
-  const specificVolume = 1e-3 * (R * T / P) * (1 + grp);
+  /* Thermodynamic properties */
+  const specificVolume =
+    1e-3 * (R * T / P) * (1 + grp);
+
   const density = 1 / Math.max(specificVolume, EPS);
 
   const enthalpy = R * T * tau * (g0t + grt);
   const entropy = R * (tau * (g0t + grt) - (g0 + gr));
+
   const cp = -R * tau * tau * (g0tt + grtt);
 
-  // === CORRECTED Cv (unit-safe & guarded) ===
   const denom = 1 + 2 * grp + pi * grpp;
-  const correction =
+  const cv =
     denom > EPS
-      ? (1e-3 * R *
-         Math.pow(1 + grp - tau * grpt, 2) / denom)
-      : 0;
-
-  const cv = Math.max(cp - correction, EPS);
+      ? cp -
+        (R * Math.pow(1 + grp - tau * grpt, 2)) / denom
+      : cp;
 
   return {
     region: 2,
-    phase: "superheated_vapor",
     T,
     P,
     density,
