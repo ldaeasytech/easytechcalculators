@@ -1,18 +1,14 @@
-// solver.js — IF97 dispatcher with HUMANIZED PHASE OUTPUT
+// solver.js — IF97 dispatcher (TX-SAFE, PHASE-LOCKED)
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { Psat } from "./if97/region4.js";
 
-/*
-  IF97 NOTE:
-  Region 2 is not defined exactly on the saturation line.
-  Saturated vapor is evaluated slightly inside Region 2.
-*/
-const SAT_OFFSET = 5.0; // K — numerical safety offset
+const SAT_OFFSET = 5.0;      // K — safe approach to Region 2
+const X_EPS = 1e-9;          // quality tolerance
 
 /* ============================================================
-   Phase label map (single source of truth)
+   Human-readable phase labels
    ============================================================ */
 const PHASE_LABELS = {
   saturated_liquid: "Saturated Liquid",
@@ -22,30 +18,29 @@ const PHASE_LABELS = {
   compressed_liquid: "Compressed (Subcooled) Liquid"
 };
 
-function withPhase(phaseKey, props) {
+function withPhase(key, props) {
   return {
-    phase: phaseKey,
-    phaseLabel: PHASE_LABELS[phaseKey] ?? phaseKey,
+    phase: key,
+    phaseLabel: PHASE_LABELS[key],
     ...props
   };
 }
 
 /* ============================================================
-   Main solver
+   Solver
    ============================================================ */
 export function solve(inputs) {
   const { mode } = inputs;
 
-  /* ============================
+  /* ============================================================
      T – P MODE
-     ============================ */
+     ============================================================ */
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
 
     const Ps = Psat(T);
 
-    // Compressed / subcooled liquid
     if (P > Ps) {
       return withPhase(
         "compressed_liquid",
@@ -53,7 +48,6 @@ export function solve(inputs) {
       );
     }
 
-    // Saturated vapor (approached from Region 2)
     if (Math.abs(P - Ps) < 1e-6) {
       return withPhase(
         "saturated_vapor",
@@ -61,43 +55,47 @@ export function solve(inputs) {
       );
     }
 
-    // Superheated vapor
     return withPhase(
       "superheated_vapor",
       region2(T, P)
     );
   }
 
-  /* ============================
-     T – x MODE (EXPLICIT SATURATION)
-     ============================ */
+  /* ============================================================
+     T – x MODE  (PHASE IS DEFINED BY x — NO EXCEPTIONS)
+     ============================================================ */
   if (mode === "Tx") {
     const T = inputs.temperature;
-    const x = inputs.quality;
+    let x = Number(inputs.quality);
 
-    // Pressure MUST come from Region 4 — never from UI
+    // HARD clamp quality
+    if (!Number.isFinite(x)) {
+      throw new Error("Invalid vapor quality x");
+    }
+    x = Math.min(1, Math.max(0, x));
+
     const Ps = Psat(T);
 
     const satL = region1(T, Ps);
     const satV = region2(T + SAT_OFFSET, Ps);
 
-    // Saturated liquid
-    if (x === 0) {
+    // x ≈ 0 → saturated liquid
+    if (x < X_EPS) {
       return withPhase(
         "saturated_liquid",
         satL
       );
     }
 
-    // Saturated vapor
-    if (x === 1) {
+    // x ≈ 1 → saturated vapor
+    if (1 - x < X_EPS) {
       return withPhase(
         "saturated_vapor",
         satV
       );
     }
 
-    // Two-phase mixture
+    // 0 < x < 1 → two-phase mixture
     return withPhase(
       "two_phase",
       {
