@@ -1,5 +1,5 @@
 // solver.js
-// Central thermodynamic state solver (IF97)
+// Central thermodynamic state solver (IF97, industry-correct)
 // INTERNAL UNITS:
 //   temperature → K
 //   pressure    → MPa
@@ -19,10 +19,15 @@ import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
 import { region5 } from "./if97/region5.js";
-import { Psat, Tsat } from "./if97/region4.js";
+
+import {
+  Psat,
+  Tsat,
+  satLiquid,
+  satVapor
+} from "./if97/region4.js";
 
 const MAX_ITER = 80;
-const EPS_SAT = 1e-6; // saturation guard
 
 /* ============================================================
    Normalize inputs
@@ -38,30 +43,25 @@ function normalizeInputs(raw) {
 }
 
 /* ============================================================
-   Region selection for (T, P)
+   T–P solver
    ============================================================ */
 function solveTP(T, P) {
   const Ps = Psat(T);
 
-  // Region 5: high-temperature vapor
+  // High-temperature vapor (Region 5)
   if (T >= T_R5_MIN && P <= P_R5_MAX) {
     return { T, P, phase: "superheated_vapor", ...region5(T, P) };
   }
 
   // --- SATURATION GUARD ---
   if (Math.abs(P - Ps) / Ps < 1e-7) {
-    const satL = region1(T, P);
-
-    // evaluate vapor safely AWAY from saturation
-    const satV = region2(T + 0.01, P * 0.99);
-
     return {
       region: 4,
       T,
       P,
       phase: "two_phase",
-      satL,
-      satV
+      satL: satLiquid(T),
+      satV: satVapor(T)
     };
   }
 
@@ -80,20 +80,15 @@ function solveTP(T, P) {
 }
 
 /* ============================================================
-   Saturated mixture (T, x)
+   T–x solver (TRUE REGION-4)
    ============================================================ */
 function solveTx(T, x) {
   if (x < 0 || x > 1) {
     throw new Error("Quality must be between 0 and 1");
   }
 
-  const P = Psat(T);
-
-  // Saturated liquid (Region 1 is valid exactly on the line)
-  const satL = region1(T, P);
-
-  // Saturated vapor → NEVER evaluate region2 at (T,P)
-  const satV = region2(T + 0.01, P * 0.99);
+  const satL = satLiquid(T);
+  const satV = satVapor(T);
 
   const EPS_X = 1e-9;
 
@@ -101,8 +96,6 @@ function solveTx(T, x) {
   if (x <= EPS_X) {
     return {
       ...satL,
-      T,
-      P,
       phase: "saturated_liquid",
       quality: 0
     };
@@ -112,24 +105,20 @@ function solveTx(T, x) {
   if (x >= 1 - EPS_X) {
     return {
       ...satV,
-      T,
-      P,
       phase: "saturated_vapor",
-      quality: 1,
-      density: 1 / satV.specificVolume
+      quality: 1
     };
   }
 
-  // Two-phase mixture (NO Cp/Cv by definition)
+  // Two-phase mixture (Cp/Cv undefined → omitted)
   const mix = (a, b) => a + x * (b - a);
-
   const v = mix(satL.specificVolume, satV.specificVolume);
 
   return {
     region: 4,
     phase: "two_phase",
     T,
-    P,
+    P: satL.P,
     quality: x,
     specificVolume: v,
     density: 1 / v,
@@ -139,63 +128,58 @@ function solveTx(T, x) {
 }
 
 /* ============================================================
-   Inverse solvers
+   P–h solver
    ============================================================ */
 function solvePH(P, hTarget) {
   const Ts = Tsat(P);
 
-  let Tlow = T_MIN;
-  let Thigh = T_MAX;
-
   if (Number.isFinite(Ts)) {
-    const hL = region1(Ts, P).enthalpy;
-    const hV = region2(Ts + 0.01, P * 0.99).enthalpy;
+    const satL = satLiquid(Ts);
+    const satV = satVapor(Ts);
 
-    if (hTarget > hL && hTarget < hV) {
-      const x = (hTarget - hL) / (hV - hL);
+    if (hTarget > satL.enthalpy && hTarget < satV.enthalpy) {
+      const x = (hTarget - satL.enthalpy) /
+                (satV.enthalpy - satL.enthalpy);
       return solveTx(Ts, x);
     }
-
-    if (hTarget <= hL) Thigh = Ts;
-    if (hTarget >= hV) Tlow = Ts;
   }
 
+  let Tlow = T_MIN;
+  let Thigh = T_MAX;
   let T = 0.5 * (Tlow + Thigh);
 
   for (let i = 0; i < MAX_ITER; i++) {
     const state = solveTP(T, P);
     const f = state.enthalpy - hTarget;
-
     if (Math.abs(f) < EPS) return state;
-    if (!Number.isFinite(state.cp) || state.cp <= 0) break;
 
+    if (!state.cp || state.cp <= 0) break;
     T -= f / state.cp;
     T = Math.min(Math.max(T, Tlow), Thigh);
-    f > 0 ? (Thigh = T) : (Tlow = T);
   }
 
   throw new Error("solvePH did not converge");
 }
 
+/* ============================================================
+   P–s solver
+   ============================================================ */
 function solvePS(P, sTarget) {
   const Ts = Tsat(P);
 
-  let Tlow = T_MIN;
-  let Thigh = T_MAX;
-
   if (Number.isFinite(Ts)) {
-    const sL = region1(Ts, P).entropy;
-    const sV = region2(Ts + 0.01, P * 0.99).entropy;
+    const satL = satLiquid(Ts);
+    const satV = satVapor(Ts);
 
-    if (sTarget > sL && sTarget < sV) {
-      const x = (sTarget - sL) / (sV - sL);
+    if (sTarget > satL.entropy && sTarget < satV.entropy) {
+      const x = (sTarget - satL.entropy) /
+                (satV.entropy - satL.entropy);
       return solveTx(Ts, x);
     }
-
-    if (sTarget <= sL) Thigh = Ts;
-    if (sTarget >= sV) Tlow = Ts;
   }
 
+  let Tlow = T_MIN;
+  let Thigh = T_MAX;
   let T = 0.5 * (Tlow + Thigh);
 
   for (let i = 0; i < MAX_ITER; i++) {
@@ -203,12 +187,9 @@ function solvePS(P, sTarget) {
     const f = state.entropy - sTarget;
     if (Math.abs(f) < EPS) return state;
 
-    const dSdT = state.cp / T;
-    if (!Number.isFinite(dSdT) || dSdT <= 0) break;
-
-    T -= f / dSdT;
+    if (!state.cp || state.cp <= 0) break;
+    T -= f / (state.cp / T);
     T = Math.min(Math.max(T, Tlow), Thigh);
-    f > 0 ? (Thigh = T) : (Tlow = T);
   }
 
   throw new Error("solvePS did not converge");
