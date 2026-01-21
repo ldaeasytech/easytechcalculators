@@ -1,19 +1,8 @@
-// region4.js — IF97 Saturation Properties (FULL)
-// Provides Psat(T), Tsat(P), and saturated liquid/vapor properties
-// Units:
-//   T  → K
-//   P  → MPa
-//   v  → m³/kg
-//   h  → kJ/kg
-//   s  → kJ/(kg·K)
+// region4.js — IF97 Region 4 (Saturation curve only)
 
 import { EPS } from "../constants.js";
-import { region1 } from "./region1.js";
-import { region2 } from "./region2.js";
 
-/* ============================================================
-   Saturation pressure Psat(T)
-   ============================================================ */
+/* IAPWS IF97 saturation coefficients */
 const n = [
   0.11670521452767e4,
   -0.72421316703206e6,
@@ -40,9 +29,6 @@ export function Psat(T) {
   );
 }
 
-/* ============================================================
-   Saturation temperature Tsat(P)
-   ============================================================ */
 export function Tsat(P) {
   let Tlow = 273.15;
   let Thigh = 647.096;
@@ -54,63 +40,4 @@ export function Tsat(P) {
     f > 0 ? (Thigh = Tmid) : (Tlow = Tmid);
   }
   return NaN;
-}
-
-/* ============================================================
-   TRUE Region-4 saturated properties
-   ============================================================ */
-
-/**
- * Saturated liquid properties (Region 1 is valid on the boundary)
- */
-export function satLiquid(T) {
-  const P = Psat(T);
-  const r1 = region1(T, P);
-
-  return {
-    T,
-    P,
-    specificVolume: r1.specificVolume,
-    density: 1 / r1.specificVolume,
-    enthalpy: r1.enthalpy,
-    entropy: r1.entropy
-    // Cp, Cv intentionally undefined
-  };
-}
-
-/**
- * Saturated vapor properties
- *
- * IF97 does NOT provide explicit equations for hg, sg, vg.
- * The standard and accepted IAPWS practice is:
- *   → evaluate Region-2 sufficiently ABOVE Tsat
- *   → freeze the result as saturated vapor
- *
- * Offset of +5 K is conservative and numerically stable.
- */
-export function satVapor(T) {
-  const P = Psat(T);
-
-  const T_eval = Math.min(T + 5.0, 1073.15);
-  const r2 = region2(T_eval, P);
-
-  return {
-    T,
-    P,
-    specificVolume: r2.specificVolume,
-    density: 1 / r2.specificVolume,
-    enthalpy: r2.enthalpy,
-    entropy: r2.entropy
-    // Cp, Cv intentionally undefined
-  };
-}
-
-/**
- * Convenience helper returning both states
- */
-export function satProperties(T) {
-  return {
-    liquid: satLiquid(T),
-    vapor: satVapor(T)
-  };
 }
