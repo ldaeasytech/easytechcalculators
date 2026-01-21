@@ -1,6 +1,5 @@
-// main.js
-// UI-only: input mode selection & field enable/disable
-// Ensures solver always receives valid, intentional inputs
+// main.js — UI-only: input mode selection & field enable/disable
+// GUARANTEES correct solver mode at all times
 
 const tabHelpText = {
   TP: "Enter Temperature and Pressure (most common case).",
@@ -17,8 +16,32 @@ const MODE_TO_KEYS = {
   Tx: ["temperature", "quality"]
 };
 
-// Track active mode explicitly (deterministic default)
+// Deterministic default
 let currentMode = "TP";
+
+/* ============================================================
+   INTERNAL helpers
+   ============================================================ */
+
+function normalizeMode(mode) {
+  if (!MODE_TO_KEYS[mode]) {
+    throw new Error(`Invalid input mode: ${mode}`);
+  }
+  return mode;
+}
+
+function getModeFromActiveTab() {
+  const activeTab = document.querySelector(
+    ".input-tabs .tab.active"
+  );
+
+  if (!activeTab) {
+    return "TP";
+  }
+
+  const mode = activeTab.dataset.mode;
+  return normalizeMode(mode);
+}
 
 /* ============================================================
    Tab click handling
@@ -32,12 +55,7 @@ document.querySelectorAll(".input-tabs .tab").forEach(tab => {
 
     tab.classList.add("active");
 
-    const mode = tab.dataset.mode;
-    if (!MODE_TO_KEYS[mode]) {
-      console.error("Unknown input mode:", mode);
-      return;
-    }
-
+    const mode = normalizeMode(tab.dataset.mode);
     setInputMode(mode);
   });
 });
@@ -47,27 +65,26 @@ document.querySelectorAll(".input-tabs .tab").forEach(tab => {
    ============================================================ */
 
 function setInputMode(mode) {
-  currentMode = mode;
+  currentMode = normalizeMode(mode);
 
   const help = document.getElementById("tabHelp");
-  if (help) help.textContent = tabHelpText[mode];
+  if (help) help.textContent = tabHelpText[currentMode];
 
   const allFields = [
     "temperature",
     "pressure",
     "enthalpy",
     "entropy",
-    "specificVolume", // intentionally unsupported as input
+    "specificVolume", // intentionally unsupported
     "quality"
   ];
 
-  const enabled = MODE_TO_KEYS[mode];
+  const enabled = MODE_TO_KEYS[currentMode];
 
   allFields.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
 
-    // Enforce numeric-only input at UI level
     el.inputMode = "decimal";
     el.step = "any";
 
@@ -79,7 +96,7 @@ function setInputMode(mode) {
     }
   });
 
-  // Explicitly lock unsupported inverse properties
+  // Always lock unsupported inverse properties
   const v = document.getElementById("specificVolume");
   if (v) {
     v.value = "";
@@ -88,15 +105,17 @@ function setInputMode(mode) {
 }
 
 /* ============================================================
-   Public API for app.js
+   Public API for app.js (AUTHORITATIVE)
    ============================================================ */
 
 export function getInputMode() {
+  // Always re-sync with DOM to avoid stale state
+  currentMode = getModeFromActiveTab();
   return currentMode;
 }
 
 export function getEnabledKeys() {
-  return MODE_TO_KEYS[currentMode];
+  return MODE_TO_KEYS[getInputMode()];
 }
 
 /* ============================================================
@@ -108,9 +127,14 @@ document.addEventListener("DOMContentLoaded", () => {
     '.input-tabs .tab[data-mode="TP"]'
   );
 
-  if (defaultTab) {
-    defaultTab.classList.add("active");
+  if (!defaultTab) {
+    throw new Error("TP tab not found in DOM");
   }
 
+  document
+    .querySelectorAll(".input-tabs .tab")
+    .forEach(t => t.classList.remove("active"));
+
+  defaultTab.classList.add("active");
   setInputMode("TP");
 });
