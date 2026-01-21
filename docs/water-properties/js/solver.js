@@ -82,7 +82,10 @@ export function solveState({ mode, T, P, x }) {
         (1 - x) * satL.entropy +
         x * satV.entropy
     };
+    
   }
 
   throw new Error("Unsupported calculation mode");
 }
+
+export { solveState as solve };
