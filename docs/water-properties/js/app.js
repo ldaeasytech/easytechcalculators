@@ -1,8 +1,6 @@
-// app.js
-// UI ↔ Solver orchestration layer (AUTHORITATIVE)
-// Single entry point for the application
+// app.js — UI ↔ Solver orchestration layer (PHASE-SAFE)
+// This file guarantees that solver output is NEVER overridden.
 
-// Ensure main.js executes first (UI initialization)
 import "./main.js";
 
 import { unitSets } from "./unitConfig.js";
@@ -16,67 +14,96 @@ import { getInputMode } from "./main.js";
    Form handler
    ============================================================ */
 
-document.getElementById("calcForm").addEventListener("submit", e => {
-  e.preventDefault();
+document
+  .getElementById("calcForm")
+  .addEventListener("submit", e => {
+    e.preventDefault();
 
-  clearMessages();
-  clearResults();
-  document.getElementById("loading").style.display = "block";
+    clearMessages();
+    clearResults();
+    document.getElementById("loading").style.display = "block";
 
-  try {
-    const unitSystem =
-      document.getElementById("unitSystem")?.value ?? "SI";
+    try {
+      const unitSystem =
+        document.getElementById("unitSystem")?.value ?? "SI";
 
-    // Single source of truth for input mode
-    const mode = getInputMode();
+      // SINGLE source of truth for mode
+      const mode = getInputMode();
 
-    // Read only enabled inputs for the selected mode
-    const rawInputs = readInputsByMode(mode);
+      // Read only inputs relevant to the mode
+      const rawInputs = readInputsByMode(mode);
 
-    // Hard numeric validation
-    for (const [k, v] of Object.entries(rawInputs)) {
-      if (!Number.isFinite(v)) {
-        throw new Error(`Invalid or missing input: ${k}`);
+      // Hard numeric validation
+      for (const [k, v] of Object.entries(rawInputs)) {
+        if (!Number.isFinite(v)) {
+          throw new Error(`Invalid or missing input: ${k}`);
+        }
       }
-    }
 
-    // Remove undefined / non-finite inputs
-    const canonicalInputs = normalizeInputs(rawInputs);
+      // Normalize inputs (strip undefined)
+      const canonicalInputs = normalizeInputs(rawInputs);
 
-    // Convert UI → internal IF97 units
-    const siInputs = toSI(canonicalInputs, unitSystem);
+      // Convert UI → SI
+      const siInputs = toSI(canonicalInputs, unitSystem);
 
-    // Physical validation
-    const validation = validateState(siInputs);
-    renderValidation(validation);
-    if (!validation.valid) return;
-
-    // Solve thermodynamic state
-   const stateSI = solve({
+      // Inject mode ONLY ONCE
+      const solverInputs = {
         mode,
         ...siInputs
-      });;
+      };
 
-    // Convert back to UI units
-    const stateUI = fromSI(stateSI, unitSystem);
+      // Validate physical domain
+      const validation = validateState(solverInputs);
+      renderValidation(validation);
+      if (!validation.valid) return;
 
-    // Confidence bands
-    const confidence = {};
-    for (const k of COMPARABLE_PROPERTIES) {
-      if (Number.isFinite(stateUI[k])) {
-        confidence[k] = estimateConfidence(k, stateUI.phase);
+      /* ============================
+         SOLVER (AUTHORITATIVE)
+         ============================ */
+      const stateSI = solve(solverInputs);
+
+      // HARD ASSERT — Tx must NEVER output TP phases
+      if (
+        mode === "Tx" &&
+        (stateSI.phase === "superheated_vapor" ||
+         stateSI.phase === "compressed_liquid")
+      ) {
+        throw new Error(
+          "Internal error: TP phase leaked into Tx mode"
+        );
       }
+
+      /* ============================
+         UNIT CONVERSION (PASSIVE)
+         ============================ */
+      const stateUI = fromSI(stateSI, unitSystem);
+
+      // LOCK PHASE METADATA
+      stateUI.phase = stateSI.phase;
+      stateUI.phaseLabel = stateSI.phaseLabel;
+
+      /* ============================
+         CONFIDENCE BANDS
+         ============================ */
+      const confidence = {};
+      for (const k of COMPARABLE_PROPERTIES) {
+        if (Number.isFinite(stateUI[k])) {
+          confidence[k] = estimateConfidence(
+            k,
+            stateUI.phase
+          );
+        }
+      }
+
+      renderResultsTable(stateUI, confidence);
+
+    } catch (err) {
+      document.getElementById("errors").textContent =
+        "❌ " + (err?.message ?? "Unknown error");
+    } finally {
+      document.getElementById("loading").style.display = "none";
     }
-
-    renderResultsTable(stateUI, confidence);
-
-  } catch (err) {
-    document.getElementById("errors").textContent =
-      "❌ " + (err?.message ?? "Unknown error");
-  } finally {
-    document.getElementById("loading").style.display = "none";
-  }
-});
+  });
 
 /* ============================================================
    Input handling
@@ -117,7 +144,7 @@ function readInputsByMode(mode) {
 }
 
 /**
- * Removes undefined and non-finite values.
+ * Removes undefined and non-finite values
  */
 function normalizeInputs(obj) {
   const out = {};
@@ -156,7 +183,9 @@ const LABELS = {
 };
 
 function renderResultsTable(state, confidence) {
-  const container = document.getElementById("resultsTable");
+  const container =
+    document.getElementById("resultsTable");
+
   const unitSystem =
     document.getElementById("unitSystem")?.value ?? "SI";
 
@@ -195,10 +224,10 @@ function renderResultsTable(state, confidence) {
 }
 
 function renderPhaseBanner(state) {
-  if (!state.phase) return "";
+  if (!state.phaseLabel) return "";
   return `
     <div class="phase-banner">
-      Phase: <strong>${state.phase}</strong>
+      Phase: <strong>${state.phaseLabel}</strong>
     </div>
   `;
 }
