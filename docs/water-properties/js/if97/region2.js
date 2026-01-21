@@ -78,22 +78,31 @@ export function region2(T, P) {
     grpt += nr[k] * Ir[k] * Jr[k] * piI * tauJ / (pi * tau);
   }
 
-  const v = 1e-3*(R * T / P) * (1 + grp);
-  const density = 1 / Math.max(v, EPS);
+  // === SPECIFIC VOLUME (kJ + MPa → m³/kg needs 1e-3) ===
+  const specificVolume = 1e-3 * (R * T / P) * (1 + grp);
+  const density = 1 / Math.max(specificVolume, EPS);
 
   const enthalpy = R * T * tau * (g0t + grt);
   const entropy = R * (tau * (g0t + grt) - (g0 + gr));
   const cp = -R * tau * tau * (g0tt + grtt);
-  const cv = cp -
-    R * Math.pow(1 + grp - tau * grpt, 2) /
-    Math.max(1 + 2 * grp + pi * grpp, EPS);
+
+  // === CORRECTED Cv (unit-safe & guarded) ===
+  const denom = 1 + 2 * grp + pi * grpp;
+  const correction =
+    denom > EPS
+      ? (1e-3 * R *
+         Math.pow(1 + grp - tau * grpt, 2) / denom)
+      : 0;
+
+  const cv = Math.max(cp - correction, EPS);
 
   return {
     region: 2,
     phase: "superheated_vapor",
-    T, P,
+    T,
+    P,
     density,
-    specificVolume: v,
+    specificVolume,
     enthalpy,
     entropy,
     cp,
