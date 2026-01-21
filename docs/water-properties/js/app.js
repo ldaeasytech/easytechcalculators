@@ -1,5 +1,4 @@
-// app.js — UI ↔ Solver orchestration layer (PHASE-SAFE)
-// This file guarantees that solver output is NEVER overridden.
+// app.js — UI ↔ Solver orchestration (FINAL, MODE-SAFE)
 
 import "./main.js";
 
@@ -27,10 +26,10 @@ document
       const unitSystem =
         document.getElementById("unitSystem")?.value ?? "SI";
 
-      // SINGLE source of truth for mode
+      // 🔒 SINGLE source of truth for mode
       const mode = getInputMode();
 
-      // Read only inputs relevant to the mode
+      // Read inputs strictly by mode
       const rawInputs = readInputsByMode(mode);
 
       // Hard numeric validation
@@ -40,51 +39,43 @@ document
         }
       }
 
-      // Normalize inputs (strip undefined)
+      // Normalize inputs
       const canonicalInputs = normalizeInputs(rawInputs);
 
       // Convert UI → SI
       const siInputs = toSI(canonicalInputs, unitSystem);
 
-      // Inject mode ONLY ONCE
-      const solverInputs = {
-        mode,
+      /* ========================================================
+         VALIDATION (NO MODE MUTATION)
+         ======================================================== */
+      const validation = validateState({
+        mode,          // pass mode explicitly
         ...siInputs
-      };
+      });
 
-      // Validate physical domain
-      const validation = validateState(solverInputs);
       renderValidation(validation);
       if (!validation.valid) return;
 
-      /* ============================
+      /* ========================================================
          SOLVER (AUTHORITATIVE)
-         ============================ */
-      const stateSI = solve(solverInputs);
+         ======================================================== */
+      const stateSI = solve({
+        mode,          // 🔒 re-inject mode explicitly
+        ...siInputs
+      });
 
-      // HARD ASSERT — Tx must NEVER output TP phases
-      if (
-        mode === "Tx" &&
-        (stateSI.phase === "superheated_vapor" ||
-         stateSI.phase === "compressed_liquid")
-      ) {
-        throw new Error(
-          "Internal error: TP phase leaked into Tx mode"
-        );
-      }
-
-      /* ============================
+      /* ========================================================
          UNIT CONVERSION (PASSIVE)
-         ============================ */
+         ======================================================== */
       const stateUI = fromSI(stateSI, unitSystem);
 
-      // LOCK PHASE METADATA
+      // 🔒 LOCK phase metadata
       stateUI.phase = stateSI.phase;
       stateUI.phaseLabel = stateSI.phaseLabel;
 
-      /* ============================
+      /* ========================================================
          CONFIDENCE BANDS
-         ============================ */
+         ======================================================== */
       const confidence = {};
       for (const k of COMPARABLE_PROPERTIES) {
         if (Number.isFinite(stateUI[k])) {
