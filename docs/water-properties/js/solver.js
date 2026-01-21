@@ -1,18 +1,23 @@
-// solver.js — IF97 dispatcher (FIXED)
+// solver.js — IF97 dispatcher (COHERENT & FIXED)
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { Psat } from "./if97/region4.js";
 
-const SAT_OFFSET = 5.0; // K — IAPWS recommended
+const SAT_OFFSET = 5.0; // K — numerical safety offset
 
-export function solveState({ mode, T, P, x }) {
+export function solve(inputs) {
+  const {
+    mode,
+    temperature: T,
+    pressure: P,
+    quality: x
+  } = inputs;
 
   /* ============================
      T – P MODE
      ============================ */
   if (mode === "TP") {
-
     const Ps = Psat(T);
 
     // Compressed / subcooled liquid
@@ -23,7 +28,7 @@ export function solveState({ mode, T, P, x }) {
       };
     }
 
-    // Saturated vapor → shift into Region 2
+    // Saturated vapor (mapped via Region 2)
     if (Math.abs(P - Ps) < 1e-6) {
       return {
         phase: "saturated_vapor",
@@ -42,7 +47,6 @@ export function solveState({ mode, T, P, x }) {
      T – x MODE (TRUE Region 4)
      ============================ */
   if (mode === "Tx") {
-
     const Ps = Psat(T);
 
     const satL = region1(T, Ps);
@@ -67,6 +71,7 @@ export function solveState({ mode, T, P, x }) {
     // Two-phase mixture
     return {
       phase: "two_phase",
+
       density:
         1 / ((1 - x) / satL.density + x / satV.density),
 
@@ -82,10 +87,7 @@ export function solveState({ mode, T, P, x }) {
         (1 - x) * satL.entropy +
         x * satV.entropy
     };
-    
   }
 
   throw new Error("Unsupported calculation mode");
 }
-
-export { solveState as solve };
