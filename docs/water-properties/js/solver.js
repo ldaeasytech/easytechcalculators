@@ -1,129 +1,110 @@
 // solver.js
-// Central thermodynamic solver (IF97-compliant) 
+// Central thermodynamic state solver (IF97)
+// INTERNAL UNITS:
+//   temperature → K
+//   pressure    → MPa
+//   enthalpy    → kJ/kg
+//   entropy     → kJ/(kg·K)
+
+import {
+  T_MIN,
+  T_MAX,
+  T_R1_MAX,
+  T_R5_MIN,
+  P_R5_MAX,
+  EPS
+} from "./constants.js";
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
-import { Psat, Tsat } from "./if97/region4.js";
 import { region5 } from "./if97/region5.js";
+import { Psat, Tsat } from "./if97/region4.js";
 
-import { computeQuality } from "./quality.js";
-import { T_R1_MAX, T_R5_MIN, P_R5_MAX } from "./constants.js";
-
-// Aliases (keep naming coherent)
-const saturationPressure = Psat;
-const saturationTemperature = Tsat;
-
-// Small offset to avoid IF97 singularities at saturation
-const SAT_EPS_P = 1e-6; // MPa
-const SAT_EPS_T = 1e-6; // K
+const MAX_ITER = 80;
 
 /* ============================================================
-   Public solver entry
+   Normalize inputs
    ============================================================ */
-
-export function solve(inputs) {
-  if ("quality" in inputs && "temperature" in inputs) {
-    return solveTx(inputs);
-  }
-
-  if ("temperature" in inputs && "pressure" in inputs) {
-    return solveTP(inputs.temperature, inputs.pressure);
-  }
-
-  if ("pressure" in inputs && "enthalpy" in inputs) {
-    return solvePh(inputs);
-  }
-
-  if ("pressure" in inputs && "entropy" in inputs) {
-    return solvePs(inputs);
-  }
-
-  throw new Error("Unsupported input combination.");
+function normalizeInputs(raw) {
+  return {
+    temperature: raw.temperature ?? raw.T,
+    pressure: raw.pressure ?? raw.P,
+    enthalpy: raw.enthalpy ?? raw.h,
+    entropy: raw.entropy ?? raw.s,
+    quality: raw.quality ?? raw.x
+  };
 }
 
 /* ============================================================
-   T–P
+   Region selection for (T, P)
    ============================================================ */
-
 function solveTP(T, P) {
-  const Ts = saturationTemperature(P);
+  const Ps = Psat(T);
 
-  if (T < Ts - SAT_EPS_T) {
-    return region1(T, P);
-  }
-
-  if (Math.abs(T - Ts) <= SAT_EPS_T) {
-    const sat = getSaturationStates_T(T);
+  // Region 5: high temperature vapor
+  if (T >= T_R5_MIN && P <= P_R5_MAX) {
     return {
-      region: 4,
-      phase: "two_phase",
       T,
       P,
-      satL: sat.liquid,
-      satV: sat.vapor
+      phase: "superheated_vapor",
+      ...region5(T, P)
     };
   }
 
-  if (T >= T_R5_MIN && P <= P_R5_MAX) {
-    return region5(T, P);
+  // Saturation line (default → vapor side)
+  if (Math.abs(P - Ps) / Ps < 1e-7) {
+    return {
+      T,
+      P,
+      phase: "saturated_vapor",
+      ...region2(T, P)
+    };
   }
 
-  if (T > T_R1_MAX) {
-    return region2(T, P);
+  // Compressed / subcooled liquid
+  if (T <= T_R1_MAX && P > Ps) {
+    return {
+      T,
+      P,
+      phase: "compressed_liquid",
+      ...region1(T, P)
+    };
   }
 
-  return region3(T, P);
+  // Superheated vapor (Region 2)
+  if (T <= T_R1_MAX && P < Ps) {
+    return {
+      T,
+      P,
+      phase: "superheated_vapor",
+      ...region2(T, P)
+    };
+  }
+
+  // Dense fluid / near critical (Region 3)
+  return {
+    T,
+    P,
+    phase: "dense_fluid",
+    ...region3(T, P)
+  };
 }
 
 /* ============================================================
-   T–x  (TRUE REGION-4 HANDLING)
+   Saturated mixture (T, x)
    ============================================================ */
-
-function solveTx({ temperature, quality }) {
-  const x = Number(quality);
-
-  if (!Number.isFinite(x) || x < 0 || x > 1) {
-    throw new Error("Quality x must be between 0 and 1.");
+function solveTx(T, x) {
+  if (x < 0 || x > 1) {
+    throw new Error("Quality must be between 0 and 1");
   }
 
-  const T = temperature;
-  const P = saturationPressure(T);
+  const P = Psat(T);
 
-  const sat = getSaturationStates_T(T);
+  const satL = region1(T, P);
+  const satV = region2(T, P);
 
-  const EPS_X = 1e-9;
-
-  // Saturated liquid
-  if (x <= EPS_X) {
-    return {
-      ...sat.liquid,
-      phase: "saturated_liquid",
-      quality: 0
-    };
-  }
-
-  // Saturated vapor
-  if (x >= 1 - EPS_X) {
-    return {
-      ...sat.vapor,
-      phase: "saturated_vapor",
-      quality: 1
-    };
-  }
-
-  // Two-phase mixture
-  const v =
-    sat.liquid.specificVolume +
-    x * (sat.vapor.specificVolume - sat.liquid.specificVolume);
-
-  const h =
-    sat.liquid.enthalpy +
-    x * (sat.vapor.enthalpy - sat.liquid.enthalpy);
-
-  const s =
-    sat.liquid.entropy +
-    x * (sat.vapor.entropy - sat.liquid.entropy);
+  const mix = (a, b) => a + x * (b - a);
 
   return {
     region: 4,
@@ -131,92 +112,120 @@ function solveTx({ temperature, quality }) {
     T,
     P,
     quality: x,
-    specificVolume: v,
-    density: 1 / v,
+    density: 1 / mix(satL.specificVolume, satV.specificVolume),
+    specificVolume: mix(
+      satL.specificVolume,
+      satV.specificVolume
+    ),
+    enthalpy: mix(satL.enthalpy, satV.enthalpy),
+    entropy: mix(satL.entropy, satV.entropy),
+    cp: NaN,
+    cv: NaN,
+    viscosity: NaN,
+    conductivity: NaN
+  };
+}
+
+/* ============================================================
+   Inverse solvers
+   ============================================================ */
+function solvePH(P, hTarget) {
+  const Ts = Tsat(P);
+
+  let Tlow = T_MIN;
+  let Thigh = T_MAX;
+
+  if (Number.isFinite(Ts)) {
+    const hL = region1(Ts, P).enthalpy;
+    const hV = region2(Ts, P).enthalpy;
+
+    if (hTarget > hL && hTarget < hV) {
+      const x = (hTarget - hL) / (hV - hL);
+      return solveTx(Ts, x);
+    }
+
+    if (hTarget <= hL) Thigh = Ts;
+    if (hTarget >= hV) Tlow = Ts;
+  }
+
+  let T = 0.5 * (Tlow + Thigh);
+
+  for (let i = 0; i < MAX_ITER; i++) {
+    const state = solveTP(T, P);
+    const f = state.enthalpy - hTarget;
+
+    if (Math.abs(f) < EPS) return state;
+
+    if (!Number.isFinite(state.cp) || state.cp <= 0) {
+      break;
+    }
+
+    const Tnew = T - f / state.cp;
+    T = Math.min(Math.max(Tnew, Tlow), Thigh);
+
+    f > 0 ? (Thigh = T) : (Tlow = T);
+  }
+
+  throw new Error("solvePH did not converge");
+}
+
+function solvePS(P, sTarget) {
+  const Ts = Tsat(P);
+
+  let Tlow = T_MIN;
+  let Thigh = T_MAX;
+
+  if (Number.isFinite(Ts)) {
+    const sL = region1(Ts, P).entropy;
+    const sV = region2(Ts, P).entropy;
+
+    if (sTarget > sL && sTarget < sV) {
+      const x = (sTarget - sL) / (sV - sL);
+      return solveTx(Ts, x);
+    }
+
+    if (sTarget <= sL) Thigh = Ts;
+    if (sTarget >= sV) Tlow = Ts;
+  }
+
+  let T = 0.5 * (Tlow + Thigh);
+
+  for (let i = 0; i < MAX_ITER; i++) {
+    const state = solveTP(T, P);
+    const f = state.entropy - sTarget;
+
+    if (Math.abs(f) < EPS) return state;
+
+    const dSdT = state.cp / T;
+    if (!Number.isFinite(dSdT) || dSdT <= 0) break;
+
+    const Tnew = T - f / dSdT;
+    T = Math.min(Math.max(Tnew, Tlow), Thigh);
+
+    f > 0 ? (Thigh = T) : (Tlow = T);
+  }
+
+  throw new Error("solvePS did not converge");
+}
+
+/* ============================================================
+   Public dispatcher
+   ============================================================ */
+export function solve(rawInputs) {
+  const {
+    temperature: T,
+    pressure: P,
     enthalpy: h,
-    entropy: s
-  };
-}
+    entropy: s,
+    quality: x
+  } = normalizeInputs(rawInputs);
 
-/* ============================================================
-   P–h
-   ============================================================ */
+  if (Number.isFinite(T) && Number.isFinite(P)) return solveTP(T, P);
+  if (Number.isFinite(P) && Number.isFinite(h)) return solvePH(P, h);
+  if (Number.isFinite(P) && Number.isFinite(s)) return solvePS(P, s);
+  if (Number.isFinite(T) && Number.isFinite(x)) return solveTx(T, x);
 
-function solvePh({ pressure, enthalpy }) {
-  const P = pressure;
-  const Ts = saturationTemperature(P);
-
-  const sat = getSaturationStates_P(P);
-
-  if (enthalpy < sat.liquid.enthalpy) {
-    return region1(findT(P, enthalpy, region1), P);
-  }
-
-  if (enthalpy > sat.vapor.enthalpy) {
-    return region2(findT(P, enthalpy, region2), P);
-  }
-
-  const x = computeQuality(sat.liquid, sat.vapor, { enthalpy });
-  return solveTx({ temperature: Ts, quality: x });
-}
-
-/* ============================================================
-   P–s
-   ============================================================ */
-
-function solvePs({ pressure, entropy }) {
-  const P = pressure;
-  const Ts = saturationTemperature(P);
-
-  const sat = getSaturationStates_P(P);
-
-  if (entropy < sat.liquid.entropy) {
-    return region1(findT(P, entropy, region1, "entropy"), P);
-  }
-
-  if (entropy > sat.vapor.entropy) {
-    return region2(findT(P, entropy, region2, "entropy"), P);
-  }
-
-  const x = computeQuality(sat.liquid, sat.vapor, { entropy });
-  return solveTx({ temperature: Ts, quality: x });
-}
-
-/* ============================================================
-   Saturation helpers (TRUE REGION-4 STATES)
-   ============================================================ */
-
-function getSaturationStates_T(T) {
-  const P = saturationPressure(T);
-
-  return {
-    liquid: region1(T - SAT_EPS_T, P),
-    vapor: region2(T + SAT_EPS_T, P * (1 - SAT_EPS_P))
-  };
-}
-
-function getSaturationStates_P(P) {
-  const T = saturationTemperature(P);
-
-  return {
-    liquid: region1(T - SAT_EPS_T, P),
-    vapor: region2(T + SAT_EPS_T, P * (1 - SAT_EPS_P))
-  };
-}
-
-/* ============================================================
-   Root finder
-   ============================================================ */
-
-function findT(P, target, regionFn, key = "enthalpy") {
-  let Tlow = 250;
-  let Thigh = 2000;
-
-  for (let i = 0; i < 50; i++) {
-    const Tmid = 0.5 * (Tlow + Thigh);
-    const state = regionFn(Tmid, P);
-    state[key] > target ? (Thigh = Tmid) : (Tlow = Tmid);
-  }
-
-  return 0.5 * (Tlow + Thigh);
+  throw new Error(
+    "Unsupported property pair. Allowed: (T,P), (P,h), (P,s), (T,x)"
+  );
 }
