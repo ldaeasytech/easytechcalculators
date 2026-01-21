@@ -52,7 +52,10 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     if (!validation.valid) return;
 
     // Solve thermodynamic state
-    const stateSI = solve(siInputs);
+   const stateSI = solve({
+        mode,
+        ...siInputs
+      });;
 
     // Convert back to UI units
     const stateUI = fromSI(stateSI, unitSystem);
