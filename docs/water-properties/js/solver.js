@@ -4,8 +4,8 @@ import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { Psat } from "./if97/region4.js";
 
-const SAT_OFFSET = 5.0;      // K — safe approach to Region 2
 const X_EPS = 1e-9;          // quality tolerance
+const T_CRIT = 647.096;     // K — critical temperature
 
 /* ============================================================
    Human-readable phase labels
@@ -51,7 +51,7 @@ export function solve(inputs) {
     if (Math.abs(P - Ps) < 1e-6) {
       return withPhase(
         "saturated_vapor",
-        region2(T + SAT_OFFSET, Ps)
+        region2(T, Ps)   // ✅ NO temperature offset
       );
     }
 
@@ -68,7 +68,10 @@ export function solve(inputs) {
     const T = inputs.temperature;
     let x = Number(inputs.quality);
 
-    // HARD clamp quality
+    if (T >= T_CRIT) {
+      throw new Error("Quality x is undefined at or above critical temperature");
+    }
+
     if (!Number.isFinite(x)) {
       throw new Error("Invalid vapor quality x");
     }
@@ -77,9 +80,8 @@ export function solve(inputs) {
     const Ps = Psat(T);
 
     const satL = region1(T, Ps);
-    const satV = region2(T + SAT_OFFSET, Ps);
+    const satV = region2(T, Ps);   // ✅ EXACT saturation state
 
-    // x ≈ 0 → saturated liquid
     if (x < X_EPS) {
       return withPhase(
         "saturated_liquid",
@@ -87,7 +89,6 @@ export function solve(inputs) {
       );
     }
 
-    // x ≈ 1 → saturated vapor
     if (1 - x < X_EPS) {
       return withPhase(
         "saturated_vapor",
@@ -95,7 +96,6 @@ export function solve(inputs) {
       );
     }
 
-    // 0 < x < 1 → two-phase mixture
     return withPhase(
       "two_phase",
       {
