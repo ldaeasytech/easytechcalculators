@@ -1,9 +1,7 @@
 // region1.js — IF97 Region 1 (Compressed/Subcooled Liquid)
-// Fully IF97-compliant and Cv-stable
 
 import { R, EPS } from "../constants.js";
 
-/* IAPWS-IF97 Region 1 coefficients */
 const I = [0,0,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,3,3,3,4,4,4,5,8];
 const J = [-2,-1,0,1,2,3,4,5,-9,-7,-1,0,1,3,-3,0,1,3,17,-4,0,6,-5,-2,10,-8,-11];
 const n = [
@@ -29,22 +27,15 @@ export function region1(T, P) {
   const dpi = 7.1 - pi;
   const dt = tau - 1.222;
 
-  let g = 0;
-  let gpi = 0;
-  let gt = 0;
-  let gpp = 0;
-  let gtt = 0;
-  let gpt = 0;
+  let g = 0, gpi = 0, gt = 0, gpp = 0, gtt = 0, gpt = 0;
 
   for (let k = 0; k < n.length; k++) {
     const dI = Math.pow(dpi, I[k]);
     const dJ = Math.pow(dt, J[k]);
 
-    g += n[k] * dI * dJ;
-
+    g   += n[k] * dI * dJ;
     gpi += -n[k] * I[k] * Math.pow(dpi, I[k] - 1) * dJ;
     gt  +=  n[k] * J[k] * dI * Math.pow(dt, J[k] - 1);
-
     gpp +=  n[k] * I[k] * (I[k] - 1) * Math.pow(dpi, I[k] - 2) * dJ;
     gtt +=  n[k] * J[k] * (J[k] - 1) * dI * Math.pow(dt, J[k] - 2);
     gpt += -n[k] * I[k] * J[k] *
@@ -52,25 +43,17 @@ export function region1(T, P) {
             Math.pow(dt, J[k] - 1);
   }
 
-  // IF97-consistent properties
+  // ✅ REQUIRED 1e-3 scaling
   const specificVolume =
-    (R * T / P) * pi * gpi;
+    1e-3 * (R * T / P) * pi * gpi;
 
-  const density =
-    1 / Math.max(specificVolume, EPS);
+  const density = 1 / Math.max(specificVolume, EPS);
 
-  const enthalpy =
-    R * T * tau * gt;
+  const enthalpy = R * T * tau * gt;
+  const entropy  = R * (tau * gt - g);
+  const cp = -R * tau * tau * gtt;
 
-  const entropy =
-    R * (tau * gt - g);
-
-  const cp =
-    -R * tau * tau * gtt;
-
-  const denom =
-    1 - pi * pi * gpp;
-
+  const denom = 1 - pi * pi * gpp;
   const cv =
     denom > EPS
       ? cp -
