@@ -1,4 +1,4 @@
-// app.js — UI ↔ Solver orchestration (FINAL, MODE-SAFE)
+// app.js — UI ↔ Solver orchestration (FINAL, MODE-SAFE, Px ENABLED)
 
 import "./main.js";
 
@@ -56,7 +56,7 @@ document
       stateUI.phase = stateSI.phase;
       stateUI.phaseLabel = stateSI.phaseLabel;
 
-      // 🔒 Cp/Cv undefined in two-phase region
+      // Cp/Cv undefined in two-phase region
       if (stateUI.phase === "two_phase") {
         stateUI.cp = NaN;
         stateUI.cv = NaN;
@@ -80,7 +80,7 @@ document
   });
 
 /* ============================================================
-   Input handling
+   Input handling (FIXED: Px added)
    ============================================================ */
 
 function readInputsByMode(mode) {
@@ -90,12 +90,19 @@ function readInputsByMode(mode) {
   switch (mode) {
     case "TP":
       return { temperature: num("temperature"), pressure: num("pressure") };
+
     case "Ph":
       return { pressure: num("pressure"), enthalpy: num("enthalpy") };
+
     case "Ps":
       return { pressure: num("pressure"), entropy: num("entropy") };
+
     case "Tx":
       return { temperature: num("temperature"), quality: num("quality") };
+
+    case "Px":   // ✅ FIX
+      return { pressure: num("pressure"), quality: num("quality") };
+
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
   }
