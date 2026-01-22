@@ -3,9 +3,6 @@
 
 import { R, EPS } from "../constants.js";
 
-export function region2(T, P) {
-  const pi = P / 1.0;
-  const tau = 540 / T;
 /* ============================================================
    Ideal-gas part coefficients (IF97)
    ============================================================ */
