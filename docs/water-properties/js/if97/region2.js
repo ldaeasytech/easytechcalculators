@@ -3,6 +3,9 @@
 
 import { R, EPS } from "../constants.js";
 
+export function region2(T, P) {
+  const pi = P / 1.0;
+  const tau = 540 / T;
 /* ============================================================
    Ideal-gas part coefficients (IF97)
    ============================================================ */
@@ -97,12 +100,11 @@ export function region2(T, P) {
 
   /* ---------------- Properties ---------------- */
 
-  // Specific volume (m³/kg) — NO extra scaling
+  // ✅ REQUIRED 1e-3 scaling
   const specificVolume =
-    (R * T / P) * (1 + grp);
+    1e-3 * (R * T / P) * (1 + grp);
 
-  const density =
-    1 / Math.max(specificVolume, EPS);
+  const density = 1 / Math.max(specificVolume, EPS);
 
   const enthalpy =
     R * T * tau * (g0t + grt);
