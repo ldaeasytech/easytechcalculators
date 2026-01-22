@@ -1,0 +1,229 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: #0b1220;
+  color: #e6e9ef;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.header {
+  background: linear-gradient(180deg, #003a75, #001b3a);
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #c7d6ea;
+}
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 0 16px;
+}
+
+.panel {
+  background: #141a24;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.panel h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+/* =========================================================
+   MODE BUTTONS
+========================================================= */
+.mode-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px 0;
+  background: #242c3a;
+  border: none;
+  border-radius: 8px;
+  color: #cfd8e3;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+  background: #2f3a4d;
+}
+
+.mode-btn.active {
+  background: #007acc;
+  color: #ffffff;
+}
+
+/* =========================================================
+   INFO BAR
+========================================================= */
+.info-bar {
+  background: #0f2a44;
+  color: #b9dbff;
+  border-left: 4px solid #2da8ff;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* =========================================================
+   INPUT GRID
+========================================================= */
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group.full {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-size: 13px;
+  color: #b8c2d4;
+  margin-bottom: 4px;
+}
+
+input,
+select {
+  background: #1e2533;
+  border: 1px solid #2b3445;
+  border-radius: 6px;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #3fa9ff;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+.calculate-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  background: #007acc;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.calculate-btn:hover {
+  background: #005fa3;
+}
+
+/* =========================================================
+   RESULTS PANEL
+========================================================= */
+.results-header {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.phase {
+  font-weight: 700;
+  color: #3fa9ff;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.results-table th,
+.results-table td {
+  padding: 10px 6px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.results-table th {
+  color: #9fb0c9;
+  border-bottom: 1px solid #2b3445;
+}
+
+.results-table td {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.value {
+  color: #5cff90;
+  font-weight: 600;
+}
+
+.confidence {
+  color: #a0aec0;
+  font-size: 13px;
+}
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+.hidden {
+  display: none !important;
+}
+
+.center {
+  text-align: center;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
