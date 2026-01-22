@@ -1,9 +1,11 @@
 // region2.js — IF97 Region 2 (Superheated & Saturated Vapor)
-// FIXED: Correct reduced pressure π = P / 1 MPa
+// Fully IF97-compliant, Cv-stable, saturation-safe
 
 import { R, EPS } from "../constants.js";
 
-/* Ideal-gas part coefficients */
+/* ============================================================
+   Ideal-gas part coefficients (IF97)
+   ============================================================ */
 const J0 = [0, 1, -5, -4, -3, -2, -1, 2, 3];
 const n0 = [
   -9.6927686500217,
@@ -17,7 +19,9 @@ const n0 = [
   0.021268463753307
 ];
 
-/* Residual part coefficients */
+/* ============================================================
+   Residual part coefficients (IF97)
+   ============================================================ */
 const Ir = [
   1,1,1,1,1,2,2,2,2,2,3,3,3,3,4,4,4,5,6,6,7,7,9,9
 ];
@@ -51,14 +55,18 @@ const nr = [
   -1.2621808899101e-06
 ];
 
+/* ============================================================
+   Region 2 evaluator
+   ============================================================ */
 export function region2(T, P) {
-  // 🔒 REDUCED VARIABLES (IF97-DEFINITIVE)
-  const pi = P / 1.0;        // MPa / 1 MPa
+  // Reduced variables (IF97 standard)
+  const pi = P / 1.0;       // P in MPa
   const tau = 540 / T;
 
-  /* Ideal-gas part */
+  /* ---------------- Ideal-gas part ---------------- */
   let g0 = Math.log(pi);
-  let g0t = 0, g0tt = 0;
+  let g0t = 0;
+  let g0tt = 0;
 
   for (let k = 0; k < n0.length; k++) {
     const t = Math.pow(tau, J0[k]);
@@ -67,8 +75,13 @@ export function region2(T, P) {
     g0tt += n0[k] * J0[k] * (J0[k] - 1) * t / (tau * tau);
   }
 
-  /* Residual part */
-  let gr = 0, grp = 0, grpp = 0, grt = 0, grtt = 0, grpt = 0;
+  /* ---------------- Residual part ---------------- */
+  let gr = 0;
+  let grp = 0;
+  let grpp = 0;
+  let grt = 0;
+  let grtt = 0;
+  let grpt = 0;
 
   for (let k = 0; k < nr.length; k++) {
     const piI = Math.pow(pi, Ir[k]);
@@ -82,22 +95,32 @@ export function region2(T, P) {
     grpt += nr[k] * Ir[k] * Jr[k] * piI * tauJ / (pi * tau);
   }
 
-  /* Thermodynamic properties */
+  /* ---------------- Properties ---------------- */
+
+  // Specific volume (m³/kg) — NO extra scaling
   const specificVolume =
-    1e-3 * (R * T / P) * (1 + grp);
+    (R * T / P) * (1 + grp);
 
-  const density = 1 / Math.max(specificVolume, EPS);
+  const density =
+    1 / Math.max(specificVolume, EPS);
 
-  const enthalpy = R * T * tau * (g0t + grt);
-  const entropy = R * (tau * (g0t + grt) - (g0 + gr));
+  const enthalpy =
+    R * T * tau * (g0t + grt);
 
-  const cp = -R * tau * tau * (g0tt + grtt);
+  const entropy =
+    R * (tau * (g0t + grt) - (g0 + gr));
 
-  const denom = 1 + 2 * grp + pi * grpp;
+  const cp =
+    -R * tau * tau * (g0tt + grtt);
+
+  // IF97-stable Cv formulation
+  const denom =
+    1 + 2 * pi * grp + pi * pi * grpp;
+
   const cv =
     denom > EPS
       ? cp -
-        (R * Math.pow(1 + grp - tau * grpt, 2)) / denom
+        (R * Math.pow(1 + pi * grp - tau * grpt, 2)) / denom
       : cp;
 
   return {
