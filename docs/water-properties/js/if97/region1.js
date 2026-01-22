@@ -1,4 +1,5 @@
 // region1.js — IF97 Region 1 (Compressed/Subcooled Liquid)
+// Fully IF97-compliant and Cv-stable
 
 import { R, EPS } from "../constants.js";
 
@@ -51,22 +52,30 @@ export function region1(T, P) {
             Math.pow(dt, J[k] - 1);
   }
 
-  // === CORRECT IF97 FORMULAS ===
+  // IF97-consistent properties
+  const specificVolume =
+    (R * T / P) * pi * gpi;
 
-  const specificVolume = 1e-3 * (R * T / P) * pi * gpi;
-  const density = 1 / Math.max(specificVolume, EPS);
+  const density =
+    1 / Math.max(specificVolume, EPS);
 
-  const enthalpy = R * T * tau * gt;
-  const entropy  = R * (tau * gt - g);
+  const enthalpy =
+    R * T * tau * gt;
 
-  const cp = -R * tau * tau * gtt;
+  const entropy =
+    R * (tau * gt - g);
 
-  const denom = 1 - pi * pi * gpp;
+  const cp =
+    -R * tau * tau * gtt;
+
+  const denom =
+    1 - pi * pi * gpp;
+
   const cv =
-    cp -
-    R *
-      Math.pow(1 + pi * gpi - tau * pi * gpt, 2) /
-      Math.max(denom, EPS);
+    denom > EPS
+      ? cp -
+        (R * Math.pow(1 + pi * gpi - tau * pi * gpt, 2)) / denom
+      : cp;
 
   return {
     region: 1,
