@@ -26,63 +26,46 @@ document
       const unitSystem =
         document.getElementById("unitSystem")?.value ?? "SI";
 
-      // 🔒 SINGLE source of truth for mode
       const mode = getInputMode();
-
-      // Read inputs strictly by mode
       const rawInputs = readInputsByMode(mode);
 
-      // Hard numeric validation
       for (const [k, v] of Object.entries(rawInputs)) {
         if (!Number.isFinite(v)) {
           throw new Error(`Invalid or missing input: ${k}`);
         }
       }
 
-      // Normalize inputs
       const canonicalInputs = normalizeInputs(rawInputs);
-
-      // Convert UI → SI
       const siInputs = toSI(canonicalInputs, unitSystem);
 
-      /* ========================================================
-         VALIDATION (NO MODE MUTATION)
-         ======================================================== */
       const validation = validateState({
-        mode,          // pass mode explicitly
+        mode,
         ...siInputs
       });
 
       renderValidation(validation);
       if (!validation.valid) return;
 
-      /* ========================================================
-         SOLVER (AUTHORITATIVE)
-         ======================================================== */
       const stateSI = solve({
-        mode,          // 🔒 re-inject mode explicitly
+        mode,
         ...siInputs
       });
 
-      /* ========================================================
-         UNIT CONVERSION (PASSIVE)
-         ======================================================== */
       const stateUI = fromSI(stateSI, unitSystem);
 
-      // 🔒 LOCK phase metadata
       stateUI.phase = stateSI.phase;
       stateUI.phaseLabel = stateSI.phaseLabel;
 
-      /* ========================================================
-         CONFIDENCE BANDS
-         ======================================================== */
+      // 🔒 Cp/Cv undefined in two-phase region
+      if (stateUI.phase === "two_phase") {
+        stateUI.cp = NaN;
+        stateUI.cv = NaN;
+      }
+
       const confidence = {};
       for (const k of COMPARABLE_PROPERTIES) {
         if (Number.isFinite(stateUI[k])) {
-          confidence[k] = estimateConfidence(
-            k,
-            stateUI.phase
-          );
+          confidence[k] = estimateConfidence(k, stateUI.phase);
         }
       }
 
@@ -106,43 +89,22 @@ function readInputsByMode(mode) {
 
   switch (mode) {
     case "TP":
-      return {
-        temperature: num("temperature"),
-        pressure: num("pressure")
-      };
-
+      return { temperature: num("temperature"), pressure: num("pressure") };
     case "Ph":
-      return {
-        pressure: num("pressure"),
-        enthalpy: num("enthalpy")
-      };
-
+      return { pressure: num("pressure"), enthalpy: num("enthalpy") };
     case "Ps":
-      return {
-        pressure: num("pressure"),
-        entropy: num("entropy")
-      };
-
+      return { pressure: num("pressure"), entropy: num("entropy") };
     case "Tx":
-      return {
-        temperature: num("temperature"),
-        quality: num("quality")
-      };
-
+      return { temperature: num("temperature"), quality: num("quality") };
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
   }
 }
 
-/**
- * Removes undefined and non-finite values
- */
 function normalizeInputs(obj) {
   const out = {};
   for (const [k, v] of Object.entries(obj)) {
-    if (Number.isFinite(v)) {
-      out[k] = v;
-    }
+    if (Number.isFinite(v)) out[k] = v;
   }
   return out;
 }
@@ -174,9 +136,7 @@ const LABELS = {
 };
 
 function renderResultsTable(state, confidence) {
-  const container =
-    document.getElementById("resultsTable");
-
+  const container = document.getElementById("resultsTable");
   const unitSystem =
     document.getElementById("unitSystem")?.value ?? "SI";
 
@@ -215,12 +175,9 @@ function renderResultsTable(state, confidence) {
 }
 
 function renderPhaseBanner(state) {
-  if (!state.phaseLabel) return "";
-  return `
-    <div class="phase-banner">
-      Phase: <strong>${state.phaseLabel}</strong>
-    </div>
-  `;
+  return state.phaseLabel
+    ? `<div class="phase-banner">Phase: <strong>${state.phaseLabel}</strong></div>`
+    : "";
 }
 
 function formatNumber(x) {
@@ -236,10 +193,8 @@ function formatNumber(x) {
 function renderValidation({ errors, warnings, suggestions }) {
   document.getElementById("errors").innerHTML =
     errors.map(e => "❌ " + e).join("<br>");
-
   document.getElementById("warnings").innerHTML =
     warnings.map(w => "⚠️ " + w).join("<br>");
-
   document.getElementById("suggestions").innerHTML =
     suggestions.map(s => "💡 " + s).join("<br>");
 }
