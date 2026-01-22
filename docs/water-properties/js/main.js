@@ -5,7 +5,8 @@ const tabHelpText = {
   TP: "Enter Temperature and Pressure (most common case).",
   Ph: "Enter Pressure and Enthalpy (energy balance).",
   Ps: "Enter Pressure and Entropy (turbines, compressors).",
-  Tx: "Enter Temperature and Quality for saturated mixtures."
+  Tx: "Enter Temperature and Quality for saturated mixtures.",
+  Px: "Enter Pressure and Quality for saturated mixtures." // ✅ ADDED
 };
 
 // Canonical mapping to solver expectations
@@ -13,7 +14,8 @@ const MODE_TO_KEYS = {
   TP: ["temperature", "pressure"],
   Ph: ["pressure", "enthalpy"],
   Ps: ["pressure", "entropy"],
-  Tx: ["temperature", "quality"]
+  Tx: ["temperature", "quality"],
+  Px: ["pressure", "quality"] // ✅ ADDED
 };
 
 // Deterministic default
