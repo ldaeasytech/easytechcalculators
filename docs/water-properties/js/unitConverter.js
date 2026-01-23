@@ -31,8 +31,8 @@ const OUTPUT_FIELDS = [
   "specificVolume",
   "enthalpy",
   "entropy",
-  "cp",
-  "cv",
+  "Cp",
+  "Cv",
   "viscosity",
   "conductivity"
 ];
@@ -110,8 +110,8 @@ export function fromSI(raw, system = "SI") {
 
       case "enthalpy":
       case "entropy":
-      case "cp":
-      case "cv":
+      case "Cp":
+      case "Cv":
         out[key] = out[key] * KJPKG_TO_BTU_LBM;
         break;
 
