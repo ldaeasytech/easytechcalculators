@@ -98,6 +98,7 @@ const TsatPieces = [
 ];
 
 export function Tsat(P) {
+     console.warn("Tsat called with P =", P);
   if (P < P_TRIPLE || P > P_CRIT) return NaN;
 
   for (const seg of TsatPieces) {
@@ -137,6 +138,7 @@ const PsatPieces = [
 ];
 
 export function Psat(T) {
+    console.warn("Psat called with T =", T);
   if (T < T_TRIPLE || T > T_CRIT) return NaN;
 
   for (const seg of PsatPieces) {
