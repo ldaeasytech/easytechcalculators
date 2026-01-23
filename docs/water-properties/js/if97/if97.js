@@ -1,64 +1,32 @@
-// if97.js
-// IF97 T–P property evaluator (PURE DISPATCHER)
+// if97.js — SAFE IF97 FACADE
+// Delegates ALL thermodynamic logic to solver.js
+// No region selection, no saturation logic, no unit conversion
 
-import {
-  T_R1_MAX,
-  T_R5_MIN,
-  P_R5_MAX
-} from "../constants.js";
-
-import { region1 } from "./region1.js";
-import { region2 } from "./region2.js";
-import { region3 } from "./region3.js";
-import { region5 } from "./region5.js";
-import { Psat } from "./region4.js";
-
+import { solve } from "../solver.js";
 import { viscosity } from "./viscosity.js";
 import { conductivity } from "./conductivity.js";
 
-export function computeIF97(T, P) {
-  let state;
+/* ============================================================
+   Public API
+   ============================================================ */
 
-  /* ------------------------------------------------------------
-     Region selection
-     ------------------------------------------------------------ */
+/**
+ * Compute water/steam properties using IF97
+ * Inputs MUST already be in IF97 units:
+ *   T [K], P [MPa], h [kJ/kg], s [kJ/kg-K], x [-]
+ */
+export function computeIF97(inputs) {
+  // Delegate ALL logic to the solver
+  const state = solve(inputs);
 
-  if (T >= T_R5_MIN && P <= P_R5_MAX) {
-    state = region5(T, P);
-  }
-  else if (T <= T_R1_MAX) {
-    const Ps = Psat(T);
-
-    if (Math.abs(P - Ps) / Ps < 1e-7) {
-      return {
-        region: 4,
-        phase: "two_phase",
-        T,
-        P,
-        message: "Two-phase state: specify quality x"
-      };
-    }
-
-    state = P > Ps ? region1(T, P) : region2(T, P);
-  }
-  else {
-    state = P <= 16.5292 ? region2(T, P) : region3(T, P);
-  }
-
-  state.T = T;
-  state.P = P;
-
-  /* ------------------------------------------------------------
-     Transport properties (single-phase only)
-     ------------------------------------------------------------ */
-
+  // Transport properties: only for single-phase states
   if (
     state.phase !== "two_phase" &&
     Number.isFinite(state.density) &&
     state.density > 0
   ) {
-    state.viscosity = viscosity(T, state.density);
-    state.conductivity = conductivity(T, state.density);
+    state.viscosity = viscosity(state.T, state.density);
+    state.conductivity = conductivity(state.T, state.density);
   } else {
     state.viscosity = NaN;
     state.conductivity = NaN;
