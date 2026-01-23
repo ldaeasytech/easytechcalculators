@@ -1,19 +1,15 @@
 // region4.js — IF97 Region 4 (Saturation curve)
-// FINAL VERSION
+// FINAL VERSION: Psat(T) solved by inversion of validated Tsat(P)
 //
 // Units:
 //   T → K
 //   P → MPa
-//
-// Design:
-//   - Tsat(P): kept as your validated bisection implementation
-//   - Psat(T): verified IF97 polynomial with BOTH roots evaluated,
-//              physical root selected safely (JS-robust)
 
 import { EPS } from "../constants.js";
 
 /* ============================================================
    IF97 Region-4 coefficients (official IAPWS)
+   Used ONLY inside Tsat(P)
    ============================================================ */
 
 const n = [
@@ -30,8 +26,8 @@ const n = [
 ];
 
 // IF97 limits
-const T_TRIPLE = 273.16;      // K
-const T_CRIT   = 647.096;    // K
+const T_TRIPLE = 273.16;       // K
+const T_CRIT   = 647.096;     // K
 const P_TRIPLE = 0.000611657; // MPa
 const P_CRIT   = 22.064;      // MPa
 
@@ -73,32 +69,26 @@ export function Tsat(P) {
 
 /* ============================================================
    Psat(T) — saturation pressure from temperature
-   (ROBUST IF97 POLYNOMIAL — BOTH ROOTS EVALUATED)
+   (ROBUST inversion of Tsat(P))
    T in K → P in MPa
    ============================================================ */
 
 export function Psat(T) {
-  if (T < 273.16 || T > 647.096) return NaN;
+  if (T < T_TRIPLE || T > T_CRIT) return NaN;
 
-  const theta = T + n[8] / (T - n[9]);
+  let Plow = P_TRIPLE;
+  let Phigh = P_CRIT;
 
-  const A = theta * theta + n[0] * theta + n[1];
-  const B = n[2] * theta * theta + n[3] * theta + n[4];
-  const C = n[5] * theta * theta + n[6] * theta + n[7];
+  for (let i = 0; i < 80; i++) {
+    const Pmid = 0.5 * (Plow + Phigh);
+    const Tmid = Tsat(Pmid);
 
-  const D = B * B - 4 * A * C;
-  if (D <= 0) return NaN;
+    if (!Number.isFinite(Tmid)) return NaN;
 
-  const sqrtD = Math.sqrt(D);
+    if (Math.abs(Tmid - T) < 1e-7) return Pmid;
 
-  // IF97 physical branch (DO NOT CHANGE SIGN)
-  const denom = -B - sqrtD;
-  if (Math.abs(denom) < 1e-14) return NaN;
+    Tmid > T ? (Phigh = Pmid) : (Plow = Pmid);
+  }
 
-  const x = (2 * C) / denom;
-  const P = x * x * x * x;
-
-  if (P < P_TRIPLE || P > P_CRIT) return NaN;
-
-  return P;
+  return 0.5 * (Plow + Phigh);
 }
