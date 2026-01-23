@@ -1,6 +1,9 @@
 // main.js — UI-only: input mode selection & field enable/disable
 // GUARANTEES correct solver mode at all times
 
+import "./if97-test-region4.js";
+
+
 const tabHelpText = {
   TP: "Enter Temperature and Pressure (most common case).",
   Ph: "Enter Pressure and Enthalpy (energy balance).",
