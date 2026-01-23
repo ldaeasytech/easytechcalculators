@@ -1,4 +1,4 @@
-// validator.js — MODE-AWARE, NON-MUTATING, Tx-SAFE
+// validator.js — MODE-AWARE, NON-MUTATING, Tx & Px SAFE
 
 import {
   T_MIN,
@@ -54,9 +54,10 @@ export function validateState(inputs) {
       errors.push("Quality must be between 0 and 1.");
     }
 
-    if (mode !== "Tx") {
+    // Quality is only meaningful in Tx and Px
+    if (mode !== "Tx" && mode !== "Px") {
       warnings.push(
-        "Quality is ignored unless Temperature–Quality (T–x) mode is selected."
+        "Quality is ignored unless Temperature–Quality (T–x) or Pressure–Quality (P–x) mode is selected."
       );
     }
   }
@@ -98,6 +99,14 @@ export function validateState(inputs) {
       }
       break;
 
+    case "Px": // ✅ ADDED
+      if (!Number.isFinite(P) || !Number.isFinite(x)) {
+        errors.push(
+          "Pressure and Quality are required in P–x mode."
+        );
+      }
+      break;
+
     default:
       errors.push("Unknown calculation mode.");
   }
@@ -112,7 +121,7 @@ export function validateState(inputs) {
       if (Math.abs(P - Ps) / Ps < 1e-5) {
         warnings.push("State is very close to saturation.");
         suggestions.push(
-          "Consider switching to Temperature–Quality (T–x) mode."
+          "Consider switching to Temperature–Quality (T–x) or Pressure–Quality (P–x) mode."
         );
       }
     } catch {
