@@ -207,3 +207,142 @@ select:focus {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ============================================================
+   RESULTS CARD – VISUAL UPGRADE
+   ============================================================ */
+
+#resultsTable {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.04),
+    rgba(255,255,255,0.015)
+  );
+  border-radius: 14px;
+  padding: 1.25rem 1.4rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 12px 30px rgba(0,0,0,0.35);
+}
+
+/* ============================================================
+   PHASE BADGE
+   ============================================================ */
+
+.phase-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  margin-bottom: 1rem;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    rgba(0,160,255,0.25),
+    rgba(0,100,200,0.35)
+  );
+  color: #eaf6ff;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.12),
+    0 6px 18px rgba(0,0,0,0.35);
+}
+
+/* ============================================================
+   RESULT ACTION BUTTONS
+   ============================================================ */
+
+.result-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.result-actions button {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(
+    180deg,
+    #0d8cff,
+    #006fd6
+  );
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.result-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.result-actions button:active {
+  transform: translateY(0);
+  box-shadow:
+    0 5px 12px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ============================================================
+   RESULTS TABLE – CLEAN & TECHNICAL
+   ============================================================ */
+
+.results-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.results-clean thead th {
+  text-align: left;
+  font-weight: 600;
+  opacity: 0.75;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.18);
+}
+
+.results-clean tbody tr {
+  transition: background 0.15s ease;
+}
+
+.results-clean tbody tr:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.results-clean td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Value column – numeric emphasis */
+.results-clean td:nth-child(2) {
+  text-align: right;
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Unit column – de-emphasized */
+.results-clean td:nth-child(3) {
+  opacity: 0.65;
+  white-space: nowrap;
+}
