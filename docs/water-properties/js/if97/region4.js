@@ -10,6 +10,8 @@
 //   - Psat(T): piece-wise quadratic fit (fast, UI)
 //
 
+console.warn(">>> USING PIECEWISE REGION4 <<<");
+
 import { EPS } from "../constants.js";
 
 /* ============================================================
