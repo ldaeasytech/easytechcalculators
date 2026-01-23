@@ -1,209 +1,65 @@
-/* =========================================================
-   RESET & BASE
-========================================================= */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ============================================================
+   Clean Results Display
+   ============================================================ */
+
+.phase-banner {
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: rgba(0, 140, 255, 0.15);
+  border-left: 4px solid #00a2ff;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
-body {
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0b1220;
-  color: #e6e9ef;
-  min-height: 100vh;
-  line-height: 1.4;
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
-.app-header {
-  background: linear-gradient(180deg, #003a75, #001b3a);
-  text-align: center;
-  padding: 26px 16px;
-}
-
-.app-header h1 {
-  font-size: clamp(22px, 4vw, 34px);
-  color: #ffffff;
-}
-
-.subtitle {
-  margin-top: 6px;
-  font-size: clamp(12px, 2.5vw, 14px);
-  color: #c7d6ea;
-}
-
-/* =========================================================
-   LAYOUT
-========================================================= */
-.container {
-  max-width: 1200px;
-  margin: 24px auto;
-  padding: 0 14px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-.card {
-  background: #141a24;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
-}
-
-.card h2 {
-  margin-bottom: 14px;
-  font-size: 18px;
-}
-
-/* =========================================================
-   MODE TABS
-========================================================= */
-.input-tabs {
+.result-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
-.tab {
-  flex: 1 1 72px;
-  padding: 10px 0;
-  background: #242c3a;
+.result-actions button {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  background: #0a84ff;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  color: #cfd8e3;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.tab.active {
-  background: #007acc;
-  color: #ffffff;
-}
-
-/* =========================================================
-   HELP BAR
-========================================================= */
-.tab-help {
-  background: #0f2a44;
-  color: #b9dbff;
-  border-left: 4px solid #2da8ff;
-  padding: 10px 12px;
   border-radius: 6px;
-  font-size: 13px;
-  margin-bottom: 14px;
-}
-
-/* =========================================================
-   INPUT GRID
-========================================================= */
-.grid-form {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-}
-
-.field.full {
-  grid-column: 1 / -1;
-}
-
-label {
-  font-size: 13px;
-  color: #b8c2d4;
-  margin-bottom: 4px;
-}
-
-input,
-select {
-  background: #1e2533;
-  border: 1px solid #2b3445;
-  border-radius: 8px;
-  padding: 11px;
-  color: #ffffff;
-  font-size: 14px;
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #3fa9ff;
-}
-
-/* =========================================================
-   PRIMARY BUTTON
-========================================================= */
-.primary {
-  margin-top: 10px;
-  width: 100%;
-  padding: 14px;
-  background: #007acc;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #ffffff;
   cursor: pointer;
 }
 
-.primary:hover {
-  background: #005fa3;
+.result-actions button:hover {
+  background: #006fd6;
 }
 
-/* =========================================================
-   RESULTS
-========================================================= */
-.results-table {
-  margin-top: 10px;
-  font-size: 14px;
+/* ============================================================
+   Results Table
+   ============================================================ */
+
+.results-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
 }
 
-.loading {
-  text-align: center;
-  color: #9fb0c9;
-  margin-bottom: 10px;
+.results-clean th,
+.results-clean td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.hidden {
-  display: none;
+.results-clean th {
+  text-align: left;
+  font-weight: 600;
+  opacity: 0.85;
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
-.app-footer {
-  text-align: center;
-  padding: 18px 10px;
-  font-size: 12px;
-  color: #9fb0c9;
+.results-clean td:nth-child(2) {
+  text-align: right;
+  font-family: "Courier New", monospace;
 }
 
-/* =========================================================
-   RESPONSIVE BREAKPOINTS
-========================================================= */
-
-/* Tablets */
-@media (min-width: 600px) {
-  .grid-form {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* Laptops / Desktops */
-@media (min-width: 900px) {
-  .container {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .grid-form {
-    grid-template-columns: 1fr 1fr;
-  }
+.results-clean td:nth-child(3) {
+  opacity: 0.7;
+  white-space: nowrap;
 }
