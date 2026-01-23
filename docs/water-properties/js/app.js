@@ -54,10 +54,34 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     // ---------------------------------------------------------
     // Convert OUTPUTS only if NON-SI is selected
     // ---------------------------------------------------------
-    const stateUI =
-      unitSystem === "SI"
-        ? { ...stateIF97 }
-        : fromSI(stateIF97, unitSystem);
+const stateIF97 = solve({
+  mode,
+  ...rawInputs
+});
+
+// ---------------------------------------------------------
+// Map solver symbols → UI-friendly names
+// ---------------------------------------------------------
+const mappedState = {
+  ...stateIF97,
+  temperature: stateIF97.T,
+  pressure: stateIF97.P
+};
+
+// ---------------------------------------------------------
+// Convert OUTPUTS only if NON-SI is selected
+// ---------------------------------------------------------
+const stateUI =
+  unitSystem === "SI"
+    ? { ...mappedState }
+    : fromSI(mappedState, unitSystem);
+
+// Preserve metadata
+stateUI.phase = stateIF97.phase;
+stateUI.phaseLabel = stateIF97.phaseLabel;
+stateUI.inputMode = mode;
+
+renderResults(stateUI, unitSystem);
 
     // Preserve metadata
     stateUI.phase = stateIF97.phase;
