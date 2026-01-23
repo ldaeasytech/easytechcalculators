@@ -1,19 +1,15 @@
 // solver.js — IF97 dispatcher (TP, Tx, Px, Ph, Ps)
-// FINAL: saturation-stable, IF97-pure, unit-consistent
+// FINAL: saturation-stable, piecewise-safe, IF97-consistent
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { Psat, Tsat } from "./if97/region4.js";
 
 /* ============================================================
-   Numerical tolerances (IF97-safe)
+   Numerical tolerances
    ============================================================ */
 
 const X_EPS = 1e-9;
-
-// One-sided saturation approach (DO NOT set to zero)
-const SAT_EPS_T = 1e-4;  // K   → approach Tsat from vapor side
-const SAT_EPS_P = 1e-6;  // MPa → approach Psat from vapor side
 
 /* ============================================================
    Phase labels
@@ -36,23 +32,15 @@ function withPhase(key, props) {
 }
 
 /* ============================================================
-   Saturation helpers (IF97-correct)
+   Saturation helpers (PIECEWISE-SAFE)
    ============================================================ */
 
-// Saturated liquid → Region 1 at saturation (stable)
 function satLiquid(T, P) {
   return region1(T, P);
 }
 
-// Saturated vapor → one-sided limit into Region 2
-function satVapor_Tx(T) {
-  const P = Psat(T);
-  return region2(T + SAT_EPS_T, P);
-}
-
-function satVapor_Px(P) {
-  const T = Tsat(P);
-  return region2(T, P - SAT_EPS_P);
+function satVapor(T, P) {
+  return region2(T, P);
 }
 
 /* ============================================================
@@ -78,7 +66,7 @@ export function solve(inputs) {
     if (Math.abs(P - Ps) < 1e-6) {
       return withPhase(
         "saturated_vapor",
-        region2(T + SAT_EPS_T, Ps)
+        satVapor(T, Ps)
       );
     }
 
@@ -99,8 +87,10 @@ export function solve(inputs) {
     x = Math.min(1, Math.max(0, x));
 
     const P = Psat(T);
-    const L = satLiquid(T, P);
-    const V = satVapor_Tx(T);
+    const Ts = Tsat(P);
+
+    const L = satLiquid(Ts, P);
+    const V = satVapor(Ts, P);
 
     if (x < X_EPS) return withPhase("saturated_liquid", L);
     if (1 - x < X_EPS) return withPhase("saturated_vapor", V);
@@ -122,8 +112,9 @@ export function solve(inputs) {
     x = Math.min(1, Math.max(0, x));
 
     const T = Tsat(P);
+
     const L = satLiquid(T, P);
-    const V = satVapor_Px(P);
+    const V = satVapor(T, P);
 
     if (x < X_EPS) return withPhase("saturated_liquid", L);
     if (1 - x < X_EPS) return withPhase("saturated_vapor", V);
@@ -140,7 +131,7 @@ export function solve(inputs) {
 
     const T = Tsat(P);
     const L = satLiquid(T, P);
-    const V = satVapor_Px(P);
+    const V = satVapor(T, P);
 
     if (h < L.enthalpy) {
       return withPhase("compressed_liquid", region1(T, P));
@@ -163,7 +154,7 @@ export function solve(inputs) {
 
     const T = Tsat(P);
     const L = satLiquid(T, P);
-    const V = satVapor_Px(P);
+    const V = satVapor(T, P);
 
     if (s < L.entropy) {
       return withPhase("compressed_liquid", region1(T, P));
