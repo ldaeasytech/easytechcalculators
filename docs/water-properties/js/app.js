@@ -1,4 +1,4 @@
-// app.js — UI ↔ Solver orchestration (FINAL, MODE-SAFE, Px ENABLED)
+// app.js — UI ↔ Solver orchestration (CLEAN RESULTS, COPY-FRIENDLY)
 
 import "./main.js";
 
@@ -6,81 +6,63 @@ import { unitSets } from "./unitConfig.js";
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
 import { toSI, fromSI } from "./unitConverter.js";
-import { estimateConfidence } from "./confidence.js";
 import { getInputMode } from "./main.js";
 
 /* ============================================================
    Form handler
    ============================================================ */
 
-document
-  .getElementById("calcForm")
-  .addEventListener("submit", e => {
-    e.preventDefault();
+document.getElementById("calcForm").addEventListener("submit", e => {
+  e.preventDefault();
 
-    clearMessages();
-    clearResults();
-    document.getElementById("loading").style.display = "block";
+  clearMessages();
+  clearResults();
+  document.getElementById("loading").style.display = "block";
 
-    try {
-      const unitSystem =
-        document.getElementById("unitSystem")?.value ?? "SI";
+  try {
+    const unitSystem =
+      document.getElementById("unitSystem")?.value ?? "SI";
 
-      const mode = getInputMode();
-      const rawInputs = readInputsByMode(mode);
+    const mode = getInputMode();
+    const rawInputs = readInputsByMode(mode);
 
-      for (const [k, v] of Object.entries(rawInputs)) {
-        if (!Number.isFinite(v)) {
-          throw new Error(`Invalid or missing input: ${k}`);
-        }
+    for (const [k, v] of Object.entries(rawInputs)) {
+      if (!Number.isFinite(v)) {
+        throw new Error(`Invalid or missing input: ${k}`);
       }
-
-      const canonicalInputs = normalizeInputs(rawInputs);
-      const siInputs = toSI(canonicalInputs, unitSystem);
-
-      const validation = validateState({
-        mode,
-        ...siInputs
-      });
-
-      renderValidation(validation);
-      if (!validation.valid) return;
-
-      const stateSI = solve({
-        mode,
-        ...siInputs
-      });
-
-      const stateUI = fromSI(stateSI, unitSystem);
-
-      stateUI.phase = stateSI.phase;
-      stateUI.phaseLabel = stateSI.phaseLabel;
-
-      // Cp/Cv undefined in two-phase region
-      if (stateUI.phase === "two_phase") {
-        stateUI.cp = NaN;
-        stateUI.cv = NaN;
-      }
-
-      const confidence = {};
-      for (const k of COMPARABLE_PROPERTIES) {
-        if (Number.isFinite(stateUI[k])) {
-          confidence[k] = estimateConfidence(k, stateUI.phase);
-        }
-      }
-
-      renderResultsTable(stateUI, confidence);
-
-    } catch (err) {
-      document.getElementById("errors").textContent =
-        "❌ " + (err?.message ?? "Unknown error");
-    } finally {
-      document.getElementById("loading").style.display = "none";
     }
-  });
+
+    const siInputs = toSI(rawInputs, unitSystem);
+
+    const validation = validateState({
+      mode,
+      ...siInputs
+    });
+
+    renderValidation(validation);
+    if (!validation.valid) return;
+
+    const stateSI = solve({
+      mode,
+      ...siInputs
+    });
+
+    const stateUI = fromSI(stateSI, unitSystem);
+    stateUI.phase = stateSI.phase;
+    stateUI.phaseLabel = stateSI.phaseLabel;
+
+    renderResults(stateUI, unitSystem);
+
+  } catch (err) {
+    document.getElementById("errors").textContent =
+      "❌ " + (err?.message ?? "Unknown error");
+  } finally {
+    document.getElementById("loading").style.display = "none";
+  }
+});
 
 /* ============================================================
-   Input handling (FIXED: Px added)
+   Input handling
    ============================================================ */
 
 function readInputsByMode(mode) {
@@ -90,37 +72,24 @@ function readInputsByMode(mode) {
   switch (mode) {
     case "TP":
       return { temperature: num("temperature"), pressure: num("pressure") };
-
     case "Ph":
       return { pressure: num("pressure"), enthalpy: num("enthalpy") };
-
     case "Ps":
       return { pressure: num("pressure"), entropy: num("entropy") };
-
     case "Tx":
       return { temperature: num("temperature"), quality: num("quality") };
-
-    case "Px":   // ✅ FIX
+    case "Px":
       return { pressure: num("pressure"), quality: num("quality") };
-
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
   }
 }
 
-function normalizeInputs(obj) {
-  const out = {};
-  for (const [k, v] of Object.entries(obj)) {
-    if (Number.isFinite(v)) out[k] = v;
-  }
-  return out;
-}
-
 /* ============================================================
-   Results table & phase display
+   Results rendering
    ============================================================ */
 
-const COMPARABLE_PROPERTIES = [
+const PROPERTIES = [
   "density",
   "specificVolume",
   "enthalpy",
@@ -142,38 +111,41 @@ const LABELS = {
   conductivity: "Thermal Conductivity"
 };
 
-function renderResultsTable(state, confidence) {
+function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
-  const unitSystem =
-    document.getElementById("unitSystem")?.value ?? "SI";
-
   const units = unitSets[unitSystem];
 
-  const rows = COMPARABLE_PROPERTIES
+  const rows = PROPERTIES
     .filter(k => Number.isFinite(state[k]))
     .map(k => {
       const unit = units?.[k]?.unit ?? "";
       return `
         <tr>
           <td>${LABELS[k]}</td>
-          <td class="value">
-            ${formatNumber(state[k])}
-            <span class="unit">${unit}</span>
-          </td>
-          <td>${confidence[k]?.confidence_band ?? "—"}</td>
+          <td>${formatNumber(state[k])}</td>
+          <td>${unit}</td>
         </tr>
       `;
     })
     .join("");
 
   container.innerHTML = `
-    ${renderPhaseBanner(state)}
-    <table>
+    <div class="phase-banner">
+      Phase: <strong>${state.phaseLabel}</strong>
+    </div>
+
+    <div class="result-actions">
+      <button onclick="copyResults('tsv')">Copy for Excel</button>
+      <button onclick="copyResults('csv')">Copy CSV</button>
+      <button onclick="copyResults('text')">Copy Text</button>
+    </div>
+
+    <table class="results-clean">
       <thead>
         <tr>
           <th>Property</th>
           <th>Value</th>
-          <th>Confidence</th>
+          <th>Unit</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -181,21 +153,41 @@ function renderResultsTable(state, confidence) {
   `;
 }
 
-function renderPhaseBanner(state) {
-  return state.phaseLabel
-    ? `<div class="phase-banner">Phase: <strong>${state.phaseLabel}</strong></div>`
-    : "";
-}
+/* ============================================================
+   Copy helpers
+   ============================================================ */
+
+window.copyResults = function (format) {
+  const rows = [];
+  rows.push(["Property", "Value", "Unit"]);
+
+  document
+    .querySelectorAll(".results-clean tbody tr")
+    .forEach(tr => {
+      rows.push(
+        Array.from(tr.children).map(td => td.textContent.trim())
+      );
+    });
+
+  let text;
+  if (format === "csv") {
+    text = rows.map(r => r.join(",")).join("\n");
+  } else {
+    text = rows.map(r => r.join("\t")).join("\n");
+  }
+
+  navigator.clipboard.writeText(text);
+};
+
+/* ============================================================
+   Utilities
+   ============================================================ */
 
 function formatNumber(x) {
   if (!Number.isFinite(x)) return "—";
-  if (Math.abs(x) < 1e-6) return x.toExponential(3);
+  if (Math.abs(x) < 1e-6) return x.toExponential(6);
   return x.toFixed(6);
 }
-
-/* ============================================================
-   UI helpers
-   ============================================================ */
 
 function renderValidation({ errors, warnings, suggestions }) {
   document.getElementById("errors").innerHTML =
