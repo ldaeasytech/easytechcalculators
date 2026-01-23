@@ -1,14 +1,18 @@
 // region4.js — IF97 Region 4 (Saturation curve)
-// FINAL VERSION: Psat(T) solved by inversion of validated Tsat(P)
 //
 // Units:
 //   T → K
 //   P → MPa
+//
+// Design:
+//   - Tsat(P): authoritative IF97 inversion (UNCHANGED)
+//   - Psat(T): numerically stable Wagner-type correlation
+//
 
 import { EPS } from "../constants.js";
 
 /* ============================================================
-   IF97 Region-4 coefficients (official IAPWS)
+   IF97 Region-4 coefficients (official)
    Used ONLY inside Tsat(P)
    ============================================================ */
 
@@ -33,7 +37,7 @@ const P_CRIT   = 22.064;      // MPa
 
 /* ============================================================
    Tsat(P) — saturation temperature from pressure
-   (VALIDATED, UNCHANGED)
+   (VALIDATED IF97 INVERSION — UNCHANGED)
    P in MPa → T in K
    ============================================================ */
 
@@ -69,26 +73,37 @@ export function Tsat(P) {
 
 /* ============================================================
    Psat(T) — saturation pressure from temperature
-   (ROBUST inversion of Tsat(P))
+   (WAGNER-TYPE CORRELATION)
    T in K → P in MPa
    ============================================================ */
 
 export function Psat(T) {
   if (T < T_TRIPLE || T > T_CRIT) return NaN;
 
-  let Plow = P_TRIPLE;
-  let Phigh = P_CRIT;
+  const Tc = T_CRIT;
+  const Pc = P_CRIT;
 
-  for (let i = 0; i < 80; i++) {
-    const Pmid = 0.5 * (Plow + Phigh);
-    const Tmid = Tsat(Pmid);
+  // Reduced temperature
+  let tau = 1 - T / Tc;
 
-    if (!Number.isFinite(Tmid)) return NaN;
+  // Numerical safeguard near critical point
+  tau = Math.max(tau, 1e-12);
 
-    if (Math.abs(Tmid - T) < 1e-7) return Pmid;
+  // Wagner-type coefficients
+  // NOTE: These should be replaced with YOUR fitted values
+  const a1 = -7.85951783;
+  const a2 =  1.84408259;
+  const a3 = -11.7866497;
+  const a4 =  22.6807411;
 
-    Tmid > T ? (Phigh = Pmid) : (Plow = Pmid);
-  }
+  const exponent =
+    (Tc / T) *
+    (
+      a1 * tau +
+      a2 * Math.pow(tau, 1.5) +
+      a3 * Math.pow(tau, 3.0) +
+      a4 * Math.pow(tau, 3.5)
+    );
 
-  return 0.5 * (Plow + Phigh);
+  return Pc * Math.exp(exponent);
 }
