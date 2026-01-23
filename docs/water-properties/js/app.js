@@ -130,9 +130,9 @@ function renderResults(state, unitSystem) {
     .join("");
 
   container.innerHTML = `
-    <div class="phase-banner">
-      Phase: <strong>${state.phaseLabel}</strong>
-    </div>
+      <div class="phase-banner">
+        Phase: ${state.phaseLabel}
+      </div>
 
     <div class="result-actions">
       <button onclick="copyResults('tsv')">Copy for Excel</button>
