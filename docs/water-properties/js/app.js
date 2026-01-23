@@ -42,6 +42,8 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     renderValidation(validation);
     if (!validation.valid) return;
 
+     console.log("DEBUG P to solver (MPa):", siInputs.pressure);
+
     const stateSI = solve({
       mode,
       ...siInputs
