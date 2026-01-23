@@ -1,10 +1,10 @@
 // region4.js — IF97 Region 4 (Saturation curve)
-// FINAL: numerically stable, inversion-based Psat(T)
+// FINAL: Tsat(P) kept as-is, Psat(T) uses verified IF97 polynomial
 
 import { EPS } from "../constants.js";
 
 /* ============================================================
-   IAPWS IF97 saturation coefficients (for Tsat(P))
+   IAPWS IF97 saturation coefficients (official)
    ============================================================ */
 
 const n = [
@@ -20,13 +20,18 @@ const n = [
   0.65017534844798e3
 ];
 
+// IF97 validity limits
+const T_TRIPLE = 273.16;    // K
+const T_CRIT   = 647.096;  // K
+const P_CRIT   = 22.064;   // MPa
+
 /* ============================================================
    Tsat(P) — saturation temperature from pressure
+   (UNCHANGED — your validated implementation)
    P in MPa → T in K
    ============================================================ */
 
 export function Tsat(P) {
-  // Valid IF97 saturation range
   let Tlow = 273.15;   // K
   let Thigh = 647.096; // K
 
@@ -39,8 +44,10 @@ export function Tsat(P) {
     const B = n[2] * theta * theta + n[3] * theta + n[4];
     const C = n[5] * theta * theta + n[6] * theta + n[7];
 
+    const D = Math.max(B * B - 4 * A * C, EPS);
+
     const Psat_mid = Math.pow(
-      (2 * C) / (-B + Math.sqrt(Math.max(B * B - 4 * A * C, EPS))),
+      (2 * C) / (-B + Math.sqrt(D)),
       4
     );
 
@@ -54,25 +61,27 @@ export function Tsat(P) {
 
 /* ============================================================
    Psat(T) — saturation pressure from temperature
+   (VERIFIED IF97 POLYNOMIAL)
    T in K → P in MPa
-   (ROBUST inversion of Tsat(P))
    ============================================================ */
 
 export function Psat(T) {
-  // Valid IF97 saturation pressure range
-  let Plow = 1e-6;    // MPa
-  let Phigh = 22.064; // MPa (critical pressure)
+  if (T < T_TRIPLE || T > T_CRIT) return NaN;
 
-  for (let i = 0; i < 80; i++) {
-    const Pmid = 0.5 * (Plow + Phigh);
-    const Tmid = Tsat(Pmid);
+  const theta = T + n[8] / (T - n[9]);
 
-    if (!Number.isFinite(Tmid)) break;
+  const A = theta * theta + n[0] * theta + n[1];
+  const B = n[2] * theta * theta + n[3] * theta + n[4];
+  const C = n[5] * theta * theta + n[6] * theta + n[7];
 
-    if (Math.abs(Tmid - T) < 1e-7) return Pmid;
+  const D = B * B - 4 * A * C;
+  if (D < 0) return NaN;
 
-    Tmid > T ? (Phigh = Pmid) : (Plow = Pmid);
-  }
+  const P = Math.pow(
+    (2 * C) / (-B + Math.sqrt(D)),
+    4
+  );
 
-  return NaN;
+  // Guard against tiny numerical overshoots
+  return P > P_CRIT ? NaN : P;
 }
