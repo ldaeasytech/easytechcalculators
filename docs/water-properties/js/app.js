@@ -1,11 +1,11 @@
-// app.js — UI ↔ Solver orchestration (CLEAN RESULTS, COPY-FRIENDLY)
+// app.js — UI ↔ Solver orchestration (IF97-CORRECT, STABLE)
 
 import "./main.js";
 
 import { unitSets } from "./unitConfig.js";
 import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
-import { toSI, fromSI } from "./unitConverter.js";
+import { fromSI } from "./unitConverter.js"; // ⚠️ OUTPUT conversion ONLY
 import { getInputMode } from "./main.js";
 
 /* ============================================================
@@ -26,32 +26,40 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     const mode = getInputMode();
     const rawInputs = readInputsByMode(mode);
 
+    // Validate raw inputs (still in IF97 base units)
     for (const [k, v] of Object.entries(rawInputs)) {
       if (!Number.isFinite(v)) {
         throw new Error(`Invalid or missing input: ${k}`);
       }
     }
 
-    const siInputs = toSI(rawInputs, unitSystem);
-
+    // Validation uses IF97 units
     const validation = validateState({
       mode,
-      ...siInputs
+      ...rawInputs
     });
 
     renderValidation(validation);
     if (!validation.valid) return;
 
-     console.log("DEBUG P to solver (MPa):", siInputs.pressure);
-
-    const stateSI = solve({
+    console.log("DEBUG → Solver inputs (IF97 units):", {
       mode,
-      ...siInputs
+      ...rawInputs
     });
 
-    const stateUI = fromSI(stateSI, unitSystem);
-    stateUI.phase = stateSI.phase;
-    stateUI.phaseLabel = stateSI.phaseLabel;
+    // 🔒 CRITICAL FIX:
+    // DO NOT convert inputs before solver
+    const stateIF97 = solve({
+      mode,
+      ...rawInputs
+    });
+
+    // Convert OUTPUTS only (for UI)
+    const stateUI = fromSI(stateIF97, unitSystem);
+
+    // Preserve phase labels
+    stateUI.phase = stateIF97.phase;
+    stateUI.phaseLabel = stateIF97.phaseLabel;
 
     renderResults(stateUI, unitSystem);
 
@@ -73,15 +81,35 @@ function readInputsByMode(mode) {
 
   switch (mode) {
     case "TP":
-      return { temperature: num("temperature"), pressure: num("pressure") };
+      return {
+        temperature: num("temperature"), // K
+        pressure: num("pressure")        // MPa
+      };
+
     case "Ph":
-      return { pressure: num("pressure"), enthalpy: num("enthalpy") };
+      return {
+        pressure: num("pressure"),       // MPa
+        enthalpy: num("enthalpy")         // kJ/kg
+      };
+
     case "Ps":
-      return { pressure: num("pressure"), entropy: num("entropy") };
+      return {
+        pressure: num("pressure"),       // MPa
+        entropy: num("entropy")           // kJ/kg-K
+      };
+
     case "Tx":
-      return { temperature: num("temperature"), quality: num("quality") };
+      return {
+        temperature: num("temperature"), // K
+        quality: num("quality")           // –
+      };
+
     case "Px":
-      return { pressure: num("pressure"), quality: num("quality") };
+      return {
+        pressure: num("pressure"),       // MPa
+        quality: num("quality")           // –
+      };
+
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
   }
@@ -96,8 +124,8 @@ const PROPERTIES = [
   "specificVolume",
   "enthalpy",
   "entropy",
-  "cp",
-  "cv",
+  "Cp",
+  "Cv",
   "viscosity",
   "conductivity"
 ];
@@ -107,8 +135,8 @@ const LABELS = {
   specificVolume: "Specific Volume",
   enthalpy: "Enthalpy",
   entropy: "Entropy",
-  cp: "Cp",
-  cv: "Cv",
+  Cp: "Cp",
+  Cv: "Cv",
   viscosity: "Viscosity",
   conductivity: "Thermal Conductivity"
 };
@@ -132,9 +160,9 @@ function renderResults(state, unitSystem) {
     .join("");
 
   container.innerHTML = `
-      <div class="phase-banner">
-        Phase: ${state.phaseLabel}
-      </div>
+    <div class="phase-banner">
+      Phase: ${state.phaseLabel}
+    </div>
 
     <div class="result-actions">
       <button onclick="copyResults('tsv')">Copy for Excel</button>
@@ -171,12 +199,10 @@ window.copyResults = function (format) {
       );
     });
 
-  let text;
-  if (format === "csv") {
-    text = rows.map(r => r.join(",")).join("\n");
-  } else {
-    text = rows.map(r => r.join("\t")).join("\n");
-  }
+  const text =
+    format === "csv"
+      ? rows.map(r => r.join(",")).join("\n")
+      : rows.map(r => r.join("\t")).join("\n");
 
   navigator.clipboard.writeText(text);
 };
