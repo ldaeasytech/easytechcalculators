@@ -1,5 +1,5 @@
-// app.js — FINAL, COHERENT WITH SOLVER + IF97
-// Stable for saturated liquid, two-phase, and saturated vapor
+// app.js — FINAL, UI + IF97 SAFE VERSION
+// Restores all input modes and correct output mapping
 
 import "./main.js";
 
@@ -10,7 +10,74 @@ import { unitSets } from "./unitConfig.js";
 import { getInputMode } from "./main.js";
 
 /* ============================================================
-   Main form handler
+   MODE → ACTIVE INPUT FIELDS
+   ============================================================ */
+
+const MODE_FIELDS = {
+  TP: ["temperature", "pressure"],
+  Ph: ["pressure", "enthalpy"],
+  Ps: ["pressure", "entropy"],
+  Tx: ["temperature", "quality"],
+  Px: ["pressure", "quality"]
+};
+
+const ALL_FIELDS = [
+  "temperature",
+  "pressure",
+  "enthalpy",
+  "entropy",
+  "specificVolume",
+  "quality"
+];
+
+/* ============================================================
+   MODE CHANGE HANDLING (CRITICAL)
+   ============================================================ */
+
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const mode = btn.dataset.mode;
+    activateMode(mode);
+  });
+});
+
+function activateMode(mode) {
+  // highlight active tab
+  document.querySelectorAll(".mode-btn").forEach(b =>
+    b.classList.toggle("active", b.dataset.mode === mode)
+  );
+
+  // enable / disable inputs
+  const active = MODE_FIELDS[mode] || [];
+
+  ALL_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    if (active.includes(id)) {
+      el.disabled = false;
+      el.parentElement.classList.remove("disabled");
+    } else {
+      el.disabled = true;
+      el.value = "";
+      el.parentElement.classList.add("disabled");
+    }
+  });
+
+  // update hint text
+  const hint = document.getElementById("modeHint");
+  if (hint) {
+    hint.textContent =
+      mode === "Tx"
+        ? "Enter Temperature and Quality for saturated mixtures."
+        : mode === "Px"
+        ? "Enter Pressure and Quality for saturated mixtures."
+        : "";
+  }
+}
+
+/* ============================================================
+   FORM SUBMIT
    ============================================================ */
 
 document.getElementById("calcForm").addEventListener("submit", e => {
@@ -27,14 +94,13 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     const mode = getInputMode();
     const rawInputs = readInputsByMode(mode);
 
-    // Basic numeric validation
+    // numeric validation
     for (const [k, v] of Object.entries(rawInputs)) {
       if (!Number.isFinite(v)) {
         throw new Error(`Invalid or missing input: ${k}`);
       }
     }
 
-    // Domain validation (IF97 units)
     const validation = validateState({
       mode,
       ...rawInputs
@@ -43,47 +109,22 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     renderValidation(validation);
     if (!validation.valid) return;
 
-    // ---------------------------------------------------------
-    // Solver ALWAYS runs in IF97 units (K, MPa, kJ/kg)
-    // ---------------------------------------------------------
-    const stateIF97 = solve({
-      mode,
-      ...rawInputs
-    });
+    // ---- SOLVER (IF97 UNITS ONLY) ----
+    const stateIF97 = solve({ mode, ...rawInputs });
 
-    // ---------------------------------------------------------
-    // Convert OUTPUTS only if NON-SI is selected
-    // ---------------------------------------------------------
-const stateIF97 = solve({
-  mode,
-  ...rawInputs
-});
+    // map solver symbols → UI names
+    const mappedState = {
+      ...stateIF97,
+      temperature: stateIF97.T,
+      pressure: stateIF97.P
+    };
 
-// ---------------------------------------------------------
-// Map solver symbols → UI-friendly names
-// ---------------------------------------------------------
-const mappedState = {
-  ...stateIF97,
-  temperature: stateIF97.T,
-  pressure: stateIF97.P
-};
+    // convert ONLY if non-SI
+    const stateUI =
+      unitSystem === "SI"
+        ? { ...mappedState }
+        : fromSI(mappedState, unitSystem);
 
-// ---------------------------------------------------------
-// Convert OUTPUTS only if NON-SI is selected
-// ---------------------------------------------------------
-const stateUI =
-  unitSystem === "SI"
-    ? { ...mappedState }
-    : fromSI(mappedState, unitSystem);
-
-// Preserve metadata
-stateUI.phase = stateIF97.phase;
-stateUI.phaseLabel = stateIF97.phaseLabel;
-stateUI.inputMode = mode;
-
-renderResults(stateUI, unitSystem);
-
-    // Preserve metadata
     stateUI.phase = stateIF97.phase;
     stateUI.phaseLabel = stateIF97.phaseLabel;
     stateUI.inputMode = mode;
@@ -99,43 +140,27 @@ renderResults(stateUI, unitSystem);
 });
 
 /* ============================================================
-   Input parsing (IF97 base units)
+   INPUT PARSING
    ============================================================ */
 
 function readInputsByMode(mode) {
-  const num = id =>
-    parseFloat(document.getElementById(id)?.value);
+  const num = id => parseFloat(document.getElementById(id)?.value);
 
   switch (mode) {
     case "TP":
-      return {
-        temperature: num("temperature"), // K
-        pressure: num("pressure")        // MPa
-      };
+      return { temperature: num("temperature"), pressure: num("pressure") };
 
     case "Ph":
-      return {
-        pressure: num("pressure"),       // MPa
-        enthalpy: num("enthalpy")         // kJ/kg
-      };
+      return { pressure: num("pressure"), enthalpy: num("enthalpy") };
 
     case "Ps":
-      return {
-        pressure: num("pressure"),       // MPa
-        entropy: num("entropy")           // kJ/kg-K
-      };
+      return { pressure: num("pressure"), entropy: num("entropy") };
 
     case "Tx":
-      return {
-        temperature: num("temperature"), // K
-        quality: num("quality")           // –
-      };
+      return { temperature: num("temperature"), quality: num("quality") };
 
     case "Px":
-      return {
-        pressure: num("pressure"),       // MPa
-        quality: num("quality")           // –
-      };
+      return { pressure: num("pressure"), quality: num("quality") };
 
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
@@ -143,7 +168,7 @@ function readInputsByMode(mode) {
 }
 
 /* ============================================================
-   Results rendering
+   RESULTS RENDERING
    ============================================================ */
 
 const BASE_FIELDS = [
@@ -174,16 +199,10 @@ function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
   const units = unitSets[unitSystem];
 
-  // Decide which extra variable to show
   const fields = [...BASE_FIELDS];
 
-  if (state.inputMode === "Tx") {
-    fields.unshift("pressure");   // show Psat
-  }
-
-  if (state.inputMode === "Px") {
-    fields.unshift("temperature"); // show Tsat
-  }
+  if (state.inputMode === "Tx") fields.unshift("pressure");
+  if (state.inputMode === "Px") fields.unshift("temperature");
 
   const rows = fields
     .filter(k => Number.isFinite(state[k]))
@@ -200,20 +219,9 @@ function renderResults(state, unitSystem) {
     <div class="phase-banner">
       Phase: ${state.phaseLabel}
     </div>
-
-    <div class="result-actions">
-      <button onclick="copyResults('tsv')">COPY FOR EXCEL</button>
-      <button onclick="copyResults('csv')">COPY CSV</button>
-      <button onclick="copyResults('text')">COPY TEXT</button>
-    </div>
-
     <table class="results-clean">
       <thead>
-        <tr>
-          <th>Property</th>
-          <th>Value</th>
-          <th>Unit</th>
-        </tr>
+        <tr><th>Property</th><th>Value</th><th>Unit</th></tr>
       </thead>
       <tbody>${rows}</tbody>
     </table>
@@ -221,36 +229,12 @@ function renderResults(state, unitSystem) {
 }
 
 /* ============================================================
-   Copy helpers
-   ============================================================ */
-
-window.copyResults = function (format) {
-  const rows = [["Property", "Value", "Unit"]];
-
-  document
-    .querySelectorAll(".results-clean tbody tr")
-    .forEach(tr => {
-      rows.push(
-        Array.from(tr.children).map(td => td.textContent.trim())
-      );
-    });
-
-  const text =
-    format === "csv"
-      ? rows.map(r => r.join(",")).join("\n")
-      : rows.map(r => r.join("\t")).join("\n");
-
-  navigator.clipboard.writeText(text);
-};
-
-/* ============================================================
-   UI helpers
+   UI HELPERS
    ============================================================ */
 
 function formatNumber(x) {
   if (!Number.isFinite(x)) return "—";
-  if (Math.abs(x) < 1e-6) return x.toExponential(6);
-  return x.toFixed(6);
+  return Math.abs(x) < 1e-6 ? x.toExponential(6) : x.toFixed(6);
 }
 
 function setLoading(flag) {
@@ -273,8 +257,4 @@ function clearMessages() {
 function renderValidation({ errors, warnings, suggestions }) {
   document.getElementById("errors").innerHTML =
     errors.map(e => "❌ " + e).join("<br>");
-  document.getElementById("warnings").innerHTML =
-    warnings.map(w => "⚠️ " + w).join("<br>");
-  document.getElementById("suggestions").innerHTML =
-    suggestions.map(s => "💡 " + s).join("<br>");
 }
