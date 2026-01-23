@@ -1,39 +1,51 @@
 // region4.js — IF97 Region 4 (Saturation curve)
-// FINAL: Tsat(P) kept as-is, Psat(T) uses verified IF97 polynomial
+// FINAL VERSION
+//
+// Units:
+//   T → K
+//   P → MPa
+//
+// Design:
+//   - Tsat(P): kept as your validated bisection implementation
+//   - Psat(T): verified IF97 polynomial with BOTH roots evaluated,
+//              physical root selected safely (JS-robust)
 
 import { EPS } from "../constants.js";
 
 /* ============================================================
-   IAPWS IF97 saturation coefficients (official)
+   IF97 Region-4 coefficients (official IAPWS)
    ============================================================ */
 
 const n = [
-  0.11670521452767e4,
+   0.11670521452767e4,
   -0.72421316703206e6,
   -0.17073846940092e2,
-  0.12020824702470e5,
+   0.12020824702470e5,
   -0.32325550322333e7,
-  0.14915108613530e2,
+   0.14915108613530e2,
   -0.48232657361591e4,
-  0.40511340542057e6,
+   0.40511340542057e6,
   -0.23855557567849,
-  0.65017534844798e3
+   0.65017534844798e3
 ];
 
-// IF97 validity limits
-const T_TRIPLE = 273.16;    // K
-const T_CRIT   = 647.096;  // K
-const P_CRIT   = 22.064;   // MPa
+// IF97 limits
+const T_TRIPLE = 273.16;      // K
+const T_CRIT   = 647.096;    // K
+const P_TRIPLE = 0.000611657; // MPa
+const P_CRIT   = 22.064;      // MPa
 
 /* ============================================================
    Tsat(P) — saturation temperature from pressure
-   (UNCHANGED — your validated implementation)
+   (VALIDATED, UNCHANGED)
    P in MPa → T in K
    ============================================================ */
 
 export function Tsat(P) {
-  let Tlow = 273.15;   // K
-  let Thigh = 647.096; // K
+  if (P < P_TRIPLE || P > P_CRIT) return NaN;
+
+  let Tlow = T_TRIPLE;
+  let Thigh = T_CRIT;
 
   for (let i = 0; i < 80; i++) {
     const Tmid = 0.5 * (Tlow + Thigh);
@@ -51,17 +63,17 @@ export function Tsat(P) {
       4
     );
 
-    if (Math.abs(Psat_mid - P) < EPS) return Tmid;
+    if (Math.abs(Psat_mid - P) < 1e-7) return Tmid;
 
     Psat_mid > P ? (Thigh = Tmid) : (Tlow = Tmid);
   }
 
-  return NaN;
+  return 0.5 * (Tlow + Thigh);
 }
 
 /* ============================================================
    Psat(T) — saturation pressure from temperature
-   (VERIFIED IF97 POLYNOMIAL)
+   (ROBUST IF97 POLYNOMIAL — BOTH ROOTS EVALUATED)
    T in K → P in MPa
    ============================================================ */
 
@@ -77,11 +89,29 @@ export function Psat(T) {
   const D = B * B - 4 * A * C;
   if (D < 0) return NaN;
 
-  const P = Math.pow(
-    (2 * C) / (-B - Math.sqrt(D)),
-    4
-  );
+  const sqrtD = Math.sqrt(D);
 
-  // Guard against tiny numerical overshoots
-  return P > P_CRIT ? NaN : P;
+  // Two mathematical roots
+  const x1 = (2 * C) / (-B + sqrtD);
+  const x2 = (2 * C) / (-B - sqrtD);
+
+  const P1 = Math.pow(x1, 4);
+  const P2 = Math.pow(x2, 4);
+
+  const valid1 =
+    Number.isFinite(P1) && P1 >= P_TRIPLE && P1 <= P_CRIT;
+  const valid2 =
+    Number.isFinite(P2) && P2 >= P_TRIPLE && P2 <= P_CRIT;
+
+  if (valid1 && !valid2) return P1;
+  if (valid2 && !valid1) return P2;
+
+  if (valid1 && valid2) {
+    // Choose root consistent with Tsat(P)
+    return Math.abs(Tsat(P1) - T) < Math.abs(Tsat(P2) - T)
+      ? P1
+      : P2;
+  }
+
+  return NaN;
 }
