@@ -1,5 +1,5 @@
-// app.js — FINAL IF97-CORRECT UI ↔ Solver pipeline
-// Stable for all x ∈ [0,1]
+// app.js — FINAL, COHERENT WITH SOLVER + IF97
+// Stable for saturated liquid, two-phase, and saturated vapor
 
 import "./main.js";
 
@@ -43,10 +43,7 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     renderValidation(validation);
     if (!validation.valid) return;
 
-    console.log("IF97 solver inputs:", { mode, ...rawInputs });
-
     // ---------------------------------------------------------
-    // CRITICAL RULE:
     // Solver ALWAYS runs in IF97 units (K, MPa, kJ/kg)
     // ---------------------------------------------------------
     const stateIF97 = solve({
@@ -55,15 +52,17 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     });
 
     // ---------------------------------------------------------
-    // Conversion ONLY for non-SI display
+    // Convert OUTPUTS only if NON-SI is selected
     // ---------------------------------------------------------
     const stateUI =
       unitSystem === "SI"
         ? { ...stateIF97 }
         : fromSI(stateIF97, unitSystem);
 
+    // Preserve metadata
     stateUI.phase = stateIF97.phase;
     stateUI.phaseLabel = stateIF97.phaseLabel;
+    stateUI.inputMode = mode;
 
     renderResults(stateUI, unitSystem);
 
@@ -76,7 +75,7 @@ document.getElementById("calcForm").addEventListener("submit", e => {
 });
 
 /* ============================================================
-   Input parsing (IF97 BASE UNITS)
+   Input parsing (IF97 base units)
    ============================================================ */
 
 function readInputsByMode(mode) {
@@ -123,7 +122,7 @@ function readInputsByMode(mode) {
    Results rendering
    ============================================================ */
 
-const DISPLAY_FIELDS = [
+const BASE_FIELDS = [
   "density",
   "specificVolume",
   "enthalpy",
@@ -135,6 +134,8 @@ const DISPLAY_FIELDS = [
 ];
 
 const LABELS = {
+  temperature: "Temperature",
+  pressure: "Pressure",
   density: "Density",
   specificVolume: "Specific Volume",
   enthalpy: "Enthalpy",
@@ -149,7 +150,18 @@ function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
   const units = unitSets[unitSystem];
 
-  const rows = DISPLAY_FIELDS
+  // Decide which extra variable to show
+  const fields = [...BASE_FIELDS];
+
+  if (state.inputMode === "Tx") {
+    fields.unshift("pressure");   // show Psat
+  }
+
+  if (state.inputMode === "Px") {
+    fields.unshift("temperature"); // show Tsat
+  }
+
+  const rows = fields
     .filter(k => Number.isFinite(state[k]))
     .map(k => `
       <tr>
