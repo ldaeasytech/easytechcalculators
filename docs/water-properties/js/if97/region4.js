@@ -78,7 +78,7 @@ export function Tsat(P) {
    ============================================================ */
 
 export function Psat(T) {
-  if (T < T_TRIPLE || T > T_CRIT) return NaN;
+  if (T < 273.16 || T > 647.096) return NaN;
 
   const theta = T + n[8] / (T - n[9]);
 
@@ -87,31 +87,18 @@ export function Psat(T) {
   const C = n[5] * theta * theta + n[6] * theta + n[7];
 
   const D = B * B - 4 * A * C;
-  if (D < 0) return NaN;
+  if (D <= 0) return NaN;
 
   const sqrtD = Math.sqrt(D);
 
-  // Two mathematical roots
-  const x1 = (2 * C) / (-B + sqrtD);
-  const x2 = (2 * C) / (-B - sqrtD);
+  // IF97 physical branch (DO NOT CHANGE SIGN)
+  const denom = -B - sqrtD;
+  if (Math.abs(denom) < 1e-14) return NaN;
 
-  const P1 = Math.pow(x1, 4);
-  const P2 = Math.pow(x2, 4);
+  const x = (2 * C) / denom;
+  const P = x * x * x * x;
 
-  const valid1 =
-    Number.isFinite(P1) && P1 >= P_TRIPLE && P1 <= P_CRIT;
-  const valid2 =
-    Number.isFinite(P2) && P2 >= P_TRIPLE && P2 <= P_CRIT;
+  if (P < P_TRIPLE || P > P_CRIT) return NaN;
 
-  if (valid1 && !valid2) return P1;
-  if (valid2 && !valid1) return P2;
-
-  if (valid1 && valid2) {
-    // Choose root consistent with Tsat(P)
-    return Math.abs(Tsat(P1) - T) < Math.abs(Tsat(P2) - T)
-      ? P1
-      : P2;
-  }
-
-  return NaN;
+  return P;
 }
