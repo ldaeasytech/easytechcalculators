@@ -1,22 +1,30 @@
 // solver.js — IF97 dispatcher (TP, Tx, Px, Ph, Ps)
-// Saturation-pure, offset-free, density-consistent
+// FINAL: saturation-stable, IF97-pure, unit-consistent
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
-import { Tsat, Psat } from "./if97/region4.js";
+import { Psat, Tsat } from "./if97/region4.js";
+
+/* ============================================================
+   Numerical tolerances (IF97-safe)
+   ============================================================ */
 
 const X_EPS = 1e-9;
-const SAT_TOL = 1e-6;
+
+// One-sided saturation approach (DO NOT set to zero)
+const SAT_EPS_T = 1e-4;  // K   → approach Tsat from vapor side
+const SAT_EPS_P = 1e-6;  // MPa → approach Psat from vapor side
 
 /* ============================================================
    Phase labels
    ============================================================ */
+
 const PHASE_LABELS = {
+  compressed_liquid: "Compressed (Subcooled) Liquid",
   saturated_liquid: "Saturated Liquid",
   saturated_vapor: "Saturated Vapor",
   two_phase: "Two-Phase Mixture",
-  superheated_vapor: "Superheated Vapor",
-  compressed_liquid: "Compressed (Subcooled) Liquid"
+  superheated_vapor: "Superheated Vapor"
 };
 
 function withPhase(key, props) {
@@ -28,21 +36,29 @@ function withPhase(key, props) {
 }
 
 /* ============================================================
-   Saturation helpers (IF97-pure)
+   Saturation helpers (IF97-correct)
    ============================================================ */
+
+// Saturated liquid → Region 1 at saturation (stable)
 function satLiquid(T, P) {
   return region1(T, P);
 }
 
-function satVapor(T, P) {
-  // IF97 definition: saturated vapor is the limiting
-  // superheated vapor at Tsat, Psat
-  return region2(T, P);
+// Saturated vapor → one-sided limit into Region 2
+function satVapor_Tx(T) {
+  const P = Psat(T);
+  return region2(T + SAT_EPS_T, P);
+}
+
+function satVapor_Px(P) {
+  const T = Tsat(P);
+  return region2(T, P - SAT_EPS_P);
 }
 
 /* ============================================================
    Solver entry
    ============================================================ */
+
 export function solve(inputs) {
   const { mode } = inputs;
 
@@ -55,14 +71,14 @@ export function solve(inputs) {
 
     const Ps = Psat(T);
 
-    if (P > Ps + SAT_TOL) {
+    if (P > Ps) {
       return withPhase("compressed_liquid", region1(T, P));
     }
 
-    if (Math.abs(P - Ps) <= SAT_TOL) {
+    if (Math.abs(P - Ps) < 1e-6) {
       return withPhase(
         "saturated_vapor",
-        satVapor(T, Ps)
+        region2(T + SAT_EPS_T, Ps)
       );
     }
 
@@ -76,12 +92,15 @@ export function solve(inputs) {
     const T = inputs.temperature;
     let x = Number(inputs.quality);
 
-    if (!Number.isFinite(x)) throw new Error("Invalid vapor quality x");
+    if (!Number.isFinite(x)) {
+      throw new Error("Invalid vapor quality x");
+    }
+
     x = Math.min(1, Math.max(0, x));
 
     const P = Psat(T);
     const L = satLiquid(T, P);
-    const V = satVapor(T, P);
+    const V = satVapor_Tx(T);
 
     if (x < X_EPS) return withPhase("saturated_liquid", L);
     if (1 - x < X_EPS) return withPhase("saturated_vapor", V);
@@ -96,12 +115,15 @@ export function solve(inputs) {
     const P = inputs.pressure;
     let x = Number(inputs.quality);
 
-    if (!Number.isFinite(x)) throw new Error("Invalid vapor quality x");
+    if (!Number.isFinite(x)) {
+      throw new Error("Invalid vapor quality x");
+    }
+
     x = Math.min(1, Math.max(0, x));
 
     const T = Tsat(P);
     const L = satLiquid(T, P);
-    const V = satVapor(T, P);
+    const V = satVapor_Px(P);
 
     if (x < X_EPS) return withPhase("saturated_liquid", L);
     if (1 - x < X_EPS) return withPhase("saturated_vapor", V);
@@ -118,7 +140,7 @@ export function solve(inputs) {
 
     const T = Tsat(P);
     const L = satLiquid(T, P);
-    const V = satVapor(T, P);
+    const V = satVapor_Px(P);
 
     if (h < L.enthalpy) {
       return withPhase("compressed_liquid", region1(T, P));
@@ -141,7 +163,7 @@ export function solve(inputs) {
 
     const T = Tsat(P);
     const L = satLiquid(T, P);
-    const V = satVapor(T, P);
+    const V = satVapor_Px(P);
 
     if (s < L.entropy) {
       return withPhase("compressed_liquid", region1(T, P));
@@ -159,8 +181,9 @@ export function solve(inputs) {
 }
 
 /* ============================================================
-   Two-phase mixture (exact IF97 form)
+   Two-phase mixture (thermodynamically correct)
    ============================================================ */
+
 function mix(L, V, x) {
   return {
     density:
