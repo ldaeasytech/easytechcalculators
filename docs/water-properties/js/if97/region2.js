@@ -99,7 +99,7 @@ export function region2(T, P) {
 
   // ✅ REQUIRED 1e-3 scaling
   const specificVolume =
-    1e-3 * (R * T / P) * (1 + grp);
+    1e-3 * (R * T / P) * (1 + pi*grp);
 
   const density = 1 / Math.max(specificVolume, EPS);
 
