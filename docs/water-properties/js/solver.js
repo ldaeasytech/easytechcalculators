@@ -4,7 +4,7 @@ import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { Psat, Tsat } from "./if97/region4.js";
 
-const SAT_OFFSET = 1e-6; // K — safe offset for Region 2
+const SAT_OFFSET = 10; // K — safe offset for Region 2
 const X_EPS = 1e-9;
 
 /* ============================================================
