@@ -78,7 +78,7 @@ export function Psat(T) {
   if (D < 0) return NaN;
 
   const P = Math.pow(
-    (2 * C) / (-B + Math.sqrt(D)),
+    (2 * C) / (-B - Math.sqrt(D)),
     4
   );
 
