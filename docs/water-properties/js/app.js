@@ -1,5 +1,5 @@
-// app.js — FINAL, UI + IF97 SAFE VERSION
-// Saturation-safe, Region-4 compatible
+// app.js — FINAL UI LAYER
+// Precision-polished, saturation-safe
 
 import "./main.js";
 
@@ -103,14 +103,12 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     // ---- SOLVER (IF97 UNITS ONLY) ----
     const stateIF97 = solve({ mode, ...rawInputs });
 
-    // map solver → UI symbols
     const mappedState = {
       ...stateIF97,
       temperature: stateIF97.T,
       pressure: stateIF97.P
     };
 
-    // unit conversion
     const stateUI =
       unitSystem === "SI"
         ? { ...mappedState }
@@ -140,19 +138,14 @@ function readInputsByMode(mode) {
   switch (mode) {
     case "TP":
       return { temperature: num("temperature"), pressure: num("pressure") };
-
     case "Ph":
       return { pressure: num("pressure"), enthalpy: num("enthalpy") };
-
     case "Ps":
       return { pressure: num("pressure"), entropy: num("entropy") };
-
     case "Tx":
       return { temperature: num("temperature"), quality: num("quality") };
-
     case "Px":
       return { pressure: num("pressure"), quality: num("quality") };
-
     default:
       throw new Error(`Unsupported input mode: ${mode}`);
   }
@@ -191,7 +184,6 @@ function renderResults(state, unitSystem) {
   const units = unitSets[unitSystem];
 
   const fields = [...BASE_FIELDS];
-
   if (state.inputMode === "Tx") fields.unshift("pressure");
   if (state.inputMode === "Px") fields.unshift("temperature");
 
@@ -200,8 +192,8 @@ function renderResults(state, unitSystem) {
     .map(k => `
       <tr>
         <td>${LABELS[k]}</td>
-        <td>${formatNumber(state[k])}</td>
-        <td>${units?.[k]?.unit ?? ""}</td>
+        <td>${formatNumber(state[k], k)}</td>
+        <td>${resolveUnit(k, units)}</td>
       </tr>
     `)
     .join("");
@@ -220,15 +212,37 @@ function renderResults(state, unitSystem) {
 }
 
 /* ============================================================
-   UI HELPERS
+   NUMBER FORMATTING (PRECISION CONTROL)
    ============================================================ */
 
-function formatNumber(x) {
+function formatNumber(x, key) {
   if (!Number.isFinite(x)) return "—";
+
+  // ✔ Viscosity → 8 decimal places
+  if (key === "viscosity") {
+    return x.toFixed(8);
+  }
+
+  // Default behavior (unchanged)
   return Math.abs(x) < 1e-6
     ? x.toExponential(6)
     : x.toFixed(6);
 }
+
+/* ============================================================
+   UNIT RESOLUTION
+   ============================================================ */
+
+function resolveUnit(key, units) {
+  if (key === "thermalConductivity") {
+    return "W/(m·K)";
+  }
+  return units?.[key]?.unit ?? "";
+}
+
+/* ============================================================
+   UI HELPERS
+   ============================================================ */
 
 function setLoading(flag) {
   const el = document.getElementById("loading");
@@ -247,7 +261,7 @@ function clearMessages() {
   });
 }
 
-function renderValidation({ errors, warnings, suggestions }) {
+function renderValidation({ errors }) {
   document.getElementById("errors").innerHTML =
     errors.map(e => "❌ " + e).join("<br>");
 }
