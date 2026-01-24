@@ -60,7 +60,8 @@ const nr = [
    ============================================================ */
 export function region2(T, P) {
   // Reduced variables (IF97 standard)
-  const pi = P / 1.0;       // P in MPa
+  // P must be in MPa, T in K
+  const pi = P / 1.0;
   const tau = 540 / T;
 
   /* ---------------- Ideal-gas part ---------------- */
@@ -97,11 +98,12 @@ export function region2(T, P) {
 
   /* ---------------- Properties ---------------- */
 
-  // ✅ REQUIRED 1e-3 scaling
+  // ✅ Correct IF97 specific volume (NO 1e-3 scaling)
   const specificVolume =
-    1e-3 * (R * T / P) * (1 + pi*grp);
+    (R * T / P) * (1 + pi * grp);
 
-  const density = 1 / Math.max(specificVolume, EPS);
+  const density =
+    1 / Math.max(specificVolume, EPS);
 
   const enthalpy =
     R * T * tau * (g0t + grt);
