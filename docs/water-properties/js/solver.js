@@ -5,6 +5,9 @@ import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { Psat, Tsat } from "./if97/region4.js";
 
+console.log("Calling region2 with:", { P, T });
+
+
 const X_EPS = 1e-9;
 
 /* ============================================================
