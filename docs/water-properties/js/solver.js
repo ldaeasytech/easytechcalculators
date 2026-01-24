@@ -1,5 +1,5 @@
-// solver.js — IF97 dispatcher (TP, Tx, Px, Ph, Ps)
-// FINAL: saturation-stable, piecewise-safe, PROPERTY-COHERENT
+// solver.js — FINAL IF97 SOLVER
+// Saturation-forced, piecewise Tsat/Psat, paste-safe
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
@@ -8,138 +8,112 @@ import { Psat, Tsat } from "./if97/region4.js";
 const X_EPS = 1e-9;
 
 /* ============================================================
-   Property normalization (CRITICAL FIX)
-   ============================================================ */
-
-function normalize(r) {
-  return {
-    density: r.density,
-    specificVolume: r.specificVolume,
-    enthalpy: r.enthalpy,
-    entropy: r.entropy,
-    Cp: r.Cp ?? r.cp ?? NaN,
-    Cv: r.Cv ?? r.cv ?? NaN
-  };
-}
-
-function region1_safe(T, P) {
-  return normalize(region1(T, P));
-}
-
-function region2_safe(T, P) {
-  return normalize(region2(T, P));
-}
-
-/* ============================================================
-   Phase labels
-   ============================================================ */
-
-const PHASE_LABELS = {
-  compressed_liquid: "Compressed (Subcooled) Liquid",
-  saturated_liquid: "Saturated Liquid",
-  saturated_vapor: "Saturated Vapor",
-  two_phase: "Two-Phase Mixture",
-  superheated_vapor: "Superheated Vapor"
-};
-
-function withPhase(key, props) {
-  return {
-    phase: key,
-    phaseLabel: PHASE_LABELS[key],
-    ...props
-  };
-}
-
-/* ============================================================
-   Solver entry
+   Solver entry point
    ============================================================ */
 
 export function solve(inputs) {
   const { mode } = inputs;
 
-  /* ---------- T–P ---------- */
+  /* ========================================================
+     T–P MODE
+     ======================================================== */
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
     const Ps = Psat(T);
 
-    if (P > Ps) return withPhase("compressed_liquid", region1_safe(T, P));
-    if (Math.abs(P - Ps) < 1e-6)
-      return withPhase("saturated_vapor", region2_safe(T, Ps));
+    if (Math.abs(P - Ps) < 1e-6) {
+      const V = region2(T, Ps);
+      return withPhase("saturated_vapor", V, T, Ps);
+    }
 
-    return withPhase("superheated_vapor", region2_safe(T, P));
+    if (P > Ps) {
+      const L = region1(T, P);
+      return withPhase("compressed_liquid", L, T, P);
+    }
+
+    const V = region2(T, P);
+    return withPhase("superheated_vapor", V, T, P);
   }
 
-// ===== SATURATED STATES (AUTHORITATIVE REGION 4) =====
+  /* ========================================================
+     T–x MODE  (AUTHORITATIVE Psat)
+     ======================================================== */
+  if (mode === "Tx") {
+    const T = inputs.temperature;
+    const x = inputs.quality;
 
-if (mode === "Tx") {
-  const T = temperature;
+    const P = Psat(T);
 
-  // FORCE saturation pressure from piecewise Psat(T)
-  const P = Psat(T);
+    const L = region1(T, P);
+    const V = region2(T, P);
 
-  const satL = region1(T, P);
-  const satV = region2(T, P);
+    if (x <= X_EPS) {
+      return withPhase("saturated_liquid", L, T, P);
+    }
 
-  satL.T = T; satL.P = P;
-  satV.T = T; satV.P = P;
+    if (1 - x <= X_EPS) {
+      return withPhase("saturated_vapor", V, T, P);
+    }
 
-  if (quality === 0) {
-    satL.phase = "saturated_liquid";
-    satL.phaseLabel = "Saturated Liquid";
-    return satL;
+    return mixStates(L, V, x, T, P);
   }
 
-  if (quality === 1) {
-    satV.phase = "saturated_vapor";
-    satV.phaseLabel = "Saturated Vapor";
-    return satV;
+  /* ========================================================
+     P–x MODE  (AUTHORITATIVE Tsat)
+     ======================================================== */
+  if (mode === "Px") {
+    const P = inputs.pressure;
+    const x = inputs.quality;
+
+    const T = Tsat(P);
+
+    const L = region1(T, P);
+    const V = region2(T, P);
+
+    if (x <= X_EPS) {
+      return withPhase("saturated_liquid", L, T, P);
+    }
+
+    if (1 - x <= X_EPS) {
+      return withPhase("saturated_vapor", V, T, P);
+    }
+
+    return mixStates(L, V, x, T, P);
   }
 
-  return mixSaturatedStates(satL, satV, quality);
+  throw new Error(`Unsupported solver mode: ${mode}`);
 }
 
-if (mode === "Px") {
-  const P = pressure;
-
-  // FORCE saturation temperature from piecewise Tsat(P)
-  const T = Tsat(P);
-
-  const satL = region1(T, P);
-  const satV = region2(T, P);
-
-  satL.T = T; satL.P = P;
-  satV.T = T; satV.P = P;
-
-  if (quality === 0) {
-    satL.phase = "saturated_liquid";
-    satL.phaseLabel = "Saturated Liquid";
-    return satL;
-  }
-
-  if (quality === 1) {
-    satV.phase = "saturated_vapor";
-    satV.phaseLabel = "Saturated Vapor";
-    return satV;
-  }
-
-  return mixSaturatedStates(satL, satV, quality);
-}
-
-
-   
 /* ============================================================
-   Two-phase mixture
+   Helpers
    ============================================================ */
 
-function mixSaturatedStates(L, V, x) {
+function withPhase(phase, r, T, P) {
+  return {
+    T,
+    P,
+    phase,
+    phaseLabel: phaseLabel(phase),
+
+    density: r.density,
+    specificVolume: r.specificVolume,
+    enthalpy: r.enthalpy,
+    entropy: r.entropy,
+
+    Cp: r.Cp ?? r.cp ?? NaN,
+    Cv: r.Cv ?? r.cv ?? NaN
+  };
+}
+
+function mixStates(L, V, x, T, P) {
   const v =
     (1 - x) * L.specificVolume +
     x * V.specificVolume;
 
   return {
-    T: L.T,
-    P: L.P,
+    T,
+    P,
     phase: "two_phase",
     phaseLabel: "Two-Phase Mixture",
 
@@ -157,4 +131,21 @@ function mixSaturatedStates(L, V, x) {
     Cp: NaN,
     Cv: NaN
   };
+}
+
+function phaseLabel(key) {
+  switch (key) {
+    case "compressed_liquid":
+      return "Compressed (Subcooled) Liquid";
+    case "saturated_liquid":
+      return "Saturated Liquid";
+    case "saturated_vapor":
+      return "Saturated Vapor";
+    case "two_phase":
+      return "Two-Phase Mixture";
+    case "superheated_vapor":
+      return "Superheated Vapor";
+    default:
+      return "";
+  }
 }
