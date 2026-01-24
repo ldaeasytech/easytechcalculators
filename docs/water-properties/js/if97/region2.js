@@ -1,11 +1,13 @@
-// region2.js — IF97 Region 2 (Superheated & Saturated Vapor)
-// Fully IF97-compliant, Cv-stable, saturation-safe
+// region2.js — IF97 Region 2 (Superheated Vapor ONLY)
+// Saturation-guarded, Cv-stable, solver-safe
 
 import { R, EPS } from "../constants.js";
+import { Psat } from "./region4.js";
 
 /* ============================================================
    Ideal-gas part coefficients (IF97)
    ============================================================ */
+
 const J0 = [0, 1, -5, -4, -3, -2, -1, 2, 3];
 const n0 = [
   -9.6927686500217,
@@ -22,6 +24,7 @@ const n0 = [
 /* ============================================================
    Residual part coefficients (IF97)
    ============================================================ */
+
 const Ir = [
   1,1,1,1,1,2,2,2,2,2,3,3,3,3,4,4,4,5,6,6,7,7,9,9
 ];
@@ -56,15 +59,22 @@ const nr = [
 ];
 
 /* ============================================================
-   Region 2 evaluator
+   Region 2 evaluator (SUPERHEATED ONLY)
    ============================================================ */
+
 export function region2(T, P) {
+  // 🔒 SATURATION GUARD
+  if (Math.abs(P - Psat(T)) < 1e-6) {
+    throw new Error("Region2 called at saturation — use Region4");
+  }
+
   // Reduced variables (IF97 standard)
-  // P must be in MPa, T in K
+  // P in MPa, T in K
   const pi = P / 1.0;
   const tau = 540 / T;
 
   /* ---------------- Ideal-gas part ---------------- */
+
   let g0 = Math.log(pi);
   let g0t = 0;
   let g0tt = 0;
@@ -77,6 +87,7 @@ export function region2(T, P) {
   }
 
   /* ---------------- Residual part ---------------- */
+
   let gr = 0;
   let grp = 0;
   let grpp = 0;
@@ -88,17 +99,17 @@ export function region2(T, P) {
     const piI = Math.pow(pi, Ir[k]);
     const tauJ = Math.pow(tau, Jr[k]);
 
-    gr += nr[k] * piI * tauJ;
-    grp += nr[k] * Ir[k] * piI * tauJ / pi;
+    gr   += nr[k] * piI * tauJ;
+    grp  += nr[k] * Ir[k] * piI * tauJ / pi;
     grpp += nr[k] * Ir[k] * (Ir[k] - 1) * piI * tauJ / (pi * pi);
-    grt += nr[k] * Jr[k] * piI * tauJ / tau;
+    grt  += nr[k] * Jr[k] * piI * tauJ / tau;
     grtt += nr[k] * Jr[k] * (Jr[k] - 1) * piI * tauJ / (tau * tau);
     grpt += nr[k] * Ir[k] * Jr[k] * piI * tauJ / (pi * tau);
   }
 
-  /* ---------------- Properties ---------------- */
+  /* ---------------- Thermodynamic properties ---------------- */
 
-  // ✅ Correct IF97 specific volume (NO 1e-3 scaling)
+  // ✔ Correct IF97 specific volume (no 1e-3 scaling)
   const specificVolume =
     (R * T / P) * (1 + pi * grp);
 
