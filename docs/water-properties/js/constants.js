@@ -18,6 +18,13 @@ export const R = 0.461526; // kJ/(kg·K)
 // Numerical tolerance
 export const EPS = 1e-9;
 
+// --- Water fixed points (IAPWS) ---
+export const T_TRIPLE = 273.16;     // K
+export const P_TRIPLE = 0.000611657; // MPa
+
+export const T_CRIT = 647.096;      // K
+export const P_CRIT = 22.064;       // MPa
+
 // -----------------------------------------------------------------------------
 // Critical & reference points
 // -----------------------------------------------------------------------------
