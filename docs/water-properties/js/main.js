@@ -147,14 +147,14 @@ document.addEventListener("DOMContentLoaded", () => {
 // TEMP: Region 4 diagnostics
 // =======================
 
-import { Psat, Tsat } from "./if97/region4.js";
+//import { Psat, Tsat } from "./if97/region4.js";
 
-console.log("=== Region 4: Psat(T) ===");
-[300, 350, 373.15, 400, 450, 500].forEach(T => {
-  console.log(`T = ${T} K → Psat = ${Psat(T)} MPa`);
-});
+//console.log("=== Region 4: Psat(T) ===");
+//[300, 350, 373.15, 400, 450, 500].forEach(T => {
+//  console.log(`T = ${T} K → Psat = ${Psat(T)} MPa`);
+//});
 
-console.log("=== Region 4: Tsat(P) ===");
-[0.001, 0.01, 0.1, 0.5, 1, 5].forEach(P => {
-  console.log(`P = ${P} MPa → Tsat = ${Tsat(P)} K`);
-});
+//console.log("=== Region 4: Tsat(P) ===");
+//[0.001, 0.01, 0.1, 0.5, 1, 5].forEach(P => {
+//  console.log(`P = ${P} MPa → Tsat = ${Tsat(P)} K`);
+//});
