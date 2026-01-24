@@ -101,8 +101,9 @@ function withPhase(phase, r, T, P) {
     enthalpy: r.enthalpy,
     entropy: r.entropy,
 
-    Cp: r.Cp ?? r.cp ?? NaN,
-    Cv: r.Cv ?? r.cv ?? NaN
+   Cp: (phase.includes("saturated")) ? NaN : (r.Cp ?? r.cp ?? NaN),
+   Cv: (phase.includes("saturated")) ? NaN : (r.Cv ?? r.cv ?? NaN)
+
   };
 }
 
