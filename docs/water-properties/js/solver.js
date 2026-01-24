@@ -1,11 +1,36 @@
 // solver.js — FINAL IF97 SOLVER
-// Saturation-forced, piecewise Tsat/Psat, paste-safe
+// Saturation-locked, Region-4 authoritative
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
-import { Psat, Tsat } from "./if97/region4.js";
+
+import {
+  Psat,
+  Tsat,
+
+  // saturated liquid
+  rho_f_sat,
+  v_f_sat,
+  h_f_sat,
+  s_f_sat,
+  cp_f_sat,
+  cv_f_sat,
+  k_f_sat,
+  mu_f_sat,
+
+  // saturated vapor
+  rho_g_sat,
+  v_g_sat,
+  h_g_sat,
+  s_g_sat,
+  cp_g_sat,
+  cv_g_sat,
+  k_g_sat,
+  mu_g_sat
+} from "./if97/region4.js";
 
 const X_EPS = 1e-9;
+const SAT_EPS = 1e-6;
 
 /* ============================================================
    Solver entry point
@@ -22,65 +47,66 @@ export function solve(inputs) {
     const P = inputs.pressure;
     const Ps = Psat(T);
 
-    if (Math.abs(P - Ps) < 1e-6) {
-      const V = region2(T, Ps);
+    // Saturation lock
+    if (Math.abs(P - Ps) < SAT_EPS) {
+      const V = satVaporState(T, Ps);
       return withPhase("saturated_vapor", V, T, Ps);
     }
 
+    // Compressed liquid
     if (P > Ps) {
       const L = region1(T, P);
       return withPhase("compressed_liquid", L, T, P);
     }
 
+    // Superheated vapor
     const V = region2(T, P);
     return withPhase("superheated_vapor", V, T, P);
   }
 
   /* ========================================================
-     T–x MODE  (AUTHORITATIVE Psat)
+     T–x MODE  (Psat authoritative)
      ======================================================== */
   if (mode === "Tx") {
     const T = inputs.temperature;
     const x = inputs.quality;
-
     const P = Psat(T);
 
-     console.log("Calling region2 with:", { P, T });
-     
-    const L = region1(T, P);
-    const V = region2(T, P);
-
     if (x <= X_EPS) {
+      const L = satLiquidState(T, P);
       return withPhase("saturated_liquid", L, T, P);
     }
 
     if (1 - x <= X_EPS) {
+      const V = satVaporState(T, P);
       return withPhase("saturated_vapor", V, T, P);
     }
 
+    const L = satLiquidState(T, P);
+    const V = satVaporState(T, P);
     return mixStates(L, V, x, T, P);
   }
 
   /* ========================================================
-     P–x MODE  (AUTHORITATIVE Tsat)
+     P–x MODE  (Tsat authoritative)
      ======================================================== */
   if (mode === "Px") {
     const P = inputs.pressure;
     const x = inputs.quality;
-
     const T = Tsat(P);
 
-    const L = region1(T, P);
-    const V = region2(T, P);
-
     if (x <= X_EPS) {
+      const L = satLiquidState(T, P);
       return withPhase("saturated_liquid", L, T, P);
     }
 
     if (1 - x <= X_EPS) {
+      const V = satVaporState(T, P);
       return withPhase("saturated_vapor", V, T, P);
     }
 
+    const L = satLiquidState(T, P);
+    const V = satVaporState(T, P);
     return mixStates(L, V, x, T, P);
   }
 
@@ -88,7 +114,37 @@ export function solve(inputs) {
 }
 
 /* ============================================================
-   Helpers
+   Saturation helpers (Region-4 only)
+   ============================================================ */
+
+function satLiquidState(T, P) {
+  return {
+    density: rho_f_sat(T),
+    specificVolume: v_f_sat(T),
+    enthalpy: h_f_sat(T),
+    entropy: s_f_sat(T),
+    Cp: cp_f_sat(T),
+    Cv: cv_f_sat(T),
+    k: k_f_sat(T),
+    mu: mu_f_sat(T)
+  };
+}
+
+function satVaporState(T, P) {
+  return {
+    density: rho_g_sat(T),
+    specificVolume: v_g_sat(T),
+    enthalpy: h_g_sat(T),
+    entropy: s_g_sat(T),
+    Cp: cp_g_sat(T),
+    Cv: cv_g_sat(T),
+    k: k_g_sat(T),
+    mu: mu_g_sat(T)
+  };
+}
+
+/* ============================================================
+   Output helpers
    ============================================================ */
 
 function withPhase(phase, r, T, P) {
@@ -103,9 +159,11 @@ function withPhase(phase, r, T, P) {
     enthalpy: r.enthalpy,
     entropy: r.entropy,
 
-   Cp: (phase.includes("saturated")) ? NaN : (r.Cp ?? r.cp ?? NaN),
-   Cv: (phase.includes("saturated")) ? NaN : (r.Cv ?? r.cv ?? NaN)
+    Cp: r.Cp ?? r.cp ?? NaN,
+    Cv: r.Cv ?? r.cv ?? NaN,
 
+    thermalConductivity: r.k ?? NaN,
+    viscosity: r.mu ?? NaN
   };
 }
 
@@ -132,7 +190,9 @@ function mixStates(L, V, x, T, P) {
       x * V.entropy,
 
     Cp: NaN,
-    Cv: NaN
+    Cv: NaN,
+    thermalConductivity: NaN,
+    viscosity: NaN
   };
 }
 
