@@ -20,10 +20,6 @@ export function solve(inputs) {
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
-
-     console.log("Calling region2 with:", { P, T });
-
-     
     const Ps = Psat(T);
 
     if (Math.abs(P - Ps) < 1e-6) {
@@ -49,6 +45,8 @@ export function solve(inputs) {
 
     const P = Psat(T);
 
+     console.log("Calling region2 with:", { P, T });
+     
     const L = region1(T, P);
     const V = region2(T, P);
 
