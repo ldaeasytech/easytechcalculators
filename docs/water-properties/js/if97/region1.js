@@ -1,6 +1,7 @@
 // region1.js — IF97 Region 1 (Compressed/Subcooled Liquid)
 
 import { R, EPS } from "../constants.js";
+import { Psat } from "./region4.js"; // ← ADD
 
 const I = [0,0,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,3,3,3,4,4,4,5,8];
 const J = [-2,-1,0,1,2,3,4,5,-9,-7,-1,0,1,3,-3,0,1,3,17,-4,0,6,-5,-2,10,-8,-11];
@@ -21,6 +22,11 @@ const n = [
 ];
 
 export function region1(T, P) {
+  // 🔒 SATURATION GUARD (NEW)
+  if (Math.abs(P - Psat(T)) < 1e-6) {
+    throw new Error("Region1 called at saturation — use Region4");
+  }
+
   const pi = P / 16.53;
   const tau = 1386 / T;
 
@@ -43,7 +49,6 @@ export function region1(T, P) {
             Math.pow(dt, J[k] - 1);
   }
 
-  // ✅ REQUIRED 1e-3 scaling
   const specificVolume =
     1e-3 * (R * T / P) * pi * gpi;
 
@@ -62,7 +67,6 @@ export function region1(T, P) {
 
   return {
     region: 1,
-    phase: "compressed_liquid",
     T,
     P,
     density,
