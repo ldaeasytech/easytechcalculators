@@ -10,6 +10,8 @@
 //   - Psat(T): piece-wise quadratic fit (fast, UI)
 //
 
+import { EPS, T_TRIPLE, T_CRIT } from "../constants.js";
+import { P_TRIPLE, P_CRIT } from "../constants.js";
 
 /* ============================================================
    Tsat(P) — piece-wise quadratic fit
