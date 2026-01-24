@@ -1,5 +1,5 @@
 // app.js — FINAL, UI + IF97 SAFE VERSION
-// Restores all input modes and correct output mapping
+// Saturation-safe, Region-4 compatible
 
 import "./main.js";
 
@@ -31,23 +31,20 @@ const ALL_FIELDS = [
 ];
 
 /* ============================================================
-   MODE CHANGE HANDLING (CRITICAL)
+   MODE CHANGE HANDLING
    ============================================================ */
 
 document.querySelectorAll(".mode-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    const mode = btn.dataset.mode;
-    activateMode(mode);
+    activateMode(btn.dataset.mode);
   });
 });
 
 function activateMode(mode) {
-  // highlight active tab
   document.querySelectorAll(".mode-btn").forEach(b =>
     b.classList.toggle("active", b.dataset.mode === mode)
   );
 
-  // enable / disable inputs
   const active = MODE_FIELDS[mode] || [];
 
   ALL_FIELDS.forEach(id => {
@@ -64,14 +61,13 @@ function activateMode(mode) {
     }
   });
 
-  // update hint text
   const hint = document.getElementById("modeHint");
   if (hint) {
     hint.textContent =
       mode === "Tx"
-        ? "Enter Temperature and Quality for saturated mixtures."
+        ? "Enter Temperature and Quality (saturated mixture)."
         : mode === "Px"
-        ? "Enter Pressure and Quality for saturated mixtures."
+        ? "Enter Pressure and Quality (saturated mixture)."
         : "";
   }
 }
@@ -94,32 +90,27 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     const mode = getInputMode();
     const rawInputs = readInputsByMode(mode);
 
-    // numeric validation
     for (const [k, v] of Object.entries(rawInputs)) {
       if (!Number.isFinite(v)) {
         throw new Error(`Invalid or missing input: ${k}`);
       }
     }
 
-    const validation = validateState({
-      mode,
-      ...rawInputs
-    });
-
+    const validation = validateState({ mode, ...rawInputs });
     renderValidation(validation);
     if (!validation.valid) return;
 
     // ---- SOLVER (IF97 UNITS ONLY) ----
     const stateIF97 = solve({ mode, ...rawInputs });
 
-    // map solver symbols → UI names
+    // map solver → UI symbols
     const mappedState = {
       ...stateIF97,
       temperature: stateIF97.T,
       pressure: stateIF97.P
     };
 
-    // convert ONLY if non-SI
+    // unit conversion
     const stateUI =
       unitSystem === "SI"
         ? { ...mappedState }
@@ -179,7 +170,7 @@ const BASE_FIELDS = [
   "Cp",
   "Cv",
   "viscosity",
-  "conductivity"
+  "thermalConductivity"
 ];
 
 const LABELS = {
@@ -192,7 +183,7 @@ const LABELS = {
   Cp: "Cp",
   Cv: "Cv",
   viscosity: "Viscosity",
-  conductivity: "Thermal Conductivity"
+  thermalConductivity: "Thermal Conductivity"
 };
 
 function renderResults(state, unitSystem) {
@@ -234,7 +225,9 @@ function renderResults(state, unitSystem) {
 
 function formatNumber(x) {
   if (!Number.isFinite(x)) return "—";
-  return Math.abs(x) < 1e-6 ? x.toExponential(6) : x.toFixed(6);
+  return Math.abs(x) < 1e-6
+    ? x.toExponential(6)
+    : x.toFixed(6);
 }
 
 function setLoading(flag) {
