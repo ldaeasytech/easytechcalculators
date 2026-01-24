@@ -70,51 +70,90 @@ export function solve(inputs) {
     return withPhase("superheated_vapor", region2_safe(T, P));
   }
 
-  /* ---------- T–x ---------- */
-  if (mode === "Tx") {
-    const T = inputs.temperature;
-    let x = Math.min(1, Math.max(0, Number(inputs.quality)));
+// ===== SATURATED STATES (AUTHORITATIVE REGION 4) =====
 
-    const P = Psat(T);
-    const Ts = Tsat(P);
+if (mode === "Tx") {
+  const T = temperature;
 
-    const L = region1_safe(Ts, P);
-    const V = region2_safe(Ts, P);
+  // FORCE saturation pressure from piecewise Psat(T)
+  const P = Psat(T);
 
-    if (x < X_EPS) return withPhase("saturated_liquid", L);
-    if (1 - x < X_EPS) return withPhase("saturated_vapor", V);
+  const satL = region1(T, P);
+  const satV = region2(T, P);
 
-    return withPhase("two_phase", mix(L, V, x));
+  satL.T = T; satL.P = P;
+  satV.T = T; satV.P = P;
+
+  if (quality === 0) {
+    satL.phase = "saturated_liquid";
+    satL.phaseLabel = "Saturated Liquid";
+    return satL;
   }
 
-  /* ---------- P–x ---------- */
-  if (mode === "Px") {
-    const P = inputs.pressure;
-    let x = Math.min(1, Math.max(0, Number(inputs.quality)));
-
-    const T = Tsat(P);
-    const L = region1_safe(T, P);
-    const V = region2_safe(T, P);
-
-    if (x < X_EPS) return withPhase("saturated_liquid", L);
-    if (1 - x < X_EPS) return withPhase("saturated_vapor", V);
-
-    return withPhase("two_phase", mix(L, V, x));
+  if (quality === 1) {
+    satV.phase = "saturated_vapor";
+    satV.phaseLabel = "Saturated Vapor";
+    return satV;
   }
 
-  throw new Error(`Unsupported calculation mode: ${mode}`);
+  return mixSaturatedStates(satL, satV, quality);
 }
 
+if (mode === "Px") {
+  const P = pressure;
+
+  // FORCE saturation temperature from piecewise Tsat(P)
+  const T = Tsat(P);
+
+  const satL = region1(T, P);
+  const satV = region2(T, P);
+
+  satL.T = T; satL.P = P;
+  satV.T = T; satV.P = P;
+
+  if (quality === 0) {
+    satL.phase = "saturated_liquid";
+    satL.phaseLabel = "Saturated Liquid";
+    return satL;
+  }
+
+  if (quality === 1) {
+    satV.phase = "saturated_vapor";
+    satV.phaseLabel = "Saturated Vapor";
+    return satV;
+  }
+
+  return mixSaturatedStates(satL, satV, quality);
+}
+
+
+   
 /* ============================================================
    Two-phase mixture
    ============================================================ */
 
-function mix(L, V, x) {
+function mixSaturatedStates(L, V, x) {
+  const v =
+    (1 - x) * L.specificVolume +
+    x * V.specificVolume;
+
   return {
-    density: 1 / ((1 - x) / L.density + x / V.density),
-    specificVolume: (1 - x) * L.specificVolume + x * V.specificVolume,
-    enthalpy: (1 - x) * L.enthalpy + x * V.enthalpy,
-    entropy: (1 - x) * L.entropy + x * V.entropy,
+    T: L.T,
+    P: L.P,
+    phase: "two_phase",
+    phaseLabel: "Two-Phase Mixture",
+
+    specificVolume: v,
+    density: 1 / v,
+
+    enthalpy:
+      (1 - x) * L.enthalpy +
+      x * V.enthalpy,
+
+    entropy:
+      (1 - x) * L.entropy +
+      x * V.entropy,
+
     Cp: NaN,
     Cv: NaN
   };
