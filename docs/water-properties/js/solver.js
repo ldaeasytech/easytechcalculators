@@ -1,214 +1,161 @@
-// solver.js — FINAL IF97 SOLVER
-// Saturation-locked, Region-4 authoritative
-
-import { region1 } from "./if97/region1.js";
-import { region2 } from "./if97/region2.js";
-
-import {
-  Psat,
-  Tsat,
-
-  // saturated liquid
-  rho_f_sat,
-  v_f_sat,
-  h_f_sat,
-  s_f_sat,
-  cp_f_sat,
-  cv_f_sat,
-  k_f_sat,
-  mu_f_sat,
-
-  // saturated vapor
-  rho_g_sat,
-  v_g_sat,
-  h_g_sat,
-  s_g_sat,
-  cp_g_sat,
-  cv_g_sat,
-  k_g_sat,
-  mu_g_sat
-} from "./if97/region4.js";
-
-const X_EPS = 1e-9;
-const SAT_EPS = 1e-6;
-
 /* ============================================================
-   Solver entry point
+   solver.js
+   Central dispatcher + iterative solvers for IF97 calculator
    ============================================================ */
 
-export function solve(inputs) {
-  const { mode } = inputs;
+import { region1 } from "./region1.js";
+import { region2 } from "./region2.js";
+import { region4 } from "./region4.js";
 
-  /* ========================================================
-     T–P MODE
-     ======================================================== */
-  if (mode === "TP") {
-    const T = inputs.temperature;
-    const P = inputs.pressure;
-    const Ps = Psat(T);
+/* ------------------------------------------------------------
+   Public entry point
+------------------------------------------------------------ */
+export function solve(mode, inputs) {
+  const { P, T, h, s, x } = inputs;
 
-    // Saturation lock
-    if (Math.abs(P - Ps) < SAT_EPS) {
-      const V = satVaporState(T, Ps);
-      return withPhase("saturated_vapor", V, T, Ps);
-    }
+  switch (mode) {
+    case "TP":
+      return solveTP(P, T);
 
-    // Compressed liquid
-    if (P > Ps) {
-      const L = region1(T, P);
-      return withPhase("compressed_liquid", L, T, P);
-    }
+    case "Tx":
+      return solveTx(T, x);
 
-    // Superheated vapor
-    const V = region2(T, P);
-    return withPhase("superheated_vapor", V, T, P);
-  }
+    case "Px":
+      return solvePx(P, x);
 
-  /* ========================================================
-     T–x MODE  (Psat authoritative)
-     ======================================================== */
-  if (mode === "Tx") {
-    const T = inputs.temperature;
-    const x = inputs.quality;
-    const P = Psat(T);
+    case "Ph":
+      return solvePh(P, h);
 
-    if (x <= X_EPS) {
-      const L = satLiquidState(T, P);
-      return withPhase("saturated_liquid", L, T, P);
-    }
+    case "Ps":
+      return solvePs(P, s);
 
-    if (1 - x <= X_EPS) {
-      const V = satVaporState(T, P);
-      return withPhase("saturated_vapor", V, T, P);
-    }
-
-    const L = satLiquidState(T, P);
-    const V = satVaporState(T, P);
-    return mixStates(L, V, x, T, P);
-  }
-
-  /* ========================================================
-     P–x MODE  (Tsat authoritative)
-     ======================================================== */
-  if (mode === "Px") {
-    const P = inputs.pressure;
-    const x = inputs.quality;
-    const T = Tsat(P);
-
-    if (x <= X_EPS) {
-      const L = satLiquidState(T, P);
-      return withPhase("saturated_liquid", L, T, P);
-    }
-
-    if (1 - x <= X_EPS) {
-      const V = satVaporState(T, P);
-      return withPhase("saturated_vapor", V, T, P);
-    }
-
-    const L = satLiquidState(T, P);
-    const V = satVaporState(T, P);
-    return mixStates(L, V, x, T, P);
-  }
-
-  throw new Error(`Unsupported solver mode: ${mode}`);
-}
-
-/* ============================================================
-   Saturation helpers (Region-4 only)
-   ============================================================ */
-
-function satLiquidState(T, P) {
-  return {
-    density: rho_f_sat(T),
-    specificVolume: v_f_sat(T),
-    enthalpy: h_f_sat(T),
-    entropy: s_f_sat(T),
-    Cp: cp_f_sat(T),
-    Cv: cv_f_sat(T),
-    k: k_f_sat(T),
-    mu: mu_f_sat(T)
-  };
-}
-
-function satVaporState(T, P) {
-  return {
-    density: rho_g_sat(T),
-    specificVolume: v_g_sat(T),
-    enthalpy: h_g_sat(T),
-    entropy: s_g_sat(T),
-    Cp: cp_g_sat(T),
-    Cv: cv_g_sat(T),
-    k: k_g_sat(T),
-    mu: mu_g_sat(T)
-  };
-}
-
-/* ============================================================
-   Output helpers
-   ============================================================ */
-
-function withPhase(phase, r, T, P) {
-  return {
-    T,
-    P,
-    phase,
-    phaseLabel: phaseLabel(phase),
-
-    density: r.density,
-    specificVolume: r.specificVolume,
-    enthalpy: r.enthalpy,
-    entropy: r.entropy,
-
-    Cp: r.Cp ?? r.cp ?? NaN,
-    Cv: r.Cv ?? r.cv ?? NaN,
-
-    thermalConductivity: r.k ?? NaN,
-    viscosity: r.mu ?? NaN
-  };
-}
-
-function mixStates(L, V, x, T, P) {
-  const v =
-    (1 - x) * L.specificVolume +
-    x * V.specificVolume;
-
-  return {
-    T,
-    P,
-    phase: "two_phase",
-    phaseLabel: "Two-Phase Mixture",
-
-    specificVolume: v,
-    density: 1 / v,
-
-    enthalpy:
-      (1 - x) * L.enthalpy +
-      x * V.enthalpy,
-
-    entropy:
-      (1 - x) * L.entropy +
-      x * V.entropy,
-
-    Cp: NaN,
-    Cv: NaN,
-    thermalConductivity: NaN,
-    viscosity: NaN
-  };
-}
-
-function phaseLabel(key) {
-  switch (key) {
-    case "compressed_liquid":
-      return "Compressed (Subcooled) Liquid";
-    case "saturated_liquid":
-      return "Saturated Liquid";
-    case "saturated_vapor":
-      return "Saturated Vapor";
-    case "two_phase":
-      return "Two-Phase Mixture";
-    case "superheated_vapor":
-      return "Superheated Vapor";
     default:
-      return "";
+      throw new Error(`Unsupported solver mode: ${mode}`);
   }
+}
+
+/* ------------------------------------------------------------
+   Direct solvers
+------------------------------------------------------------ */
+function solveTP(P, T) {
+  const Tsat = region4.Tsat_P(P);
+
+  if (T < Tsat) return region1(P, T);
+  return region2(P, T);
+}
+
+function solveTx(T, x) {
+  return region4.from_Tx(T, x);
+}
+
+function solvePx(P, x) {
+  return region4.from_Px(P, x);
+}
+
+/* ------------------------------------------------------------
+   Iterative solvers: P-h and P-s
+------------------------------------------------------------ */
+function solvePh(P, h) {
+  const Tsat = region4.Tsat_P(P);
+
+  const sat = region4.from_Px(P, 0.5);
+  const hf = sat.hf;
+  const hg = sat.hg;
+
+  /* --- Two-phase region --- */
+  if (h >= hf && h <= hg) {
+    const x = (h - hf) / (hg - hf);
+    return region4.from_Px(P, x);
+  }
+
+  /* --- Subcooled liquid --- */
+  if (h < hf) {
+    return iterateAtConstantP({
+      P,
+      target: h,
+      property: "h",
+      regionFn: region1,
+      Tmin: 273.15,
+      Tmax: Tsat
+    });
+  }
+
+  /* --- Superheated vapor --- */
+  return iterateAtConstantP({
+    P,
+    target: h,
+    property: "h",
+    regionFn: region2,
+    Tmin: Tsat,
+    Tmax: 1073.15
+  });
+}
+
+function solvePs(P, s) {
+  const Tsat = region4.Tsat_P(P);
+
+  const sat = region4.from_Px(P, 0.5);
+  const sf = sat.sf;
+  const sg = sat.sg;
+
+  /* --- Two-phase region --- */
+  if (s >= sf && s <= sg) {
+    const x = (s - sf) / (sg - sf);
+    return region4.from_Px(P, x);
+  }
+
+  /* --- Subcooled liquid --- */
+  if (s < sf) {
+    return iterateAtConstantP({
+      P,
+      target: s,
+      property: "s",
+      regionFn: region1,
+      Tmin: 273.15,
+      Tmax: Tsat
+    });
+  }
+
+  /* --- Superheated vapor --- */
+  return iterateAtConstantP({
+    P,
+    target: s,
+    property: "s",
+    regionFn: region2,
+    Tmin: Tsat,
+    Tmax: 1073.15
+  });
+}
+
+/* ------------------------------------------------------------
+   Generic bisection iterator at constant pressure
+------------------------------------------------------------ */
+function iterateAtConstantP({
+  P,
+  target,
+  property,
+  regionFn,
+  Tmin,
+  Tmax,
+  maxIter = 50,
+  tol = 1e-6
+}) {
+  let Tlow = Tmin;
+  let Thigh = Tmax;
+  let result = null;
+
+  for (let i = 0; i < maxIter; i++) {
+    const Tmid = 0.5 * (Tlow + Thigh);
+    result = regionFn(P, Tmid);
+
+    const value = result[property];
+    const error = value - target;
+
+    if (Math.abs(error) < tol) break;
+
+    if (error > 0) Thigh = Tmid;
+    else Tlow = Tmid;
+  }
+
+  return result;
 }
