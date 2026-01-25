@@ -7,7 +7,13 @@
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
-import { region4 } from "./if97/region4.js";
+
+import {
+  Tsat_P,
+  from_Px,
+  from_Tx
+} from "./if97/region4.js";
+
 
 /* ------------------------------------------------------------
    Public entry point
