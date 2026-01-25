@@ -1,4 +1,9 @@
-// solver.js — IF97 Solver + IAPWS transport properties (FINAL)
+// solver.js — IF97 Thermodynamics + IAPWS Transport Properties
+// Folder: /docs/water-properties/js/solver.js
+
+/* ============================================================
+   Imports (MATCHES YOUR FILE STRUCTURE)
+   ============================================================ */
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
@@ -7,12 +12,14 @@ import { region5 } from "./if97/region5.js";
 import {
   Psat,
   Tsat,
+
   rho_f_sat,
   v_f_sat,
   h_f_sat,
   s_f_sat,
   cp_f_sat,
   cv_f_sat,
+
   rho_g_sat,
   v_g_sat,
   h_g_sat,
@@ -21,8 +28,8 @@ import {
   cv_g_sat
 } from "./if97/region4.js";
 
-import { conductivity } from "./transport/conductivity.js";
-import { viscosity } from "./transport/viscosity.js";
+import { conductivity } from "./if97/conductivity.js";
+import { viscosity } from "./if97/viscosity.js";
 
 /* ============================================================
    Constants
@@ -35,23 +42,24 @@ const MAX_IT = 200;
 const T_TOL = 1e-7;
 const P_TOL = 1e-10;
 
-const SAT_T_BAND_PH = 2e-4;
-const SAT_P_BAND_TS = 5e-5;
+const SAT_T_BAND_PH = 2e-4; // K
+const SAT_P_BAND_TS = 5e-5; // MPa
 
 function isRegion5(T, P) {
   return T > 1073.15 && T <= 2273.15 && P <= 50.0;
 }
 
 /* ============================================================
-   Main solver
+   Main Solver
    ============================================================ */
 
 export function solve(inputs) {
   let { mode } = inputs;
 
-  // UI alias
+  // UI alias: P–s → Ts
   if (mode === "Ps") mode = "Ts";
 
+  /* ------------------ T–P ------------------ */
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
@@ -61,7 +69,9 @@ export function solve(inputs) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    if (P > Ps) return withPhase("compressed_liquid", region1(T, P), T, P);
+    if (P > Ps) {
+      return withPhase("compressed_liquid", region1(T, P), T, P);
+    }
 
     if (isRegion5(T, P)) {
       return withPhase("high_temperature_steam", region5(T, P), T, P);
@@ -70,6 +80,7 @@ export function solve(inputs) {
     return withPhase("superheated_vapor", region2(T, P), T, P);
   }
 
+  /* ------------------ T–x ------------------ */
   if (mode === "Tx") {
     const T = inputs.temperature;
     const x = inputs.quality;
@@ -81,6 +92,7 @@ export function solve(inputs) {
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
 
+  /* ------------------ P–x ------------------ */
   if (mode === "Px") {
     const P = inputs.pressure;
     const x = inputs.quality;
@@ -92,9 +104,11 @@ export function solve(inputs) {
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
 
+  /* ------------------ P–h ------------------ */
   if (mode === "Ph") {
     const P = inputs.pressure;
     const h = inputs.enthalpy;
+
     const T_sat = Tsat(P);
     const hf = h_f_sat(T_sat);
     const hg = h_g_sat(T_sat);
@@ -115,6 +129,15 @@ export function solve(inputs) {
       isRegion5(T, P) ? region5(T, P).enthalpy : region2(T, P).enthalpy
     );
 
+    if (Math.abs(Tsol - T_sat) < SAT_T_BAND_PH) {
+      const x = clamp01((h - hf) / (hg - hf));
+      if (x >= 0 && x <= 1) {
+        if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T_sat), T_sat, P);
+        if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T_sat), T_sat, P);
+        return mixStates(satLiquidState(T_sat), satVaporState(T_sat), x, T_sat, P);
+      }
+    }
+
     if (isRegion5(Tsol, P)) {
       return withPhase("high_temperature_steam", region5(Tsol, P), Tsol, P);
     }
@@ -122,9 +145,11 @@ export function solve(inputs) {
     return withPhase("superheated_vapor", region2(Tsol, P), Tsol, P);
   }
 
+  /* ------------------ T–s (Ps UI mode) ------------------ */
   if (mode === "Ts") {
     const T = inputs.temperature;
     const s = inputs.entropy;
+
     const Ps = Psat(T);
     const sf = s_f_sat(T);
     const sg = s_g_sat(T);
@@ -137,12 +162,14 @@ export function solve(inputs) {
     }
 
     const Psol = solveP(T, s, P => {
+      if (Math.abs(P - Ps) < SAT_EPS) return sg;
       if (P > Ps) return region1(T, P).entropy;
       return isRegion5(T, P) ? region5(T, P).entropy : region2(T, P).entropy;
     });
 
     if (Psol > Ps) return withPhase("compressed_liquid", region1(T, Psol), T, Psol);
     if (isRegion5(T, Psol)) return withPhase("high_temperature_steam", region5(T, Psol), T, Psol);
+
     return withPhase("superheated_vapor", region2(T, Psol), T, Psol);
   }
 
@@ -150,7 +177,7 @@ export function solve(inputs) {
 }
 
 /* ============================================================
-   Saturation states
+   Saturation helpers
    ============================================================ */
 
 function satLiquidState(T) {
@@ -176,7 +203,7 @@ function satVaporState(T) {
 }
 
 /* ============================================================
-   Output helpers (WITH transport properties)
+   Output helpers (UI-compatible)
    ============================================================ */
 
 function withPhase(phase, r, T, P) {
@@ -193,7 +220,7 @@ function withPhase(phase, r, T, P) {
     cv: r.cv
   };
 
-  // Transport properties (single-phase only)
+  // Transport properties for single-phase states
   if (Number.isFinite(r.density)) {
     out.thermalConductivity = conductivity(T, r.density);
     out.viscosity = viscosity(T, r.density);
