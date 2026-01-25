@@ -3,9 +3,11 @@
    Central dispatcher + iterative solvers for IF97 calculator
    ============================================================ */
 
-import { region1 } from "./region1.js";
-import { region2 } from "./region2.js";
-import { region4 } from "./region4.js";
+// solver.js
+
+import { region1 } from "./if97/region1.js";
+import { region2 } from "./if97/region2.js";
+import { region4 } from "./if97/region4.js";
 
 /* ------------------------------------------------------------
    Public entry point
