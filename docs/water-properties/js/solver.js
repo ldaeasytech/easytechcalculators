@@ -221,10 +221,13 @@ function withPhase(phase, r, T, P) {
   };
 
   // Transport properties for single-phase states
-  if (Number.isFinite(r.density)) {
-    out.thermalConductivity = conductivity(T, r.density);
-    out.viscosity = viscosity(T, r.density);
-  }
+ if (Number.isFinite(r.density)) {
+  // IAPWS transport correlations expect density in g/cm³
+  const rho_cgs = r.density * 1e-3; // kg/m³ → g/cm³
+
+  out.thermalConductivity = conductivity(T, rho_cgs);
+  out.viscosity = viscosity(T, rho_cgs);
+}
 
   if (phase === "saturated_liquid") out.quality = 0;
   if (phase === "saturated_vapor") out.quality = 1;
