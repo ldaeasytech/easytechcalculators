@@ -111,7 +111,7 @@ export function region2(T, P) {
 
   // ✔ Correct IF97 specific volume (no 1e-3 scaling)
   const specificVolume =
-    (R * T / P) * (1 + pi * grp);
+    (1e-3)*(R * T / P) * (1 + pi * grp);
 
   const density =
     1 / Math.max(specificVolume, EPS);
