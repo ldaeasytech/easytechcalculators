@@ -99,18 +99,24 @@ export function solve(inputs) {
       rho0 = (P > Ps) ? rho_f_sat(T) : rho_g_sat(T);
     }
 
-    /* ----- IAPWS-95 Newton solver (single-phase) ----- */
-    let rho;
-    try {
-      rho = solveDensity(T, P, rho0);
-    } catch {
-      // Damped retry
-      rho = solveDensity(T, P, Math.max(0.5 * rho0, 1e-3));
-    }
+   /* ----- Decide liquid vs vapor before IAPWS-95 ----- */
+if (P > Ps && T < Tsat(P)) {
+  // Compressed liquid → IF97 Region 1 is robust here
+  const r = region1(T, P);
+  return withPhase("compressed_liquid", r, T, P);
+}
 
-    const r = iapwsProps(T, rho);
-    return withPhase("Single-phase", r, T, P);
-  }
+/* ----- IAPWS-95 Newton solver (vapor / supercritical) ----- */
+let rho;
+try {
+  rho = solveDensity(T, P, rho0);
+} catch {
+  rho = solveDensity(T, P, Math.max(0.5 * rho0, 1e-3));
+}
+
+const r = iapwsProps(T, rho);
+return withPhase("Single-phase", r, T, P);
+
 
   /* ------------------ T–x ------------------ */
   if (mode === "Tx") {
