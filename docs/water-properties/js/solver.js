@@ -1,4 +1,4 @@
-// solver.js — IF97 (initial guess) + IAPWS-95 (final EOS)
+// solver.js — IAPWS-95 authoritative, IF97 initial guess only
 
 /* ============================================================
    Imports
@@ -56,23 +56,16 @@ export function solve(inputs) {
     const P = inputs.pressure;
     const Ps = Psat(T);
 
-    // ---- Saturation ----
+    // --- Saturated ---
     if (Math.abs(P - Ps) < SAT_EPS) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    // ---- IF97 initial guess ----
-    let guess;
-    if (P > Ps) guess = region1(T, P);
-    else if (isRegion5(T, P)) guess = region5(T, P);
-    else guess = region2(T, P);
+    // --- Single-phase ---
+    const phase = P > Ps ? "compressed_liquid" : "superheated_steam";
+    const rho0 = initialDensityGuess(T, P, Ps);
 
-    return singlePhaseIAPWS(
-      T,
-      P,
-      guess.density,
-      P > Ps ? "compressed_liquid" : "superheated_steam"
-    );
+    return singlePhaseIAPWS(T, P, rho0, phase);
   }
 
   /* ======================= T–x (UNCHANGED) ======================= */
@@ -103,6 +96,32 @@ export function solve(inputs) {
 }
 
 /* ============================================================
+   Initial density logic
+   ============================================================ */
+
+function initialDensityGuess(T, P, Ps) {
+  let rho0;
+
+  try {
+    let g;
+    if (P > Ps) g = region1(T, P);
+    else if (isRegion5(T, P)) g = region5(T, P);
+    else g = region2(T, P);
+
+    rho0 = g.density;
+  } catch {
+    rho0 = NaN;
+  }
+
+  // Guard against non-physical IF97 results
+  if (!Number.isFinite(rho0) || rho0 <= 0) {
+    rho0 = P > Ps ? rho_f_sat(T) : rho_g_sat(T);
+  }
+
+  return rho0;
+}
+
+/* ============================================================
    IAPWS-95 single-phase wrapper
    ============================================================ */
 
@@ -112,7 +131,6 @@ function singlePhaseIAPWS(T, P, rho0, phase) {
   try {
     rho = solveDensity(T, P, rho0);
   } catch {
-    // fallback to saturation boundary
     rho = phase === "compressed_liquid"
       ? rho_f_sat(T)
       : rho_g_sat(T);
