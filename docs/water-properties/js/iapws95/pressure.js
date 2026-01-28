@@ -1,16 +1,45 @@
-import { R, Tc, rhoc } from "./constants95.js";
-import { helmholtz } from "./derivatives.js";
+// iapws95/pressure.js
+// Pressure and derivative from Helmholtz EOS
 
-// Pressure in MPa
-export function pressure(T, rho) {
-  const h = helmholtz(T, rho, Tc, rhoc);
-  return rho * R * T * (1 + h.delta * h.ar_d) * 1e-3;
+import { Tc, rhoc, R } from "./constants95.js";
+import {
+  alphar,
+  alphar_delta,
+  alphar_deltadelta
+} from "./helmholtz.js";
+
+/*
+  delta = rho / rhoc
+  tau   = Tc / T
+*/
+
+/**
+ * Pressure P [MPa] from density rho [kg/m^3] and temperature T [K]
+ */
+export function pressureFromRho(T, rho) {
+  const delta = rho / rhoc;
+  const tau = Tc / T;
+
+  const ar_d = alphar_delta(delta, tau);
+
+  // P = rho * R * T * (1 + delta * ∂αʳ/∂δ)
+  return rho * R * T * (1 + delta * ar_d) * 1e-3;
 }
 
+/**
+ * ∂P/∂rho [MPa·m^3/kg]
+ */
 export function dPdrho(T, rho) {
-  const h = helmholtz(T, rho, Tc, rhoc);
+  const delta = rho / rhoc;
+  const tau = Tc / T;
+
+  const ar_d = alphar_delta(delta, tau);
+  const ar_dd = alphar_deltadelta(delta, tau);
+
   const term =
-    1 + 2 * h.delta * h.ar_d + h.delta * h.delta * h.ar_dd;
+    1 +
+    2 * delta * ar_d +
+    delta * delta * ar_dd;
 
   return R * T * term * 1e-3;
 }
