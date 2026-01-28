@@ -8,7 +8,7 @@ export const rhoc = 322.0;      // kg/m³
 export const R = 0.461526;      // kJ/(kg·K)
 
 // Newton solver controls
-export const MAX_ITER = 50;
+export const MAX_ITER = 500;
 export const TOL = 1e-10;
 
 /* ============================================================
