@@ -74,7 +74,7 @@ export function solve(inputs) {
 
     /* ----- Saturation (Region 4 is authoritative) ----- */
     if (Math.abs(P - Ps) < SAT_EPS) {
-      return withPhase("saturated_vapor", satVaporState(T), T, Ps);
+      return withPhase("Saturated vapor", satVaporState(T), T, Ps);
     }
 
     /* ----- Initial density guess (IF97 → fallback to sat) ----- */
@@ -109,7 +109,7 @@ export function solve(inputs) {
     }
 
     const r = iapwsProps(T, rho);
-    return withPhase("single_phase", r, T, P);
+    return withPhase("Single-phase", r, T, P);
   }
 
   /* ------------------ T–x ------------------ */
@@ -118,8 +118,8 @@ export function solve(inputs) {
     const x = inputs.quality;
     const P = Psat(T);
 
-    if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T), T, P);
-    if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T), T, P);
+    if (x <= X_EPS) return withPhase("Saturated liquid", satLiquidState(T), T, P);
+    if (1 - x <= X_EPS) return withPhase("Saturated vapor", satVaporState(T), T, P);
 
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
@@ -130,8 +130,8 @@ export function solve(inputs) {
     const x = inputs.quality;
     const T = Tsat(P);
 
-    if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T), T, P);
-    if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T), T, P);
+    if (x <= X_EPS) return withPhase("Saturated liquid", satLiquidState(T), T, P);
+    if (1 - x <= X_EPS) return withPhase("Saturated vapor", satVaporState(T), T, P);
 
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
@@ -147,14 +147,14 @@ export function solve(inputs) {
 
     if (h >= hf && h <= hg) {
       const x = clamp01((h - hf) / (hg - hf));
-      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T_sat), T_sat, P);
-      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T_sat), T_sat, P);
+      if (x <= X_EPS) return withPhase("Saturated liquid", satLiquidState(T_sat), T_sat, P);
+      if (1 - x <= X_EPS) return withPhase("Saturated vapor", satVaporState(T_sat), T_sat, P);
       return mixStates(satLiquidState(T_sat), satVaporState(T_sat), x, T_sat, P);
     }
 
     if (h < hf) {
       const Tsol = solveT(P, h, T => region1(T, P).enthalpy);
-      return withPhase("compressed_liquid", region1(Tsol, P), Tsol, P);
+      return withPhase("Compressed liquid", region1(Tsol, P), Tsol, P);
     }
 
     const Tsol = solveT(P, h, T =>
@@ -162,10 +162,10 @@ export function solve(inputs) {
     );
 
     if (isRegion5(Tsol, P)) {
-      return withPhase("high_temperature_steam", region5(Tsol, P), Tsol, P);
+      return withPhase("High-temperature steam", region5(Tsol, P), Tsol, P);
     }
 
-    return withPhase("superheated_vapor", region2(Tsol, P), Tsol, P);
+    return withPhase("Superheated vapor", region2(Tsol, P), Tsol, P);
   }
 
   /* ------------------ T–s (Ps UI mode) ------------------ */
@@ -179,8 +179,8 @@ export function solve(inputs) {
 
     if (s >= sf && s <= sg) {
       const x = clamp01((s - sf) / (sg - sf));
-      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T), T, Ps);
-      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T), T, Ps);
+      if (x <= X_EPS) return withPhase("Saturated liquid", satLiquidState(T), T, Ps);
+      if (1 - x <= X_EPS) return withPhase("Saturated vapor", satVaporState(T), T, Ps);
       return mixStates(satLiquidState(T), satVaporState(T), x, T, Ps);
     }
 
@@ -190,10 +190,10 @@ export function solve(inputs) {
       return isRegion5(T, P) ? region5(T, P).entropy : region2(T, P).entropy;
     });
 
-    if (Psol > Ps) return withPhase("compressed_liquid", region1(T, Psol), T, Psol);
-    if (isRegion5(T, Psol)) return withPhase("high_temperature_steam", region5(T, Psol), T, Psol);
+    if (Psol > Ps) return withPhase("Compressed liquid", region1(T, Psol), T, Psol);
+    if (isRegion5(T, Psol)) return withPhase("High-temperature steam", region5(T, Psol), T, Psol);
 
-    return withPhase("superheated_vapor", region2(T, Psol), T, Psol);
+    return withPhase("Superheated vapor", region2(T, Psol), T, Psol);
   }
 
   throw new Error(`Unsupported solver mode: ${mode}`);
