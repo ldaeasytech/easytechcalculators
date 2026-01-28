@@ -1,4 +1,5 @@
-// solver.js — IAPWS-95 authoritative, IF97 initial guess only
+// solver.js — IAPWS-95 authoritative EOS
+// IF97 used ONLY for initial density guesses
 
 /* ============================================================
    Imports
@@ -37,13 +38,16 @@ import { viscosity } from "./if97/viscosity.js";
 
 const SAT_EPS = 1e-6;
 const X_EPS = 1e-10;
+const T_TOL = 1e-7;
+const P_TOL = 1e-10;
+const MAX_IT = 200;
 
 function isRegion5(T, P) {
   return T > 1073.15 && T <= 2273.15 && P <= 50.0;
 }
 
 /* ============================================================
-   Main Solver
+   Main solver
    ============================================================ */
 
 export function solve(inputs) {
@@ -56,12 +60,75 @@ export function solve(inputs) {
     const P = inputs.pressure;
     const Ps = Psat(T);
 
-    // --- Saturated ---
     if (Math.abs(P - Ps) < SAT_EPS) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    // --- Single-phase ---
+    const phase = P > Ps ? "compressed_liquid" : "superheated_steam";
+    const rho0 = initialDensityGuess(T, P, Ps);
+
+    return singlePhaseIAPWS(T, P, rho0, phase);
+  }
+
+  /* ======================= P–h ======================= */
+  if (mode === "Ph") {
+    const P = inputs.pressure;
+    const h = inputs.enthalpy;
+
+    const Ts = Tsat(P);
+    const hf = h_f_sat(Ts);
+    const hg = h_g_sat(Ts);
+
+    // ---- Saturated / two-phase ----
+    if (h >= hf && h <= hg) {
+      const x = clamp01((h - hf) / (hg - hf));
+      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(Ts), Ts, P);
+      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(Ts), Ts, P);
+      return mixStates(satLiquidState(Ts), satVaporState(Ts), x, Ts, P);
+    }
+
+    // ---- Single-phase: solve T using IF97 as helper ----
+    const T = solveT(P, h, T =>
+      h < hf
+        ? region1(T, P).enthalpy
+        : isRegion5(T, P)
+          ? region5(T, P).enthalpy
+          : region2(T, P).enthalpy
+    );
+
+    const Ps = Psat(T);
+    const phase = P > Ps ? "compressed_liquid" : "superheated_steam";
+    const rho0 = initialDensityGuess(T, P, Ps);
+
+    return singlePhaseIAPWS(T, P, rho0, phase);
+  }
+
+  /* ======================= T–s ======================= */
+  if (mode === "Ts") {
+    const T = inputs.temperature;
+    const s = inputs.entropy;
+
+    const Ps = Psat(T);
+    const sf = s_f_sat(T);
+    const sg = s_g_sat(T);
+
+    // ---- Saturated / two-phase ----
+    if (s >= sf && s <= sg) {
+      const x = clamp01((s - sf) / (sg - sf));
+      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T), T, Ps);
+      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T), T, Ps);
+      return mixStates(satLiquidState(T), satVaporState(T), x, T, Ps);
+    }
+
+    // ---- Single-phase: solve P using IF97 as helper ----
+    const P = solveP(T, s, P =>
+      P > Ps
+        ? region1(T, P).entropy
+        : isRegion5(T, P)
+          ? region5(T, P).entropy
+          : region2(T, P).entropy
+    );
+
     const phase = P > Ps ? "compressed_liquid" : "superheated_steam";
     const rho0 = initialDensityGuess(T, P, Ps);
 
@@ -100,29 +167,27 @@ export function solve(inputs) {
    ============================================================ */
 
 function initialDensityGuess(T, P, Ps) {
-  let rho0;
+  let rho;
 
   try {
     let g;
     if (P > Ps) g = region1(T, P);
     else if (isRegion5(T, P)) g = region5(T, P);
     else g = region2(T, P);
-
-    rho0 = g.density;
+    rho = g.density;
   } catch {
-    rho0 = NaN;
+    rho = NaN;
   }
 
-  // Guard against non-physical IF97 results
-  if (!Number.isFinite(rho0) || rho0 <= 0) {
-    rho0 = P > Ps ? rho_f_sat(T) : rho_g_sat(T);
+  if (!Number.isFinite(rho) || rho <= 0) {
+    rho = P > Ps ? rho_f_sat(T) : rho_g_sat(T);
   }
 
-  return rho0;
+  return rho;
 }
 
 /* ============================================================
-   IAPWS-95 single-phase wrapper
+   IAPWS-95 wrapper
    ============================================================ */
 
 function singlePhaseIAPWS(T, P, rho0, phase) {
@@ -199,4 +264,46 @@ function mixStates(L, V, x, T, P) {
     thermalConductivity: NaN,
     viscosity: NaN
   };
+}
+
+/* ============================================================
+   Generic solvers (IF97 helpers only)
+   ============================================================ */
+
+function clamp01(x) {
+  return Math.max(0, Math.min(1, x));
+}
+
+function solveT(P, target, f) {
+  let lo = 273.15, hi = 2273.15;
+  let flo = f(lo) - target, fhi = f(hi) - target;
+
+  for (let i = 0; i < MAX_IT; i++) {
+    const mid = 0.5 * (lo + hi);
+    const fmid = f(mid) - target;
+    if (Math.abs(hi - lo) < T_TOL) return mid;
+    if (flo * fmid <= 0) {
+      hi = mid; fhi = fmid;
+    } else {
+      lo = mid; flo = fmid;
+    }
+  }
+  return 0.5 * (lo + hi);
+}
+
+function solveP(T, target, f) {
+  let lo = 0.000611, hi = 100.0;
+  let flo = f(lo) - target, fhi = f(hi) - target;
+
+  for (let i = 0; i < MAX_IT; i++) {
+    const mid = 0.5 * (lo + hi);
+    const fmid = f(mid) - target;
+    if (Math.abs(hi - lo) < P_TOL) return mid;
+    if (flo * fmid <= 0) {
+      hi = mid; fhi = fmid;
+    } else {
+      lo = mid; flo = fmid;
+    }
+  }
+  return 0.5 * (lo + hi);
 }
