@@ -160,8 +160,8 @@ const BASE_FIELDS = [
   "specificVolume",
   "enthalpy",
   "entropy",
-  "Cp",
-  "Cv",
+  "cp",
+  "cv",
   "viscosity",
   "thermalConductivity"
 ];
