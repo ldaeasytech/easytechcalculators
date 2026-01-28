@@ -1,8 +1,8 @@
-// solver.js — IF97 Thermodynamics + IAPWS Transport Properties
-// Folder: /docs/water-properties/js/solver.js
+// solver.js — IF97 + IAPWS-95 hybrid solver
+// Location: /docs/water-properties/js/solver.js
 
 /* ============================================================
-   Imports (MATCHES YOUR FILE STRUCTURE)
+   Imports (MATCH YOUR CURRENT FILE STRUCTURE)
    ============================================================ */
 
 import { region1 } from "./if97/region1.js";
@@ -42,8 +42,8 @@ const MAX_IT = 200;
 const T_TOL = 1e-7;
 const P_TOL = 1e-10;
 
-const SAT_T_BAND_PH = 2e-4; // K
-const SAT_P_BAND_TS = 5e-5; // MPa
+const SAT_T_BAND_PH = 2e-4;
+const SAT_P_BAND_TS = 5e-5;
 
 function isRegion5(T, P) {
   return T > 1073.15 && T <= 2273.15 && P <= 50.0;
@@ -56,10 +56,10 @@ function isRegion5(T, P) {
 export function solve(inputs) {
   let { mode } = inputs;
 
-  // UI alias: P–s → Ts
+  // UI alias
   if (mode === "Ps") mode = "Ts";
 
-  /* ------------------ T–P ------------------ */
+  /* ======================= T–P ======================= */
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
@@ -77,10 +77,10 @@ export function solve(inputs) {
       return withPhase("high_temperature_steam", region5(T, P), T, P);
     }
 
-    return withPhase("superheated_vapor", region2(T, P), T, P);
+    return withPhase("superheated_steam", region2(T, P), T, P);
   }
 
-  /* ------------------ T–x ------------------ */
+  /* ======================= T–x (DO NOT MODIFY) ======================= */
   if (mode === "Tx") {
     const T = inputs.temperature;
     const x = inputs.quality;
@@ -92,7 +92,7 @@ export function solve(inputs) {
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
 
-  /* ------------------ P–x ------------------ */
+  /* ======================= P–x (DO NOT MODIFY) ======================= */
   if (mode === "Px") {
     const P = inputs.pressure;
     const x = inputs.quality;
@@ -104,20 +104,20 @@ export function solve(inputs) {
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
 
-  /* ------------------ P–h ------------------ */
+  /* ======================= P–h ======================= */
   if (mode === "Ph") {
     const P = inputs.pressure;
     const h = inputs.enthalpy;
 
-    const T_sat = Tsat(P);
-    const hf = h_f_sat(T_sat);
-    const hg = h_g_sat(T_sat);
+    const Ts = Tsat(P);
+    const hf = h_f_sat(Ts);
+    const hg = h_g_sat(Ts);
 
     if (h >= hf && h <= hg) {
       const x = clamp01((h - hf) / (hg - hf));
-      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T_sat), T_sat, P);
-      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T_sat), T_sat, P);
-      return mixStates(satLiquidState(T_sat), satVaporState(T_sat), x, T_sat, P);
+      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(Ts), Ts, P);
+      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(Ts), Ts, P);
+      return mixStates(satLiquidState(Ts), satVaporState(Ts), x, Ts, P);
     }
 
     if (h < hf) {
@@ -129,12 +129,12 @@ export function solve(inputs) {
       isRegion5(T, P) ? region5(T, P).enthalpy : region2(T, P).enthalpy
     );
 
-    if (Math.abs(Tsol - T_sat) < SAT_T_BAND_PH) {
+    if (Math.abs(Tsol - Ts) < SAT_T_BAND_PH) {
       const x = clamp01((h - hf) / (hg - hf));
       if (x >= 0 && x <= 1) {
-        if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T_sat), T_sat, P);
-        if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T_sat), T_sat, P);
-        return mixStates(satLiquidState(T_sat), satVaporState(T_sat), x, T_sat, P);
+        if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(Ts), Ts, P);
+        if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(Ts), Ts, P);
+        return mixStates(satLiquidState(Ts), satVaporState(Ts), x, Ts, P);
       }
     }
 
@@ -142,10 +142,10 @@ export function solve(inputs) {
       return withPhase("high_temperature_steam", region5(Tsol, P), Tsol, P);
     }
 
-    return withPhase("superheated_vapor", region2(Tsol, P), Tsol, P);
+    return withPhase("superheated_steam", region2(Tsol, P), Tsol, P);
   }
 
-  /* ------------------ T–s (Ps UI mode) ------------------ */
+  /* ======================= T–s ======================= */
   if (mode === "Ts") {
     const T = inputs.temperature;
     const s = inputs.entropy;
@@ -170,7 +170,7 @@ export function solve(inputs) {
     if (Psol > Ps) return withPhase("compressed_liquid", region1(T, Psol), T, Psol);
     if (isRegion5(T, Psol)) return withPhase("high_temperature_steam", region5(T, Psol), T, Psol);
 
-    return withPhase("superheated_vapor", region2(T, Psol), T, Psol);
+    return withPhase("superheated_steam", region2(T, Psol), T, Psol);
   }
 
   throw new Error(`Unsupported solver mode: ${mode}`);
@@ -203,15 +203,15 @@ function satVaporState(T) {
 }
 
 /* ============================================================
-   Output helpers (UI-compatible)
+   Output helpers
    ============================================================ */
 
 function withPhase(phase, r, T, P) {
   const out = {
     phase,
     phaseLabel: phase,
-    T,
-    P,
+    temperature: T,
+    pressure: P,
     density: r.density,
     specificVolume: r.specificVolume,
     enthalpy: r.enthalpy,
@@ -220,14 +220,11 @@ function withPhase(phase, r, T, P) {
     cv: r.cv
   };
 
-  // Transport properties for single-phase states
- if (Number.isFinite(r.density)) {
-  // IAPWS transport correlations expect density in g/cm³
-  const rho_cgs = r.density * 1e-3; // kg/m³ → g/cm³
-
-  out.thermalConductivity = conductivity(T, rho_cgs);
-  out.viscosity = viscosity(T, rho_cgs);
-}
+  if (Number.isFinite(r.density)) {
+    const rho_cgs = r.density * 1e-3; // kg/m³ → g/cm³
+    out.thermalConductivity = conductivity(T, rho_cgs);
+    out.viscosity = viscosity(T, rho_cgs);
+  }
 
   if (phase === "saturated_liquid") out.quality = 0;
   if (phase === "saturated_vapor") out.quality = 1;
@@ -240,10 +237,10 @@ function mixStates(L, V, x, T, P) {
     phase: "two_phase",
     phaseLabel: "two_phase",
     quality: x,
-    T,
-    P,
-    specificVolume: NaN,
+    temperature: T,
+    pressure: P,
     density: NaN,
+    specificVolume: NaN,
     enthalpy: (1 - x) * L.enthalpy + x * V.enthalpy,
     entropy: (1 - x) * L.entropy + x * V.entropy,
     cp: NaN,
@@ -266,7 +263,8 @@ function solveT(P, target, f) {
   let flo = f(lo) - target, fhi = f(hi) - target;
 
   for (let i = 0; i < MAX_IT && flo * fhi > 0; i++) {
-    lo -= 50; hi += 50;
+    lo -= 50;
+    hi += 50;
     flo = f(lo) - target;
     fhi = f(hi) - target;
   }
@@ -275,10 +273,12 @@ function solveT(P, target, f) {
     const mid = 0.5 * (lo + hi);
     const fmid = f(mid) - target;
     if (Math.abs(hi - lo) < T_TOL) return mid;
-    if (flo * fmid <= 0) { hi = mid; fhi = fmid; }
-    else { lo = mid; flo = fmid; }
+    if (flo * fmid <= 0) {
+      hi = mid; fhi = fmid;
+    } else {
+      lo = mid; flo = fmid;
+    }
   }
-
   return 0.5 * (lo + hi);
 }
 
@@ -287,7 +287,8 @@ function solveP(T, target, f) {
   let flo = f(lo) - target, fhi = f(hi) - target;
 
   for (let i = 0; i < MAX_IT && flo * fhi > 0; i++) {
-    lo /= 2; hi *= 1.2;
+    lo /= 2;
+    hi *= 1.2;
     flo = f(lo) - target;
     fhi = f(hi) - target;
   }
@@ -296,9 +297,11 @@ function solveP(T, target, f) {
     const mid = 0.5 * (lo + hi);
     const fmid = f(mid) - target;
     if (Math.abs(hi - lo) < P_TOL) return mid;
-    if (flo * fmid <= 0) { hi = mid; fhi = fmid; }
-    else { lo = mid; flo = fmid; }
+    if (flo * fmid <= 0) {
+      hi = mid; fhi = fmid;
+    } else {
+      lo = mid; flo = fmid;
+    }
   }
-
   return 0.5 * (lo + hi);
 }
