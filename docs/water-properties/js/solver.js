@@ -1,8 +1,7 @@
-// solver.js — IF97 + IAPWS-95 hybrid solver
-// Location: /docs/water-properties/js/solver.js
+// solver.js — IF97 (initial guess) + IAPWS-95 (final EOS)
 
 /* ============================================================
-   Imports (MATCH YOUR CURRENT FILE STRUCTURE)
+   Imports
    ============================================================ */
 
 import { region1 } from "./if97/region1.js";
@@ -12,14 +11,12 @@ import { region5 } from "./if97/region5.js";
 import {
   Psat,
   Tsat,
-
   rho_f_sat,
   v_f_sat,
   h_f_sat,
   s_f_sat,
   cp_f_sat,
   cv_f_sat,
-
   rho_g_sat,
   v_g_sat,
   h_g_sat,
@@ -27,6 +24,9 @@ import {
   cp_g_sat,
   cv_g_sat
 } from "./if97/region4.js";
+
+import { solveDensity } from "./iapws95/solver.js";
+import { properties as iapwsProps } from "./iapws95/properties.js";
 
 import { conductivity } from "./if97/conductivity.js";
 import { viscosity } from "./if97/viscosity.js";
@@ -38,13 +38,6 @@ import { viscosity } from "./if97/viscosity.js";
 const SAT_EPS = 1e-6;
 const X_EPS = 1e-10;
 
-const MAX_IT = 200;
-const T_TOL = 1e-7;
-const P_TOL = 1e-10;
-
-const SAT_T_BAND_PH = 2e-4;
-const SAT_P_BAND_TS = 5e-5;
-
 function isRegion5(T, P) {
   return T > 1073.15 && T <= 2273.15 && P <= 50.0;
 }
@@ -55,8 +48,6 @@ function isRegion5(T, P) {
 
 export function solve(inputs) {
   let { mode } = inputs;
-
-  // UI alias
   if (mode === "Ps") mode = "Ts";
 
   /* ======================= T–P ======================= */
@@ -65,22 +56,26 @@ export function solve(inputs) {
     const P = inputs.pressure;
     const Ps = Psat(T);
 
+    // ---- Saturation ----
     if (Math.abs(P - Ps) < SAT_EPS) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    if (P > Ps) {
-      return withPhase("compressed_liquid", region1(T, P), T, P);
-    }
+    // ---- IF97 initial guess ----
+    let guess;
+    if (P > Ps) guess = region1(T, P);
+    else if (isRegion5(T, P)) guess = region5(T, P);
+    else guess = region2(T, P);
 
-    if (isRegion5(T, P)) {
-      return withPhase("high_temperature_steam", region5(T, P), T, P);
-    }
-
-    return withPhase("superheated_steam", region2(T, P), T, P);
+    return singlePhaseIAPWS(
+      T,
+      P,
+      guess.density,
+      P > Ps ? "compressed_liquid" : "superheated_steam"
+    );
   }
 
-  /* ======================= T–x (DO NOT MODIFY) ======================= */
+  /* ======================= T–x (UNCHANGED) ======================= */
   if (mode === "Tx") {
     const T = inputs.temperature;
     const x = inputs.quality;
@@ -92,7 +87,7 @@ export function solve(inputs) {
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
 
-  /* ======================= P–x (DO NOT MODIFY) ======================= */
+  /* ======================= P–x (UNCHANGED) ======================= */
   if (mode === "Px") {
     const P = inputs.pressure;
     const x = inputs.quality;
@@ -104,76 +99,40 @@ export function solve(inputs) {
     return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
   }
 
-  /* ======================= P–h ======================= */
-  if (mode === "Ph") {
-    const P = inputs.pressure;
-    const h = inputs.enthalpy;
-
-    const Ts = Tsat(P);
-    const hf = h_f_sat(Ts);
-    const hg = h_g_sat(Ts);
-
-    if (h >= hf && h <= hg) {
-      const x = clamp01((h - hf) / (hg - hf));
-      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(Ts), Ts, P);
-      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(Ts), Ts, P);
-      return mixStates(satLiquidState(Ts), satVaporState(Ts), x, Ts, P);
-    }
-
-    if (h < hf) {
-      const Tsol = solveT(P, h, T => region1(T, P).enthalpy);
-      return withPhase("compressed_liquid", region1(Tsol, P), Tsol, P);
-    }
-
-    const Tsol = solveT(P, h, T =>
-      isRegion5(T, P) ? region5(T, P).enthalpy : region2(T, P).enthalpy
-    );
-
-    if (Math.abs(Tsol - Ts) < SAT_T_BAND_PH) {
-      const x = clamp01((h - hf) / (hg - hf));
-      if (x >= 0 && x <= 1) {
-        if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(Ts), Ts, P);
-        if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(Ts), Ts, P);
-        return mixStates(satLiquidState(Ts), satVaporState(Ts), x, Ts, P);
-      }
-    }
-
-    if (isRegion5(Tsol, P)) {
-      return withPhase("high_temperature_steam", region5(Tsol, P), Tsol, P);
-    }
-
-    return withPhase("superheated_steam", region2(Tsol, P), Tsol, P);
-  }
-
-  /* ======================= T–s ======================= */
-  if (mode === "Ts") {
-    const T = inputs.temperature;
-    const s = inputs.entropy;
-
-    const Ps = Psat(T);
-    const sf = s_f_sat(T);
-    const sg = s_g_sat(T);
-
-    if (s >= sf && s <= sg) {
-      const x = clamp01((s - sf) / (sg - sf));
-      if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T), T, Ps);
-      if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T), T, Ps);
-      return mixStates(satLiquidState(T), satVaporState(T), x, T, Ps);
-    }
-
-    const Psol = solveP(T, s, P => {
-      if (Math.abs(P - Ps) < SAT_EPS) return sg;
-      if (P > Ps) return region1(T, P).entropy;
-      return isRegion5(T, P) ? region5(T, P).entropy : region2(T, P).entropy;
-    });
-
-    if (Psol > Ps) return withPhase("compressed_liquid", region1(T, Psol), T, Psol);
-    if (isRegion5(T, Psol)) return withPhase("high_temperature_steam", region5(T, Psol), T, Psol);
-
-    return withPhase("superheated_steam", region2(T, Psol), T, Psol);
-  }
-
   throw new Error(`Unsupported solver mode: ${mode}`);
+}
+
+/* ============================================================
+   IAPWS-95 single-phase wrapper
+   ============================================================ */
+
+function singlePhaseIAPWS(T, P, rho0, phase) {
+  let rho;
+
+  try {
+    rho = solveDensity(T, P, rho0);
+  } catch {
+    // fallback to saturation boundary
+    rho = phase === "compressed_liquid"
+      ? rho_f_sat(T)
+      : rho_g_sat(T);
+  }
+
+  const r = iapwsProps(T, rho);
+
+  const out = {
+    phase,
+    phaseLabel: phase,
+    temperature: T,
+    pressure: P,
+    ...r
+  };
+
+  const rho_cgs = rho * 1e-3;
+  out.thermalConductivity = conductivity(T, rho_cgs);
+  out.viscosity = viscosity(T, rho_cgs);
+
+  return out;
 }
 
 /* ============================================================
@@ -203,34 +162,8 @@ function satVaporState(T) {
 }
 
 /* ============================================================
-   Output helpers
+   Two-phase mixer
    ============================================================ */
-
-function withPhase(phase, r, T, P) {
-  const out = {
-    phase,
-    phaseLabel: phase,
-    temperature: T,
-    pressure: P,
-    density: r.density,
-    specificVolume: r.specificVolume,
-    enthalpy: r.enthalpy,
-    entropy: r.entropy,
-    cp: r.cp,
-    cv: r.cv
-  };
-
-  if (Number.isFinite(r.density)) {
-    const rho_cgs = r.density * 1e-3; // kg/m³ → g/cm³
-    out.thermalConductivity = conductivity(T, rho_cgs);
-    out.viscosity = viscosity(T, rho_cgs);
-  }
-
-  if (phase === "saturated_liquid") out.quality = 0;
-  if (phase === "saturated_vapor") out.quality = 1;
-
-  return out;
-}
 
 function mixStates(L, V, x, T, P) {
   return {
@@ -248,60 +181,4 @@ function mixStates(L, V, x, T, P) {
     thermalConductivity: NaN,
     viscosity: NaN
   };
-}
-
-/* ============================================================
-   Numerical solvers
-   ============================================================ */
-
-function clamp01(x) {
-  return Math.max(0, Math.min(1, x));
-}
-
-function solveT(P, target, f) {
-  let lo = 273.15, hi = 2273.15;
-  let flo = f(lo) - target, fhi = f(hi) - target;
-
-  for (let i = 0; i < MAX_IT && flo * fhi > 0; i++) {
-    lo -= 50;
-    hi += 50;
-    flo = f(lo) - target;
-    fhi = f(hi) - target;
-  }
-
-  for (let i = 0; i < MAX_IT; i++) {
-    const mid = 0.5 * (lo + hi);
-    const fmid = f(mid) - target;
-    if (Math.abs(hi - lo) < T_TOL) return mid;
-    if (flo * fmid <= 0) {
-      hi = mid; fhi = fmid;
-    } else {
-      lo = mid; flo = fmid;
-    }
-  }
-  return 0.5 * (lo + hi);
-}
-
-function solveP(T, target, f) {
-  let lo = 0.000611, hi = 100.0;
-  let flo = f(lo) - target, fhi = f(hi) - target;
-
-  for (let i = 0; i < MAX_IT && flo * fhi > 0; i++) {
-    lo /= 2;
-    hi *= 1.2;
-    flo = f(lo) - target;
-    fhi = f(hi) - target;
-  }
-
-  for (let i = 0; i < MAX_IT; i++) {
-    const mid = 0.5 * (lo + hi);
-    const fmid = f(mid) - target;
-    if (Math.abs(hi - lo) < P_TOL) return mid;
-    if (flo * fmid <= 0) {
-      hi = mid; fhi = fmid;
-    } else {
-      lo = mid; flo = fmid;
-    }
-  }
-  return 0.5 * (lo + hi);
 }
