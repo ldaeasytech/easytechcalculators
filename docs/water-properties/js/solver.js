@@ -1,14 +1,16 @@
-// solver.js — IF97 Thermodynamics + IAPWS Transport Properties
+// solver.js — IF97 + IAPWS-95 Hybrid Thermodynamics Solver
 // Folder: /docs/water-properties/js/solver.js
 
 /* ============================================================
    Imports (MATCHES YOUR FILE STRUCTURE)
    ============================================================ */
 
+// IF97 regions (used ONLY for initial guesses & non-TP modes)
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
 import { region5 } from "./if97/region5.js";
 
+// Region 4 (AUTHORITATIVE for saturation & phase detection)
 import {
   Psat,
   Tsat,
@@ -28,8 +30,13 @@ import {
   cv_g_sat
 } from "./if97/region4.js";
 
+// Transport properties (IAPWS correlations)
 import { conductivity } from "./if97/conductivity.js";
 import { viscosity } from "./if97/viscosity.js";
+
+// IAPWS-95 single-phase solver
+import { solveDensity } from "./iapws95/solver.js";
+import { properties as iapwsProps } from "./iapws95/properties.js";
 
 /* ============================================================
    Constants
@@ -65,19 +72,44 @@ export function solve(inputs) {
     const P = inputs.pressure;
     const Ps = Psat(T);
 
+    /* ----- Saturation (Region 4 is authoritative) ----- */
     if (Math.abs(P - Ps) < SAT_EPS) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    if (P > Ps) {
-      return withPhase("compressed_liquid", region1(T, P), T, P);
+    /* ----- Initial density guess (IF97 → fallback to sat) ----- */
+    let rho0;
+
+    try {
+      let guess;
+      if (P > Ps) {
+        guess = region1(T, P);
+      } else if (isRegion5(T, P)) {
+        guess = region5(T, P);
+      } else {
+        guess = region2(T, P);
+      }
+
+      rho0 = guess.density;
+      if (!Number.isFinite(rho0) || rho0 <= 0) {
+        throw new Error("Invalid IF97 density");
+      }
+    } catch {
+      // Guaranteed physical fallback
+      rho0 = (P > Ps) ? rho_f_sat(T) : rho_g_sat(T);
     }
 
-    if (isRegion5(T, P)) {
-      return withPhase("high_temperature_steam", region5(T, P), T, P);
+    /* ----- IAPWS-95 Newton solver (single-phase) ----- */
+    let rho;
+    try {
+      rho = solveDensity(T, P, rho0);
+    } catch {
+      // Damped retry
+      rho = solveDensity(T, P, Math.max(0.5 * rho0, 1e-3));
     }
 
-    return withPhase("superheated_vapor", region2(T, P), T, P);
+    const r = iapwsProps(T, rho);
+    return withPhase("single_phase", r, T, P);
   }
 
   /* ------------------ T–x ------------------ */
@@ -128,15 +160,6 @@ export function solve(inputs) {
     const Tsol = solveT(P, h, T =>
       isRegion5(T, P) ? region5(T, P).enthalpy : region2(T, P).enthalpy
     );
-
-    if (Math.abs(Tsol - T_sat) < SAT_T_BAND_PH) {
-      const x = clamp01((h - hf) / (hg - hf));
-      if (x >= 0 && x <= 1) {
-        if (x <= X_EPS) return withPhase("saturated_liquid", satLiquidState(T_sat), T_sat, P);
-        if (1 - x <= X_EPS) return withPhase("saturated_vapor", satVaporState(T_sat), T_sat, P);
-        return mixStates(satLiquidState(T_sat), satVaporState(T_sat), x, T_sat, P);
-      }
-    }
 
     if (isRegion5(Tsol, P)) {
       return withPhase("high_temperature_steam", region5(Tsol, P), Tsol, P);
@@ -221,13 +244,12 @@ function withPhase(phase, r, T, P) {
   };
 
   // Transport properties for single-phase states
- if (Number.isFinite(r.density)) {
-  // IAPWS transport correlations expect density in g/cm³
-  const rho_cgs = r.density * 1e-3; // kg/m³ → g/cm³
-
-  out.thermalConductivity = conductivity(T, rho_cgs);
-  out.viscosity = viscosity(T, rho_cgs);
-}
+  if (Number.isFinite(r.density)) {
+    // IAPWS transport correlations expect density in g/cm³
+    const rho_cgs = r.density * 1e-3; // kg/m³ → g/cm³
+    out.thermalConductivity = conductivity(T, rho_cgs);
+    out.viscosity = viscosity(T, rho_cgs);
+  }
 
   if (phase === "saturated_liquid") out.quality = 0;
   if (phase === "saturated_vapor") out.quality = 1;
