@@ -100,13 +100,13 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     renderValidation(validation);
     if (!validation.valid) return;
 
-    // ---- SOLVER (IF97 UNITS ONLY) ----
-    const stateIF97 = solve({ mode, ...rawInputs });
+    // ---- SOLVER (IF97 / IAPWS UNITS ONLY) ----
+    const stateSolved = solve({ mode, ...rawInputs });
 
     const mappedState = {
-      ...stateIF97,
-      temperature: stateIF97.T,
-      pressure: stateIF97.P
+      ...stateSolved,
+      temperature: stateSolved.T,
+      pressure: stateSolved.P
     };
 
     const stateUI =
@@ -114,8 +114,8 @@ document.getElementById("calcForm").addEventListener("submit", e => {
         ? { ...mappedState }
         : fromSI(mappedState, unitSystem);
 
-    stateUI.phase = stateIF97.phase;
-    stateUI.phaseLabel = stateIF97.phaseLabel;
+    stateUI.phase = stateSolved.phase;
+    stateUI.phaseLabel = stateSolved.phaseLabel;
     stateUI.inputMode = mode;
 
     renderResults(stateUI, unitSystem);
@@ -155,13 +155,14 @@ function readInputsByMode(mode) {
    RESULTS RENDERING
    ============================================================ */
 
+// 🔧 FIXED: lowercase cp / cv
 const BASE_FIELDS = [
   "density",
   "specificVolume",
   "enthalpy",
   "entropy",
-  "Cp",
-  "Cv",
+  "cp",
+  "cv",
   "viscosity",
   "thermalConductivity"
 ];
@@ -212,18 +213,16 @@ function renderResults(state, unitSystem) {
 }
 
 /* ============================================================
-   NUMBER FORMATTING (PRECISION CONTROL)
+   NUMBER FORMATTING
    ============================================================ */
 
 function formatNumber(x, key) {
   if (!Number.isFinite(x)) return "—";
 
-  // ✔ Viscosity → 8 decimal places
   if (key === "viscosity") {
     return x.toFixed(8);
   }
 
-  // Default behavior (unchanged)
   return Math.abs(x) < 1e-6
     ? x.toExponential(6)
     : x.toFixed(6);
