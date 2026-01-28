@@ -160,8 +160,8 @@ const BASE_FIELDS = [
   "specificVolume",
   "enthalpy",
   "entropy",
-  "cp",
-  "cv",
+  "Cp",
+  "Cv",
   "viscosity",
   "thermalConductivity"
 ];
@@ -173,8 +173,8 @@ const LABELS = {
   specificVolume: "Specific Volume",
   enthalpy: "Enthalpy",
   entropy: "Entropy",
-  Cp: "Cp",
-  Cv: "Cv",
+  cp: "Cp",
+  cv: "Cv",
   viscosity: "Viscosity",
   thermalConductivity: "Thermal Conductivity"
 };
