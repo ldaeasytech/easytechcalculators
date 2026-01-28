@@ -1,5 +1,6 @@
 // solver.js
-// Hybrid IF97 + IAPWS-95 master solver (with quality support)
+// Hybrid IF97 + IAPWS-95 solver
+// Region 4 uses piecewise saturation correlations
 
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
@@ -17,16 +18,9 @@ const SAT_EPS = 1e-6;
    Helpers
    ============================================================ */
 
-function attachTransport(r, T, rho) {
-  const rho_cgs = rho * 1e-3;
-  r.viscosity = viscosity(T, rho_cgs);
-  r.thermalConductivity = conductivity(T, rho_cgs);
-  return r;
-}
-
-function finalize(phase, r, T, P) {
+function finalizeSinglePhase(r, T, P) {
   return {
-    phase,
+    phase: "single_phase",
     phaseLabel: r.phaseLabel,
     T,
     P,
@@ -34,14 +28,14 @@ function finalize(phase, r, T, P) {
     specificVolume: 1 / r.density,
     enthalpy: r.h,
     entropy: r.s,
-    Cv: r.cv,
     Cp: r.cp,
+    Cv: r.cv,
     thermalConductivity: r.thermalConductivity,
     viscosity: r.viscosity
   };
 }
 
-function saturatedMixture(T, P, x) {
+function saturatedMixture(T, x = null) {
   const sat = region4(T);
 
   return {
@@ -49,20 +43,34 @@ function saturatedMixture(T, P, x) {
     phaseLabel: "saturated mixture",
     mixture: true,
     quality: x,
-    T,
-    P,
-    liquid: finalize(
-      "saturated_liquid",
-      { ...sat.liquid, phaseLabel: "saturated liquid" },
-      T,
-      P
-    ),
-    vapor: finalize(
-      "saturated_vapor",
-      { ...sat.vapor, phaseLabel: "saturated vapor" },
-      T,
-      P
-    )
+    T: sat.T,
+    P: sat.P,
+
+    liquid: {
+      phase: "saturated_liquid",
+      phaseLabel: "saturated liquid",
+      density: sat.rho_f,
+      specificVolume: sat.v_f,
+      enthalpy: sat.h_f,
+      entropy: sat.s_f,
+      Cp: sat.cp_f,
+      Cv: sat.cv_f,
+      thermalConductivity: sat.k_f,
+      viscosity: sat.mu_f
+    },
+
+    vapor: {
+      phase: "saturated_vapor",
+      phaseLabel: "saturated vapor",
+      density: sat.rho_g,
+      specificVolume: sat.v_g,
+      enthalpy: sat.h_g,
+      entropy: sat.s_g,
+      Cp: sat.cp_g,
+      Cv: sat.cv_g,
+      thermalConductivity: sat.k_g,
+      viscosity: sat.mu_g
+    }
   };
 }
 
@@ -74,36 +82,44 @@ function solveTP(T, P) {
   const Ps = Psat(T);
   const Ts = Tsat(P);
 
+  /* ---------- Saturation ---------- */
   if (Math.abs(P - Ps) < SAT_EPS) {
-    return saturatedMixture(T, Ps, null);
+    return saturatedMixture(T);
   }
 
+  /* ---------- Subcooled / compressed ---------- */
   if (T < Ts && P > Ps) {
     const r = region1(T, P);
     r.phaseLabel = "compressed liquid";
-    attachTransport(r, T, r.density);
-    return finalize("subcooled_liquid", r, T, P);
+
+    r.viscosity = viscosity(T, r.density * 1e-3);
+    r.thermalConductivity = conductivity(T, r.density * 1e-3);
+
+    return finalizeSinglePhase(r, T, P);
   }
 
-  let rho0 = T > Ts
-    ? (P * 1e3) / (0.461526 * T)
-    : region1(T, P).density;
+  /* ---------- Superheated / dense vapor ---------- */
+  let rho0 =
+    T > Ts
+      ? (P * 1e3) / (0.461526 * T)   // ideal-gas guess
+      : region1(T, P).density;
 
   let rho;
   try {
     rho = solveDensity(T, P, rho0);
   } catch {
-    return saturatedMixture(T, Psat(T), null);
+    return saturatedMixture(T);
   }
 
   const r = iapwsProps(T, rho);
-  attachTransport(r, T, rho);
 
-  r.phaseLabel = T > Ts
-    ? "superheated steam"
-    : "compressed liquid";
+  r.viscosity = viscosity(T, rho * 1e-3);
+  r.thermalConductivity = conductivity(T, rho * 1e-3);
 
-  return finalize("single_phase", r, T, P);
+  r.phaseLabel =
+    T > Ts ? "superheated steam" : "compressed liquid";
+
+  return finalizeSinglePhase(r, T, P);
 }
 
 /* ============================================================
@@ -117,16 +133,18 @@ export function solve({ mode, ...inputs }) {
     return solveTP(inputs.temperature, inputs.pressure);
   }
 
-  /* ---------------- Px ---------------- */
-  if (mode === "Px") {
-    const T = inputs.temperature;
-    return solveTP(T, Psat(T));
-  }
-
   /* ---------------- Tx ---------------- */
   if (mode === "Tx") {
+    const T = inputs.temperature;
+    const x = inputs.quality;
+    return saturatedMixture(T, x);
+  }
+
+  /* ---------------- Px ---------------- */
+  if (mode === "Px") {
     const P = inputs.pressure;
-    return solveTP(Tsat(P), P);
+    const x = inputs.quality;
+    return saturatedMixture(Tsat(P), x);
   }
 
   /* ---------------- Ph ---------------- */
@@ -136,16 +154,14 @@ export function solve({ mode, ...inputs }) {
     const T = Tsat(P);
 
     const sat = region4(T);
-    const hf = sat.liquid.h;
-    const hg = sat.vapor.h;
 
-    if (h > hf && h < hg) {
-      const x = (h - hf) / (hg - hf);
-      return saturatedMixture(T, P, x);
+    if (h > sat.h_f && h < sat.h_g) {
+      const x = (h - sat.h_f) / (sat.h_g - sat.h_f);
+      return saturatedMixture(T, x);
     }
 
     return solveTP(
-      h <= hf ? T - 1e-3 : T + 1e-3,
+      h <= sat.h_f ? T - 1e-3 : T + 1e-3,
       P
     );
   }
@@ -157,16 +173,14 @@ export function solve({ mode, ...inputs }) {
     const T = Tsat(P);
 
     const sat = region4(T);
-    const sf = sat.liquid.s;
-    const sg = sat.vapor.s;
 
-    if (s > sf && s < sg) {
-      const x = (s - sf) / (sg - sf);
-      return saturatedMixture(T, P, x);
+    if (s > sat.s_f && s < sat.s_g) {
+      const x = (s - sat.s_f) / (sat.s_g - sat.s_f);
+      return saturatedMixture(T, x);
     }
 
     return solveTP(
-      s <= sf ? T - 1e-3 : T + 1e-3,
+      s <= sat.s_f ? T - 1e-3 : T + 1e-3,
       P
     );
   }
