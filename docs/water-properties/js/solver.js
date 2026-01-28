@@ -1,15 +1,19 @@
 // solver.js
 // Hybrid IF97 + IAPWS-95 master solver
 
-import { region1 } from "./region1.js";
-import { region2 } from "./region2.js";
-import { region4, Psat, Tsat } from "./region4.js";
+// solver.js
+// Hybrid IF97 + IAPWS-95 master solver
+
+import { region1 } from "./if97/region1.js";
+import { region2 } from "./if97/region2.js";
+import { region4, Psat, Tsat } from "./if97/region4.js";
 
 import { solveDensity } from "./iapws95/solver.js";
 import { properties as iapwsProps } from "./iapws95/properties.js";
 
 import { conductivity } from "./conductivity.js";
 import { viscosity } from "./viscosity.js";
+
 
 const SAT_EPS = 1e-6;
 
