@@ -78,26 +78,30 @@ export function solve(inputs) {
     }
 
     /* ----- Initial density guess (IF97 → fallback to sat) ----- */
-    let rho0;
+  /* ----- Initial density guess (PHYSICALLY CONSISTENT) ----- */
 
-    try {
-      let guess;
-      if (P > Ps) {
-        guess = region1(T, P);
-      } else if (isRegion5(T, P)) {
-        guess = region5(T, P);
-      } else {
-        guess = region2(T, P);
-      }
+let rho0;
 
-      rho0 = guess.density;
-      if (!Number.isFinite(rho0) || rho0 <= 0) {
-        throw new Error("Invalid IF97 density");
-      }
-    } catch {
-      // Guaranteed physical fallback
-      rho0 = (P > Ps) ? rho_f_sat(T) : rho_g_sat(T);
-    }
+// Superheated vapor → gas-like initial guess
+if (T > Tsat(P)) {
+  // Ideal gas density: rho = P / (R T)
+  // R in kJ/(kg·K), P in MPa → multiply by 1e3
+  rho0 = (P * 1e3) / (0.461526 * T);
+}
+// Compressed liquid → IF97 Region 1
+else if (P > Ps) {
+  rho0 = region1(T, P).density;
+}
+// Near saturation vapor side
+else {
+  rho0 = region2(T, P).density;
+}
+
+// Safety
+if (!Number.isFinite(rho0) || rho0 <= 0) {
+  throw new Error("Invalid initial density guess");
+}
+
 
    /* ----- Decide liquid vs vapor before IAPWS-95 ----- */
 if (P > Ps && T < Tsat(P)) {
