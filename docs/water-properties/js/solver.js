@@ -11,8 +11,8 @@ import { region4, Psat, Tsat } from "./if97/region4.js";
 import { solveDensity } from "./iapws95/solver.js";
 import { properties as iapwsProps } from "./iapws95/properties.js";
 
-import { conductivity } from "./conductivity.js";
-import { viscosity } from "./viscosity.js";
+import { conductivity } from "./if97/conductivity.js";
+import { viscosity } from "./if97/viscosity.js";
 
 
 const SAT_EPS = 1e-6;
