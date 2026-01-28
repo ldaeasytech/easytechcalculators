@@ -675,3 +675,41 @@ export function mu_g_sat(T) {
 
   return NaN;
 }
+
+
+/* ============================================================
+   Region 4 unified export (solver compatibility)
+   ============================================================ */
+
+export function region4(T) {
+  const P = Psat(T);
+
+  return {
+    region: 4,
+    phase: "two_phase",
+
+    T,
+    P,
+
+    // Saturated liquid properties
+    rho_f: rho_f_sat(T),
+    v_f: v_f_sat(T),
+    h_f: h_f_sat(T),
+    s_f: s_f_sat(T),
+    cp_f: cp_f_sat(T),
+    cv_f: cv_f_sat(T),
+    k_f: k_f_sat(T),
+    mu_f: mu_f_sat(T),
+
+    // Saturated vapor properties
+    rho_g: rho_g_sat(T),
+    v_g: v_g_sat(T),
+    h_g: h_g_sat(T),
+    s_g: s_g_sat(T),
+    cp_g: cp_g_sat(T),
+    cv_g: cv_g_sat(T),
+    k_g: k_g_sat(T),
+    mu_g: mu_g_sat(T)
+  };
+}
+
