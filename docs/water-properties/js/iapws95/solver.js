@@ -1,25 +1,47 @@
-import { pressure, dPdrho } from "./pressure.js";
-import { MAX_ITER, TOL } from "./constants95.js";
+// iapws95/solver.js
+// Robust density solver for IAPWS-95 Helmholtz EOS
 
+import { Tc, rhoc, R, MAX_ITER, TOL } from "./constants95.js";
+import {
+  pressureFromRho,
+  dPdrho
+} from "./pressure.js";
+
+/**
+ * Solve density rho [kg/m^3] for given T [K], P [MPa]
+ */
 export function solveDensity(T, P, rho0) {
   let rho = rho0;
 
-  for (let i = 0; i < MAX_ITER; i++) {
-    const f = pressure(T, rho) - P;
-    if (Math.abs(f / P) < TOL) return rho;
+  for (let iter = 0; iter < MAX_ITER; iter++) {
+    const Pcalc = pressureFromRho(T, rho);
+    const f = Pcalc - P;
 
-    const df = dPdrho(T, rho);
-    if (!isFinite(df) || df <= 0) break;
+    if (Math.abs(f) < TOL) return rho;
 
-    let step = f / df;
+    const dPd = dPdrho(T, rho);
+    if (!Number.isFinite(dPd) || dPd <= 0) {
+      throw new Error("Non-physical dP/drho encountered");
+    }
 
-    // damping (critical!)
-    step = Math.sign(step) * Math.min(Math.abs(step), 0.5 * rho);
+    // Newton step
+    let rho_new = rho - f / dPd;
 
-    rho -= step;
-    if (rho <= 0) rho *= 0.5;
+    // ---- STEP 3 GUARDS ----
+
+    // Prevent non-physical densities
+    if (!Number.isFinite(rho_new) || rho_new <= 0) {
+      rho_new = 0.5 * rho;
+    }
+
+    // Prevent liquid-root capture when solving vapor
+    if (rho < rhoc && rho_new > 1.5 * rhoc) {
+      rho_new = 0.5 * (rho + rhoc);
+    }
+
+    // Damping
+    rho = 0.5 * rho + 0.5 * rho_new;
   }
 
   throw new Error("IAPWS-95 density solver failed");
 }
-
