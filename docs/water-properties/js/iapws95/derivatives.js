@@ -32,13 +32,13 @@ export function helmholtz(T, rho, Tc, rhoc) {
     a0_t: alpha0_tau(tau),
     ar_t: alphar_tau(delta, tau),
 
-    // Second derivatives wrt tau (UNSCALED)
+    // Second derivatives wrt tau
     a0_tt: alpha0_tautau(tau),
     ar_tt: alphar_tautau(delta, tau),
 
-    // Delta derivatives
-    a0_d: alpha0_delta(),
-    a0_dd: alpha0_deltadelta(),
+    // Delta derivatives (🔥 FIXED: delta passed correctly)
+    a0_d: alpha0_delta(delta),
+    a0_dd: alpha0_deltadelta(delta),
     ar_d: alphar_delta(delta, tau),
     ar_dd: alphar_deltadelta(delta, tau),
 
