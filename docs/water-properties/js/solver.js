@@ -36,6 +36,9 @@ import { viscosity } from "./if97/viscosity.js";
    Constants
    ============================================================ */
 
+const DEBUG_IAPWS = true; // set false to silence logs
+
+
 const SAT_EPS = 1e-6;
 const X_EPS = 1e-10;
 const T_TOL = 1e-7;
@@ -66,6 +69,16 @@ export function solve(inputs) {
 
     const phase = P > Ps ? "compressed_liquid" : "superheated_steam";
     const rho0 = initialDensityGuess(T, P, Ps);
+
+     if (DEBUG_IAPWS) {
+  console.log("[TP] Phase detection:", {
+    T,
+    P_MPa: P,
+    Ps_MPa: Ps,
+    phase,
+    rho0_initial: rho0
+  });
+}
 
     return singlePhaseIAPWS(T, P, rho0, phase);
   }
@@ -193,9 +206,28 @@ function initialDensityGuess(T, P, Ps) {
 function singlePhaseIAPWS(T, P, rho0, phase) {
   let rho;
 
+   if (DEBUG_IAPWS) {
+  console.log("[TP] Phase detection:", {
+    T,
+    P_MPa: P,
+    Ps_MPa: Ps,
+    phase,
+    rho0_initial: rho0
+  });
+}
+
   try {
     rho = solveDensity(T, P, rho0);
-  } catch {
+    
+     if (DEBUG_IAPWS) {
+      console.log("[IAPWS] Density converged:", {
+        rho,
+        deviation_pct: 100 * (rho - rho0) / rho0
+      });
+   
+  } catch (err) {
+      console.warn("[IAPWS] Density solver failed, fallback used:", err);
+     
     rho = phase === "compressed_liquid"
       ? rho_f_sat(T)
       : rho_g_sat(T);
