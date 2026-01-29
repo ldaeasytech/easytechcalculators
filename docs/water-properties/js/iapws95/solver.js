@@ -1,91 +1,64 @@
 // iapws95/solver.js
-// Density solver for IAPWS-95 using Helmholtz EOS
-// DEBUG / INSTRUMENTED VERSION
+// Density solver for IAPWS-95 (DEBUG VERSION, API-CORRECT)
 
-import { R } from "./constants95.js";
-import {
-  helmholtzResidual,
-  helmholtzResidual_dDelta,
-  helmholtzResidual_dDelta2
-} from "./helmholtz.js";
+import { R, Tc, rhoc, MAX_ITER, TOL } from "./constants95.js";
+import { helmholtz } from "./derivatives.js";
 
 /* ============================================================
-   Pressure from density
-   ------------------------------------------------------------
-   Inputs:
-     T   : K
-     rho : kg/m^3
-   Output:
-     P   : MPa
+   Pressure from density using Helmholtz EOS
    ============================================================ */
 function pressureFromRho(T, rho) {
-  const delta = rho / 322.0;      // rhoc = 322 kg/m^3
-  const tau = 647.096 / T;        // Tc = 647.096 K
-
-  const phir_d = helmholtzResidual_dDelta(delta, tau);
+  const h = helmholtz(T, rho, Tc, rhoc);
+  const delta = h.delta;
 
   // Pa → MPa
-  return rho * R * T * (1 + delta * phir_d) * 1e-6;
+  return rho * R * T * (1 + delta * h.ar_d) * 1e-6;
 }
 
 /* ============================================================
-   dP/drho from EOS
+   dP/drho at constant T
    ============================================================ */
 function dPdrho(T, rho) {
-  const delta = rho / 322.0;
-  const tau = 647.096 / T;
-
-  const phir_d = helmholtzResidual_dDelta(delta, tau);
-  const phir_dd = helmholtzResidual_dDelta2(delta, tau);
+  const h = helmholtz(T, rho, Tc, rhoc);
+  const delta = h.delta;
 
   const term =
     1 +
-    2 * delta * phir_d +
-    delta * delta * phir_dd;
+    2 * delta * h.ar_d +
+    delta * delta * h.ar_dd;
 
-  return R * T * term * 1e-6; // MPa·m^3/kg
+  return R * T * term * 1e-6; // MPa·m³/kg
 }
 
 /* ============================================================
-   Main density solver
+   Main density solver (Newton + bisection, instrumented)
    ============================================================ */
 export function solveDensity_IAPWS95(T, P) {
-  const MAX_ITER = 50;
-  const TOL = 1e-6;
-
   console.groupCollapsed(
     `%c[IAPWS-95 Density Solver] T=${T} K, P=${P} MPa`,
     "color:#00ffaa;font-weight:bold"
   );
 
-  /* ----------------------------------------------------------
-     Initial guess (ideal gas)
-     ---------------------------------------------------------- */
+  // Ideal-gas initial guess
   let rho = Math.max((P * 1e6) / (R * T), 1.0);
-  console.log("Initial rho guess =", rho);
+  console.log("Initial rho guess:", rho);
 
-  /* ----------------------------------------------------------
-     Fixed global bracket (safe for water)
-     ---------------------------------------------------------- */
+  // Global bracket (safe for water)
   let a = 1.0;
   let b = 1500.0;
 
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
-  console.log("Initial bracket:");
   console.table([
     { rho: a, Pcalc: pressureFromRho(T, a), f: fa },
     { rho: b, Pcalc: pressureFromRho(T, b), f: fb }
   ]);
 
   if (fa * fb > 0) {
-    console.error("❌ No sign change in bracket — EOS or units are wrong");
+    console.error("❌ No sign change in pressure bracket");
   }
 
-  /* ----------------------------------------------------------
-     Iteration loop
-     ---------------------------------------------------------- */
   for (let iter = 1; iter <= MAX_ITER; iter++) {
     const Pcalc = pressureFromRho(T, rho);
     const f = Pcalc - P;
@@ -108,18 +81,13 @@ export function solveDensity_IAPWS95(T, P) {
 
     // Newton step
     if (isFinite(dP) && Math.abs(dP) > 1e-12) {
-      const step = f / dP;
-      rhoNew = rho - step;
-      console.log("Newton step =", step);
-    } else {
-      console.warn("Derivative invalid → bisection");
-      rhoNew = 0.5 * (a + b);
+      rhoNew = rho - f / dP;
     }
 
-    // Safeguard
+    // Safeguard → bisection
     if (!isFinite(rhoNew) || rhoNew <= a || rhoNew >= b) {
-      console.warn("Out of bracket → bisection");
       rhoNew = 0.5 * (a + b);
+      console.warn("Bisection step used");
     }
 
     const fNew = pressureFromRho(T, rhoNew) - P;
@@ -137,7 +105,6 @@ export function solveDensity_IAPWS95(T, P) {
     }
 
     rho = rhoNew;
-
     console.groupEnd();
   }
 
