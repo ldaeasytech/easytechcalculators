@@ -1,9 +1,11 @@
 // iapws95/solver.js
 // Robust density solver for full IAPWS-95 (single phase)
-// Phase-aware safeguarded Newton + bisection
+// Phase-aware Newton + safeguarded bisection
+// Uses IF97 Region 4 for saturation-based phase selection
 
-import { R, rhoc, MAX_ITER } from "./constants95.js";
+import { R, rhoc, Tc, MAX_ITER } from "./constants95.js";
 import { pressureFromRho, dPdrho } from "./pressure.js";
+import { Psat_T } from "../if97/region4.js";
 
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
@@ -14,7 +16,7 @@ export function solveDensity(T, P, phaseHint = "auto") {
   const P_Pa = P * 1e6;
 
   // --------------------------------------------------
-  // Physical bounds
+  // Physical density bounds
   // --------------------------------------------------
   const RHO_MIN = 1e-6;
   const RHO_MAX = 1500.0;
@@ -25,7 +27,7 @@ export function solveDensity(T, P, phaseHint = "auto") {
   const rho_ig = P_Pa / (R * T);
 
   // --------------------------------------------------
-  // Phase-aware initial guess
+  // Phase-aware initial guess (FIXED)
   // --------------------------------------------------
   let rho0;
 
@@ -34,11 +36,19 @@ export function solveDensity(T, P, phaseHint = "auto") {
   } else if (phaseHint === "vapor") {
     rho0 = Math.min(Math.max(rho_ig, 0.1), 0.8 * rhoc);
   } else {
-    // auto
-    if (rho_ig > rhoc) {
-      rho0 = 1000.0;
+    // AUTO phase detection using saturation pressure
+    if (T < Tc) {
+      const Psat = Psat_T(T); // MPa
+      if (P > Psat) {
+        // compressed liquid
+        rho0 = Math.max(1000.0, 1.2 * rhoc);
+      } else {
+        // superheated vapor
+        rho0 = Math.min(Math.max(rho_ig, 0.1), 0.8 * rhoc);
+      }
     } else {
-      rho0 = Math.max(rho_ig, 0.5);
+      // supercritical
+      rho0 = Math.max(rho_ig, rhoc);
     }
   }
 
@@ -53,7 +63,7 @@ export function solveDensity(T, P, phaseHint = "auto") {
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
-  for (let i = 0; i < 30 && fa * fb > 0; i++) {
+  for (let i = 0; i < 40 && fa * fb > 0; i++) {
     a = Math.max(0.5 * a, RHO_MIN);
     b = Math.min(2.0 * b, RHO_MAX);
     fa = pressureFromRho(T, a) - P;
@@ -72,7 +82,7 @@ export function solveDensity(T, P, phaseHint = "auto") {
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
 
-    // Relative convergence in pressure
+    // Relative pressure convergence
     if (Math.abs(f / P) < 1e-8) {
       return rho;
     }
@@ -80,7 +90,7 @@ export function solveDensity(T, P, phaseHint = "auto") {
     const dPd = dPdrho(T, rho);
     let rho_new;
 
-    // Newton step (only if well-behaved)
+    // Newton step (only if stable)
     if (Number.isFinite(dPd) && dPd > 1e-12) {
       rho_new = rho - f / dPd;
     }
