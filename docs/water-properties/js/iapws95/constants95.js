@@ -5,7 +5,8 @@
 export const Tc = 647.096;      // K
 export const Pc = 22.064;       // MPa
 export const rhoc = 322.0;      // kg/m³
-export const R = 0.461526;      // kJ/(kg·K)
+export const R = 461.526; // J/(kg·K)
+
 
 // Newton solver controls
 export const MAX_ITER = 500;
