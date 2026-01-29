@@ -1,15 +1,15 @@
 // iapws95/solver.js
-// Robust density solver for full IAPWS-95 (single phase)
+// Robust density solver for IAPWS-95 (single-phase)
 // Phase-aware Newton + safeguarded bisection
-// Uses IF97 Region 4 for saturation-based phase selection
+// Uses IF97 Region 4 Psat(T) for automatic phase selection
 
 import { R, rhoc, Tc, MAX_ITER } from "./constants95.js";
 import { pressureFromRho, dPdrho } from "./pressure.js";
-import { Psat_T } from "../if97/region4.js";
+import { Psat } from "../if97/region4.js";
 
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
- * phaseHint: "liquid" | "vapor" | "auto"
+ * phaseHint: "auto" | "liquid" | "vapor"
  */
 export function solveDensity(T, P, phaseHint = "auto") {
 
@@ -27,19 +27,22 @@ export function solveDensity(T, P, phaseHint = "auto") {
   const rho_ig = P_Pa / (R * T);
 
   // --------------------------------------------------
-  // Phase-aware initial guess (FIXED)
+  // Phase-aware initial guess
   // --------------------------------------------------
   let rho0;
 
   if (phaseHint === "liquid") {
     rho0 = Math.max(1000.0, 1.2 * rhoc);
+
   } else if (phaseHint === "vapor") {
     rho0 = Math.min(Math.max(rho_ig, 0.1), 0.8 * rhoc);
+
   } else {
-    // AUTO phase detection using saturation pressure
+    // AUTO: decide phase using saturation pressure
     if (T < Tc) {
-      const Psat = Psat_T(T); // MPa
-      if (P > Psat) {
+      const Psat_val = Psat(T); // MPa
+
+      if (isFinite(Psat_val) && P > Psat_val) {
         // compressed liquid
         rho0 = Math.max(1000.0, 1.2 * rhoc);
       } else {
@@ -95,7 +98,7 @@ export function solveDensity(T, P, phaseHint = "auto") {
       rho_new = rho - f / dPd;
     }
 
-    // Safeguard
+    // Safeguard: fall back to bisection
     if (
       !Number.isFinite(rho_new) ||
       rho_new <= a ||
