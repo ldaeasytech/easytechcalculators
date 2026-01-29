@@ -231,6 +231,29 @@ function singlePhaseIAPWS(T, P, rho0, phase) {
 
   const r = iapwsProps(T, rho);
 
+   /* ======================= DEBUG LOG ======================= */
+if (DEBUG_IAPWS) {
+  console.group("[IAPWS-95] Thermodynamic properties");
+  console.log("Input:", {
+    T_K: T,
+    P_MPa: P,
+    rho_kg_m3: rho
+  });
+
+  console.log("Raw IAPWS-95 output:", {
+    density: r.density,
+    specificVolume: r.specificVolume,
+    enthalpy_kJkg: r.enthalpy,
+    entropy_kJkgK: r.entropy,
+    internalEnergy_kJkg: r.internalEnergy,
+    cp_kJkgK: r.cp,
+    cv_kJkgK: r.cv
+  });
+  console.groupEnd();
+}
+/* ========================================================= */
+   
+
   const out = {
     phase,
     phaseLabel: phase,
