@@ -1,13 +1,12 @@
 // iapws95/solver.js
-// Helmholtz EOS density solver with automatic physical-root selection
-// Rejects metastable roots using thermodynamic stability checks
+// Helmholtz EOS density solver with mechanical-stability filtering
+// Option C: accept roots with dp/dρ > 0 only
 
-import { MAX_ITER, TOL, R } from "./constants95.js";
+import { MAX_ITER, TOL } from "./constants95.js";
 import {
   pressureFromRho,
   dPdrho
 } from "./pressure.js";
-import { properties } from "./properties.js";
 
 // -----------------------------------------------
 // Debug flag
@@ -16,18 +15,18 @@ const DEBUG_SOLVER = false;
 
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
- * Automatically selects the physically stable root
+ * Accepts the first mechanically stable root (dp/dρ > 0)
  */
 export function solveDensity(T, P) {
 
   // --------------------------------------------------
-  // Density search bounds
+  // Global density bounds
   // --------------------------------------------------
   const RHO_MIN = 1e-6;
   const RHO_MAX = 2000.0;
 
   // --------------------------------------------------
-  // Candidate initial guesses (log-spaced)
+  // Density seeds (cover vapor → liquid basins)
   // --------------------------------------------------
   const seeds = [
     1e-3,
@@ -36,48 +35,45 @@ export function solveDensity(T, P) {
     50,
     200,
     500,
-    800,
-    1000,
-    1200
+    700,
+    900,
+    1100
   ];
 
-  const roots = [];
+  const accepted = [];
 
   for (const rho0 of seeds) {
     try {
       const rho = solveSingleRoot(T, P, rho0, RHO_MIN, RHO_MAX);
 
       // Deduplicate roots
-      if (roots.some(r => Math.abs(r - rho) / rho < 1e-3)) continue;
+      if (accepted.some(r => Math.abs(r - rho) / rho < 1e-3)) continue;
 
-      // --------------------------------------------------
-      // Thermodynamic stability check
-      // --------------------------------------------------
       const dpdrho = dPdrho(T, rho);
-      if (!(dpdrho > 0)) continue;
 
-      const props = properties(T, rho);
+      // --------------------------------------------------
+      // Mechanical stability criterion ONLY
+      // --------------------------------------------------
+      if (dpdrho > 0 && Number.isFinite(dpdrho)) {
 
-      if (
-        props.cp > 0 &&
-        props.cv > 0 &&
-        Number.isFinite(props.enthalpy) &&
-        Number.isFinite(props.entropy)
-      ) {
         if (DEBUG_SOLVER) {
-          console.log("[IAPWS95] Stable root accepted:", rho);
+          console.log("[IAPWS95] Accepted root:", {
+            rho,
+            dpdrho
+          });
         }
+
         return rho;
       }
 
-      roots.push(rho);
+      accepted.push(rho);
 
     } catch {
-      /* ignore failed seeds */
+      // ignore failed seed
     }
   }
 
-  throw new Error("IAPWS-95: no physically stable density root found");
+  throw new Error("IAPWS-95: no mechanically stable density root found");
 }
 
 /* ============================================================
@@ -93,7 +89,7 @@ function solveSingleRoot(T, P, rho0, a0, b0) {
   let fb = pressureFromRho(T, b) - P;
 
   if (!Number.isFinite(fa) || !Number.isFinite(fb) || fa * fb > 0) {
-    throw new Error("Root not bracketed");
+    throw new Error("Density root not bracketed");
   }
 
   let rho = Math.min(Math.max(rho0, a), b);
@@ -148,5 +144,5 @@ function solveSingleRoot(T, P, rho0, a0, b0) {
     f = f_new;
   }
 
-  throw new Error("Single-root solver did not converge");
+  throw new Error("IAPWS-95: single-root solver did not converge");
 }
