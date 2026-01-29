@@ -25,14 +25,17 @@ export function properties(T, rho) {
     ) /
     (1 + 2 * h.delta * h.ar_d + h.delta * h.delta * h.ar_dd);
 
-  return {
-    density: rho,
-    specificVolume: v,
-    enthalpy: h_spec,
-    entropy: s,
-    internalEnergy: u,
-    cp,
-    cv
-  };
+const J2kJ = 1e-3;
+
+return {
+  density: rho,
+  specificVolume: v,
+  enthalpy: h_spec * J2kJ,
+  entropy: s * J2kJ,
+  internalEnergy: u * J2kJ,
+  cp: cp * J2kJ,
+  cv: cv * J2kJ
+};
+
 }
 
