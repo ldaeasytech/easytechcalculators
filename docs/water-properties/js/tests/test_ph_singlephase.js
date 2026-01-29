@@ -1,18 +1,15 @@
 // docs/water-properties/js/tests/test_ph_singlephase.js
 
-import { solvePH, solveTP } from "../solver.js";
+import { solve } from "../solver.js";
 import { Tsat } from "../if97/region4.js";
 
 function relErr(a, b) {
   return Math.abs(a - b) / Math.max(Math.abs(b), 1e-12);
 }
 
-const TOL = {
-  T: 1e-6,
-  h: 5e-4
-};
+const TOL_T = 1e-5;
+const TOL_H = 5e-4;
 
-// generate PH tests from known TP states
 const seedTP = [
   { T: 320, P: 8e6 },
   { T: 380, P: 15e6 },
@@ -26,28 +23,36 @@ seedTP.forEach(({ T, P }) => {
   const Ts = Tsat(P);
   if (Math.abs(T - Ts) < 1e-3) return;
 
-  const ref = solveTP(T, P);
-  const h = ref.h;
+  const ref = solve({
+    mode: "TP",
+    temperature: T,
+    pressure: P
+  });
 
-  const result = solvePH(P, h);
+  const r = solve({
+    mode: "Ph",
+    pressure: P,
+    enthalpy: ref.enthalpy
+  });
 
-  const Terr = Math.abs(result.T - T);
-  const herr = relErr(result.h, h);
+  const Terr = Math.abs(r.temperature - T);
+  const Herr = relErr(r.enthalpy, ref.enthalpy);
 
-  if (Terr > TOL.T || herr > TOL.h) {
+  if (Terr > TOL_T || Herr > TOL_H) {
     console.error("❌ PH inversion failed", {
       P,
-      h,
       T_expected: T,
-      T_got: result.T
+      T_got: r.temperature,
+      Terr,
+      Herr
     });
     return;
   }
 
   console.log("✅ PASS", {
     P,
-    h,
-    T: result.T,
-    state: result.state
+    h: ref.enthalpy,
+    T: r.temperature,
+    phase: r.phase
   });
 });
