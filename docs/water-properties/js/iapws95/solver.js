@@ -1,6 +1,8 @@
 // iapws95/solver.js
 // Robust density solver for IAPWS-95 Helmholtz EOS
 
+console.log("iapws95/solver.js LOADED");
+
 import { Tc, rhoc, R, MAX_ITER, TOL } from "./constants95.js";
 import {
   pressureFromRho,
