@@ -1,6 +1,6 @@
 // iapws95/solver.js
 // Hybrid Newton–Brent density solver for IAPWS-95 Helmholtz EOS
-// Newton when safe, Brent fallback when Newton is unsafe
+// Phase-stable, saturation-enforced, with optional convergence logging
 
 import { Tc, rhoc, R, MAX_ITER, TOL } from "./constants95.js";
 import {
@@ -8,51 +8,84 @@ import {
   dPdrho
 } from "./pressure.js";
 
+// Saturation envelope (used ONLY to enforce physical admissibility)
+import { rho_f_sat, rho_g_sat } from "../if97/region4.js";
+
+// -----------------------------------------------
+// Debug flag (set false to silence logs)
+// -----------------------------------------------
+const DEBUG_SOLVER = true;
+
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
  */
 export function solveDensity(T, P, rho0) {
+
   // --------------------------------------------------
   // Phase inference from initial guess
   // --------------------------------------------------
   const isLiquid = rho0 > rhoc;
 
-  // Conservative global bounds
+  // --------------------------------------------------
+  // Physical bounds
+  // --------------------------------------------------
   const RHO_MIN = 1e-6;
   const RHO_MAX = 2000.0;
 
-  // Phase-specific bracket
-  let a = isLiquid ? rhoc : RHO_MIN;
-  let b = isLiquid ? RHO_MAX : rhoc;
+  // --------------------------------------------------
+  // Phase-safe bracketing (CRITICAL)
+  // --------------------------------------------------
+  let a, b;
 
+  if (isLiquid) {
+    a = rho_f_sat(T);   // liquid MUST be above saturated liquid density
+    b = RHO_MAX;
+  } else {
+    a = RHO_MIN;
+    b = rho_g_sat(T);   // vapor MUST be below saturated vapor density
+  }
+
+  // Initial bracket residuals
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
-  // Safety: ensure bracket validity
   if (fa * fb > 0) {
-    throw new Error("IAPWS-95: root not bracketed");
+    throw new Error("IAPWS-95: density root not bracketed (phase logic error)");
   }
 
-  // Initial iterate
+  // --------------------------------------------------
+  // Initial iterate (clamped to bracket)
+  // --------------------------------------------------
   let rho = Math.min(Math.max(rho0, a), b);
   let f = pressureFromRho(T, rho) - P;
 
-  // Track previous point for secant fallback
   let rho_prev = rho;
   let f_prev = f;
 
+  // --------------------------------------------------
+  // Iteration loop
+  // --------------------------------------------------
   for (let iter = 0; iter < MAX_ITER; iter++) {
 
-    // --------------------------------------------------
-    // Convergence test
-    // --------------------------------------------------
+    // ---- Diagnostic logging ----
+    if (DEBUG_SOLVER) {
+      const Pcalc = pressureFromRho(T, rho);
+      console.log(
+        `[IAPWS95] iter=${iter} ` +
+        `rho=${rho.toFixed(6)} kg/m3 ` +
+        `Pcalc=${Pcalc.toFixed(6)} MPa ` +
+        `error=${(Pcalc - P).toExponential(3)}`
+      );
+    }
+
+    // ---- Convergence ----
     if (Math.abs(f) < TOL) return rho;
 
     let rho_new;
     let usedNewton = false;
 
     // --------------------------------------------------
-    // Attempt Newton step
+    // Newton step (FAST when safe)
     // --------------------------------------------------
     const dPd = dPdrho(T, rho);
     if (Number.isFinite(dPd) && Math.abs(dPd) > 1e-10) {
@@ -64,24 +97,22 @@ export function solveDensity(T, P, rho0) {
     }
 
     // --------------------------------------------------
-    // Brent-style fallback (secant → bisection)
+    // Brent fallback (SECANT → BISECTION)
     // --------------------------------------------------
     if (!usedNewton) {
-      // Secant step if possible
       if (Math.abs(f - f_prev) > 1e-12) {
         rho_new = rho - f * (rho - rho_prev) / (f - f_prev);
       } else {
-        rho_new = 0.5 * (a + b); // bisection
+        rho_new = 0.5 * (a + b);
       }
     }
 
-    // Clamp to physical bounds
+    // ---- Safety clamps ----
     if (!Number.isFinite(rho_new)) {
       rho_new = 0.5 * (a + b);
     }
-
-    if (rho_new <= RHO_MIN) rho_new = RHO_MIN;
-    if (rho_new >= RHO_MAX) rho_new = RHO_MAX;
+    if (rho_new < RHO_MIN) rho_new = RHO_MIN;
+    if (rho_new > RHO_MAX) rho_new = RHO_MAX;
 
     // --------------------------------------------------
     // Evaluate new point
@@ -107,5 +138,5 @@ export function solveDensity(T, P, rho0) {
     f = f_new;
   }
 
-  throw new Error("IAPWS-95 hybrid Newton–Brent solver failed");
+  throw new Error("IAPWS-95 hybrid Newton–Brent density solver failed");
 }
