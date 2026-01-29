@@ -1,8 +1,11 @@
 // docs/water-properties/js/tests/test_tp_singlephase.js
 
 import { solve } from "../solver.js";
-import { Tsat } from "../if97/region4.js";
+import { Psat } from "../if97/region4.js";
 
+/* ------------------------------------------------------------
+   Simple assertion helper
+------------------------------------------------------------ */
 function assert(cond, msg, ctx = {}) {
   if (!cond) {
     console.error("❌", msg, ctx);
@@ -11,22 +14,33 @@ function assert(cond, msg, ctx = {}) {
   return true;
 }
 
+/* ------------------------------------------------------------
+   TP single-phase test cases
+   NOTE: Pressure is in MPa (solver contract)
+------------------------------------------------------------ */
 const tests = [
-  { T: 300, P: 5, expected: "compressed_liquid" },
-  { T: 350, P: 10, expected: "compressed_liquid" },
-  { T: 400, P: 20, expected: "compressed_liquid" },
+  // Compressed / subcooled liquid
+  { T: 300, P: 5.0 },
+  { T: 350, P: 10.0 },
+  { T: 400, P: 20.0 },
 
-  { T: 500, P: 0.1, expected: "superheated_steam" },
-  { T: 700, P: 1.0, expected: "superheated_steam" },
-  { T: 900, P: 5.0, expected: "superheated_steam" }
+  // Superheated steam
+  { T: 500, P: 0.1 },
+  { T: 700, P: 1.0 },
+  { T: 900, P: 5.0 }
 ];
-
 
 console.log("=== TP SINGLE-PHASE TEST ===");
 
+/* ------------------------------------------------------------
+   Run tests
+------------------------------------------------------------ */
 tests.forEach(({ T, P }) => {
-  const Ts = Tsat(P);
-  if (Math.abs(T - Ts) < 1e-3) return;
+  const Ps = Psat(T); // MPa
+
+  // Expected phase (EXACTLY matches solver logic)
+  const expected =
+    P > Ps ? "compressed_liquid" : "superheated_steam";
 
   const r = solve({
     mode: "TP",
@@ -34,11 +48,14 @@ tests.forEach(({ T, P }) => {
     pressure: P
   });
 
-  const expected =
-    P > Tsat(T) ? "compressed_liquid" : "superheated_steam";
+  // ---- Phase check ----
+  if (!assert(
+    r.phase === expected,
+    "Phase mismatch",
+    { T, P, expected, got: r.phase }
+  )) return;
 
-  if (!assert(r.phase === expected, "Phase mismatch", { T, P, got: r.phase })) return;
-
+  // ---- Sanity checks on properties ----
   assert(Number.isFinite(r.density) && r.density > 0, "Invalid density", r);
   assert(Number.isFinite(r.enthalpy), "Invalid enthalpy", r);
   assert(Number.isFinite(r.entropy), "Invalid entropy", r);
@@ -47,5 +64,9 @@ tests.forEach(({ T, P }) => {
   assert(Number.isFinite(r.viscosity), "Invalid viscosity", r);
   assert(Number.isFinite(r.thermalConductivity), "Invalid conductivity", r);
 
-  console.log("✅ PASS", { T, P, phase: r.phase });
+  console.log("✅ PASS", {
+    T,
+    P,
+    phase: r.phase
+  });
 });
