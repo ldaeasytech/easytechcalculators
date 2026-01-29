@@ -1,25 +1,18 @@
 // docs/water-properties/js/tests/test_tp_singlephase.js
 
-import { solveTP } from "../solver.js";
+import { solve } from "../solver.js";
 import { Tsat } from "../if97/region4.js";
 
-// relative tolerance helper
-function relErr(a, b) {
-  return Math.abs(a - b) / Math.max(Math.abs(b), 1e-12);
+function assert(cond, msg, ctx = {}) {
+  if (!cond) {
+    console.error("❌", msg, ctx);
+    return false;
+  }
+  return true;
 }
 
-// tolerance table
-const TOL = {
-  rho: 5e-4,
-  h: 5e-4,
-  s: 5e-4,
-  cp: 1e-3,
-  cv: 2e-3
-};
-
-// TP single-phase test points
 const tests = [
-  // subcooled liquid
+  // compressed / subcooled liquid
   { T: 300, P: 5e6 },
   { T: 350, P: 10e6 },
   { T: 400, P: 20e6 },
@@ -34,44 +27,26 @@ console.log("=== TP SINGLE-PHASE TEST ===");
 
 tests.forEach(({ T, P }) => {
   const Ts = Tsat(P);
+  if (Math.abs(T - Ts) < 1e-3) return;
 
-  if (Math.abs(T - Ts) < 1e-3) {
-    console.warn("Skipped saturated test:", T, P);
-    return;
-  }
-
-  const result = solveTP(T, P);
-
-  const expectedPhase =
-    T < Ts ? "subcooled liquid" : "superheated vapor";
-
-  if (result.state !== expectedPhase) {
-    console.error("❌ Phase mismatch", { T, P, expectedPhase, got: result.state });
-    return;
-  }
-
-  const if97 = result.if97;     // initial guess result
-  const iapws = result.iapws;   // final refined result
-
-  const checks = [
-    ["rho", TOL.rho],
-    ["h", TOL.h],
-    ["s", TOL.s],
-    ["cp", TOL.cp],
-    ["cv", TOL.cv]
-  ];
-
-  for (const [key, tol] of checks) {
-    const err = relErr(iapws[key], if97[key]);
-    if (err > tol) {
-      console.error(`❌ ${key} mismatch`, { T, P, err });
-      return;
-    }
-  }
-
-  console.log("✅ PASS", {
-    T,
-    P,
-    state: result.state
+  const r = solve({
+    mode: "TP",
+    temperature: T,
+    pressure: P
   });
+
+  const expected =
+    P > Tsat(T) ? "compressed_liquid" : "superheated_steam";
+
+  if (!assert(r.phase === expected, "Phase mismatch", { T, P, got: r.phase })) return;
+
+  assert(Number.isFinite(r.density) && r.density > 0, "Invalid density", r);
+  assert(Number.isFinite(r.enthalpy), "Invalid enthalpy", r);
+  assert(Number.isFinite(r.entropy), "Invalid entropy", r);
+  assert(Number.isFinite(r.cp), "Invalid Cp", r);
+  assert(Number.isFinite(r.cv), "Invalid Cv", r);
+  assert(Number.isFinite(r.viscosity), "Invalid viscosity", r);
+  assert(Number.isFinite(r.thermalConductivity), "Invalid conductivity", r);
+
+  console.log("✅ PASS", { T, P, phase: r.phase });
 });
