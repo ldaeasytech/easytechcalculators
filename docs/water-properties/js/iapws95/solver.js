@@ -7,6 +7,10 @@ import { R, rhoc, Tc, MAX_ITER } from "./constants95.js";
 import { pressureFromRho, dPdrho } from "./pressure.js";
 import { Psat } from "../if97/region4.js";
 
+import { rho_f_sat } from "../if97/region4.js";
+
+
+
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
  * phaseHint: "auto" | "liquid" | "vapor"
@@ -57,25 +61,40 @@ export function solveDensity(T, P, phaseHint = "auto") {
 
   rho0 = Math.min(Math.max(rho0, RHO_MIN), RHO_MAX);
 
+   // --------------------------------------------------
+  // Phase-aware bracketing (CRITICAL FIX)
   // --------------------------------------------------
-  // Bracketing
-  // --------------------------------------------------
-  let a = Math.max(0.5 * rho0, RHO_MIN);
-  let b = Math.min(2.0 * rho0, RHO_MAX);
+
+  let a, b;
+
+  if (T < Tc && isFinite(Psat(T)) && P > Psat(T)) {
+    // Compressed liquid: bracket around saturated liquid density
+    const rho_sat_liq = rho_f_sat(T);
+
+    a = Math.max(0.8 * rho_sat_liq, RHO_MIN);
+    b = Math.min(1.2 * rho_sat_liq, RHO_MAX);
+
+  } else {
+    // Vapor / supercritical
+    a = Math.max(0.2 * rho0, RHO_MIN);
+    b = Math.min(5.0 * rho0, RHO_MAX);
+  }
 
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
+  // Expand if needed (safeguard)
   for (let i = 0; i < 40 && fa * fb > 0; i++) {
-    a = Math.max(0.5 * a, RHO_MIN);
-    b = Math.min(2.0 * b, RHO_MAX);
+    a = Math.max(0.9 * a, RHO_MIN);
+    b = Math.min(1.1 * b, RHO_MAX);
     fa = pressureFromRho(T, a) - P;
     fb = pressureFromRho(T, b) - P;
   }
 
   if (fa * fb > 0) {
-    throw new Error("IAPWS-95: unable to bracket density root");
+    throw new Error("IAPWS-95: unable to bracket density root (phase-consistent)");
   }
+
 
   // --------------------------------------------------
   // Newton–bisection loop
