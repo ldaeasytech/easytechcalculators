@@ -10,6 +10,8 @@ import {
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
  */
+
+rho0 = 1;
 export function solveDensity(T, P, rho0) {
   let rho = rho0;
 
@@ -42,6 +44,7 @@ export function solveDensity(T, P, rho0) {
     // Damping
     rho = 0.5 * rho + 0.5 * rho_new;
   }
+  console.log("IAPWS density iteration:", rho);
 
   throw new Error("IAPWS-95 density solver failed");
 }
