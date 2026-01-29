@@ -1,6 +1,6 @@
 // iapws95/constants95.js
-// Full IAPWS-95 Helmholtz formulation constants
-// Reference: Wagner & Pruss, J. Phys. Chem. Ref. Data 31, 387 (2002)
+// IAPWS-95 Helmholtz formulation constants
+// Wagner & Pruss (2002) – single-phase implementation
 
 /* ============================================================
    Fundamental constants
@@ -161,7 +161,6 @@ export const dg = [1, 1, 1];
 export const tg = [0, 0, 0];
 export const ag = [3, 3, 3];
 export const bg = [0, 1, 4];
-export const cg = [20, 20, 20];
 
 /* ============================================================
    Non-analytic critical terms (55–56)
@@ -174,5 +173,3 @@ export const alphac = [1, 1];
 export const betac = [1, 1];
 export const Ac = [0.32, 0.32];
 export const Bc = [0.2, 0.2];
-export const Cc = [28.0, 32.0];
-export const Dc = [700, 800];
