@@ -1,5 +1,6 @@
 // IAPWS-95 Helmholtz free energy (industrial form)
 // Valid for liquid, vapor, supercritical regions
+// Reference: IAPWS 1995 formulation
 
 import {
   nr, dr, tr,
@@ -17,7 +18,11 @@ import {
    ============================================================ */
 
 export function alpha0(delta, tau) {
-  let sum = Math.log(delta) + n0[0] + n0[1] * tau + n0[2] * Math.log(tau);
+  let sum =
+    Math.log(delta) +
+    n0[0] +
+    n0[1] * tau +
+    n0[2] * Math.log(tau);
 
   for (let i = 3; i < n0.length; i++) {
     sum += n0[i] * Math.log(1 - Math.exp(-gamma0[i] * tau));
@@ -31,7 +36,8 @@ export function alpha0_tau(tau) {
 
   for (let i = 3; i < n0.length; i++) {
     const g = gamma0[i];
-    sum += n0[i] * g / (Math.exp(g * tau) - 1);
+    const eg = Math.exp(-g * tau);
+    sum += n0[i] * g * eg / (1 - eg);
   }
 
   return sum;
@@ -42,19 +48,19 @@ export function alpha0_tautau(tau) {
 
   for (let i = 3; i < n0.length; i++) {
     const g = gamma0[i];
-    const e = Math.exp(g * tau);
-    sum -= n0[i] * g * g * e / Math.pow(e - 1, 2);
+    const eg = Math.exp(-g * tau);
+    sum -= n0[i] * g * g * eg / Math.pow(1 - eg, 2);
   }
 
   return sum;
 }
 
-export function alpha0_delta() {
-  return 1;
+export function alpha0_delta(delta) {
+  return 1 / delta;
 }
 
-export function alpha0_deltadelta() {
-  return -1;
+export function alpha0_deltadelta(delta) {
+  return -1 / (delta * delta);
 }
 
 /* ============================================================
@@ -65,7 +71,9 @@ export function alphar(delta, tau) {
   let sum = 0.0;
 
   for (let i = 0; i < nr.length; i++) {
-    sum += nr[i] * Math.pow(delta, dr[i]) * Math.pow(tau, tr[i]);
+    sum += nr[i] *
+      Math.pow(delta, dr[i]) *
+      Math.pow(tau, tr[i]);
   }
 
   for (let i = 0; i < ne.length; i++) {
