@@ -190,17 +190,11 @@ function initialDensityGuess(T, P, Ps) {
    IAPWS-95 wrapper
    ============================================================ */
 
-function singlePhaseIAPWS(T, P_MPa, rho0, phase) {
-  const P_Pa = P_MPa * 1e6; // MPa → Pa
-
-  if (P_Pa < 1e3) {
-    console.warn("IAPWS-95 received suspiciously low pressure:", P_Pa);
-  }
-
+function singlePhaseIAPWS(T, P, rho0, phase) {
   let rho;
 
   try {
-    rho = solveDensity(T, P_Pa, rho0);
+    rho = solveDensity(T, P, rho0);
   } catch {
     rho = phase === "compressed_liquid"
       ? rho_f_sat(T)
@@ -213,7 +207,7 @@ function singlePhaseIAPWS(T, P_MPa, rho0, phase) {
     phase,
     phaseLabel: phase,
     temperature: T,
-    pressure: P_MPa, // keep UI units consistent
+    pressure: P, // keep UI units consistent
     ...r
   };
 
