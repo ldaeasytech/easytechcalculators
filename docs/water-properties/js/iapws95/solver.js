@@ -11,8 +11,9 @@ import {
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
  */
 
-rho0 = 1;
+
 export function solveDensity(T, P, rho0) {
+  rho0 = 1;
   let rho = rho0;
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
