@@ -1,8 +1,6 @@
 // iapws95/solver.js
 // Robust density solver for IAPWS-95 Helmholtz EOS
 
-console.log("iapws95/solver.js LOADED");
-
 import { Tc, rhoc, R, MAX_ITER, TOL } from "./constants95.js";
 import {
   pressureFromRho,
@@ -15,7 +13,6 @@ import {
 
 
 export function solveDensity(T, P, rho0) {
-  rho0 = 1;
   let rho = rho0;
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
@@ -47,7 +44,6 @@ export function solveDensity(T, P, rho0) {
     // Damping
     rho = 0.5 * rho + 0.5 * rho_new;
   }
-  console.log("IAPWS density iteration:", rho);
-
+  
   throw new Error("IAPWS-95 density solver failed");
 }
