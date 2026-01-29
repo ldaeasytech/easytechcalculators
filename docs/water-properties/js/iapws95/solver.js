@@ -1,145 +1,147 @@
 // iapws95/solver.js
-// Robust density solver for IAPWS-95 (single-phase)
-// Phase-aware Newton + safeguarded bisection
-// Uses IF97 Region 4 Psat(T) for automatic phase selection
+// Density solver for IAPWS-95 using Helmholtz EOS
+// DEBUG / INSTRUMENTED VERSION
 
-import { R, rhoc, Tc, MAX_ITER } from "./constants95.js";
-import { pressureFromRho, dPdrho } from "./pressure.js";
-import { Psat } from "../if97/region4.js";
+import { R } from "./constants95.js";
+import {
+  helmholtzResidual,
+  helmholtzResidual_dDelta,
+  helmholtzResidual_dDelta2
+} from "./helmholtz.js";
 
-import { rho_f_sat } from "../if97/region4.js";
+/* ============================================================
+   Pressure from density
+   ------------------------------------------------------------
+   Inputs:
+     T   : K
+     rho : kg/m^3
+   Output:
+     P   : MPa
+   ============================================================ */
+function pressureFromRho(T, rho) {
+  const delta = rho / 322.0;      // rhoc = 322 kg/m^3
+  const tau = 647.096 / T;        // Tc = 647.096 K
 
+  const phir_d = helmholtzResidual_dDelta(delta, tau);
 
+  // Pa → MPa
+  return rho * R * T * (1 + delta * phir_d) * 1e-6;
+}
 
-/**
- * Solve density rho [kg/m^3] for given T [K], P [MPa]
- * phaseHint: "auto" | "liquid" | "vapor"
- */
-export function solveDensity(T, P, phaseHint = "auto") {
+/* ============================================================
+   dP/drho from EOS
+   ============================================================ */
+function dPdrho(T, rho) {
+  const delta = rho / 322.0;
+  const tau = 647.096 / T;
 
-  const P_Pa = P * 1e6;
+  const phir_d = helmholtzResidual_dDelta(delta, tau);
+  const phir_dd = helmholtzResidual_dDelta2(delta, tau);
 
-  // --------------------------------------------------
-  // Physical density bounds
-  // --------------------------------------------------
-  const RHO_MIN = 1e-6;
-  const RHO_MAX = 1500.0;
+  const term =
+    1 +
+    2 * delta * phir_d +
+    delta * delta * phir_dd;
 
-  // --------------------------------------------------
-  // Ideal-gas estimate
-  // --------------------------------------------------
-  const rho_ig = P_Pa / (R * T);
+  return R * T * term * 1e-6; // MPa·m^3/kg
+}
 
-  // --------------------------------------------------
-  // Phase-aware initial guess
-  // --------------------------------------------------
-  let rho0;
+/* ============================================================
+   Main density solver
+   ============================================================ */
+export function solveDensity_IAPWS95(T, P) {
+  const MAX_ITER = 50;
+  const TOL = 1e-6;
 
-  if (phaseHint === "liquid") {
-    rho0 = Math.max(1000.0, 1.2 * rhoc);
+  console.groupCollapsed(
+    `%c[IAPWS-95 Density Solver] T=${T} K, P=${P} MPa`,
+    "color:#00ffaa;font-weight:bold"
+  );
 
-  } else if (phaseHint === "vapor") {
-    rho0 = Math.min(Math.max(rho_ig, 0.1), 0.8 * rhoc);
+  /* ----------------------------------------------------------
+     Initial guess (ideal gas)
+     ---------------------------------------------------------- */
+  let rho = Math.max((P * 1e6) / (R * T), 1.0);
+  console.log("Initial rho guess =", rho);
 
-  } else {
-    // AUTO: decide phase using saturation pressure
-    if (T < Tc) {
-      const Psat_val = Psat(T); // MPa
-
-      if (isFinite(Psat_val) && P > Psat_val) {
-        // compressed liquid
-        rho0 = Math.max(1000.0, 1.2 * rhoc);
-      } else {
-        // superheated vapor
-        rho0 = Math.min(Math.max(rho_ig, 0.1), 0.8 * rhoc);
-      }
-    } else {
-      // supercritical
-      rho0 = Math.max(rho_ig, rhoc);
-    }
-  }
-
-  rho0 = Math.min(Math.max(rho0, RHO_MIN), RHO_MAX);
-
-   // --------------------------------------------------
-  // Phase-aware bracketing (CRITICAL FIX)
-  // --------------------------------------------------
-
-  let a, b;
-
-  if (T < Tc && isFinite(Psat(T)) && P > Psat(T)) {
-    // Compressed liquid: bracket around saturated liquid density
-    const rho_sat_liq = rho_f_sat(T);
-
-    a = Math.max(0.8 * rho_sat_liq, RHO_MIN);
-    b = Math.min(1.2 * rho_sat_liq, RHO_MAX);
-
-  } else {
-    // Vapor / supercritical
-    a = Math.max(0.2 * rho0, RHO_MIN);
-    b = Math.min(5.0 * rho0, RHO_MAX);
-  }
+  /* ----------------------------------------------------------
+     Fixed global bracket (safe for water)
+     ---------------------------------------------------------- */
+  let a = 1.0;
+  let b = 1500.0;
 
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
-  // Expand if needed (safeguard)
-  for (let i = 0; i < 40 && fa * fb > 0; i++) {
-    a = Math.max(0.9 * a, RHO_MIN);
-    b = Math.min(1.1 * b, RHO_MAX);
-    fa = pressureFromRho(T, a) - P;
-    fb = pressureFromRho(T, b) - P;
-  }
+  console.log("Initial bracket:");
+  console.table([
+    { rho: a, Pcalc: pressureFromRho(T, a), f: fa },
+    { rho: b, Pcalc: pressureFromRho(T, b), f: fb }
+  ]);
 
   if (fa * fb > 0) {
-    throw new Error("IAPWS-95: unable to bracket density root (phase-consistent)");
+    console.error("❌ No sign change in bracket — EOS or units are wrong");
   }
 
+  /* ----------------------------------------------------------
+     Iteration loop
+     ---------------------------------------------------------- */
+  for (let iter = 1; iter <= MAX_ITER; iter++) {
+    const Pcalc = pressureFromRho(T, rho);
+    const f = Pcalc - P;
+    const dP = dPdrho(T, rho);
 
-  // --------------------------------------------------
-  // Newton–bisection loop
-  // --------------------------------------------------
-  let rho = rho0;
-  let f = pressureFromRho(T, rho) - P;
+    console.group(`Iteration ${iter}`);
+    console.log("rho =", rho);
+    console.log("Pcalc =", Pcalc, "MPa");
+    console.log("Residual =", f);
+    console.log("dP/drho =", dP);
 
-  for (let iter = 0; iter < MAX_ITER; iter++) {
-
-    // Relative pressure convergence
-    if (Math.abs(f / P) < 1e-8) {
+    if (Math.abs(f) < TOL) {
+      console.log("✅ CONVERGED");
+      console.groupEnd();
+      console.groupEnd();
       return rho;
     }
 
-    const dPd = dPdrho(T, rho);
-    let rho_new;
+    let rhoNew = rho;
 
-    // Newton step (only if stable)
-    if (Number.isFinite(dPd) && dPd > 1e-12) {
-      rho_new = rho - f / dPd;
+    // Newton step
+    if (isFinite(dP) && Math.abs(dP) > 1e-12) {
+      const step = f / dP;
+      rhoNew = rho - step;
+      console.log("Newton step =", step);
+    } else {
+      console.warn("Derivative invalid → bisection");
+      rhoNew = 0.5 * (a + b);
     }
 
-    // Safeguard: fall back to bisection
-    if (
-      !Number.isFinite(rho_new) ||
-      rho_new <= a ||
-      rho_new >= b
-    ) {
-      rho_new = 0.5 * (a + b);
+    // Safeguard
+    if (!isFinite(rhoNew) || rhoNew <= a || rhoNew >= b) {
+      console.warn("Out of bracket → bisection");
+      rhoNew = 0.5 * (a + b);
     }
 
-    const f_new = pressureFromRho(T, rho_new) - P;
+    const fNew = pressureFromRho(T, rhoNew) - P;
+
+    console.log("rho_new =", rhoNew);
+    console.log("f_new =", fNew);
 
     // Update bracket
-    if (fa * f_new < 0) {
-      b = rho_new;
-      fb = f_new;
+    if (fa * fNew < 0) {
+      b = rhoNew;
+      fb = fNew;
     } else {
-      a = rho_new;
-      fa = f_new;
+      a = rhoNew;
+      fa = fNew;
     }
 
-    rho = rho_new;
-    f = f_new;
+    rho = rhoNew;
+
+    console.groupEnd();
   }
 
-  throw new Error("IAPWS-95: density solver did not converge");
+  console.error("❌ IAPWS-95 density solver did not converge");
+  console.groupEnd();
+  throw new Error("IAPWS-95 density solver did not converge");
 }
