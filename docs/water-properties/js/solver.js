@@ -191,6 +191,10 @@ function initialDensityGuess(T, P, Ps) {
    ============================================================ */
 
 function singlePhaseIAPWS(T, P, rho0, phase) {
+   const P = P_MPa * 1e6;   // MPa → Pa
+   if (P < 1e3) {
+  console.warn("IAPWS-95 received suspiciously low pressure:", P);
+}
   let rho;
 
   try {
