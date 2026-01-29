@@ -15,7 +15,7 @@ export const R = 461.526;         // J/(kg·K)
    Solver controls
    ============================================================ */
 
-export const MAX_ITER = 200;
+export const MAX_ITER = 2000;
 export const TOL = 1e-9;
 
 /* ============================================================
