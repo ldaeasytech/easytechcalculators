@@ -16,13 +16,21 @@ export function helmholtz(T, rho, Tc, rhoc) {
   return {
     delta,
     tau,
+
+    // Helmholtz energy
     a0: alpha0(delta, tau),
     ar: alphar(delta, tau),
-    ar_d: alphar_delta(delta, tau),
-    ar_dd: alphar_deltadelta(delta, tau),
+
+    // First derivatives wrt tau
     a0_t: alpha0_tau(tau),
-    a0_tt: alpha0_tautau(tau),
     ar_t: alphar_tau(delta, tau),
-    ar_tt: alphar_tautau(delta, tau)
+
+    // Second derivatives wrt tau (IMPORTANT: τ² scaling)
+    a0_tt: tau * tau * alpha0_tautau(tau),
+    ar_tt: tau * tau * alphar_tautau(delta, tau),
+
+    // Delta derivatives
+    ar_d: alphar_delta(delta, tau),
+    ar_dd: alphar_deltadelta(delta, tau)
   };
 }
