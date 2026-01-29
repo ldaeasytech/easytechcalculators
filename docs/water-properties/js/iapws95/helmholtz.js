@@ -2,6 +2,8 @@
 // Valid for liquid, vapor, supercritical regions
 // Reference: IAPWS 1995 formulation
 
+console.log("LOADED HELMHOLTZ v2026-01-29 FIXED");
+
 import {
   nr, dr, tr,
   ne, de, te, ce,
