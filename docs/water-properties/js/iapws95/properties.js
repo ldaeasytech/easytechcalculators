@@ -25,7 +25,7 @@ export function properties(T, rho) {
     ) /
     (1 + 2 * h.delta * h.ar_d + h.delta * h.delta * h.ar_dd);
 
-const J2kJ = 1e-3;
+const J2kJ = 1;
 
 return {
   density: rho,
