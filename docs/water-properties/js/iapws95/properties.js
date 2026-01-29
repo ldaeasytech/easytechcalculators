@@ -1,12 +1,15 @@
+// iapws95/properties.js
+// Thermodynamic properties from full IAPWS-95 Helmholtz EOS
+
 import { R, Tc, rhoc } from "./constants95.js";
 import { helmholtz } from "./derivatives.js";
 
 export function properties(T, rho) {
 
-  const h = helmholtz(T, rho, Tc, rhoc);
+  const H = helmholtz(T, rho, Tc, rhoc);
 
-  const tau = h.tau;
-  const delta = h.delta;
+  const tau = H.tau;
+  const delta = H.delta;
 
   const v = 1 / rho;
 
@@ -14,36 +17,43 @@ export function properties(T, rho) {
   // Thermodynamic properties
   // ----------------------------
 
+  // Internal energy [J/kg]
   const u =
-    R * T * tau * (h.a0_t + h.ar_t);
+    R * T * tau * (H.a0_t + H.ar_t);
 
+  // Enthalpy [J/kg]
   const h_spec =
     R * T * (
       1 +
-      delta * h.ar_d +
-      tau * (h.a0_t + h.ar_t)
+      delta * (H.a0_d + H.ar_d) +
+      tau * (H.a0_t + H.ar_t)
     );
 
+  // Entropy [J/(kg·K)]
   const s =
     R * (
-      tau * (h.a0_t + h.ar_t) -
-      (h.a0 + h.ar)
+      tau * (H.a0_t + H.ar_t) -
+      (H.a0 + H.ar)
     );
 
+  // Isochoric heat capacity [J/(kg·K)]
   const cv =
-    -R * tau * tau * (h.a0_tt + h.ar_tt);
+    -R * tau * tau * (H.a0_tt + H.ar_tt);
 
+  // Isobaric heat capacity [J/(kg·K)]
   const cp =
     cv +
     R *
       Math.pow(
-        1 + delta * h.ar_d - delta * tau * h.ar_dt,
+        1 +
+        delta * (H.a0_d + H.ar_d) -
+        delta * tau * H.ar_dt,
         2
       ) /
       (
         1 +
-        2 * delta * h.ar_d +
-        delta * delta * h.ar_dd
+        2 * delta * (H.a0_d + H.ar_d) +
+        delta * delta * (H.a0_dd + H.ar_dd)
       );
 
   // ----------------------------
