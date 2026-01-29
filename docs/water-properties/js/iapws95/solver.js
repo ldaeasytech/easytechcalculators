@@ -49,8 +49,8 @@ export function solveDensity(T, P, rho0) {
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
-  if (fa * fb > 0) {
-    throw new Error("IAPWS-95: density root not bracketed (phase logic error)");
+  if (!Number.isFinite(fa) || !Number.isFinite(fb)) {
+  throw new Error("IAPWS-95: invalid pressure during bracketing");
   }
 
   // --------------------------------------------------
