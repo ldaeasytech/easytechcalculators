@@ -33,7 +33,7 @@ function dPdrho(T, rho) {
 /* ============================================================
    Main density solver (Newton + bisection, instrumented)
    ============================================================ */
-export function solveDensity_IAPWS95(T, P) {
+export function solveDensity(T, P) {
   console.groupCollapsed(
     `%c[IAPWS-95 Density Solver] T=${T} K, P=${P} MPa`,
     "color:#00ffaa;font-weight:bold"
