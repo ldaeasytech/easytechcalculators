@@ -1,16 +1,14 @@
 // docs/water-properties/js/tests/test_ps_singlephase.js
 
-import { solvePS, solveTP } from "../solver.js";
+import { solve } from "../solver.js";
 import { Tsat } from "../if97/region4.js";
 
 function relErr(a, b) {
   return Math.abs(a - b) / Math.max(Math.abs(b), 1e-12);
 }
 
-const TOL = {
-  T: 1e-6,
-  s: 5e-4
-};
+const TOL_P = 1e-6;
+const TOL_S = 5e-4;
 
 const seedTP = [
   { T: 310, P: 6e6 },
@@ -25,28 +23,36 @@ seedTP.forEach(({ T, P }) => {
   const Ts = Tsat(P);
   if (Math.abs(T - Ts) < 1e-3) return;
 
-  const ref = solveTP(T, P);
-  const s = ref.s;
+  const ref = solve({
+    mode: "TP",
+    temperature: T,
+    pressure: P
+  });
 
-  const result = solvePS(P, s);
+  const r = solve({
+    mode: "Ts",
+    temperature: T,
+    entropy: ref.entropy
+  });
 
-  const Terr = Math.abs(result.T - T);
-  const serr = relErr(result.s, s);
+  const Perr = relErr(r.pressure, P);
+  const Serr = relErr(r.entropy, ref.entropy);
 
-  if (Terr > TOL.T || serr > TOL.s) {
+  if (Perr > TOL_P || Serr > TOL_S) {
     console.error("❌ PS inversion failed", {
-      P,
-      s,
-      T_expected: T,
-      T_got: result.T
+      T,
+      P_expected: P,
+      P_got: r.pressure,
+      Perr,
+      Serr
     });
     return;
   }
 
   console.log("✅ PASS", {
-    P,
-    s,
-    T: result.T,
-    state: result.state
+    T,
+    s: ref.entropy,
+    P: r.pressure,
+    phase: r.phase
   });
 });
