@@ -1,6 +1,6 @@
 // iapws95/solver.js
-// Helmholtz EOS density solver with mechanical-stability filtering
-// Option C: accept roots with dp/dρ > 0 only
+// Density solver for FULL IAPWS-95 Helmholtz EOS
+// Single-root, phase-agnostic, no heuristics
 
 import { MAX_ITER, TOL } from "./constants95.js";
 import {
@@ -15,121 +15,63 @@ const DEBUG_SOLVER = false;
 
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
- * Accepts the first mechanically stable root (dp/dρ > 0)
+ * Assumes full IAPWS-95 (single physical root)
  */
 export function solveDensity(T, P) {
 
   // --------------------------------------------------
-  // Global density bounds
+  // Global physical bounds
   // --------------------------------------------------
-  const RHO_MIN = 1e-6;
-  const RHO_MAX = 2000.0;
-
-  // --------------------------------------------------
-  // Density seeds (cover vapor → liquid basins)
-  // --------------------------------------------------
-  const seeds = [
-    1e-3,
-    1,
-    10,
-    50,
-    200,
-    500,
-    700,
-    900,
-    1100
-  ];
-
-  const accepted = [];
-
-  for (const rho0 of seeds) {
-    try {
-      const rho = solveSingleRoot(T, P, rho0, RHO_MIN, RHO_MAX);
-
-      // Deduplicate roots
-      if (accepted.some(r => Math.abs(r - rho) / rho < 1e-3)) continue;
-
-      const dpdrho = dPdrho(T, rho);
-
-      // --------------------------------------------------
-      // Mechanical stability criterion ONLY
-      // --------------------------------------------------
-      if (dpdrho > 0 && Number.isFinite(dpdrho)) {
-
-        if (DEBUG_SOLVER) {
-          console.log("[IAPWS95] Accepted root:", {
-            rho,
-            dpdrho
-          });
-        }
-
-        return rho;
-      }
-
-      accepted.push(rho);
-
-    } catch {
-      // ignore failed seed
-    }
-  }
-
-  throw new Error("IAPWS-95: no mechanically stable density root found");
-}
-
-/* ============================================================
-   Single-root Newton–Brent solver
-   ============================================================ */
-
-function solveSingleRoot(T, P, rho0, a0, b0) {
-
-  let a = a0;
-  let b = b0;
+  let a = 1e-6;     // near vacuum
+  let b = 2000.0;   // well above liquid water
 
   let fa = pressureFromRho(T, a) - P;
   let fb = pressureFromRho(T, b) - P;
 
-  if (!Number.isFinite(fa) || !Number.isFinite(fb) || fa * fb > 0) {
-    throw new Error("Density root not bracketed");
+  if (fa * fb > 0) {
+    throw new Error("IAPWS-95: density root not bracketed");
   }
 
-  let rho = Math.min(Math.max(rho0, a), b);
+  // --------------------------------------------------
+  // Initial guess: midpoint
+  // --------------------------------------------------
+  let rho = 0.5 * (a + b);
   let f = pressureFromRho(T, rho) - P;
-
-  let rho_prev = rho;
-  let f_prev = f;
 
   for (let iter = 0; iter < MAX_ITER; iter++) {
 
+    if (DEBUG_SOLVER) {
+      console.log(
+        `[IAPWS95] iter=${iter} rho=${rho.toFixed(6)} ` +
+        `Pcalc=${pressureFromRho(T, rho).toFixed(6)} MPa`
+      );
+    }
+
+    // ---- Convergence ----
     if (Math.abs(f) < TOL) return rho;
 
-    let rho_new;
-    let usedNewton = false;
-
+    // --------------------------------------------------
     // Newton step
+    // --------------------------------------------------
     const dPd = dPdrho(T, rho);
+
+    let rho_new;
     if (Number.isFinite(dPd) && Math.abs(dPd) > 1e-12) {
-      const candidate = rho - f / dPd;
-      if (candidate > a && candidate < b) {
-        rho_new = candidate;
-        usedNewton = true;
-      }
+      rho_new = rho - f / dPd;
+    } else {
+      rho_new = 0.5 * (a + b);
     }
 
-    // Secant / bisection fallback
-    if (!usedNewton) {
-      if (Math.abs(f - f_prev) > 1e-14) {
-        rho_new = rho - f * (rho - rho_prev) / (f - f_prev);
-      } else {
-        rho_new = 0.5 * (a + b);
-      }
-    }
-
+    // ---- Keep iterate inside bracket ----
     if (!Number.isFinite(rho_new) || rho_new <= a || rho_new >= b) {
       rho_new = 0.5 * (a + b);
     }
 
     const f_new = pressureFromRho(T, rho_new) - P;
 
+    // --------------------------------------------------
+    // Update bracket
+    // --------------------------------------------------
     if (fa * f_new <= 0) {
       b = rho_new;
       fb = f_new;
@@ -138,11 +80,9 @@ function solveSingleRoot(T, P, rho0, a0, b0) {
       fa = f_new;
     }
 
-    rho_prev = rho;
-    f_prev = f;
     rho = rho_new;
     f = f_new;
   }
 
-  throw new Error("IAPWS-95: single-root solver did not converge");
+  throw new Error("IAPWS-95: density solver did not converge");
 }
