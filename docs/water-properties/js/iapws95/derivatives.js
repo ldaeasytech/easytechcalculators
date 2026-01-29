@@ -1,6 +1,8 @@
 // iapws95/derivatives.js
 // Dimensionless Helmholtz energy and derivatives (NO thermodynamic scaling)
 
+console.log("LOADED DERIVATIVES v2026-01-29 FIXED");
+
 import {
   alpha0,
   alpha0_tau,
