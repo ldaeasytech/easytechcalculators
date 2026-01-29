@@ -13,14 +13,14 @@ function assert(cond, msg, ctx = {}) {
 
 const tests = [
   // compressed / subcooled liquid
-  { T: 300, P: 5e6 },
-  { T: 350, P: 10e6 },
-  { T: 400, P: 20e6 },
+  { T: 300, P: 5 },
+  { T: 350, P: 10 },
+  { T: 400, P: 20 },
 
   // superheated vapor
-  { T: 500, P: 1e5 },
-  { T: 700, P: 1e6 },
-  { T: 900, P: 5e6 }
+  { T: 500, P: 0.1 },
+  { T: 700, P: 1 },
+  { T: 900, P: 5 }
 ];
 
 console.log("=== TP SINGLE-PHASE TEST ===");
