@@ -1,83 +1,77 @@
 // iapws95/solver.js
-// Density solver for FULL IAPWS-95 Helmholtz EOS
-// Single-root, phase-agnostic, no heuristics
+// Robust density solver for full IAPWS-95
+// Phase-consistent Newton + safeguarded bisection
 
-import { MAX_ITER, TOL } from "./constants95.js";
-import {
-  pressureFromRho,
-  dPdrho
-} from "./pressure.js";
-
-// -----------------------------------------------
-// Debug flag
-// -----------------------------------------------
-const DEBUG_SOLVER = false;
+import { R, rhoc, MAX_ITER, TOL } from "./constants95.js";
+import { pressureFromRho, dPdrho } from "./pressure.js";
 
 /**
  * Solve density rho [kg/m^3] for given T [K], P [MPa]
- * Assumes full IAPWS-95 (single physical root)
  */
 export function solveDensity(T, P) {
 
   // --------------------------------------------------
-  // Global physical bounds
+  // Phase-aware initial guess
   // --------------------------------------------------
-  let a = 1e-6;     // near vacuum
-  let b = 2000.0;   // well above liquid water
+  const P_Pa = P * 1e6;
+  let rho0;
 
-  let fa = pressureFromRho(T, a) - P;
-  let fb = pressureFromRho(T, b) - P;
+  // Ideal gas estimate
+  const rho_ig = P_Pa / (R * T);
 
-  if (fa * fb > 0) {
-    throw new Error("IAPWS-95: density root not bracketed");
+  // If clearly liquid-like, start near water density
+  if (rho_ig > rhoc) {
+    rho0 = 1000.0;
+  } else {
+    rho0 = Math.max(rho_ig, 0.5);
   }
 
   // --------------------------------------------------
-  // Initial guess: midpoint
+  // Local bracket around initial guess
   // --------------------------------------------------
-  let rho = 0.5 * (a + b);
+  let a = 0.5 * rho0;
+  let b = 2.0 * rho0;
+
+  // Expand bracket if needed
+  for (let i = 0; i < 20; i++) {
+    const fa = pressureFromRho(T, a) - P;
+    const fb = pressureFromRho(T, b) - P;
+    if (fa * fb < 0) break;
+    a *= 0.5;
+    b *= 2.0;
+  }
+
+  let rho = rho0;
   let f = pressureFromRho(T, rho) - P;
 
+  // --------------------------------------------------
+  // Newton–bisection loop
+  // --------------------------------------------------
   for (let iter = 0; iter < MAX_ITER; iter++) {
 
-    if (DEBUG_SOLVER) {
-      console.log(
-        `[IAPWS95] iter=${iter} rho=${rho.toFixed(6)} ` +
-        `Pcalc=${pressureFromRho(T, rho).toFixed(6)} MPa`
-      );
-    }
-
-    // ---- Convergence ----
     if (Math.abs(f) < TOL) return rho;
 
-    // --------------------------------------------------
-    // Newton step
-    // --------------------------------------------------
     const dPd = dPdrho(T, rho);
 
     let rho_new;
-    if (Number.isFinite(dPd) && Math.abs(dPd) > 1e-12) {
+
+    // Newton step if stable
+    if (Number.isFinite(dPd) && dPd > 0) {
       rho_new = rho - f / dPd;
-    } else {
-      rho_new = 0.5 * (a + b);
     }
 
-    // ---- Keep iterate inside bracket ----
+    // Fallback to bisection
     if (!Number.isFinite(rho_new) || rho_new <= a || rho_new >= b) {
       rho_new = 0.5 * (a + b);
     }
 
     const f_new = pressureFromRho(T, rho_new) - P;
 
-    // --------------------------------------------------
     // Update bracket
-    // --------------------------------------------------
-    if (fa * f_new <= 0) {
+    if ((pressureFromRho(T, a) - P) * f_new < 0) {
       b = rho_new;
-      fb = f_new;
     } else {
       a = rho_new;
-      fa = f_new;
     }
 
     rho = rho_new;
