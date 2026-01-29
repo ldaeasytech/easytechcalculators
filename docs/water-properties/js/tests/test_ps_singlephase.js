@@ -11,10 +11,10 @@ const TOL_P = 1e-6;
 const TOL_S = 5e-4;
 
 const seedTP = [
-  { T: 310, P: 6e6 },
-  { T: 360, P: 12e6 },
-  { T: 600, P: 2e6 },
-  { T: 800, P: 4e6 }
+  { T: 310, P: 6 },
+  { T: 360, P: 12 },
+  { T: 600, P: 2 },
+  { T: 800, P: 4 }
 ];
 
 console.log("=== PS SINGLE-PHASE TEST ===");
