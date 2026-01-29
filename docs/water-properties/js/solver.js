@@ -224,7 +224,7 @@ function singlePhaseIAPWS(T, P, rho0, phase) {
         rho,
         deviation_pct: 100 * (rho - rho0) / rho0
       });
-   
+   }
   } catch (err) {
       console.warn("[IAPWS] Density solver failed, fallback used:", err);
      
