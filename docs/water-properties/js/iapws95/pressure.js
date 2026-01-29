@@ -1,8 +1,9 @@
 // iapws95/pressure.js
-// Pressure and derivative from IAPWS-95 Helmholtz EOS
+// Pressure from full IAPWS-95 Helmholtz EOS
 
 import { Tc, rhoc, R } from "./constants95.js";
 import {
+  alpha0_delta,
   alphar_delta,
   alphar_deltadelta
 } from "./helmholtz.js";
@@ -13,33 +14,26 @@ import {
 */
 
 /**
- * Pressure P [MPa] from density rho [kg/m^3] and temperature T [K]
+ * Pressure P [MPa]
  */
 export function pressureFromRho(T, rho) {
-  if (rho <= 0 || !Number.isFinite(rho)) {
-    throw new Error("Non-physical density in pressureFromRho");
-  }
 
   const delta = rho / rhoc;
   const tau = Tc / T;
 
+  const a0_d = alpha0_delta(delta);
   const ar_d = alphar_delta(delta, tau);
 
-  // IAPWS-95 pressure equation
   const P =
-    rho * R * T * (1 + delta * ar_d);
+    rho * R * T * (1 + delta * (a0_d + ar_d));
 
-  // Convert Pa → MPa
-  return P * 1e-6;
+  return P * 1e-6; // Pa → MPa
 }
 
 /**
- * ∂P/∂rho at constant T [MPa·m^3/kg]
+ * ∂P/∂ρ at constant T [MPa·m³/kg]
  */
 export function dPdrho(T, rho) {
-  if (rho <= 0 || !Number.isFinite(rho)) {
-    throw new Error("Non-physical density in dPdrho");
-  }
 
   const delta = rho / rhoc;
   const tau = Tc / T;
@@ -55,6 +49,5 @@ export function dPdrho(T, rho) {
   const dP =
     R * T * term;
 
-  // Convert Pa·m³/kg → MPa·m³/kg
   return dP * 1e-6;
 }
