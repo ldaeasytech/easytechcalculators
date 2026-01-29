@@ -12,16 +12,15 @@ function assert(cond, msg, ctx = {}) {
 }
 
 const tests = [
-  // compressed / subcooled liquid
-  { T: 300, P: 5 },
-  { T: 350, P: 10 },
-  { T: 400, P: 20 },
+  { T: 300, P: 5, expected: "compressed_liquid" },
+  { T: 350, P: 10, expected: "compressed_liquid" },
+  { T: 400, P: 20, expected: "compressed_liquid" },
 
-  // superheated vapor
-  { T: 500, P: 0.1 },
-  { T: 700, P: 1 },
-  { T: 900, P: 5 }
+  { T: 500, P: 0.1, expected: "superheated_steam" },
+  { T: 700, P: 1.0, expected: "superheated_steam" },
+  { T: 900, P: 5.0, expected: "superheated_steam" }
 ];
+
 
 console.log("=== TP SINGLE-PHASE TEST ===");
 
