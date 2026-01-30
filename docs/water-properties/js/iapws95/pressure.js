@@ -1,5 +1,6 @@
 // iapws95/pressure.js
-// Pressure from full IAPWS-95 Helmholtz EOS (CORRECT)
+// Pressure from full IAPWS-95 Helmholtz EOS
+// WITH DEBUG CONSOLE OUTPUT
 
 import { Tc, rhoc, R } from "./constants95.js";
 import {
@@ -22,19 +23,25 @@ export function pressureFromRho(T, rho) {
 
   const ar_d = alphar_delta(delta, tau);
 
-  const P =
-    rho * R * T * (1 + delta * ar_d);
+  const factor = 1 + delta * ar_d;
+  const P_Pa = rho * R * T * factor;
+  const P_MPa = P_Pa * 1e-6;
 
-  return P * 1e-6; // Pa → MPa
+  // 🔍 DEBUG OUTPUT (GUARANTEED TO RUN)
+  console.log(
+    "[pressureFromRho]",
+    {
+      T,
+      rho,
+      delta,
+      tau,
+      ar_d,
+      factor,
+      P_MPa
+    }
+  );
 
-  console.log({
-  delta,
-  tau,
-  ar_d: alphar_delta(delta, tau),
-  factor: 1 + delta * alphar_delta(delta, tau)
-});
-
-  
+  return P_MPa;
 }
 
 /**
@@ -45,7 +52,7 @@ export function dPdrho(T, rho) {
   const delta = rho / rhoc;
   const tau = Tc / T;
 
-  const ar_d = alphar_delta(delta, tau);
+  const ar_d  = alphar_delta(delta, tau);
   const ar_dd = alphar_deltadelta(delta, tau);
 
   const term =
@@ -53,8 +60,23 @@ export function dPdrho(T, rho) {
     2 * delta * ar_d +
     delta * delta * ar_dd;
 
-  const dP =
-    R * T * term;
+  const dP_Pa = R * T * term;
+  const dP_MPa = dP_Pa * 1e-6;
 
-  return dP * 1e-6;
+  // 🔍 DEBUG OUTPUT
+  console.log(
+    "[dPdrho]",
+    {
+      T,
+      rho,
+      delta,
+      tau,
+      ar_d,
+      ar_dd,
+      term,
+      dP_MPa
+    }
+  );
+
+  return dP_MPa;
 }
