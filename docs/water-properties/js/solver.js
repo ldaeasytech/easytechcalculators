@@ -129,7 +129,7 @@ export function solve(inputs) {
    ============================================================ */
 
 function singlePhaseIF97(T, P) {
-  const rgn = region(T, P);
+   const rgn = regionSelector(T, P);
 
   let props;
   if (rgn === 1) props = region1(T, P);
