@@ -22,6 +22,11 @@ export function solveDensity(T, P) {
   if (isLiquid) {
     console.log("Phase: compressed liquid");
 
+     console.log(
+  "TEST pressure:",
+  pressureFromRho(300, 1000)
+);
+
     // Liquid densities live here
     a = 200.0;
     b = 1500.0;
@@ -29,6 +34,11 @@ export function solveDensity(T, P) {
 
   } else {
     console.log("Phase: superheated vapor");
+
+     console.log(
+  "TEST pressure:",
+  pressureFromRho(300, 1000)
+);
 
     const rho_ig = P_Pa / (R * T);
     a = Math.max(1e-6, 0.1 * rho_ig);
@@ -42,6 +52,7 @@ export function solveDensity(T, P) {
   for (let i = 0; i < 50; i++) {
     const fa = pressureFromRho(T, a) - P;
     const fb = pressureFromRho(T, b) - P;
+    
 
     if (fa * fb < 0) break;
 
@@ -87,8 +98,4 @@ export function solveDensity(T, P) {
   console.groupEnd();
   throw new Error("IAPWS-95 density solver did not converge");
 
-  console.log(
-  "TEST pressure:",
-  pressureFromRho(300, 1000)
-);
 }
