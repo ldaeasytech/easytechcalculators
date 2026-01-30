@@ -174,3 +174,27 @@ export function alphar_deltadelta(delta, tau) {
 
   return sum;
 }
+
+// Mixed second derivative ∂²αr / ∂δ∂τ
+export function alphar_deltatau(delta, tau) {
+  let sum = 0.0;
+
+  // Polynomial terms
+  for (let i = 0; i < nr.length; i++) {
+    sum += nr[i] * dr[i] * tr[i]
+      * Math.pow(delta, dr[i] - 1)
+      * Math.pow(tau, tr[i] - 1);
+  }
+
+  // Exponential terms
+  for (let i = 0; i < ne.length; i++) {
+    const dc = Math.pow(delta, ce[i]);
+    sum += ne[i]
+      * Math.pow(delta, de[i] - 1)
+      * Math.pow(tau, te[i] - 1)
+      * Math.exp(-dc)
+      * te[i] * (de[i] - ce[i] * dc);
+  }
+
+  return sum;
+}
