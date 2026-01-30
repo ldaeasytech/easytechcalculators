@@ -21,15 +21,15 @@ import {
   s_g_sat,
   cp_g_sat,
   cv_g_sat
-} from "../if97/region4.js";
+} from "./if97/region4.js";
 
-import { region } from "../if97/region5.js";
-import { region1 } from "../if97/region1.js";
-import { region2 } from "../if97/region2.js";
-import { region3 } from "../if97/region3.js";
+import { region } from "./if97/region5.js";
+import { region1 } from "./if97/region1.js";
+import { region2 } from "./if97/region2.js";
+import { region3 } from "./if97/region3.js";
 
-import { conductivity } from "../if97/conductivity.js";
-import { viscosity } from "../if97/viscosity.js";
+import { conductivity } from "./if97/conductivity.js";
+import { viscosity } from "./if97/viscosity.js";
 
 /* ============================================================
    Constants
