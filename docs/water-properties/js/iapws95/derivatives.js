@@ -1,7 +1,8 @@
 // iapws95/derivatives.js
-// Dimensionless Helmholtz energy and derivatives (NO thermodynamic scaling)
+// Dimensionless Helmholtz energy and derivatives
+// Consistent with FULL IAPWS-95 helmholtz.js
 
-console.log("LOADED DERIVATIVES v2026-01-29 FIXED");
+console.log("LOADED DERIVATIVES — FULL IAPWS-95");
 
 import {
   alpha0,
@@ -11,40 +12,47 @@ import {
   alpha0_deltadelta,
   alphar,
   alphar_delta,
-  alphar_deltadelta,
-  alphar_tau,
-  alphar_tautau,
-  alphar_deltatau
+  alphar_deltadelta
 } from "./helmholtz.js";
+
+/*
+  delta = rho / rhoc
+  tau   = Tc / T
+*/
 
 export function helmholtz(T, rho, Tc, rhoc) {
 
   const delta = rho / rhoc;
   const tau   = Tc / T;
 
+  // Ideal-gas part
+  const a0    = alpha0(delta, tau);
+  const a0_t  = alpha0_tau(delta, tau);
+  const a0_tt = alpha0_tautau(delta, tau);
+  const a0_d  = alpha0_delta(delta);
+  const a0_dd = alpha0_deltadelta(delta);
+
+  // Residual part
+  const ar    = alphar(delta, tau);
+  const ar_d  = alphar_delta(delta, tau);
+  const ar_dd = alphar_deltadelta(delta, tau);
+
   return {
     delta,
     tau,
 
     // Helmholtz energy
-    a0: alpha0(delta, tau),
-    ar: alphar(delta, tau),
+    a0,
+    ar,
 
-    // First derivatives wrt tau
-    a0_t: alpha0_tau(delta, tau),
-    ar_t: alphar_tau(delta, tau),
+    // τ-derivatives (ideal only for now)
+    a0_t,
+    a0_tt,
 
-    // Second derivatives wrt tau
-    a0_tt: alpha0_tautau(delta, tau),
-    ar_tt: alphar_tautau(delta, tau),
-
-    // Delta derivatives
-    a0_d:  alpha0_delta(delta),
-    a0_dd: alpha0_deltadelta(delta),
-    ar_d:  alphar_delta(delta, tau),
-    ar_dd: alphar_deltadelta(delta, tau),
-
-    // Mixed derivative
-    ar_dt: alphar_deltatau(delta, tau)
+    // δ-derivatives
+    a0_d,
+    a0_dd,
+    ar_d,
+    ar_dd
   };
 }
