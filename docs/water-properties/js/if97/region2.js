@@ -1,5 +1,5 @@
 // region2.js — IF97 Region 2 (Superheated Vapor ONLY)
-// Saturation-guarded, Cv-stable, solver-safe
+// Explicit, non-iterative, IF97-correct
 
 import { R, EPS } from "../constants.js";
 import { Psat } from "./region4.js";
@@ -59,19 +59,20 @@ const nr = [
 ];
 
 /* ============================================================
-   Region 2 evaluator (SUPERHEATED ONLY)
+   Region 2 evaluator
    ============================================================ */
 
 export function region2(T, P) {
-  // 🔒 SATURATION GUARD
+
+  // Saturation guard
   if (Math.abs(P - Psat(T)) < 1e-6) {
-    throw new Error("Region2 called at saturation — use Region4");
+    throw new Error("Region 2 called at saturation — use Region 4");
   }
 
-  // Reduced variables (IF97 standard)
-  // P in MPa, T in K
-  const pi = P / 1.0;
+  // Reduced variables
+  const pi = P;          // P* = 1 MPa
   const tau = 540 / T;
+  const theta = tau - 0.5;
 
   /* ---------------- Ideal-gas part ---------------- */
 
@@ -81,8 +82,8 @@ export function region2(T, P) {
 
   for (let k = 0; k < n0.length; k++) {
     const t = Math.pow(tau, J0[k]);
-    g0 += n0[k] * t;
-    g0t += n0[k] * J0[k] * t / tau;
+    g0   += n0[k] * t;
+    g0t  += n0[k] * J0[k] * t / tau;
     g0tt += n0[k] * J0[k] * (J0[k] - 1) * t / (tau * tau);
   }
 
@@ -97,37 +98,28 @@ export function region2(T, P) {
 
   for (let k = 0; k < nr.length; k++) {
     const piI = Math.pow(pi, Ir[k]);
-    const tauJ = Math.pow(tau, Jr[k]);
+    const thJ = Math.pow(theta, Jr[k]);
 
-    gr   += nr[k] * piI * tauJ;
-    grp  += nr[k] * Ir[k] * piI * tauJ / pi;
-    grpp += nr[k] * Ir[k] * (Ir[k] - 1) * piI * tauJ / (pi * pi);
-    grt  += nr[k] * Jr[k] * piI * tauJ / tau;
-    grtt += nr[k] * Jr[k] * (Jr[k] - 1) * piI * tauJ / (tau * tau);
-    grpt += nr[k] * Ir[k] * Jr[k] * piI * tauJ / (pi * tau);
+    gr   += nr[k] * piI * thJ;
+    grp  += nr[k] * Ir[k] * piI * thJ / pi;
+    grpp += nr[k] * Ir[k] * (Ir[k] - 1) * piI * thJ / (pi * pi);
+    grt  += nr[k] * Jr[k] * piI * thJ / theta;
+    grtt += nr[k] * Jr[k] * (Jr[k] - 1) * piI * thJ / (theta * theta);
+    grpt += nr[k] * Ir[k] * Jr[k] * piI * thJ / (pi * theta);
   }
 
   /* ---------------- Thermodynamic properties ---------------- */
 
-  // ✔ Correct IF97 specific volume (no 1e-3 scaling)
-const specificVolume =
-  (R * T / (P * 1000)) * (1 + pi * grp);
-   
-   console.log("Region 2 debug:", {
-  T, P, pi, tau,
-  v: specificVolume,
-  rho: 1 / specificVolume
-});
+  // Specific volume (explicit IF97 form)
+  const gamma_pi = 1 / pi + grp;
+  const specificVolume =
+    (R * T / (P * 1000)) * pi * gamma_pi;
 
-   if (specificVolume <= 0 || !isFinite(specificVolume)) {
-  console.error("Region 2 volume error", {
-    T, P, pi, tau, grp, specificVolume
-  });
-}
+  if (specificVolume <= 0 || !isFinite(specificVolume)) {
+    throw new Error("Region 2 specific volume invalid");
+  }
 
-
-  const density =
-    1 / Math.max(specificVolume, EPS);
+  const density = 1 / specificVolume;
 
   const enthalpy =
     R * T * tau * (g0t + grt);
@@ -138,14 +130,12 @@ const specificVolume =
   const cp =
     -R * tau * tau * (g0tt + grtt);
 
-  // IF97-stable Cv formulation
   const denom =
     1 + 2 * pi * grp + pi * pi * grpp;
 
   const cv =
     denom > EPS
-      ? cp -
-        (R * Math.pow(1 + pi * grp - tau * grpt, 2)) / denom
+      ? cp - (R * Math.pow(1 + pi * grp - tau * grpt, 2)) / denom
       : cp;
 
   return {
@@ -160,5 +150,3 @@ const specificVolume =
     cv
   };
 }
-
-
