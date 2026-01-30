@@ -5,7 +5,7 @@ import {
   n0, gamma0,
   nr, dr, tr,
   ne, de, te, ce
-} from "./coefficients95.js";
+} from "./constants95.js";
 
 /*
   delta = rho / rhoc
