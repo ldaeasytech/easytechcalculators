@@ -55,3 +55,5 @@ export function dPdrho(T, rho) {
 
   return dP * 1e-6; // Pa → MPa
 }
+
+window.__pressureFromRho = pressureFromRho;
