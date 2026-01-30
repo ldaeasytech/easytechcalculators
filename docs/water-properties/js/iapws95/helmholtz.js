@@ -1,5 +1,5 @@
 // iapws95/helmholtz.js
-// Full IAPWS-95 Helmholtz free energy (COMPLETE & STABLE)
+// Full IAPWS-95 Helmholtz free energy (COMPLETE & JS-SAFE)
 
 import {
   // Ideal gas
@@ -72,37 +72,46 @@ export function alphar(delta, tau) {
 
   // Polynomial
   for (let i = 0; i < nr.length; i++) {
-    sum += nr[i] * delta ** dr[i] * tau ** tr[i];
+    sum += nr[i] * (delta ** dr[i]) * (tau ** tr[i]);
   }
 
   // Exponential
   for (let i = 0; i < ne.length; i++) {
-    sum += ne[i] * delta ** de[i] * tau ** te[i]
-      * Math.exp(-delta ** ce[i]);
+    sum += ne[i]
+      * (delta ** de[i])
+      * (tau ** te[i])
+      * Math.exp(-(delta ** ce[i]));
   }
 
   // Gaussian
   for (let i = 0; i < ng.length; i++) {
     const d = delta - 1;
     const t = tau - 1;
-    sum += ng[i] * delta ** dg[i] * tau ** tg[i]
+    sum += ng[i]
+      * (delta ** dg[i])
+      * (tau ** tg[i])
       * Math.exp(-ag[i] * d * d - bg[i] * t * t);
   }
 
   // Critical
   for (let i = 0; i < nc.length; i++) {
     const d = delta - 1;
-    const t = tau - 1;
-    const theta = (1 - tau) + Ac[i] * Math.abs(d) ** (1 / betac[i]);
-    const Delta = theta * theta + Bc[i] * Math.abs(d) ** alphac[i];
-    sum += nc[i] * Delta ** dc[i] * tau ** tc[i];
+    const theta =
+      (1 - tau) +
+      Ac[i] * (Math.abs(d) ** (1 / betac[i]));
+
+    const Delta =
+      theta * theta +
+      Bc[i] * (Math.abs(d) ** alphac[i]);
+
+    sum += nc[i] * (Delta ** dc[i]) * (tau ** tc[i]);
   }
 
   return sum;
 }
 
 /* ============================================================
-   First & second derivatives (only needed ones)
+   First derivatives wrt delta
    ============================================================ */
 
 export function alphar_delta(delta, tau) {
@@ -110,14 +119,19 @@ export function alphar_delta(delta, tau) {
 
   // Polynomial
   for (let i = 0; i < nr.length; i++) {
-    sum += nr[i] * dr[i] * delta ** (dr[i] - 1) * tau ** tr[i];
+    sum += nr[i] * dr[i]
+      * (delta ** (dr[i] - 1))
+      * (tau ** tr[i]);
   }
 
   // Exponential
   for (let i = 0; i < ne.length; i++) {
-    const dc = delta ** ce[i];
-    sum += ne[i] * delta ** (de[i] - 1) * tau ** te[i]
-      * Math.exp(-dc) * (de[i] - ce[i] * dc);
+    const dcVal = delta ** ce[i];
+    sum += ne[i]
+      * (delta ** (de[i] - 1))
+      * (tau ** te[i])
+      * Math.exp(-dcVal)
+      * (de[i] - ce[i] * dcVal);
   }
 
   // Gaussian
@@ -125,8 +139,11 @@ export function alphar_delta(delta, tau) {
     const d = delta - 1;
     const t = tau - 1;
     const e = Math.exp(-ag[i] * d * d - bg[i] * t * t);
-    sum += ng[i] * tau ** tg[i] * delta ** (dg[i] - 1)
-      * e * (dg[i] - 2 * ag[i] * delta * d);
+    sum += ng[i]
+      * (tau ** tg[i])
+      * (delta ** (dg[i] - 1))
+      * e
+      * (dg[i] - 2 * ag[i] * delta * d);
   }
 
   return sum;
@@ -137,16 +154,21 @@ export function alphar_deltadelta(delta, tau) {
 
   for (let i = 0; i < nr.length; i++) {
     sum += nr[i] * dr[i] * (dr[i] - 1)
-      * delta ** (dr[i] - 2) * tau ** tr[i];
+      * (delta ** (dr[i] - 2))
+      * (tau ** tr[i]);
   }
 
   for (let i = 0; i < ne.length; i++) {
-    const dc = delta ** ce[i];
-    const e = Math.exp(-dc);
-    sum += ne[i] * delta ** (de[i] - 2) * tau ** te[i]
-      * e * (
-        (de[i] - ce[i] * dc) * (de[i] - 1 - ce[i] * dc)
-        - ce[i] * ce[i] * dc
+    const dcVal = delta ** ce[i];
+    const e = Math.exp(-dcVal);
+    sum += ne[i]
+      * (delta ** (de[i] - 2))
+      * (tau ** te[i])
+      * e
+      * (
+        (de[i] - ce[i] * dcVal) *
+        (de[i] - 1 - ce[i] * dcVal) -
+        ce[i] * ce[i] * dcVal
       );
   }
 
