@@ -86,4 +86,9 @@ export function solveDensity(T, P) {
 
   console.groupEnd();
   throw new Error("IAPWS-95 density solver did not converge");
+
+  console.log(
+  "TEST pressure:",
+  pressureFromRho(300, 1000)
+);
 }
