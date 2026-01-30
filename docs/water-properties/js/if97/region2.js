@@ -147,3 +147,10 @@ export function region2(T, P) {
     cv
   };
 }
+
+console.log("Region 2 debug:", {
+  T, P, pi, tau,
+  v: specificVolume,
+  rho: 1 / specificVolume
+});
+
