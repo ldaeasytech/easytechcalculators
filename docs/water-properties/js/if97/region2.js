@@ -110,16 +110,20 @@ export function region2(T, P) {
   /* ---------------- Thermodynamic properties ---------------- */
 
   // ✔ Correct IF97 specific volume (no 1e-3 scaling)
-const gamma_pi = 1 / pi + grp;
-
 const specificVolume =
-  (R * T / (P * 1000)) * pi * gamma_pi;
+  (R * T / (P * 1000)) * (1 + pi * grp);
    
    console.log("Region 2 debug:", {
   T, P, pi, tau,
   v: specificVolume,
   rho: 1 / specificVolume
 });
+
+   if (specificVolume <= 0 || !isFinite(specificVolume)) {
+  console.error("Region 2 volume error", {
+    T, P, pi, tau, grp, specificVolume
+  });
+}
 
 
   const density =
