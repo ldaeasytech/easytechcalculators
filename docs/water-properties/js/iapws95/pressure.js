@@ -26,6 +26,15 @@ export function pressureFromRho(T, rho) {
     rho * R * T * (1 + delta * ar_d);
 
   return P * 1e-6; // Pa → MPa
+
+  console.log({
+  delta,
+  tau,
+  ar_d: alphar_delta(delta, tau),
+  factor: 1 + delta * alphar_delta(delta, tau)
+});
+
+  
 }
 
 /**
