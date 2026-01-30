@@ -110,6 +110,13 @@ export function region2(T, P) {
   const specificVolume =
     (R * T / (P * 1000)) * pi * gamma_pi;
 
+   if (specificVolume <= 0 || !isFinite(specificVolume)) {
+  console.error("Region 2 volume error", {
+    T, P, pi, tau, grp, specificVolume
+  });
+}
+
+
   if (specificVolume <= 0 || !isFinite(specificVolume)) {
     throw new Error("Region 2 specific volume invalid");
   }
