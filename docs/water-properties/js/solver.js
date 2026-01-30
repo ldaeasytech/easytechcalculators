@@ -23,6 +23,7 @@ import {
   cv_g_sat
 } from "./if97/region4.js";
 
+import { regionSelector } from "./if97/regionSelector.js";
 import { region5 } from "./if97/region5.js";
 import { region1 } from "./if97/region1.js";
 import { region2 } from "./if97/region2.js";
