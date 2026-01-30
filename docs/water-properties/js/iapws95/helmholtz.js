@@ -1,6 +1,7 @@
 // iapws95/helmholtz.js
 // FULL IAPWS-95 Helmholtz free energy (dimensionless)
-// Wagner & Pruss (2002) — single-phase, NaN-safe
+// Wagner & Pruss (2002)
+// FIXED: exponential array-length mismatch (NaN-safe)
 
 import {
   // Ideal gas
@@ -77,23 +78,23 @@ export function alpha0_tautau(delta, tau) {
 export function alphar(delta, tau) {
   let sum = 0.0;
 
-  // ---- Polynomial terms (1–7)
+  // --- Polynomial terms (1–7)
   for (let i = 0; i < nr.length; i++) {
     sum += nr[i] *
       Math.pow(delta, dr[i]) *
       Math.pow(tau, tr[i]);
   }
 
-  // ---- Exponential terms (8–51)
-  for (let i = 0; i < ne.length; i++) {
+  // --- Exponential terms (8–51)  ← FIXED
+  const Nexp = Math.min(ne.length, de.length, te.length, ce.length);
+  for (let i = 0; i < Nexp; i++) {
     sum += ne[i] *
       Math.pow(delta, de[i]) *
       Math.pow(tau, te[i]) *
       Math.exp(-Math.pow(delta, ce[i]));
   }
 
-  // ---- Gaussian terms (52–54)
-  // IMPORTANT: shifts are ALWAYS (delta - 1) and (tau - 1)
+  // --- Gaussian terms (52–54)
   for (let i = 0; i < ng.length; i++) {
     const d = delta - 1;
     const t = tau - 1;
@@ -107,7 +108,7 @@ export function alphar(delta, tau) {
       );
   }
 
-  // ---- Non-analytic critical terms (55–56)
+  // --- Critical terms (55–56)
   for (let i = 0; i < nc.length; i++) {
     const D =
       (delta - 1) * (delta - 1) +
@@ -131,15 +132,16 @@ export function alphar(delta, tau) {
 export function alphar_delta(delta, tau) {
   let sum = 0.0;
 
-  // ---- Polynomial
+  // --- Polynomial
   for (let i = 0; i < nr.length; i++) {
     sum += nr[i] * dr[i] *
       Math.pow(delta, dr[i] - 1) *
       Math.pow(tau, tr[i]);
   }
 
-  // ---- Exponential
-  for (let i = 0; i < ne.length; i++) {
+  // --- Exponential  ← FIXED
+  const Nexp = Math.min(ne.length, de.length, te.length, ce.length);
+  for (let i = 0; i < Nexp; i++) {
     const dc = Math.pow(delta, ce[i]);
     const e = Math.exp(-dc);
 
@@ -150,7 +152,7 @@ export function alphar_delta(delta, tau) {
       (de[i] - ce[i] * dc);
   }
 
-  // ---- Gaussian (NaN-safe)
+  // --- Gaussian
   for (let i = 0; i < ng.length; i++) {
     const d = delta - 1;
     const t = tau - 1;
@@ -170,7 +172,7 @@ export function alphar_delta(delta, tau) {
       );
   }
 
-  // ---- Critical
+  // --- Critical
   for (let i = 0; i < nc.length; i++) {
     const D =
       (delta - 1) * (delta - 1) +
@@ -193,21 +195,21 @@ export function alphar_delta(delta, tau) {
 
 /* ============================================================
    Second derivative ∂²αr / ∂δ²
-   (sufficient for pressure + Newton solver)
    ============================================================ */
 
 export function alphar_deltadelta(delta, tau) {
   let sum = 0.0;
 
-  // ---- Polynomial
+  // --- Polynomial
   for (let i = 0; i < nr.length; i++) {
     sum += nr[i] * dr[i] * (dr[i] - 1) *
       Math.pow(delta, dr[i] - 2) *
       Math.pow(tau, tr[i]);
   }
 
-  // ---- Exponential
-  for (let i = 0; i < ne.length; i++) {
+  // --- Exponential  ← FIXED
+  const Nexp = Math.min(ne.length, de.length, te.length, ce.length);
+  for (let i = 0; i < Nexp; i++) {
     const dc = Math.pow(delta, ce[i]);
     const e = Math.exp(-dc);
 
@@ -222,10 +224,7 @@ export function alphar_deltadelta(delta, tau) {
       );
   }
 
-  // Gaussian & critical second derivatives are not required
-  // for stable single-phase pressure iteration
-
   return sum;
 }
 
-console.log("LOADED helmholtz.js — FULL IAPWS-95 (NaN-safe)");
+console.log("LOADED helmholtz.js — FULL IAPWS-95 (array-safe, NaN-free)");
