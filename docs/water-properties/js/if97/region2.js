@@ -113,6 +113,13 @@ export function region2(T, P) {
   const specificVolume =
     (R * T / (P*1000)) * (1 + pi * grp);
 
+   console.log("Region 2 debug:", {
+  T, P, pi, tau,
+  v: specificVolume,
+  rho: 1 / specificVolume
+});
+
+
   const density =
     1 / Math.max(specificVolume, EPS);
 
@@ -148,9 +155,4 @@ export function region2(T, P) {
   };
 }
 
-console.log("Region 2 debug:", {
-  T, P, pi, tau,
-  v: specificVolume,
-  rho: 1 / specificVolume
-});
 
