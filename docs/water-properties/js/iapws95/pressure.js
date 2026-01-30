@@ -16,13 +16,14 @@ import {
  * Pressure P [MPa]
  */
 export function pressureFromRho(T, rho) {
+
   const delta = rho / rhoc;
   const tau = Tc / T;
 
   const ar_d = alphar_delta(delta, tau);
 
-  // IAPWS-95 correct pressure equation
-  const P = rho * R * T * (1 + delta * ar_d);
+  const P =
+    rho * R * T * (1 + delta * ar_d);
 
   return P * 1e-6; // Pa → MPa
 }
@@ -31,10 +32,11 @@ export function pressureFromRho(T, rho) {
  * ∂P/∂ρ at constant T [MPa·m³/kg]
  */
 export function dPdrho(T, rho) {
+
   const delta = rho / rhoc;
   const tau = Tc / T;
 
-  const ar_d  = alphar_delta(delta, tau);
+  const ar_d = alphar_delta(delta, tau);
   const ar_dd = alphar_deltadelta(delta, tau);
 
   const term =
@@ -42,10 +44,8 @@ export function dPdrho(T, rho) {
     2 * delta * ar_d +
     delta * delta * ar_dd;
 
-  const dP = R * T * term;
+  const dP =
+    R * T * term;
 
-  return dP * 1e-6; // Pa → MPa
+  return dP * 1e-6;
 }
-
-// optional console access
-window.__pressureFromRho = pressureFromRho;
