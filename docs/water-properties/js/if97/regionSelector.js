@@ -1,21 +1,27 @@
-// regionSelector.js — IF97 region determination
-// Returns 1, 2, 3, or 5
-
 import { Psat } from "./region4.js";
 
-export function regionSelector(T, P) {
-  // Region 5: high-temperature steam
-  if (T > 1073.15 && P <= 50.0) return 5;
+// IF97 Region 2–3 boundary (official)
+function T23(P) {
+  return 623.15 + (P - 16.52916425) / 0.001;
+}
 
-  // Saturation boundary
+export function regionSelector(T, P) {
   const Ps = Psat(T);
 
-  // Region 2: superheated vapor
-  if ((T > 623.15 && P <= 100.0) || (T <= 623.15 && P < Ps)) return 2;
+  // Region 5
+  if (T > 1073.15 && P <= 50) return 5;
 
-  // Region 1: compressed liquid
+  // Region 2
+  if (
+    (T > 623.15 && T <= T23(P)) ||
+    (T <= 623.15 && P < Ps)
+  ) {
+    return 2;
+  }
+
+  // Region 1
   if (T <= 623.15 && P > Ps) return 1;
 
-  // Region 3: dense fluid
+  // Region 3
   return 3;
 }
