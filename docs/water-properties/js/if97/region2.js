@@ -101,11 +101,13 @@ export function region2(T, P) {
     grt  += nr * Jr * piI * thJ / theta;
     grtt += nr * Jr * (Jr - 1) * piI * thJ / (theta * theta);
     grpt += nr * Ir * Jr * piI * thJ / (pi * theta);
+
+     const term = nr * Ir * Math.pow(theta, Jr);
+   console.log({ Ir, Jr, nr, term });
+   grp += term;
   }
 
-const term = nr * Ir * Math.pow(theta, Jr);
-console.log({ Ir, Jr, nr, term });
-grp += term;
+
 
    
   /* ---------------- Properties ---------------- */
