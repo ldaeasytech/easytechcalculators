@@ -1,6 +1,6 @@
-// solver.js — Clean Region4 + IAPWS-95 solver
-// Region4: saturation only
-// IAPWS-95: all single-phase thermodynamics
+// solver.js — Fully IF97-compliant solver
+// Region 1–3: single-phase
+// Region 4: saturation / two-phase
 
 /* ============================================================
    Imports
@@ -23,8 +23,10 @@ import {
   cv_g_sat
 } from "./if97/region4.js";
 
-import { solveDensity } from "./iapws95/solver.js";
-import { properties as iapwsProps } from "./iapws95/properties.js";
+import { region } from "./if97/region.js";
+import { region1 } from "./if97/region1.js";
+import { region2 } from "./if97/region2.js";
+import { region3 } from "./if97/region3.js";
 
 import { conductivity } from "./if97/conductivity.js";
 import { viscosity } from "./if97/viscosity.js";
@@ -54,7 +56,7 @@ export function solve(inputs) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    return singlePhaseIAPWS(T, P);
+    return singlePhaseIF97(T, P);
   }
 
   /* ======================= P–h ======================= */
@@ -74,7 +76,7 @@ export function solve(inputs) {
       return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
     }
 
-    return singlePhaseIAPWS(T, P);
+    return singlePhaseIF97(T, P);
   }
 
   /* ======================= T–s ======================= */
@@ -91,7 +93,7 @@ export function solve(inputs) {
     }
 
     const P = solvePfromS(T, s);
-    return singlePhaseIAPWS(T, P);
+    return singlePhaseIF97(T, P);
   }
 
   /* ======================= T–x ======================= */
@@ -122,22 +124,32 @@ export function solve(inputs) {
 }
 
 /* ============================================================
-   IAPWS-95 single-phase wrapper
+   IF97 single-phase wrapper
    ============================================================ */
 
-function singlePhaseIAPWS(T, P) {
-  const rho = solveDensity(T, P); // must converge
-  const r = iapwsProps(T, rho);
+function singlePhaseIF97(T, P) {
+  const rgn = region(T, P);
+
+  let props;
+  if (rgn === 1) props = region1(T, P);
+  else if (rgn === 2) props = region2(T, P);
+  else if (rgn === 3) props = region3(T, P);
+  else throw new Error(`Invalid IF97 region: ${rgn}`);
 
   const out = {
     phase: "single_phase",
-    phaseLabel: "single_phase",
+    phaseLabel: `region_${rgn}`,
     temperature: T,
     pressure: P,
-    ...r
+    density: props.density,
+    specificVolume: props.specificVolume,
+    enthalpy: props.enthalpy,
+    entropy: props.entropy,
+    cp: props.cp,
+    cv: props.cv
   };
 
-  const rho_cgs = rho * 1e-3;
+  const rho_cgs = props.density * 1e-3;
   out.thermalConductivity = conductivity(T, rho_cgs);
   out.viscosity = viscosity(T, rho_cgs);
 
@@ -193,7 +205,7 @@ function mixStates(L, V, x, T, P) {
 }
 
 /* ============================================================
-   Root solvers (simple & robust)
+   Root solvers (robust, IF97-based)
    ============================================================ */
 
 function clamp01(x) {
@@ -204,8 +216,7 @@ function solveTfromH(P, h) {
   let lo = 273.15, hi = 2273.15;
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-    const rho = solveDensity(mid, P);
-    const hm = iapwsProps(mid, rho).enthalpy;
+    const hm = singlePhaseIF97(mid, P).enthalpy;
     if (hm > h) hi = mid;
     else lo = mid;
   }
@@ -216,10 +227,23 @@ function solvePfromS(T, s) {
   let lo = 0.000611, hi = 100.0;
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-    const rho = solveDensity(T, mid);
-    const sm = iapwsProps(T, rho).entropy;
+    const sm = singlePhaseIF97(T, mid).entropy;
     if (sm > s) hi = mid;
     else lo = mid;
   }
   return 0.5 * (lo + hi);
+}
+
+/* ============================================================
+   Phase label helper
+   ============================================================ */
+
+function withPhase(label, state, T, P) {
+  return {
+    phase: label,
+    phaseLabel: label,
+    temperature: T,
+    pressure: P,
+    ...state
+  };
 }
