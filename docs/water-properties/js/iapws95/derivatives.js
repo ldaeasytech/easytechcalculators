@@ -20,7 +20,7 @@ import {
 export function helmholtz(T, rho, Tc, rhoc) {
 
   const delta = rho / rhoc;
-  const tau = Tc / T;
+  const tau   = Tc / T;
 
   return {
     delta,
@@ -31,17 +31,17 @@ export function helmholtz(T, rho, Tc, rhoc) {
     ar: alphar(delta, tau),
 
     // First derivatives wrt tau
-    a0_t: alpha0_tau(tau),
+    a0_t: alpha0_tau(delta, tau),
     ar_t: alphar_tau(delta, tau),
 
     // Second derivatives wrt tau
-    a0_tt: alpha0_tautau(tau),
+    a0_tt: alpha0_tautau(delta, tau),
     ar_tt: alphar_tautau(delta, tau),
 
-    // Delta derivatives (🔥 FIXED: delta passed correctly)
-    a0_d: alpha0_delta(delta),
+    // Delta derivatives
+    a0_d:  alpha0_delta(delta),
     a0_dd: alpha0_deltadelta(delta),
-    ar_d: alphar_delta(delta, tau),
+    ar_d:  alphar_delta(delta, tau),
     ar_dd: alphar_deltadelta(delta, tau),
 
     // Mixed derivative
