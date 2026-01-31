@@ -1,169 +1,148 @@
-// region2.js — IF97 Region 2 (Superheated Steam)
-// Explicit, non-iterative, IF97-compliant
+// region2.js
+// Superheated steam properties via tabulated quadratic interpolation
+// HARD-FAIL outside table bounds
+//
+// Units:
+//   T  [K]
+//   P  [MPa]
+//   rho [kg/m3]
+//   v   [m3/kg]
+//   h   [kJ/kg]
+//   s   [kJ/kg-K]
+//   cp  [kJ/kg-K]
+//   cv  [kJ/kg-K]
+//   k   [W/m-K]
+//   mu  [Pa-s]
 
-import { R, EPS } from "../constants.js";
-import { Psat } from "./region4.js";
+import TABLE from "../data/superheated_table.json";
 
-/* ============================================================
-   Ideal-gas part coefficients (IF97)
-   ============================================================ */
+let GRID = null;
 
-const J0 = [0, 1, -5, -4, -3, -2, -1, 2, 3];
-const n0 = [
-  -9.6927686500217,
-   10.086655968018,
-  -0.005608791128302,
-   0.071452738081455,
-  -0.40710498223928,
-   1.4240819171444,
-  -4.3839511319450,
-  -0.28408632460772,
-   0.021268463753307
-];
+// ------------------------------------------------------------
+// Build grid once
+// ------------------------------------------------------------
+function buildGrid() {
+  if (GRID) return GRID;
 
-/* ============================================================
-   Residual part coefficients (OFFICIAL IF97 TABLE)
-   Each row: [Ir, Jr, nr]
-   ============================================================ */
+  const rows = TABLE;
 
-const RES = [
-  [1,  0, -0.0017731742473213],
-  [1,  1, -0.017834862292358],
-  [1,  2, -0.045996013696365],
-  [1,  3, -0.057581259083432],
-  [1,  6, -0.050325278727930],
-  [2,  1, -0.000033032641670203],
-  [2,  2, -0.00018948987516315],
-  [2,  4, -0.0039392777243355],
-  [2,  7, -0.043797295650573],
-  [2, 36, -0.000026674547914087],
-  [3,  0,  2.0481737692309e-08],
-  [3,  1,  4.3870667284435e-07],
-  [3,  3, -0.000032277677238570],
-  [3,  6, -0.0015033924542148],
-  [4,  0, -0.040668253562649],
-  [4,  1, -7.8847309559367e-10],
-  [4,  7,  1.2790717852285e-08],
-  [5,  0,  4.8225372718507e-07],
-  [6,  1,  2.2922076337661e-06],
-  [6,  3, -1.6714766451061e-11],
-  [7,  0, -0.0021171472321355],
-  [7,  7, -23.895741934104],
-  [9,  1, -5.9059564324270e-18],
-  [9,  2, -1.2621808899101e-06]
-];
+  const Tset = new Set();
+  const Pset = new Set();
 
-/* ============================================================
-   Region 2 evaluator
-   Inputs:
-     T [K]
-     P [MPa]
-   ============================================================ */
-
-export function region2(T, P) {
-
-  // --- Saturation guard ---
-  if (Math.abs(P - Psat(T)) < 1e-8) {
-    throw new Error("Region 2 called at saturation — use Region 4");
+  for (const r of rows) {
+    Tset.add(r.T);
+    Pset.add(r.P);
   }
 
-  // --- Reduced variables (IF97) ---
-  const pi = P;           // p* = 1 MPa
-  const tau = 540 / T;
-  const theta = tau - 0.5;
+  const T = Array.from(Tset).sort((a, b) => a - b);
+  const P = Array.from(Pset).sort((a, b) => a - b);
 
-  /* ================= Ideal-gas part ================= */
+  const Ti = new Map(T.map((v, i) => [v, i]));
+  const Pi = new Map(P.map((v, i) => [v, i]));
 
-  let g0 = Math.log(pi);
-  let g0t = 0;
-  let g0tt = 0;
+  const NT = T.length;
+  const NP = P.length;
 
-  for (let k = 0; k < n0.length; k++) {
-    const J = J0[k];
-    const tJ = Math.pow(tau, J);
+  const alloc = () =>
+    Array.from({ length: NT }, () => Array(NP).fill(NaN));
 
-    g0   += n0[k] * tJ;
-    g0t  += n0[k] * J * tJ / tau;
-    g0tt += n0[k] * J * (J - 1) * tJ / (tau * tau);
+  const grid = {
+    T, P,
+    rho: alloc(),
+    v:   alloc(),
+    h:   alloc(),
+    s:   alloc(),
+    cp:  alloc(),
+    cv:  alloc(),
+    k:   alloc(),
+    mu:  alloc()
+  };
+
+  for (const r of rows) {
+    const i = Ti.get(r.T);
+    const j = Pi.get(r.P);
+
+    grid.rho[i][j] = r.rho;
+    grid.v[i][j]   = r.v;
+    grid.h[i][j]   = r.h;
+    grid.s[i][j]   = r.s;
+    grid.cp[i][j]  = r.cp;
+    grid.cv[i][j]  = r.cv;
+    grid.k[i][j]   = r.k;
+    grid.mu[i][j]  = r.mu;
   }
 
-  /* ================= Residual part ================= */
-
-  let gr = 0;
-  let grp = 0;
-  let grpp = 0;
-  let grt = 0;
-  let grtt = 0;
-  let grpt = 0;
-
-  for (const [Ir, Jr, nr] of RES) {
-    const piI = Math.pow(pi, Ir);
-    const thJ = Math.pow(theta, Jr);
-
-   // === IF97 REGION 2 DIAGNOSTIC ===
-const grp_term = nr * Ir * piI * thJ / pi;
-
-if (!isFinite(thJ) || Math.abs(grp_term) > 0.5) {
-  console.error("⚠️ Region2 anomaly", {
-    Ir, Jr, nr,
-    pi, tau, theta,
-    thJ,
-    grp_term
-  });
+  GRID = grid;
+  return grid;
 }
-// =================================
 
-     
-    gr   += nr * piI * thJ;
-    grp  += nr * Ir * piI * thJ / pi;
-    grpp += nr * Ir * (Ir - 1) * piI * thJ / (pi * pi);
-    grt  += nr * Jr * piI * thJ / theta;
-    grtt += nr * Jr * (Jr - 1) * piI * thJ / (theta * theta);
-    grpt += nr * Ir * Jr * piI * thJ / (pi * theta);
+// ------------------------------------------------------------
+// Interpolation utilities
+// ------------------------------------------------------------
+function bracket3(arr, x) {
+  const n = arr.length;
+
+  if (x < arr[0] || x > arr[n - 1]) {
+    throw new RangeError(
+      `Region 2 out of range: value=${x}, allowed=[${arr[0]}, ${arr[n - 1]}]`
+    );
   }
 
-  /* ================= Properties ================= */
+  if (x <= arr[1]) return [0, 1, 2];
+  if (x >= arr[n - 2]) return [n - 3, n - 2, n - 1];
 
-  // Pressure in Pa
-  const pressurePa = P * 1e6;
-
-  // Specific volume
-  const gamma_pi = 1 / pi + grp;
-  const specificVolume =
-    (R * T / pressurePa) * pi * gamma_pi;
-
-  if (!isFinite(specificVolume) || specificVolume <= 0) {
-    throw new Error("Region 2 specific volume invalid");
+  for (let i = 1; i < n - 1; i++) {
+    if (x < arr[i + 1]) return [i - 1, i, i + 1];
   }
+}
 
-  const density = 1 / specificVolume;
+// 1D quadratic Lagrange interpolation
+function quad1(x, x0, x1, x2, f0, f1, f2) {
+  const L0 = ((x - x1) * (x - x2)) / ((x0 - x1) * (x0 - x2));
+  const L1 = ((x - x0) * (x - x2)) / ((x1 - x0) * (x1 - x2));
+  const L2 = ((x - x0) * (x - x1)) / ((x2 - x0) * (x2 - x1));
+  return L0 * f0 + L1 * f1 + L2 * f2;
+}
 
-  const enthalpy =
-    R * T * tau * (g0t + grt);
+// 2D tensor-product quadratic interpolation
+function quad2D(T, P, Tarr, Parr, F) {
+  const [i0, i1, i2] = bracket3(Tarr, T);
+  const [j0, j1, j2] = bracket3(Parr, P);
 
-  const entropy =
-    R * (tau * (g0t + grt) - (g0 + gr));
+  const g0 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
+                   F[i0][j0], F[i0][j1], F[i0][j2]);
 
-  const cp =
-    -R * tau * tau * (g0tt + grtt);
+  const g1 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
+                   F[i1][j0], F[i1][j1], F[i1][j2]);
 
-  const denom =
-    1 + 2 * pi * grp + pi * pi * grpp;
+  const g2 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
+                   F[i2][j0], F[i2][j1], F[i2][j2]);
 
-  const cv =
-    denom > EPS
-      ? cp - (R * Math.pow(1 + pi * grp - tau * grpt, 2)) / denom
-      : cp;
+  return quad1(T, Tarr[i0], Tarr[i1], Tarr[i2], g0, g1, g2);
+}
+
+// ------------------------------------------------------------
+// PUBLIC API — Drop-in Region 2
+// ------------------------------------------------------------
+export default function region2(T, P) {
+  const G = buildGrid();
+
+  // Hard fail outside region
+  if (T < G.T[0] || T > G.T[G.T.length - 1] ||
+      P < G.P[0] || P > G.P[G.P.length - 1]) {
+    throw new RangeError(
+      `Region 2 (superheated table) out of bounds: T=${T} K, P=${P} MPa`
+    );
+  }
 
   return {
-    region: 2,
-    T,
-    P,
-    density,
-    specificVolume,
-    enthalpy,
-    entropy,
-    cp,
-    cv
+    rho: quad2D(T, P, G.T, G.P, G.rho),
+    v:   quad2D(T, P, G.T, G.P, G.v),
+    h:   quad2D(T, P, G.T, G.P, G.h),
+    s:   quad2D(T, P, G.T, G.P, G.s),
+    cp:  quad2D(T, P, G.T, G.P, G.cp),
+    cv:  quad2D(T, P, G.T, G.P, G.cv),
+    k:   quad2D(T, P, G.T, G.P, G.k),
+    mu:  quad2D(T, P, G.T, G.P, G.mu)
   };
 }
