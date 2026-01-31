@@ -106,12 +106,19 @@ function bracket3(arr, x) {
     );
   }
 
+  // Clamp to ends
   if (x <= arr[1]) return [0, 1, 2];
   if (x >= arr[n - 2]) return [n - 3, n - 2, n - 1];
 
-  for (let i = 1; i < n - 1; i++) {
-    if (x < arr[i + 1]) return [i - 1, i, i + 1];
+  // Interior (handle exact equality safely)
+  for (let i = 1; i < n - 2; i++) {
+    if (x >= arr[i] && x <= arr[i + 1]) {
+      return [i - 1, i, i + 1];
+    }
   }
+
+  // Safety net (should never trigger)
+  return [n - 3, n - 2, n - 1];
 }
 
 // 1D quadratic Lagrange interpolation
