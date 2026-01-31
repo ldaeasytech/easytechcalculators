@@ -100,6 +100,20 @@ export function region2(T, P) {
     const piI = Math.pow(pi, Ir);
     const thJ = Math.pow(theta, Jr);
 
+   // === IF97 REGION 2 DIAGNOSTIC ===
+const grp_term = nr * Ir * piI * thJ / pi;
+
+if (!isFinite(thJ) || Math.abs(grp_term) > 0.5) {
+  console.error("⚠️ Region2 anomaly", {
+    Ir, Jr, nr,
+    pi, tau, theta,
+    thJ,
+    grp_term
+  });
+}
+// =================================
+
+     
     gr   += nr * piI * thJ;
     grp  += nr * Ir * piI * thJ / pi;
     grpp += nr * Ir * (Ir - 1) * piI * thJ / (pi * pi);
