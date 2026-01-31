@@ -1,6 +1,7 @@
 // solver.js — Fully IF97-compliant solver
 // Region 1–3: single-phase
 // Region 4: saturation / two-phase
+// Region 2: async tabulated superheated steam
 
 /* ============================================================
    Imports
@@ -26,7 +27,7 @@ import {
 import { regionSelector } from "./if97/regionSelector.js";
 import { region5 } from "./if97/region5.js";
 import { region1 } from "./if97/region1.js";
-import { region2 } from "./if97/region2.js";
+import region2 from "./if97/region2.js"; // DEFAULT + ASYNC
 import { region3 } from "./if97/region3.js";
 
 import { conductivity } from "./if97/conductivity.js";
@@ -40,10 +41,10 @@ const SAT_EPS = 1e-6;
 const X_EPS = 1e-10;
 
 /* ============================================================
-   Main solver
+   Main solver (ASYNC)
    ============================================================ */
 
-export function solve(inputs) {
+export async function solve(inputs) {
   let { mode } = inputs;
   if (mode === "Ps") mode = "Ts";
 
@@ -57,7 +58,7 @@ export function solve(inputs) {
       return withPhase("saturated_vapor", satVaporState(T), T, Ps);
     }
 
-    return singlePhaseIF97(T, P);
+    return await singlePhaseIF97(T, P);
   }
 
   /* ======================= P–h ======================= */
@@ -65,7 +66,7 @@ export function solve(inputs) {
     const P = inputs.pressure;
     const h = inputs.enthalpy;
 
-    const T = solveTfromH(P, h);
+    const T = await solveTfromH(P, h);
     const Ps = Psat(T);
 
     if (Math.abs(P - Ps) < SAT_EPS) {
@@ -77,7 +78,7 @@ export function solve(inputs) {
       return mixStates(satLiquidState(T), satVaporState(T), x, T, P);
     }
 
-    return singlePhaseIF97(T, P);
+    return await singlePhaseIF97(T, P);
   }
 
   /* ======================= T–s ======================= */
@@ -93,8 +94,8 @@ export function solve(inputs) {
       return mixStates(satLiquidState(T), satVaporState(T), x, T, Ps);
     }
 
-    const P = solvePfromS(T, s);
-    return singlePhaseIF97(T, P);
+    const P = await solvePfromS(T, s);
+    return await singlePhaseIF97(T, P);
   }
 
   /* ======================= T–x ======================= */
@@ -125,15 +126,15 @@ export function solve(inputs) {
 }
 
 /* ============================================================
-   IF97 single-phase wrapper
+   IF97 single-phase wrapper (ASYNC)
    ============================================================ */
 
-function singlePhaseIF97(T, P) {
-   const rgn = regionSelector(T, P);
+async function singlePhaseIF97(T, P) {
+  const rgn = regionSelector(T, P);
 
   let props;
   if (rgn === 1) props = region1(T, P);
-  else if (rgn === 2) props = region2(T, P);
+  else if (rgn === 2) props = await region2(T, P); // ASYNC
   else if (rgn === 3) props = region3(T, P);
   else throw new Error(`Invalid IF97 region: ${rgn}`);
 
@@ -142,15 +143,15 @@ function singlePhaseIF97(T, P) {
     phaseLabel: `region_${rgn}`,
     temperature: T,
     pressure: P,
-    density: props.density,
-    specificVolume: props.specificVolume,
-    enthalpy: props.enthalpy,
-    entropy: props.entropy,
+    density: props.rho,
+    specificVolume: props.v,
+    enthalpy: props.h,
+    entropy: props.s,
     cp: props.cp,
     cv: props.cv
   };
 
-  const rho_cgs = props.density * 1e-3;
+  const rho_cgs = props.rho * 1e-3;
   out.thermalConductivity = conductivity(T, rho_cgs);
   out.viscosity = viscosity(T, rho_cgs);
 
@@ -206,29 +207,29 @@ function mixStates(L, V, x, T, P) {
 }
 
 /* ============================================================
-   Root solvers (robust, IF97-based)
+   Root solvers (ASYNC, robust)
    ============================================================ */
 
 function clamp01(x) {
   return Math.max(0, Math.min(1, x));
 }
 
-function solveTfromH(P, h) {
+async function solveTfromH(P, h) {
   let lo = 273.15, hi = 2273.15;
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-    const hm = singlePhaseIF97(mid, P).enthalpy;
+    const hm = (await singlePhaseIF97(mid, P)).enthalpy;
     if (hm > h) hi = mid;
     else lo = mid;
   }
   return 0.5 * (lo + hi);
 }
 
-function solvePfromS(T, s) {
+async function solvePfromS(T, s) {
   let lo = 0.000611, hi = 100.0;
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-    const sm = singlePhaseIF97(T, mid).entropy;
+    const sm = (await singlePhaseIF97(T, mid)).entropy;
     if (sm > s) hi = mid;
     else lo = mid;
   }
