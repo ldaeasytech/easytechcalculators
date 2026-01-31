@@ -1,5 +1,5 @@
 // region2.js — IF97 Region 2 (Superheated Steam)
-// Fully IF97-compliant, explicit, non-iterative
+// Explicit, non-iterative, IF97-compliant
 
 import { R, EPS } from "../constants.js";
 import { Psat } from "./region4.js";
@@ -23,7 +23,7 @@ const n0 = [
 
 /* ============================================================
    Residual part coefficients (OFFICIAL IF97 TABLE)
-   Each row is a strict (Ir, Jr, nr) triplet
+   Each row: [Ir, Jr, nr]
    ============================================================ */
 
 const RES = [
@@ -55,34 +55,39 @@ const RES = [
 
 /* ============================================================
    Region 2 evaluator
+   Inputs:
+     T [K]
+     P [MPa]
    ============================================================ */
 
 export function region2(T, P) {
 
   // --- Saturation guard ---
-  if (Math.abs(P - Psat(T)) < 1e-6) {
+  if (Math.abs(P - Psat(T)) < 1e-8) {
     throw new Error("Region 2 called at saturation — use Region 4");
   }
 
-  // --- Reduced variables ---
+  // --- Reduced variables (IF97) ---
   const pi = P;           // p* = 1 MPa
   const tau = 540 / T;
   const theta = tau - 0.5;
 
-  /* ---------------- Ideal-gas part ---------------- */
+  /* ================= Ideal-gas part ================= */
 
   let g0 = Math.log(pi);
   let g0t = 0;
   let g0tt = 0;
 
   for (let k = 0; k < n0.length; k++) {
-    const t = Math.pow(tau, J0[k]);
-    g0   += n0[k] * t;
-    g0t  += n0[k] * J0[k] * t / tau;
-    g0tt += n0[k] * J0[k] * (J0[k] - 1) * t / (tau * tau);
+    const J = J0[k];
+    const tJ = Math.pow(tau, J);
+
+    g0   += n0[k] * tJ;
+    g0t  += n0[k] * J * tJ / tau;
+    g0tt += n0[k] * J * (J - 1) * tJ / (tau * tau);
   }
 
-  /* ---------------- Residual part ---------------- */
+  /* ================= Residual part ================= */
 
   let gr = 0;
   let grp = 0;
@@ -101,30 +106,19 @@ export function region2(T, P) {
     grt  += nr * Jr * piI * thJ / theta;
     grtt += nr * Jr * (Jr - 1) * piI * thJ / (theta * theta);
     grpt += nr * Ir * Jr * piI * thJ / (pi * theta);
-
-     const term = nr * Ir * Math.pow(theta, Jr);
-   console.log({ Ir, Jr, nr, term });
-   grp += term;
   }
 
+  /* ================= Properties ================= */
 
+  // Pressure in Pa
+  const pressurePa = P * 1e6;
 
-   
-  /* ---------------- Properties ---------------- */
-
-  // Specific volume (explicit IF97 form)
+  // Specific volume
   const gamma_pi = 1 / pi + grp;
   const specificVolume =
-    (R * T / (P * 1000)) * pi * gamma_pi;
+    (R * T / pressurePa) * pi * gamma_pi;
 
-   if (specificVolume <= 0 || !isFinite(specificVolume)) {
-  console.error("Region 2 volume error", {
-    T, P, pi, tau, grp, specificVolume
-  });
-}
-
-
-  if (specificVolume <= 0 || !isFinite(specificVolume)) {
+  if (!isFinite(specificVolume) || specificVolume <= 0) {
     throw new Error("Region 2 specific volume invalid");
   }
 
