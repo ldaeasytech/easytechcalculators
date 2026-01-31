@@ -1,6 +1,6 @@
 // region2.js
 // Superheated steam properties via tabulated quadratic interpolation
-// HARD-FAIL outside table bounds
+// ASYNC + HARD-FAIL outside table bounds
 //
 // Units:
 //   T  [K]
@@ -14,17 +14,35 @@
 //   k   [W/m-K]
 //   mu  [Pa-s]
 
-import TABLE from "../data/superheated_table.json";
-
+// ------------------------------------------------------------
+// Load JSON table (once, cached)
+// ------------------------------------------------------------
+let TABLE = null;
 let GRID = null;
+
+async function loadTable() {
+  if (TABLE) return TABLE;
+
+  const url = new URL("../data/superheated_table.json", import.meta.url);
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to load superheated_table.json (${res.status})`
+    );
+  }
+
+  TABLE = await res.json();
+  return TABLE;
+}
 
 // ------------------------------------------------------------
 // Build grid once
 // ------------------------------------------------------------
-function buildGrid() {
+async function buildGrid() {
   if (GRID) return GRID;
 
-  const rows = TABLE;
+  const rows = await loadTable();
 
   const Tset = new Set();
   const Pset = new Set();
@@ -109,27 +127,42 @@ function quad2D(T, P, Tarr, Parr, F) {
   const [i0, i1, i2] = bracket3(Tarr, T);
   const [j0, j1, j2] = bracket3(Parr, P);
 
-  const g0 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
-                   F[i0][j0], F[i0][j1], F[i0][j2]);
+  const g0 = quad1(
+    P,
+    Parr[j0], Parr[j1], Parr[j2],
+    F[i0][j0], F[i0][j1], F[i0][j2]
+  );
 
-  const g1 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
-                   F[i1][j0], F[i1][j1], F[i1][j2]);
+  const g1 = quad1(
+    P,
+    Parr[j0], Parr[j1], Parr[j2],
+    F[i1][j0], F[i1][j1], F[i1][j2]
+  );
 
-  const g2 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
-                   F[i2][j0], F[i2][j1], F[i2][j2]);
+  const g2 = quad1(
+    P,
+    Parr[j0], Parr[j1], Parr[j2],
+    F[i2][j0], F[i2][j1], F[i2][j2]
+  );
 
-  return quad1(T, Tarr[i0], Tarr[i1], Tarr[i2], g0, g1, g2);
+  return quad1(
+    T,
+    Tarr[i0], Tarr[i1], Tarr[i2],
+    g0, g1, g2
+  );
 }
 
 // ------------------------------------------------------------
-// PUBLIC API — Drop-in Region 2
+// PUBLIC API — Drop-in Region 2 (ASYNC)
 // ------------------------------------------------------------
-export default function region2(T, P) {
-  const G = buildGrid();
+export default async function region2(T, P) {
+  const G = await buildGrid();
 
   // Hard fail outside region
-  if (T < G.T[0] || T > G.T[G.T.length - 1] ||
-      P < G.P[0] || P > G.P[G.P.length - 1]) {
+  if (
+    T < G.T[0] || T > G.T[G.T.length - 1] ||
+    P < G.P[0] || P > G.P[G.P.length - 1]
+  ) {
     throw new RangeError(
       `Region 2 (superheated table) out of bounds: T=${T} K, P=${P} MPa`
     );
