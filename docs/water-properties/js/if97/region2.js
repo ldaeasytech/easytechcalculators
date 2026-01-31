@@ -100,26 +100,37 @@ async function buildGrid() {
 function bracket3(arr, x) {
   const n = arr.length;
 
+  if (n < 3) {
+    throw new Error("Quadratic interpolation requires at least 3 grid points");
+  }
+
   if (x < arr[0] || x > arr[n - 1]) {
     throw new RangeError(
       `Region 2 out of range: value=${x}, allowed=[${arr[0]}, ${arr[n - 1]}]`
     );
   }
 
-  // Clamp to ends
-  if (x <= arr[1]) return [0, 1, 2];
-  if (x >= arr[n - 2]) return [n - 3, n - 2, n - 1];
+  // Lower boundary
+  if (x <= arr[1]) {
+    return [0, 1, 2];
+  }
 
-  // Interior (handle exact equality safely)
-  for (let i = 1; i < n - 2; i++) {
+  // Upper boundary
+  if (x >= arr[n - 2]) {
+    return [n - 3, n - 2, n - 1];
+  }
+
+  // Interior
+  for (let i = 1; i <= n - 3; i++) {
     if (x >= arr[i] && x <= arr[i + 1]) {
-      return [i - 1, i, i + 1];
+      return [i, i + 1, i + 2];
     }
   }
 
-  // Safety net (should never trigger)
+  // Absolute safety fallback (should never hit)
   return [n - 3, n - 2, n - 1];
 }
+
 
 // 1D quadratic Lagrange interpolation
 function quad1(x, x0, x1, x2, f0, f1, f2) {
