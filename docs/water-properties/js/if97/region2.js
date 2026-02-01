@@ -1,19 +1,18 @@
 // region2.js
-// Superheated steam properties via adaptive tabulated interpolation
-// ASYNC + HARD-FAIL only outside table bounds
+// Superheated steam via 2-step (T-then-P) interpolation
+// ASYNC, sparse-safe, hard-fail only outside bounds
 
 let TABLE = null;
 let GRID = null;
 
 // ------------------------------------------------------------
-// Load JSON table (once, cached)
+// Load table
 // ------------------------------------------------------------
 async function loadTable() {
   if (TABLE) return TABLE;
 
   const url = new URL("../data/superheated_table.json", import.meta.url);
   const res = await fetch(url);
-
   if (!res.ok) {
     throw new Error(`Failed to load superheated_table.json (${res.status})`);
   }
@@ -23,95 +22,35 @@ async function loadTable() {
 }
 
 // ------------------------------------------------------------
-// Build structured grid
+// Build pressure-sliced grid
 // ------------------------------------------------------------
 async function buildGrid() {
   if (GRID) return GRID;
 
   const rows = await loadTable();
 
-  const Tvals = [...new Set(rows.map(r => r.T))].sort((a, b) => a - b);
-  const Pvals = [...new Set(rows.map(r => r.P))].sort((a, b) => a - b);
+  // Group by pressure
+  const byP = new Map();
+  for (const r of rows) {
+    if (!byP.has(r.P)) byP.set(r.P, []);
+    byP.get(r.P).push(r);
+  }
 
-  const Ti = new Map(Tvals.map((v, i) => [v, i]));
-  const Pi = new Map(Pvals.map((v, i) => [v, i]));
+  // Sort each slice by temperature
+  for (const slice of byP.values()) {
+    slice.sort((a, b) => a.T - b.T);
+  }
 
-  const NT = Tvals.length;
-  const NP = Pvals.length;
-
-  const alloc = () =>
-    Array.from({ length: NT }, () => Array(NP).fill(NaN));
-
-  const grid = {
-    T: Tvals,
-    P: Pvals,
-    rho: alloc(),
-    v:   alloc(),
-    h:   alloc(),
-    s:   alloc(),
-    cp:  alloc(),
-    cv:  alloc(),
-    k:   alloc(),
-    mu:  alloc()
+  GRID = {
+    P: Array.from(byP.keys()).sort((a, b) => a - b),
+    slices: byP
   };
 
-  for (const r of rows) {
-    const i = Ti.get(r.T);
-    const j = Pi.get(r.P);
-
-    grid.rho[i][j] = r.rho;
-    grid.v[i][j]   = r.v;
-    grid.h[i][j]   = r.h;
-    grid.s[i][j]   = r.s;
-    grid.cp[i][j]  = r.cp;
-    grid.cv[i][j]  = r.cv;
-    grid.k[i][j]   = r.k;
-    grid.mu[i][j]  = r.mu;
-  }
-
-  GRID = grid;
-  return grid;
+  return GRID;
 }
 
 // ------------------------------------------------------------
-// Index helpers (NO throwing here)
-// ------------------------------------------------------------
-function bracket2(arr, x) {
-  if (arr.length < 2) return null;
-
-  if (x <= arr[0]) return [0, 1];
-  if (x >= arr[arr.length - 1]) {
-    const n = arr.length;
-    return [n - 2, n - 1];
-  }
-
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (x >= arr[i] && x <= arr[i + 1]) {
-      return [i, i + 1];
-    }
-  }
-  return null;
-}
-
-function bracket3(arr, x) {
-  if (arr.length < 3) return null;
-
-  if (x <= arr[1]) return [0, 1, 2];
-  if (x >= arr[arr.length - 2]) {
-    const n = arr.length;
-    return [n - 3, n - 2, n - 1];
-  }
-
-  for (let i = 1; i <= arr.length - 3; i++) {
-    if (x >= arr[i] && x <= arr[i + 1]) {
-      return [i, i + 1, i + 2];
-    }
-  }
-  return null;
-}
-
-// ------------------------------------------------------------
-// Interpolation kernels
+// Helpers
 // ------------------------------------------------------------
 function lerp(x, x0, x1, f0, f1) {
   return f0 + (f1 - f0) * (x - x0) / (x1 - x0);
@@ -125,62 +64,95 @@ function quad1(x, x0, x1, x2, f0, f1, f2) {
 }
 
 // ------------------------------------------------------------
-// Adaptive 2D interpolation
+// 1D interpolation in T for a fixed P slice
 // ------------------------------------------------------------
-function interp2D(T, P, Tarr, Parr, F) {
-  const Ti3 = bracket3(Tarr, T);
-  const Pi3 = bracket3(Parr, P);
+function interpT(slice, T, key) {
+  const n = slice.length;
 
-  // --- Full quadratic ---
-  if (Ti3 && Pi3) {
-    const [i0, i1, i2] = Ti3;
-    const [j0, j1, j2] = Pi3;
-
-    const g0 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
-      F[i0][j0], F[i0][j1], F[i0][j2]);
-
-    const g1 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
-      F[i1][j0], F[i1][j1], F[i1][j2]);
-
-    const g2 = quad1(P, Parr[j0], Parr[j1], Parr[j2],
-      F[i2][j0], F[i2][j1], F[i2][j2]);
-
-    return quad1(T, Tarr[i0], Tarr[i1], Tarr[i2], g0, g1, g2);
+  if (T < slice[0].T || T > slice[n - 1].T) {
+    throw new RangeError(`Region 2 out of T-range at P=${slice[0].P}`);
   }
 
-  const Ti2 = bracket2(Tarr, T);
-  const Pi2 = bracket2(Parr, P);
+  // Quadratic
+  if (n >= 3) {
+    if (T <= slice[1].T) {
+      return quad1(
+        T,
+        slice[0].T, slice[1].T, slice[2].T,
+        slice[0][key], slice[1][key], slice[2][key]
+      );
+    }
 
-  // --- Bilinear ---
-  if (Ti2 && Pi2) {
-    const [i0, i1] = Ti2;
-    const [j0, j1] = Pi2;
+    if (T >= slice[n - 2].T) {
+      return quad1(
+        T,
+        slice[n - 3].T, slice[n - 2].T, slice[n - 1].T,
+        slice[n - 3][key], slice[n - 2][key], slice[n - 1][key]
+      );
+    }
 
-    const f00 = F[i0][j0];
-    const f01 = F[i0][j1];
-    const f10 = F[i1][j0];
-    const f11 = F[i1][j1];
-
-    const f0 = lerp(P, Parr[j0], Parr[j1], f00, f01);
-    const f1 = lerp(P, Parr[j0], Parr[j1], f10, f11);
-
-    return lerp(T, Tarr[i0], Tarr[i1], f0, f1);
+    for (let i = 1; i <= n - 3; i++) {
+      if (T >= slice[i].T && T <= slice[i + 1].T) {
+        return quad1(
+          T,
+          slice[i].T, slice[i + 1].T, slice[i + 2].T,
+          slice[i][key], slice[i + 1][key], slice[i + 2][key]
+        );
+      }
+    }
   }
 
-  // --- Linear in T only ---
-  if (Ti2 && Parr.length === 1) {
-    const [i0, i1] = Ti2;
-    return lerp(T, Tarr[i0], Tarr[i1], F[i0][0], F[i1][0]);
+  // Linear fallback
+  for (let i = 0; i < n - 1; i++) {
+    if (T >= slice[i].T && T <= slice[i + 1].T) {
+      return lerp(
+        T,
+        slice[i].T, slice[i + 1].T,
+        slice[i][key], slice[i + 1][key]
+      );
+    }
   }
 
-  // --- Linear in P only ---
-  if (Pi2 && Tarr.length === 1) {
-    const [j0, j1] = Pi2;
-    return lerp(P, Parr[j0], Parr[j1], F[0][j0], F[0][j1]);
+  // Single-point slice
+  return slice[0][key];
+}
+
+// ------------------------------------------------------------
+// 1D interpolation in P
+// ------------------------------------------------------------
+function interpP(Pvals, vals, P) {
+  const n = Pvals.length;
+
+  if (n >= 3) {
+    if (P <= Pvals[1]) {
+      return quad1(P, Pvals[0], Pvals[1], Pvals[2], vals[0], vals[1], vals[2]);
+    }
+    if (P >= Pvals[n - 2]) {
+      return quad1(
+        P,
+        Pvals[n - 3], Pvals[n - 2], Pvals[n - 1],
+        vals[n - 3], vals[n - 2], vals[n - 1]
+      );
+    }
+    for (let i = 1; i <= n - 3; i++) {
+      if (P >= Pvals[i] && P <= Pvals[i + 1]) {
+        return quad1(
+          P,
+          Pvals[i], Pvals[i + 1], Pvals[i + 2],
+          vals[i], vals[i + 1], vals[i + 2]
+        );
+      }
+    }
   }
 
-  // --- Single point ---
-  return F[0][0];
+  // Linear
+  for (let i = 0; i < n - 1; i++) {
+    if (P >= Pvals[i] && P <= Pvals[i + 1]) {
+      return lerp(P, Pvals[i], Pvals[i + 1], vals[i], vals[i + 1]);
+    }
+  }
+
+  return vals[0];
 }
 
 // ------------------------------------------------------------
@@ -189,23 +161,27 @@ function interp2D(T, P, Tarr, Parr, F) {
 export default async function region2(T, P) {
   const G = await buildGrid();
 
-  if (
-    T < G.T[0] || T > G.T[G.T.length - 1] ||
-    P < G.P[0] || P > G.P[G.P.length - 1]
-  ) {
-    throw new RangeError(
-      `Region 2 (superheated table) out of bounds: T=${T} K, P=${P} MPa`
-    );
+  if (P < G.P[0] || P > G.P[G.P.length - 1]) {
+    throw new RangeError(`Region 2 pressure out of bounds: P=${P} MPa`);
   }
 
-  return {
-    rho: interp2D(T, P, G.T, G.P, G.rho),
-    v:   interp2D(T, P, G.T, G.P, G.v),
-    h:   interp2D(T, P, G.T, G.P, G.h),
-    s:   interp2D(T, P, G.T, G.P, G.s),
-    cp:  interp2D(T, P, G.T, G.P, G.cp),
-    cv:  interp2D(T, P, G.T, G.P, G.cv),
-    k:   interp2D(T, P, G.T, G.P, G.k),
-    mu:  interp2D(T, P, G.T, G.P, G.mu)
-  };
+  const keys = ["rho", "v", "h", "s", "cp", "cv", "k", "mu"];
+  const result = {};
+
+  for (const key of keys) {
+    const Pvals = [];
+    const vals = [];
+
+    for (const Pk of G.P) {
+      const slice = G.slices.get(Pk);
+      const valT = interpT(slice, T, key);
+
+      Pvals.push(Pk);
+      vals.push(valT);
+    }
+
+    result[key] = interpP(Pvals, vals, P);
+  }
+
+  return result;
 }
