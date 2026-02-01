@@ -23,8 +23,8 @@ async function loadTable() {
 
 function normalizeRow(r) {
   return {
-    T:  r["Temperature\r\nK"],
-    P:  r["Pressure\r\nMPa"],
+    T:   r["Temperature\r\nK"],
+    P:   r["Pressure\r\nMPa"],
 
     rho: r["Density\r\nkg/m^3"],
     v:   r["Volume \r\nm^3 /kg"],
@@ -44,6 +44,7 @@ function normalizeRow(r) {
 
 
 
+
 // ------------------------------------------------------------
 // Build pressure-sliced grid
 // ------------------------------------------------------------
@@ -52,6 +53,9 @@ async function buildGrid() {
 
   const raw = await loadTable();
   const rows = raw.map(normalizeRow);
+
+  console.log("Normalized row:", normalizeRow(TABLE[2]));
+
 
 
   // Group by pressure
