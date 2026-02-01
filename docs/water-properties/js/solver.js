@@ -80,8 +80,6 @@ export async function solve(inputs) {
 
     return await singlePhaseIF97(T, P);
 
-     console.log("REGION 1 STATE:", out);
-
   }
 
   /* ======================= T–s ======================= */
