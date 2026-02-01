@@ -202,12 +202,21 @@ export default async function region2(T, P) {
     const vals = [];
 
     for (const Pk of G.P) {
-      const slice = G.slices.get(Pk);
-      const valT = interpT(slice, T, key);
+  const slice = G.slices.get(Pk);
+  const valT = interpT(slice, T, key);
 
-      Pvals.push(Pk);
-      vals.push(valT);
-    }
+  if (!Number.isFinite(valT)) continue; // ← CRITICAL LINE
+
+  Pvals.push(Pk);
+  vals.push(valT);
+}
+
+    if (Pvals.length === 0) {
+  throw new RangeError(
+    `Region 2: no valid data at T=${T} K`
+  );
+}
+
 
     result[key] = interpP(Pvals, vals, P);
   }
