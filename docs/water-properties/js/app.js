@@ -181,6 +181,8 @@ const LABELS = {
   thermalConductivity: "Thermal Conductivity"
 };
 
+console.log("FINAL SOLVER STATE:", stateSolved);
+
 function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
   const units = unitSets[unitSystem];
