@@ -21,13 +21,38 @@ async function loadTable() {
   return TABLE;
 }
 
+function normalizeRow(r) {
+  return {
+    T:  r["Temperature\r\nK"],
+    P:  r["Pressure\r\nMPa"],
+
+    rho: r["Density\r\nkg/m^3"],
+    v:   r["Volume \r\nm^3 /kg"],
+
+    h:   r["Enthalpy\r\nkJ/kg"],
+    s:   r["Entropy\r\nkJ/(kg K)"],
+
+    cv:  r["Cv\r\nkJ/(kg K)"],
+    cp:  r["Cp\r\nkJ/(kg K)"],
+
+    k:   r["Therm. cond.\r\nW/(m K)"],
+
+    // µPa·s → Pa·s
+    mu:  r["Viscosity\r\nµPa s"] * 1e-6
+  };
+}
+
+
+
 // ------------------------------------------------------------
 // Build pressure-sliced grid
 // ------------------------------------------------------------
 async function buildGrid() {
   if (GRID) return GRID;
 
-  const rows = await loadTable();
+  const raw = await loadTable();
+  const rows = raw.map(normalizeRow);
+
 
   // Group by pressure
   const byP = new Map();
