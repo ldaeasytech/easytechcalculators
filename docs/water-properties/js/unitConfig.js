@@ -34,8 +34,8 @@ export const unitSets = {
     entropy: { unit: "kJ/kg·K" },
     density: { unit: "kg/m³" },
     specificVolume: { unit: "m³/kg" },
-    Cp: { unit: "kJ/kg·K" },
-    Cv: { unit: "kJ/kg·K" },
+    cp: { unit: "kJ/kg·K" },
+    cv: { unit: "kJ/kg·K" },
     viscosity: { unit: "Pa·s" },
     conductivity: { unit: "W/m·K" }
   },
@@ -47,8 +47,8 @@ export const unitSets = {
     entropy: { unit: "Btu/lbm·R" },
     density: { unit: "lbm/ft³" },
     specificVolume: { unit: "ft³/lbm" },
-    Cp: { unit: "Btu/lbm·R" },
-    Cv: { unit: "Btu/lbm·R" },
+    cp: { unit: "Btu/lbm·R" },
+    cv: { unit: "Btu/lbm·R" },
     viscosity: { unit: "lbm/ft·s" },
     conductivity: { unit: "Btu/hr·ft·R" }
   }
