@@ -99,7 +99,7 @@ function interpT(slice, T, key) {
   const n = slice.length;
 
   if (T < slice[0].T || T > slice[n - 1].T) {
-    throw new RangeError(`Region 2 out of T-range at P=${slice[0].P}`);
+   return NaN;
   }
 
   // Quadratic
