@@ -103,12 +103,9 @@ document.getElementById("calcForm").addEventListener("submit", async e => {
 
     // ---- SOLVER (IF97 / IAPWS UNITS ONLY) ----
     const stateSolved = await solve({ mode, ...rawInputs });
+     console.log("FINAL SOLVER STATE:", stateSolved);
 
-    const mappedState = {
-      ...stateSolved,
-      temperature: stateSolved.T,
-      pressure: stateSolved.P
-    };
+    const mappedState = { ...stateSolved };
 
     const stateUI =
       unitSystem === "SI"
@@ -180,8 +177,6 @@ const LABELS = {
   viscosity: "Viscosity",
   thermalConductivity: "Thermal Conductivity"
 };
-
-console.log("FINAL SOLVER STATE:", stateSolved);
 
 function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
