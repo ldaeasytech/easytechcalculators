@@ -76,7 +76,8 @@ function activateMode(mode) {
    FORM SUBMIT
    ============================================================ */
 
-document.getElementById("calcForm").addEventListener("submit", e => {
+document.getElementById("calcForm").addEventListener("submit", async e => {
+
   e.preventDefault();
 
   clearMessages();
@@ -101,7 +102,7 @@ document.getElementById("calcForm").addEventListener("submit", e => {
     if (!validation.valid) return;
 
     // ---- SOLVER (IF97 / IAPWS UNITS ONLY) ----
-    const stateSolved = solve({ mode, ...rawInputs });
+    const stateSolved = await solve({ mode, ...rawInputs });
 
     const mappedState = {
       ...stateSolved,
