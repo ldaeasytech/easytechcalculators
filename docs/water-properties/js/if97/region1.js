@@ -1,6 +1,5 @@
-// region1.js
-// Compressed liquid — table-based (replaces analytic IF97 Region 1)
-// Quadratic in T and P where possible, linear fallback
+// region1.js — Compressed liquid (table-driven)
+// Exact-match → interpolate → out-of-range error
 
 let TABLE = null;
 let GRID = null;
@@ -22,31 +21,24 @@ async function loadTable() {
 }
 
 // ------------------------------------------------------------
-// Normalize row (match your JSON headers EXACTLY)
+// Normalize row (MUST match solver keys)
 // ------------------------------------------------------------
 function normalizeRow(r) {
   return {
-    T:   r["Temperature\r\nK"],
-    P:   r["Pressure\r\nMPa"],
+    T: r["Temperature\r\nK"],
+    P: r["Pressure\r\nMPa"],
 
     rho: r["Density\r\nkg/m^3"],
     v:   r["Volume \r\nm^3 /kg"],
-
     h:   r["Enthalpy\r\nkJ/kg"],
     s:   r["Entropy\r\nkJ/(kg K)"],
-
     cp:  r["Cp\r\nkJ/(kg K)"],
-    cv:  r["Cv\r\nkJ/(kg K)"],
-
-    k:   r["Therm. cond.\r\nW/(m K)"],
-
-    // µPa·s → Pa·s
-    mu:  r["Viscosity\r\nµPa s"] * 1e-6
+    cv:  r["Cv\r\nkJ/(kg K)"]
   };
 }
 
 // ------------------------------------------------------------
-// Build pressure grid
+// Build pressure-sliced grid
 // ------------------------------------------------------------
 async function buildGrid() {
   if (GRID) return GRID;
@@ -73,7 +65,7 @@ async function buildGrid() {
 }
 
 // ------------------------------------------------------------
-// Math helpers
+// Interpolation helpers
 // ------------------------------------------------------------
 function lerp(x, x0, x1, f0, f1) {
   return f0 + (f1 - f0) * (x - x0) / (x1 - x0);
@@ -86,11 +78,9 @@ function quad1(x, x0, x1, x2, f0, f1, f2) {
   return L0 * f0 + L1 * f1 + L2 * f2;
 }
 
-// ------------------------------------------------------------
-// Interpolation in T
-// ------------------------------------------------------------
 function interpT(slice, T, key) {
   const n = slice.length;
+
   if (T < slice[0].T || T > slice[n - 1].T) return NaN;
 
   if (n >= 3) {
@@ -101,7 +91,6 @@ function interpT(slice, T, key) {
         slice[0][key], slice[1][key], slice[2][key]
       );
     }
-
     if (T >= slice[n - 2].T) {
       return quad1(
         T,
@@ -109,7 +98,6 @@ function interpT(slice, T, key) {
         slice[n - 3][key], slice[n - 2][key], slice[n - 1][key]
       );
     }
-
     for (let i = 1; i <= n - 3; i++) {
       if (T >= slice[i].T && T <= slice[i + 1].T) {
         return quad1(
@@ -121,7 +109,7 @@ function interpT(slice, T, key) {
     }
   }
 
-  // Linear fallback
+  // linear fallback
   for (let i = 0; i < n - 1; i++) {
     if (T >= slice[i].T && T <= slice[i + 1].T) {
       return lerp(
@@ -135,9 +123,6 @@ function interpT(slice, T, key) {
   return slice[0][key];
 }
 
-// ------------------------------------------------------------
-// Interpolation in P
-// ------------------------------------------------------------
 function interpP(Pvals, vals, P) {
   const n = Pvals.length;
 
@@ -163,7 +148,6 @@ function interpP(Pvals, vals, P) {
     }
   }
 
-  // Linear fallback
   for (let i = 0; i < n - 1; i++) {
     if (P >= Pvals[i] && P <= Pvals[i + 1]) {
       return lerp(P, Pvals[i], Pvals[i + 1], vals[i], vals[i + 1]);
@@ -176,14 +160,32 @@ function interpP(Pvals, vals, P) {
 // ------------------------------------------------------------
 // PUBLIC API — Region 1
 // ------------------------------------------------------------
-export default async function region1(T, P) {
+export async function region1(T, P) {
   const G = await buildGrid();
 
-  if (P < G.P[0] || P > G.P[G.P.length - 1]) {
-    throw new RangeError(`Region 1 (compressed liquid) P out of bounds: ${P}`);
+  // ---------- 1) EXACT MATCH ----------
+  const slice = G.slices.get(P);
+  if (slice) {
+    for (const r of slice) {
+      if (r.T === T) {
+        return {
+          rho: r.rho,
+          v: r.v,
+          h: r.h,
+          s: r.s,
+          cp: r.cp,
+          cv: r.cv
+        };
+      }
+    }
   }
 
-  const keys = ["rho", "v", "h", "s", "cp", "cv", "k", "mu"];
+  // ---------- 2) INTERPOLATION ----------
+  if (P < G.P[0] || P > G.P[G.P.length - 1]) {
+    throw new RangeError(`Region 1 outside table range: P=${P} MPa`);
+  }
+
+  const keys = ["rho", "v", "h", "s", "cp", "cv"];
   const out = {};
 
   for (const key of keys) {
@@ -191,16 +193,16 @@ export default async function region1(T, P) {
     const vals = [];
 
     for (const Pk of G.P) {
-      const slice = G.slices.get(Pk);
-      const valT = interpT(slice, T, key);
-      if (!Number.isFinite(valT)) continue;
+      const sl = G.slices.get(Pk);
+      const vT = interpT(sl, T, key);
+      if (!Number.isFinite(vT)) continue;
 
       Pvals.push(Pk);
-      vals.push(valT);
+      vals.push(vT);
     }
 
-    if (Pvals.length === 0) {
-      throw new RangeError(`Region 1: no data at T=${T} K`);
+    if (Pvals.length < 2) {
+      throw new RangeError(`Region 1 outside T-range at P=${P}`);
     }
 
     out[key] = interpP(Pvals, vals, P);
