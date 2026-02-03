@@ -9,6 +9,23 @@ import { fromSI } from "./unitConverter.js";
 import { unitSets } from "./unitConfig.js";
 import { getInputMode } from "./main.js";
 
+// ------------------------------------------------------------
+// Solver → UI key adapter (canonical, region-agnostic)
+// ------------------------------------------------------------
+function mapSolverToUI(stateSolved) {
+  return {
+    density: stateSolved.rho,
+    specificVolume: stateSolved.v,
+    enthalpy: stateSolved.h,
+    entropy: stateSolved.s,
+    cp: stateSolved.cp,
+    cv: stateSolved.cv,
+    thermalConductivity: stateSolved.k,
+    viscosity: stateSolved.mu
+  };
+}
+
+
 /* ============================================================
    MODE → ACTIVE INPUT FIELDS
    ============================================================ */
@@ -102,19 +119,24 @@ document.getElementById("calcForm").addEventListener("submit", async e => {
     if (!validation.valid) return;
 
     // ---- SOLVER (IF97 / IAPWS UNITS ONLY) ----
-    const stateSolved = await solve({ mode, ...rawInputs });
-     console.log("FINAL SOLVER STATE:", stateSolved);
+const stateSolved = await solve({ mode, ...rawInputs });
+console.log("FINAL SOLVER STATE:", stateSolved);
 
-    const mappedState = { ...stateSolved };
+// 🔑 canonical solver → UI mapping
+const mappedState = {
+  ...mapSolverToUI(stateSolved)
+};
 
-    const stateUI =
-      unitSystem === "SI"
-        ? { ...mappedState }
-        : fromSI(mappedState, unitSystem);
+const stateUI =
+  unitSystem === "SI"
+    ? { ...mappedState }
+    : fromSI(mappedState, unitSystem);
 
-    stateUI.phase = stateSolved.phase;
-    stateUI.phaseLabel = stateSolved.phaseLabel;
-    stateUI.inputMode = mode;
+// preserve non-property metadata
+stateUI.phase = stateSolved.phase;
+stateUI.phaseLabel = stateSolved.phaseLabel;
+stateUI.inputMode = mode;
+
 
     renderResults(stateUI, unitSystem);
 
