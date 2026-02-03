@@ -37,9 +37,9 @@ import { region3 } from "./if97/region3.js";
 
 
 const SINGLE_PHASE_LABEL = {
-  1: "compressed liquid",
-  2: "superheated vapor",
-  3: "compressed liquid"
+  1: "Compressed liquid",
+  2: "Superheated vapor",
+  3: "Compressed liquid"
 };
 
 
