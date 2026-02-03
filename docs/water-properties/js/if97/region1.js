@@ -21,6 +21,9 @@ async function loadTable() {
   return TABLE;
 }
 
+console.log("R1 table rows:", compressedLiquidTable.length);
+console.log("R1 sample row:", compressedLiquidTable[0]);
+
 // ------------------------------------------------------------
 // Normalize row (solver-canonical keys)
 // ------------------------------------------------------------
