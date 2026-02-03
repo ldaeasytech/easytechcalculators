@@ -1,5 +1,8 @@
 import { Psat } from "./region4.js";
 
+export function regionSelector(T, P) {
+  const Ps = Psat(T);
+
   // ---------- Region 5 ----------
   if (T > 1073.15 && T <= 2273.15 && P <= 50) {
     return 5;
