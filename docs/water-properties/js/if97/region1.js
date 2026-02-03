@@ -33,7 +33,8 @@ function normalizeRow(r) {
     h:   r["Enthalpy\r\nkJ/kg"],
     s:   r["Entropy\r\nkJ/(kg K)"],
     cp:  r["Cp\r\nkJ/(kg K)"],
-    cv:  r["Cv\r\nkJ/(kg K)"]
+    cv:  r["Cv\r\nkJ/(kg K)"],
+    k: r["Therm. cond.\r\nW/(m K)"],
 
         // µPa·s → Pa·s
     mu:  r["Viscosity\r\nµPa s"] * 1e-6
