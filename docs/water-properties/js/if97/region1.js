@@ -4,26 +4,12 @@
 
 console.log("REGION 1 MODULE LOADED");
 
-
 let TABLE = null;
 let GRID = null;
 
 // ------------------------------------------------------------
-// Load table
+// Load table (singleton, async-safe)
 // ------------------------------------------------------------
-async function loadTable() {
-  if (TABLE) return TABLE;
-
-  const url = new URL("../data/compressed_liquid_table.json", import.meta.url);
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to load compressed_liquid_table.json (${res.status})`);
-  }
-
-  TABLE = await res.json();
-  return TABLE;
-}
-
 async function loadTable() {
   if (TABLE) return TABLE;
 
@@ -41,28 +27,27 @@ async function loadTable() {
   return TABLE;
 }
 
-
 // ------------------------------------------------------------
 // Normalize row (solver-canonical keys)
 // ------------------------------------------------------------
 function normalizeRow(r) {
   return {
-    T: r["Temperature\r\nK"],
-    P: r["Pressure\r\nMPa"],
+    T:   Number(r["Temperature\r\nK"]),
+    P:   Number(r["Pressure\r\nMPa"]),
 
-    rho: r["Density\r\nkg/m^3"],
-    v:   r["Volume\r\nm^3 /kg"],
+    rho: Number(r["Density\r\nkg/m^3"]),
+    v:   Number(r["Volume\r\nm^3 /kg"]),
 
-    h:   r["Enthalpy\r\nkJ/kg"],
-    s:   r["Entropy\r\nkJ/(kg K)"],
+    h:   Number(r["Enthalpy\r\nkJ/kg"]),
+    s:   Number(r["Entropy\r\nkJ/(kg K)"]),
 
-    cv:  r["Cv\r\nkJ/(kg K)"],
-    cp:  r["Cp\r\nkJ/(kg K)"],
+    cp:  Number(r["Cp\r\nkJ/(kg K)"]),
+    cv:  Number(r["Cv\r\nkJ/(kg K)"]),
 
-    k:   r["Therm. cond.\r\nW/(m K)"],
+    k:   Number(r["Therm. cond.\r\nW/(m K)"]),
 
     // µPa·s → Pa·s
-    mu:  r["Viscosity\r\nµPa s"] * 1e-6
+    mu:  Number(r["Viscosity\r\nµPa s"]) * 1e-6
   };
 }
 
@@ -188,14 +173,25 @@ function interpP(Pvals, vals, P) {
 // PUBLIC API — Region 1
 // ------------------------------------------------------------
 export async function region1(T, P) {
-  const G = await buildGrid();
+  T = Number(T);
+  P = Number(P);
+
   console.log("REGION 1 CALLED", T, P);
 
+  const G = await buildGrid();
+
   // ---------- 1) EXACT MATCH ----------
-  const slice = G.slices.get(P);
+  let slice = null;
+  for (const Pk of G.P) {
+    if (Math.abs(Pk - P) < 1e-9) {
+      slice = G.slices.get(Pk);
+      break;
+    }
+  }
+
   if (slice) {
     for (const r of slice) {
-      if (r.T === T) {
+      if (Math.abs(r.T - T) < 1e-9) {
         return {
           rho: r.rho,
           v:   r.v,
