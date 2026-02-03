@@ -1,39 +1,54 @@
 import { Psat } from "./region4.js";
 
-/*
-  Custom region logic (NOT strict IF97):
-
-  Region 4 (saturation):
-    273.16 K ≤ T ≤ 647.1 K
-    P = Psat(T)
-
-  Region 1 (compressed liquid):
-    300 K ≤ T ≤ 1200 K
-    0.1 MPa ≤ P ≤ 1000 MPa
-    P > Psat(T)
-
-  Region 2 (superheated vapor):
-    372.76 K ≤ T ≤ 1200 K
-    0.1 MPa ≤ P ≤ 10 MPa
-    P < Psat(T)
-*/
+const T_CRIT = 647.1;
 
 export function regionSelector(T, P) {
+
+  // =========================
+  // Above critical temperature
+  // =========================
+  if (T > T_CRIT) {
+    if (
+      T >= 372.76 &&
+      T <= 1200 &&
+      P >= 0.1 &&
+      P <= 10
+    ) {
+      return 2; // superheated vapor (engineering sense)
+    }
+
+    if (
+      T >= 300 &&
+      T <= 1200 &&
+      P > 10 &&
+      P <= 1000
+    ) {
+      return 1; // compressed fluid (engineering sense)
+    }
+
+    throw new Error(
+      `State outside supported regions: T=${T} K, P=${P} MPa`
+    );
+  }
+
+  // =========================
+  // Below / at critical temperature
+  // =========================
   const Ps = Psat(T);
 
-  // ---------- Region 4: Saturation ----------
+  // Region 4: saturation
   if (
     T >= 273.16 &&
-    T <= 647.1 &&
+    T <= T_CRIT &&
     Math.abs(P - Ps) < 1e-6
   ) {
     return 4;
   }
 
-  // ---------- Region 1: Compressed liquid ----------
+  // Region 1: compressed liquid
   if (
     T >= 300 &&
-    T <= 1200 &&
+    T <= T_CRIT &&
     P >= 0.1 &&
     P <= 1000 &&
     P > Ps
@@ -41,10 +56,10 @@ export function regionSelector(T, P) {
     return 1;
   }
 
-  // ---------- Region 2: Superheated vapor ----------
+  // Region 2: superheated vapor
   if (
     T >= 372.76 &&
-    T <= 1200 &&
+    T <= T_CRIT &&
     P >= 0.1 &&
     P <= 10 &&
     P < Ps
@@ -52,7 +67,6 @@ export function regionSelector(T, P) {
     return 2;
   }
 
-  // ---------- Out of range ----------
   throw new Error(
     `State outside supported regions: T=${T} K, P=${P} MPa`
   );
