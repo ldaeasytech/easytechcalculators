@@ -46,8 +46,8 @@ function normalizeRow(r) {
 
     k:   Number(r["Therm. cond.\r\nW/(m K)"]),
 
-    // µPa·s → Pa·s
-    mu:  Number(r["Viscosity\r\nµPa s"]) * 1e-6
+    //viscosity already in Pa·s
+    mu:  Number(r["Viscosity\r\nµPa s"])
   };
 }
 
