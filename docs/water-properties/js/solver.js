@@ -129,32 +129,34 @@ export async function solve(inputs) {
 /* ============================================================
    IF97 single-phase wrapper (ASYNC)
    ============================================================ */
-
 async function singlePhaseIF97(T, P) {
   const rgn = regionSelector(T, P);
 
   let props;
-  if (rgn === 1) props = region1(T, P);
-  else if (rgn === 2) props = await region2(T, P); // ASYNC
+  if (rgn === 1) props = await region1(T, P);     // ✅ FIX
+  else if (rgn === 2) props = await region2(T, P);
   else if (rgn === 3) props = region3(T, P);
   else throw new Error(`Invalid IF97 region: ${rgn}`);
 
+  // --- canonical solver output ---
   const out = {
     phase: "single_phase",
     phaseLabel: `region_${rgn}`,
     temperature: T,
     pressure: P,
-    density: props.rho,
-    specificVolume: props.v,
-    enthalpy: props.h,
-    entropy: props.s,
+
+    rho: props.rho,
+    v: props.v,
+    h: props.h,
+    s: props.s,
     cp: props.cp,
     cv: props.cv
   };
 
+  // transport properties (canonical names)
   const rho_cgs = props.rho * 1e-3;
-  out.thermalConductivity = conductivity(T, rho_cgs);
-  out.viscosity = viscosity(T, rho_cgs);
+  out.k = conductivity(T, rho_cgs);
+  out.mu = viscosity(T, rho_cgs);
 
   return out;
 }
