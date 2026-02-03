@@ -153,10 +153,10 @@ async function singlePhaseIF97(T, P) {
     cv: props.cv
   };
 
-  // transport properties (canonical names)
-  const rho_cgs = props.rho * 1e-3;
-  out.k = conductivity(T, rho_cgs);
-  out.mu = viscosity(T, rho_cgs);
+// transport properties
+out.k  = props.k;
+out.mu = props.mu;
+
 
   return out;
 }
