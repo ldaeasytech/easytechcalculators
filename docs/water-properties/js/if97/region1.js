@@ -1,5 +1,6 @@
 // region1.js — Compressed liquid (table-driven)
 // Exact-match → interpolate → out-of-range error
+// OUTPUT KEYS MATCH region2.js EXACTLY
 
 let TABLE = null;
 let GRID = null;
@@ -21,7 +22,7 @@ async function loadTable() {
 }
 
 // ------------------------------------------------------------
-// Normalize row (MUST match solver keys)
+// Normalize row (solver-canonical keys)
 // ------------------------------------------------------------
 function normalizeRow(r) {
   return {
@@ -43,7 +44,6 @@ function normalizeRow(r) {
     mu:  r["Viscosity\r\nµPa s"] * 1e-6
   };
 }
-
 
 // ------------------------------------------------------------
 // Build pressure-sliced grid
@@ -88,7 +88,6 @@ function quad1(x, x0, x1, x2, f0, f1, f2) {
 
 function interpT(slice, T, key) {
   const n = slice.length;
-
   if (T < slice[0].T || T > slice[n - 1].T) return NaN;
 
   if (n >= 3) {
@@ -117,7 +116,6 @@ function interpT(slice, T, key) {
     }
   }
 
-  // linear fallback
   for (let i = 0; i < n - 1; i++) {
     if (T >= slice[i].T && T <= slice[i + 1].T) {
       return lerp(
@@ -178,11 +176,13 @@ export async function region1(T, P) {
       if (r.T === T) {
         return {
           rho: r.rho,
-          v: r.v,
-          h: r.h,
-          s: r.s,
-          cp: r.cp,
-          cv: r.cv
+          v:   r.v,
+          h:   r.h,
+          s:   r.s,
+          cp:  r.cp,
+          cv:  r.cv,
+          k:   r.k,
+          mu:  r.mu
         };
       }
     }
@@ -193,7 +193,7 @@ export async function region1(T, P) {
     throw new RangeError(`Region 1 outside table range: P=${P} MPa`);
   }
 
-  const keys = ["rho", "v", "h", "s", "cp", "cv"];
+  const keys = ["rho", "v", "h", "s", "cp", "cv", "k", "mu"];
   const out = {};
 
   for (const key of keys) {
