@@ -21,8 +21,23 @@ async function loadTable() {
   return TABLE;
 }
 
-console.log("R1 table rows:", compressedLiquidTable.length);
-console.log("R1 sample row:", compressedLiquidTable[0]);
+async function loadTable() {
+  if (TABLE) return TABLE;
+
+  const url = new URL("../data/compressed_liquid_table.json", import.meta.url);
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to load compressed_liquid_table.json (${res.status})`);
+  }
+
+  TABLE = await res.json();
+
+  console.log("R1 table rows:", TABLE.length);
+  console.log("R1 sample row:", TABLE[0]);
+
+  return TABLE;
+}
+
 
 // ------------------------------------------------------------
 // Normalize row (solver-canonical keys)
