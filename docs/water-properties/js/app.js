@@ -10,6 +10,22 @@ import { unitSets } from "./unitConfig.js";
 import { getInputMode } from "./main.js";
 
 // ------------------------------------------------------------
+// Phase label display map (UI only)
+// ------------------------------------------------------------
+const PHASE_LABEL_MAP = {
+  region_1: "Compressed Liquid",
+  region_2: "Superheated Vapor",
+  region_3: "Dense Fluid",
+  region_4: "Saturated Mixture",
+
+  saturated_liquid: "Saturated Liquid",
+  saturated_vapor: "Saturated Vapor",
+  two_phase: "Two-Phase Mixture",
+  single_phase: "Single Phase"
+};
+
+
+// ------------------------------------------------------------
 // Solver → UI key adapter (canonical, region-agnostic)
 // ------------------------------------------------------------
 function mapSolverToUI(stateSolved) {
