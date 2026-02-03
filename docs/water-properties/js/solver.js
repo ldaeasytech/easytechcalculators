@@ -35,6 +35,14 @@ import { region1 } from "./if97/region1.js";
 import region2 from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
 
+
+const SINGLE_PHASE_LABEL = {
+  1: "compressed liquid",
+  2: "superheated vapor",
+  3: "compressed liquid"
+};
+
+
 /* ============================================================
    Constants
    ============================================================ */
@@ -139,20 +147,21 @@ async function singlePhaseIF97(T, P) {
   else throw new Error(`Invalid IF97 region: ${rgn}`);
 
   return {
-    phase: "single_phase",
-    phaseLabel: `region_${rgn}`,
-    temperature: T,
-    pressure: P,
+  phase: "single_phase",
+  phaseLabel: SINGLE_PHASE_LABEL[rgn] ?? `region_${rgn}`,
+  temperature: T,
+  pressure: P,
 
-    rho: props.rho,
-    v: props.v,
-    h: props.h,
-    s: props.s,
-    cp: props.cp,
-    cv: props.cv,
-    k: props.k,
-    mu: props.mu
-  };
+  rho: props.rho,
+  v: props.v,
+  h: props.h,
+  s: props.s,
+  cp: props.cp,
+  cv: props.cv,
+  k: props.k,
+  mu: props.mu
+};
+
 }
 
 /* ============================================================
@@ -162,7 +171,7 @@ async function singlePhaseIF97(T, P) {
 function satLiquidState(T, P) {
   return {
     phase: "saturated_liquid",
-    phaseLabel: "saturated_liquid",
+    phaseLabel: "Saturated liquid",
     temperature: T,
     pressure: P,
 
@@ -180,7 +189,7 @@ function satLiquidState(T, P) {
 function satVaporState(T, P) {
   return {
     phase: "saturated_vapor",
-    phaseLabel: "saturated_vapor",
+    phaseLabel: "Saturated vapor",
     temperature: T,
     pressure: P,
 
