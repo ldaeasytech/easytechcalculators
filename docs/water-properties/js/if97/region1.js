@@ -29,17 +29,21 @@ function normalizeRow(r) {
     P: r["Pressure\r\nMPa"],
 
     rho: r["Density\r\nkg/m^3"],
-    v:   r["Volume \r\nm^3 /kg"],
+    v:   r["Volume\r\nm^3 /kg"],
+
     h:   r["Enthalpy\r\nkJ/kg"],
     s:   r["Entropy\r\nkJ/(kg K)"],
-    cp:  r["Cp\r\nkJ/(kg K)"],
-    cv:  r["Cv\r\nkJ/(kg K)"],
-    k: r["Therm. cond.\r\nW/(m K)"],
 
-        // µPa·s → Pa·s
+    cv:  r["Cv\r\nkJ/(kg K)"],
+    cp:  r["Cp\r\nkJ/(kg K)"],
+
+    k:   r["Therm. cond.\r\nW/(m K)"],
+
+    // µPa·s → Pa·s
     mu:  r["Viscosity\r\nµPa s"] * 1e-6
   };
 }
+
 
 // ------------------------------------------------------------
 // Build pressure-sliced grid
