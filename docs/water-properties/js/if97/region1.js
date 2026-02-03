@@ -189,6 +189,9 @@ function interpP(Pvals, vals, P) {
 // ------------------------------------------------------------
 export async function region1(T, P) {
   const G = await buildGrid();
+  const table = await loadTable();
+
+  console.log("REGION 1 CALLED", T, P);
 
   // ---------- 1) EXACT MATCH ----------
   const slice = G.slices.get(P);
