@@ -2,6 +2,9 @@
 // Exact-match → interpolate → out-of-range error
 // OUTPUT KEYS MATCH region2.js EXACTLY
 
+console.log("REGION 1 MODULE LOADED");
+
+
 let TABLE = null;
 let GRID = null;
 
