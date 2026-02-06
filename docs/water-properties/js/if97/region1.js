@@ -206,9 +206,12 @@ export async function region1(T, P) {
   }
 
   // ---------- 2) INTERPOLATION ----------
-  if (P < G.P[0] || P > G.P[G.P.length - 1]) {
-    throw new RangeError(`Region 1 outside table range: P=${P} MPa`);
-  }
+// ---- ENGINEERING EXTENSION: clamp pressure to table bounds ----
+const Pmin = G.P[0];
+const Pmax = G.P[G.P.length - 1];
+
+const P_eff = Math.max(Pmin, Math.min(P, Pmax));
+
 
   const keys = ["rho", "v", "h", "s", "cp", "cv", "k", "mu"];
   const out = {};
@@ -230,7 +233,7 @@ export async function region1(T, P) {
       throw new RangeError(`Region 1 outside T-range at P=${P}`);
     }
 
-    out[key] = interpP(Pvals, vals, P);
+    out[key] = interpP(Pvals, vals, P_eff);
   }
 
   return out;
