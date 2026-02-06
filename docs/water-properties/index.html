@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -38,59 +39,36 @@
 
       <!-- INPUT FORM -->
       <form id="calcForm" class="grid-form" novalidate>
-
-        <!-- Temperature -->
         <div class="field">
-          <label for="temperature">Temperature</label>
-          <div class="input-with-unit">
-            <input id="temperature" type="number" step="any" />
-            <select class="unit-select" data-field="temperature"></select>
-          </div>
+          <label for="temperature">Temperature (K)</label>
+          <input id="temperature" type="number" step="any" />
         </div>
 
-        <!-- Pressure -->
         <div class="field">
-          <label for="pressure">Pressure</label>
-          <div class="input-with-unit">
-            <input id="pressure" type="number" step="any" />
-            <select class="unit-select" data-field="pressure"></select>
-          </div>
+          <label for="pressure">Pressure (MPa)</label>
+          <input id="pressure" type="number" step="any" />
         </div>
 
-        <!-- Enthalpy -->
         <div class="field">
-          <label for="enthalpy">Enthalpy</label>
-          <div class="input-with-unit">
-            <input id="enthalpy" type="number" step="any" />
-            <select class="unit-select" data-field="enthalpy"></select>
-          </div>
+          <label for="enthalpy">Enthalpy (kJ/kg)</label>
+          <input id="enthalpy" type="number" step="any" />
         </div>
 
-        <!-- Entropy -->
         <div class="field">
-          <label for="entropy">Entropy</label>
-          <div class="input-with-unit">
-            <input id="entropy" type="number" step="any" />
-            <select class="unit-select" data-field="entropy"></select>
-          </div>
+          <label for="entropy">Entropy (kJ/kg·K)</label>
+          <input id="entropy" type="number" step="any" />
         </div>
 
-        <!-- Specific Volume (disabled input, still unit-aware) -->
         <div class="field">
-          <label for="specificVolume">Specific Volume</label>
-          <div class="input-with-unit">
-            <input id="specificVolume" type="number" disabled />
-            <select class="unit-select" data-field="specificVolume"></select>
-          </div>
+          <label for="specificVolume">Specific Volume (m³/kg)</label>
+          <input id="specificVolume" type="number" disabled />
         </div>
 
-        <!-- Quality -->
         <div class="field">
           <label for="quality">Quality x (0–1)</label>
           <input id="quality" type="number" step="any" />
         </div>
 
-        <!-- Unit System -->
         <div class="field full">
           <label for="unitSystem">Unit System</label>
           <select id="unitSystem">
