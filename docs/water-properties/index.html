@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -81,6 +80,56 @@
           Calculate Properties
         </button>
       </form>
+
+      <!-- ADVANCED SETTINGS TOGGLE -->
+      <button
+        type="button"
+        class="advanced-toggle"
+        onclick="document.getElementById('advancedPanel').classList.toggle('hidden')"
+      >
+        ⚙ Advanced Settings
+      </button>
+
+      <!-- ADVANCED SETTINGS PANEL -->
+      <div id="advancedPanel" class="advanced-panel hidden">
+        <h3>Advanced Settings</h3>
+
+        <div class="advanced-group">
+          <h4>Unit Preferences (Outputs)</h4>
+          <p class="advanced-hint">
+            Fine-tune how results are displayed. (Optional)
+          </p>
+
+          <!-- Placeholder selectors (safe, not yet wired) -->
+          <div class="advanced-row">
+            <label>Thermodynamic Properties</label>
+            <select disabled>
+              <option>Use Unit System</option>
+            </select>
+          </div>
+
+          <div class="advanced-row">
+            <label>Transport Properties</label>
+            <select disabled>
+              <option>Use Unit System</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="advanced-group">
+          <h4>Calculation Options</h4>
+          <p class="advanced-hint">
+            Reserved for future accuracy and performance controls.
+          </p>
+
+          <div class="advanced-row">
+            <label>
+              <input type="checkbox" disabled />
+              Strict IF97 region limits
+            </label>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- RESULTS -->
