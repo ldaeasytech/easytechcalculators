@@ -117,3 +117,17 @@ export const DEFAULT_UNITS = {
     thermalConductivity: "Btu/(hr·ft·R)"
   }
 };
+
+
+// ------------------------------------------------------------
+// BACKWARD-COMPATIBILITY EXPORT (for existing app.js)
+// ------------------------------------------------------------
+
+export const unitSets = {
+  SI: Object.fromEntries(
+    Object.entries(DEFAULT_UNITS.SI).map(([k, unit]) => [k, { unit }])
+  ),
+  Imperial: Object.fromEntries(
+    Object.entries(DEFAULT_UNITS.Imperial).map(([k, unit]) => [k, { unit }])
+  )
+};
