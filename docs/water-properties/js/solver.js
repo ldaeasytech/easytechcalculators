@@ -217,6 +217,26 @@ function satVaporState(T, P) {
 }
 
 function mixStates(T, P, x) {
+  // Saturated liquid properties
+  const rho_f = rho_f_sat(T);
+  const v_f   = v_f_sat(T);
+  const h_f   = h_f_sat(T);
+  const s_f   = s_f_sat(T);
+  const cp_f  = cp_f_sat(T);
+  const cv_f  = cv_f_sat(T);
+  const k_f   = k_f_sat(T);
+  const mu_f  = mu_f_sat(T);
+
+  // Saturated vapor properties
+  const rho_g = rho_g_sat(T);
+  const v_g   = v_g_sat(T);
+  const h_g   = h_g_sat(T);
+  const s_g   = s_g_sat(T);
+  const cp_g  = cp_g_sat(T);
+  const cv_g  = cv_g_sat(T);
+  const k_g   = k_g_sat(T);
+  const mu_g  = mu_g_sat(T);
+
   return {
     phase: "two_phase",
     phaseLabel: "Two-phase",
@@ -224,16 +244,18 @@ function mixStates(T, P, x) {
     temperature: T,
     pressure: P,
 
-    rho: NaN,
-    v: NaN,
-    h: (1 - x) * h_f_sat(T) + x * h_g_sat(T),
-    s: (1 - x) * s_f_sat(T) + x * s_g_sat(T),
-    cp: NaN,
-    cv: NaN,
-    k: NaN,
-    mu: NaN
+    // Mixture rules
+    rho: (1 - x) * rho_f + x * rho_g,
+    v:   (1 - x) * v_f   + x * v_g,
+    h:   (1 - x) * h_f   + x * h_g,
+    s:   (1 - x) * s_f   + x * s_g,
+    cp:  (1 - x) * cp_f  + x * cp_g,
+    cv:  (1 - x) * cv_f  + x * cv_g,
+    k:   (1 - x) * k_f   + x * k_g,
+    mu:  (1 - x) * mu_f  + x * mu_g
   };
 }
+
 
 /* ============================================================
    Root solvers
