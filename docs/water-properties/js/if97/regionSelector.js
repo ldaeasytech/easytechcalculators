@@ -1,10 +1,13 @@
-import { Psat } from "./region4.js";
+// regionSelector.js — unified region selection
+// Supports TP, Ph, Ps without satProps.js
+
+import { Psat, Tsat } from "./region4.js";
 import {
-  hSatLiquid,
-  hSatVapor,
-  sSatLiquid,
-  sSatVapor
-} from "./satProps.js";
+  h_f_sat,
+  h_g_sat,
+  s_f_sat,
+  s_g_sat
+} from "./region4.js";
 
 const T_CRIT = 647.1;
 const P_CRIT = 22.064;
@@ -14,94 +17,58 @@ const S_TOL = 1e-6;
 
 export function regionSelector({ T, P, h, s, mode }) {
 
-  // ==================================================
-  // P–h MODE
-  // ==================================================
+  /* ==================================================
+     P–h MODE (enthalpy-based, saturation first)
+     ================================================== */
   if (mode === "Ph") {
 
-    if (P > P_CRIT) return 1;
+    if (P > P_CRIT) return 1; // compressed liquid only
 
-    const h_f = hSatLiquid(P);
-    const h_g = hSatVapor(P);
+    const Ts = Tsat(P);
+    const hf = h_f_sat(Ts);
+    const hg = h_g_sat(Ts);
 
-    if (Math.abs(h - h_f) < H_TOL) return 4;
-    if (Math.abs(h - h_g) < H_TOL) return 4;
+    if (Math.abs(h - hf) < H_TOL) return 4;
+    if (Math.abs(h - hg) < H_TOL) return 4;
 
-    if (h < h_f) return 1;
-    if (h > h_g) return 2;
+    if (h < hf) return 1;
+    if (h > hg) return 2;
 
-    if (h > h_f && h < h_g) return 4;
-
-    throw new Error(`Invalid P–h state: P=${P} MPa, h=${h} kJ/kg`);
+    return 4; // two-phase
   }
 
-  // ==================================================
-  // P–s MODE
-  // ==================================================
+  /* ==================================================
+     P–s MODE (entropy-based, saturation first)
+     ================================================== */
   if (mode === "Ps") {
 
     if (P > P_CRIT) return 1;
 
-    const s_f = sSatLiquid(P);
-    const s_g = sSatVapor(P);
+    const Ts = Tsat(P);
+    const sf = s_f_sat(Ts);
+    const sg = s_g_sat(Ts);
 
-    if (Math.abs(s - s_f) < S_TOL) return 4;
-    if (Math.abs(s - s_g) < S_TOL) return 4;
+    if (Math.abs(s - sf) < S_TOL) return 4;
+    if (Math.abs(s - sg) < S_TOL) return 4;
 
-    if (s < s_f) return 1;
-    if (s > s_g) return 2;
+    if (s < sf) return 1;
+    if (s > sg) return 2;
 
-    if (s > s_f && s < s_g) return 4;
-
-    throw new Error(`Invalid P–s state: P=${P} MPa, s=${s} kJ/kg-K`);
+    return 4;
   }
 
-  // ==================================================
-  // EXISTING T–P BASED MODES (TP, Tx, Px)
-  // ==================================================
+  /* ==================================================
+     T–P MODE (TP, Tx, Px)
+     ================================================== */
 
   if (T > T_CRIT) {
-
-    if (
-      T >= 372.76 &&
-      T <= 1200 &&
-      P >= 0.1 &&
-      P <= 10
-    ) return 2;
-
-    if (
-      T >= 300 &&
-      T <= 1200 &&
-      P > 10 &&
-      P <= 1000
-    ) return 1;
-
-    throw new Error(
-      `State outside supported regions: T=${T} K, P=${P} MPa`
-    );
+    if (P <= 10) return 2;
+    return 1;
   }
 
   const Ps = Psat(T);
 
-  if (
-    T >= 273.16 &&
-    T <= T_CRIT &&
-    Math.abs(P - Ps) < 1e-6
-  ) return 4;
-
-  if (
-    T >= 300 &&
-    T <= T_CRIT &&
-    P > Ps
-  ) return 1;
-
-  if (
-    T >= 372.76 &&
-    T <= T_CRIT &&
-    P < Ps
-  ) return 2;
-
-  throw new Error(
-    `State outside supported regions: T=${T} K, P=${P} MPa`
-  );
+  if (Math.abs(P - Ps) < 1e-6) return 4;
+  if (P > Ps) return 1;
+  return 2;
 }
