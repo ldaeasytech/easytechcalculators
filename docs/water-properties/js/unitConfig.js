@@ -1,55 +1,119 @@
 // unitConfig.js
-// Display + canonical unit definitions
+// Canonical unit definitions + selectable options
 
 export const UNIT_SYSTEMS = ["SI", "Imperial"];
 
-export const PROPERTY_KEYS = {
-  temperature: "temperature",
-  pressure: "pressure",
-  enthalpy: "enthalpy",
-  entropy: "entropy",
-  density: "density",
-  specificVolume: "specificVolume",
-  Cp: "Cp",
-  Cv: "Cv",
-  viscosity: "viscosity",
-  conductivity: "conductivity"
+// Canonical solver keys
+export const PROPERTY_KEYS = [
+  "temperature",
+  "pressure",
+  "enthalpy",
+  "entropy",
+  "density",
+  "specificVolume",
+  "cp",
+  "cv",
+  "viscosity",
+  "thermalConductivity"
+];
+
+/* ============================================================
+   Unit options per property
+   ============================================================ */
+
+export const UNIT_OPTIONS = {
+  temperature: {
+    SI: [
+      { unit: "K", toSI: x => x, fromSI: x => x },
+      { unit: "°C", toSI: x => x + 273.15, fromSI: x => x - 273.15 }
+    ],
+    Imperial: [
+      { unit: "°F", toSI: x => (x + 459.67) / 1.8, fromSI: x => x * 1.8 - 459.67 },
+      { unit: "°R", toSI: x => x / 1.8, fromSI: x => x * 1.8 }
+    ]
+  },
+
+  pressure: {
+    SI: [
+      { unit: "MPa", toSI: x => x, fromSI: x => x },
+      { unit: "kPa", toSI: x => x / 1000, fromSI: x => x * 1000 },
+      { unit: "bar", toSI: x => x / 10, fromSI: x => x * 10 }
+    ],
+    Imperial: [
+      { unit: "psia", toSI: x => x / 145.0377377, fromSI: x => x * 145.0377377 },
+      { unit: "psi", toSI: x => x / 145.0377377, fromSI: x => x * 145.0377377 }
+    ]
+  },
+
+  enthalpy: {
+    SI: [{ unit: "kJ/kg", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "Btu/lbm", toSI: x => x / 0.429922614, fromSI: x => x * 0.429922614 }]
+  },
+
+  entropy: {
+    SI: [{ unit: "kJ/(kg·K)", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "Btu/(lbm·R)", toSI: x => x / 0.429922614, fromSI: x => x * 0.429922614 }]
+  },
+
+  density: {
+    SI: [{ unit: "kg/m³", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "lbm/ft³", toSI: x => x / 0.06242796, fromSI: x => x * 0.06242796 }]
+  },
+
+  specificVolume: {
+    SI: [{ unit: "m³/kg", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "ft³/lbm", toSI: x => x * 0.06242796, fromSI: x => x / 0.06242796 }]
+  },
+
+  cp: {
+    SI: [{ unit: "kJ/(kg·K)", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "Btu/(lbm·R)", toSI: x => x / 0.429922614, fromSI: x => x * 0.429922614 }]
+  },
+
+  cv: {
+    SI: [{ unit: "kJ/(kg·K)", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "Btu/(lbm·R)", toSI: x => x / 0.429922614, fromSI: x => x * 0.429922614 }]
+  },
+
+  viscosity: {
+    SI: [{ unit: "Pa·s", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "lbm/(ft·s)", toSI: x => x / 0.671968975, fromSI: x => x * 0.671968975 }]
+  },
+
+  thermalConductivity: {
+    SI: [{ unit: "W/(m·K)", toSI: x => x, fromSI: x => x }],
+    Imperial: [{ unit: "Btu/(hr·ft·R)", toSI: x => x / 0.577789, fromSI: x => x * 0.577789 }]
+  }
 };
 
-// MUST match solver outputs exactly
-export const PHASES = {
-  COMPRESSED: "compressed_liquid",
-  SAT_LIQ: "saturated_liquid",
-  SAT_VAP: "saturated_vapor",
-  SUPERHEATED: "superheated_vapor",
-  DENSE: "dense_fluid",
-  TWO_PHASE: "two_phase"
-};
+/* ============================================================
+   Default unit selections
+   ============================================================ */
 
-export const unitSets = {
+export const DEFAULT_UNITS = {
   SI: {
-    temperature: { unit: "K" },
-    pressure: { unit: "MPa" },
-    enthalpy: { unit: "kJ/kg" },
-    entropy: { unit: "kJ/kg·K" },
-    density: { unit: "kg/m³" },
-    specificVolume: { unit: "m³/kg" },
-    cp: { unit: "kJ/kg·K" },
-    cv: { unit: "kJ/kg·K" },
-    viscosity: { unit: "Pa·s" },
-    conductivity: { unit: "W/m·K" }
+    temperature: "K",
+    pressure: "MPa",
+    enthalpy: "kJ/kg",
+    entropy: "kJ/(kg·K)",
+    density: "kg/m³",
+    specificVolume: "m³/kg",
+    cp: "kJ/(kg·K)",
+    cv: "kJ/(kg·K)",
+    viscosity: "Pa·s",
+    thermalConductivity: "W/(m·K)"
   },
 
   Imperial: {
-    temperature: { unit: "°F" },
-    pressure: { unit: "psia" },
-    enthalpy: { unit: "Btu/lbm" },
-    entropy: { unit: "Btu/lbm·R" },
-    density: { unit: "lbm/ft³" },
-    specificVolume: { unit: "ft³/lbm" },
-    cp: { unit: "Btu/lbm·R" },
-    cv: { unit: "Btu/lbm·R" },
-    viscosity: { unit: "lbm/ft·s" },
-    conductivity: { unit: "Btu/hr·ft·R" }
+    temperature: "°F",
+    pressure: "psia",
+    enthalpy: "Btu/lbm",
+    entropy: "Btu/(lbm·R)",
+    density: "lbm/ft³",
+    specificVolume: "ft³/lbm",
+    cp: "Btu/(lbm·R)",
+    cv: "Btu/(lbm·R)",
+    viscosity: "lbm/(ft·s)",
+    thermalConductivity: "Btu/(hr·ft·R)"
   }
 };
