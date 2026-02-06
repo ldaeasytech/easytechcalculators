@@ -98,28 +98,18 @@ function quad1(x, x0, x1, x2, f0, f1, f2) {
 function interpT(slice, T, key) {
   const n = slice.length;
 
-  if (T < slice[0].T || T > slice[n - 1].T) {
-   return NaN;
+  // BELOW table → clamp to lowest T
+  if (T <= slice[0].T) {
+    return slice[0][key];
   }
 
-  // Quadratic
+  // ABOVE table → clamp to highest T
+  if (T >= slice[n - 1].T) {
+    return slice[n - 1][key];
+  }
+
+  // Quadratic interpolation
   if (n >= 3) {
-    if (T <= slice[1].T) {
-      return quad1(
-        T,
-        slice[0].T, slice[1].T, slice[2].T,
-        slice[0][key], slice[1][key], slice[2][key]
-      );
-    }
-
-    if (T >= slice[n - 2].T) {
-      return quad1(
-        T,
-        slice[n - 3].T, slice[n - 2].T, slice[n - 1].T,
-        slice[n - 3][key], slice[n - 2][key], slice[n - 1][key]
-      );
-    }
-
     for (let i = 1; i <= n - 3; i++) {
       if (T >= slice[i].T && T <= slice[i + 1].T) {
         return quad1(
@@ -142,10 +132,9 @@ function interpT(slice, T, key) {
     }
   }
 
-  // Single-point slice
-  return slice[0][key];
+  // Should never happen
+  return slice[n - 1][key];
 }
-
 // ------------------------------------------------------------
 // 1D interpolation in P
 // ------------------------------------------------------------
