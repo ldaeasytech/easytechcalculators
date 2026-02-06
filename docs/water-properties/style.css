@@ -346,3 +346,43 @@ select:focus {
   opacity: 0.65;
   white-space: nowrap;
 }
+
+
+/* =========================================================
+   INPUT PAIR GROUPING (UI UPGRADE)
+========================================================= */
+
+.input-groups {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* Individual group box */
+.input-group {
+  background: #0f1520;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+/* Group label */
+.group-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9fb0c9;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+/* Ensure tabs inside groups behave well */
+.input-group .input-tabs {
+  margin-bottom: 0;
+}
+
+/* Tablet and up: side-by-side groups */
+@media (min-width: 600px) {
+  .input-groups {
+    grid-template-columns: 1fr 1fr;
+  }
+}
