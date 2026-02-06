@@ -162,6 +162,69 @@
     <!-- SECTION 3 -->
     <h2>3. Phase Diagram Location</h2>
   
+<div class="phase-diagram">
+  <svg viewBox="0 0 600 400" width="100%" height="auto"
+       xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Axes -->
+    <line x1="80" y1="340" x2="520" y2="340" stroke="#9ca3af" stroke-width="2"/>
+    <line x1="80" y1="340" x2="80" y2="60" stroke="#9ca3af" stroke-width="2"/>
+
+    <!-- Axis labels -->
+    <text x="300" y="380" text-anchor="middle" fill="#d1d5db">
+      Entropy (s)
+    </text>
+    <text x="20" y="200" text-anchor="middle" fill="#d1d5db"
+          transform="rotate(-90 20 200)">
+      Temperature (T)
+    </text>
+
+    <!-- Saturation dome -->
+    <path d="M180 320
+             C220 200, 260 120, 300 100
+             C340 120, 380 200, 420 320"
+          fill="none" stroke="#60a5fa" stroke-width="3"/>
+
+    <!-- Region labels -->
+    <text x="140" y="230" fill="#93c5fd" font-size="13" text-anchor="middle">
+      Subcooled
+    </text>
+    <text x="140" y="248" fill="#93c5fd" font-size="13" text-anchor="middle">
+      (Compressed Liquid)
+    </text>
+
+    <!-- FIXED saturated region label -->
+    <text x="300" y="235" text-anchor="middle"
+          fill="#60a5fa" font-size="13">
+      Saturated Region
+    </text>
+
+    <text x="460" y="230" fill="#93c5fd" font-size="13" text-anchor="middle">
+      Superheated
+    </text>
+    <text x="460" y="248" fill="#93c5fd" font-size="13" text-anchor="middle">
+      Vapor
+    </text>
+
+    <!-- Critical point -->
+    <circle cx="300" cy="100" r="5" fill="#f87171"/>
+    <text x="300" y="82" text-anchor="middle"
+          fill="#fca5a5" font-size="12">
+      Critical Point
+    </text>
+
+  </svg>
+</div>
+
+    <p>
+      The saturation dome separates single-phase regions from the two-phase
+      mixture region. Subcooled liquid lies to the left of the dome, while
+      superheated vapor lies to the right. Points on the dome represent
+      saturated liquid and saturated vapor states.
+    </p>
+
+    <h3>Temperature–Pressure (T–P) Phase Diagram</h3>
+   
     <div class="phase-diagram">
   <svg viewBox="0 0 600 400" width="100%" height="auto"
        xmlns="http://www.w3.org/2000/svg">
@@ -171,65 +234,49 @@
     <line x1="80" y1="340" x2="80" y2="60" stroke="#9ca3af" stroke-width="2"/>
 
     <!-- Axis labels -->
-    <text x="300" y="380" text-anchor="middle" fill="#d1d5db">Entropy (s)</text>
+    <text x="300" y="380" text-anchor="middle" fill="#d1d5db">
+      Pressure (P)
+    </text>
     <text x="20" y="200" text-anchor="middle" fill="#d1d5db"
-          transform="rotate(-90 20 200)">Temperature (T)</text>
+          transform="rotate(-90 20 200)">
+      Temperature (T)
+    </text>
 
-    <!-- Saturation dome -->
-    <path d="M180 320
-             C220 200, 260 120, 300 100
-             C340 120, 380 200, 420 320"
+    <!-- Saturation curve -->
+    <path d="M160 320
+             C220 260, 300 180, 360 120"
           fill="none" stroke="#60a5fa" stroke-width="3"/>
 
     <!-- Region labels -->
-    <text x="140" y="220" fill="#93c5fd" font-size="14">
+    <text x="200" y="210" fill="#93c5fd" font-size="13" text-anchor="middle">
       Subcooled
     </text>
-    <text x="140" y="240" fill="#93c5fd" font-size="14">
-      (Compressed Liquid)
-    </text>
 
-    <text x="300" y="210" text-anchor="middle"
-          fill="#60a5fa" font-size="14">
-      Saturated Region
-    </text>
-
-    <text x="440" y="220" fill="#93c5fd" font-size="14">
+    <text x="400" y="210" fill="#93c5fd" font-size="13" text-anchor="middle">
       Superheated
     </text>
-    <text x="440" y="240" fill="#93c5fd" font-size="14">
-      Vapor
+
+    <!-- Saturation label -->
+    <text x="300" y="165" fill="#60a5fa" font-size="13" text-anchor="middle">
+      Saturation Line
     </text>
 
     <!-- Critical point -->
-    <circle cx="300" cy="100" r="5" fill="#f87171"/>
-    <text x="300" y="85" text-anchor="middle"
+    <circle cx="360" cy="120" r="5" fill="#f87171"/>
+    <text x="360" y="100" text-anchor="middle"
           fill="#fca5a5" font-size="12">
       Critical Point
     </text>
 
   </svg>
-
-<p>
-  The saturation dome separates single-phase regions from the two-phase
-  mixture region. Subcooled liquid lies to the left of the dome, while
-  superheated vapor lies to the right. Points on the dome represent
-  saturated liquid and saturated vapor states.
-</p>
-
-      
 </div>
-    
+
     <p>
-      On a temperature–entropy or pressure–temperature diagram:
+      On a temperature–pressure diagram, the saturation line separates single-phase
+      liquid and vapor regions. For saturated states, specifying either temperature
+      or pressure uniquely determines the phase equilibrium condition.
     </p>
-
-    <ul>
-      <li>Subcooled liquid lies to the left of the saturation dome</li>
-      <li>Saturated states lie along the dome boundary</li>
-      <li>Superheated vapor lies to the right of the dome</li>
-    </ul>
-
+    
     <p>
       The calculator internally determines the appropriate region based on
       the selected input pair and provided values.
