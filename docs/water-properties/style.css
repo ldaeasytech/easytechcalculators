@@ -386,3 +386,13 @@ select:focus {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* =========================================================
+   Input group title fine-tuning (prevent wrapping)
+========================================================= */
+
+.group-title {
+  font-size: 0.8rem;        /* was ~0.85rem */
+  line-height: 1.2;
+  white-space: nowrap;     /* keep on one line */
+}
