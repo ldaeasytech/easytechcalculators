@@ -246,7 +246,7 @@ function mixStates(T, P, x) {
 
     // Mixture rules
     v:   (1 - x) * v_f   + x * v_g,
-    rho: 1/v,
+    rho: 1/((1 - x) * v_f   + x * v_g),
     h:   (1 - x) * h_f   + x * h_g,
     s:   (1 - x) * s_f   + x * s_g,
     cp:  NaN,
