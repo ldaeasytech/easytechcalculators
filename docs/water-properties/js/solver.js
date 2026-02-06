@@ -245,14 +245,14 @@ function mixStates(T, P, x) {
     pressure: P,
 
     // Mixture rules
-    rho: (1 - x) * rho_f + x * rho_g,
     v:   (1 - x) * v_f   + x * v_g,
+    rho: 1/v,
     h:   (1 - x) * h_f   + x * h_g,
     s:   (1 - x) * s_f   + x * s_g,
-    cp:  (1 - x) * cp_f  + x * cp_g,
-    cv:  (1 - x) * cv_f  + x * cv_g,
-    k:   (1 - x) * k_f   + x * k_g,
-    mu:  (1 - x) * mu_f  + x * mu_g
+    cp:  NaN,
+    cv:  NaN,
+    k:   NaN,
+    mu:  NaN
   };
 }
 
