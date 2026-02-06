@@ -396,3 +396,22 @@ select:focus {
   line-height: 1.2;
   white-space: nowrap;     /* keep on one line */
 }
+
+.site-footer {
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #b0b6c3; /* soft engineering gray */
+  border-top: 1px solid #1f2937; /* subtle divider */
+}
+
+.footer-brand {
+  font-weight: 500;
+  color: #d1d5db; /* slightly brighter */
+}
+
+.footer-tagline {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #9ca3af; /* lower emphasis */
+}
