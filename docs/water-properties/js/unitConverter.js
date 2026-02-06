@@ -1,51 +1,43 @@
-// unitConverter.js
-// Per-property unit conversion (solver-safe)
+// unitConverter.js — SAFE UI ⇄ IF97 unit conversion
+// Uses unitSets as the single source of truth
 
-import { UNIT_OPTIONS } from "./unitConfig.js";
+import { unitSets } from "./unitConfig.js";
 
 /* ============================================================
-   UI → SI
+   INPUT → SI (solver side)
    ============================================================ */
+export function toSI(raw, system = "SI") {
+  const out = { ...raw };
 
-export function toSI(raw, selectedUnits) {
-  const out = {};
+  if (system === "SI") return out;
 
   for (const key in raw) {
-    const val = raw[key];
-    if (!Number.isFinite(val)) continue;
+    if (!Number.isFinite(raw[key])) continue;
 
-    const unitName = selectedUnits[key];
-    const options =
-      UNIT_OPTIONS[key]?.SI?.concat(UNIT_OPTIONS[key]?.Imperial) ?? [];
+    const unitDef = unitSets[key]?.[system]?.[0];
+    if (!unitDef?.toSI) continue;
 
-    const u = options.find(o => o.unit === unitName);
-    if (!u) throw new Error(`Unsupported unit ${unitName} for ${key}`);
-
-    out[key] = u.toSI(val);
+    out[key] = unitDef.toSI(raw[key]);
   }
 
   return out;
 }
 
 /* ============================================================
-   SI → UI
+   SI → OUTPUT (UI side)
    ============================================================ */
-
-export function fromSI(raw, selectedUnits) {
+export function fromSI(raw, system = "SI") {
   const out = { ...raw };
 
+  if (system === "SI") return out;
+
   for (const key in raw) {
-    const val = raw[key];
-    if (!Number.isFinite(val)) continue;
+    if (!Number.isFinite(raw[key])) continue;
 
-    const unitName = selectedUnits[key];
-    const options =
-      UNIT_OPTIONS[key]?.SI?.concat(UNIT_OPTIONS[key]?.Imperial) ?? [];
+    const unitDef = unitSets[key]?.[system]?.[0];
+    if (!unitDef?.fromSI) continue;
 
-    const u = options.find(o => o.unit === unitName);
-    if (!u) continue;
-
-    out[key] = u.fromSI(val);
+    out[key] = unitDef.fromSI(raw[key]);
   }
 
   return out;
