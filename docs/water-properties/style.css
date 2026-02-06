@@ -511,3 +511,40 @@ select:focus {
   background: #3b82f6;
 }
 
+
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ad-sidebar {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+@media (max-width: 1024px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+  }
+  .ad-sidebar {
+    display: none;
+  }
+}
+
+.ad-below-results {
+  margin: 32px 0;
+  padding-top: 16px;
+  border-top: 1px solid #1f2937;
+  text-align: center;
+}
+
+.ad-label {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-bottom: 6px;
+}
+
