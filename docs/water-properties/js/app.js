@@ -149,10 +149,20 @@ const mappedState = {
   ...mapSolverToUI(stateSolved)
 };
 
-const stateUI =
-  unitSystem === "SI"
-    ? { ...mappedState }
-    : fromSI(mappedState, unitSystem);
+let stateUI;
+
+if (unitSystem === "SI") {
+  stateUI = { ...mappedState };
+} else {
+  const converted = fromSI(mappedState, unitSystem);
+
+  stateUI = {
+    ...converted,
+    temperature: mappedState.temperature,
+    pressure: mappedState.pressure
+  };
+}
+
 
 // preserve non-property metadata
 stateUI.phase = stateSolved.phase;
@@ -226,9 +236,16 @@ function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
   const units = unitSets[unitSystem];
 
-  const fields = [...BASE_FIELDS];
-  if (state.inputMode === "Tx") fields.unshift("pressure");
-  if (state.inputMode === "Px") fields.unshift("temperature");
+const fields = [...BASE_FIELDS];
+
+if (state.inputMode === "Tx") {
+  fields.unshift("pressure");
+}
+
+if (state.inputMode === "Ph" || state.inputMode === "Ps" || state.inputMode === "Px") {
+  fields.unshift("temperature");
+}
+
 
   const rows = fields
     .filter(k => Number.isFinite(state[k]))
