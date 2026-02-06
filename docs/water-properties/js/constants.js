@@ -45,7 +45,7 @@ export const T_MIN = 250.0;      // K
 export const T_MAX = 2273.15;    // K
 
 export const P_MIN = 1e-6;       // MPa
-export const P_MAX = 100.0;      // MPa
+export const P_MAX = 1000.0;      // MPa
 
 export const RHO_MIN = 1e-9;     // kg/m³
 export const RHO_MAX = 2000.0;   // kg/m³
