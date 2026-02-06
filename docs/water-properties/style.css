@@ -398,20 +398,39 @@ select:focus {
 }
 
 .site-footer {
-  padding: 12px 16px;
+  padding: 16px;
   text-align: center;
+  border-top: 1px solid #1f2937;
+  color: #9ca3af;
   font-size: 0.85rem;
-  color: #b0b6c3; /* soft engineering gray */
-  border-top: 1px solid #1f2937; /* subtle divider */
 }
 
 .footer-brand {
   font-weight: 500;
-  color: #d1d5db; /* slightly brighter */
+  color: #d1d5db;
 }
 
 .footer-tagline {
   margin-top: 4px;
   font-size: 0.75rem;
-  color: #9ca3af; /* lower emphasis */
+  color: #9ca3af;
+}
+
+.footer-links {
+  margin-top: 8px;
+  font-size: 0.75rem;
+}
+
+.footer-links a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  margin: 0 6px;
+  color: #6b7280;
 }
