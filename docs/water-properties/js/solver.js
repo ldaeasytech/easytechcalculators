@@ -1,7 +1,6 @@
 // solver.js — Fully IF97-compliant solver
 // Region 1–3: single-phase
 // Region 4: saturation / two-phase
-// Region 2: async tabulated superheated steam
 
 /* ============================================================
    Imports
@@ -35,13 +34,11 @@ import { region1 } from "./if97/region1.js";
 import region2 from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
 
-
 const SINGLE_PHASE_LABEL = {
   1: "Compressed liquid",
   2: "Superheated vapor",
   3: "Compressed liquid"
 };
-
 
 /* ============================================================
    Constants
@@ -51,12 +48,11 @@ const SAT_EPS = 1e-6;
 const X_EPS = 1e-10;
 
 /* ============================================================
-   Main solver (ASYNC)
+   Main solver
    ============================================================ */
 
 export async function solve(inputs) {
-  let { mode } = inputs;
- // if (mode === "Ps") mode = "Ts";
+  const { mode } = inputs;
 
   /* ======================= T–P ======================= */
   if (mode === "TP") {
@@ -71,44 +67,46 @@ export async function solve(inputs) {
   }
 
   /* ======================= P–h ======================= */
-if (mode === "Ph") {
-  const P = inputs.pressure;
-  const h = inputs.enthalpy;
+  if (mode === "Ph") {
+    const P = inputs.pressure;
+    const h = inputs.enthalpy;
 
-  const rgn = regionSelector({ P, h, mode: "Ph" });
+    const rgn = regionSelector({ P, h, mode: "Ph" });
 
-  // Two-phase or saturation
-  if (rgn === 4) {
-    const T = Tsat(P);
-    const hf = h_f_sat(T);
-    const hg = h_g_sat(T);
-    const x = clamp01((h - hf) / (hg - hf));
+    if (rgn === 4) {
+      const T = Tsat(P);
+      const hf = h_f_sat(T);
+      const hg = h_g_sat(T);
+      const x = clamp01((h - hf) / (hg - hf));
 
-    if (x <= X_EPS) return satLiquidState(T, P);
-    if (1 - x <= X_EPS) return satVaporState(T, P);
-    return mixStates(T, P, x);
-  }
-
-  // Single-phase (Region 1 or 2)
-  const T = await solveTfromH(P, h, rgn);
-  return await singlePhaseIF97(T, P);
-}
-}
-  /* ======================= T–s ======================= */
-  if (mode === "Ts") {
-    const T = inputs.temperature;
-    const s = inputs.entropy;
-    const Ps = Psat(T);
-
-    if (s >= s_f_sat(T) && s <= s_g_sat(T)) {
-      const x = clamp01((s - s_f_sat(T)) / (s_g_sat(T) - s_f_sat(T)));
-
-      if (x <= X_EPS) return satLiquidState(T, Ps);
-      if (1 - x <= X_EPS) return satVaporState(T, Ps);
-      return mixStates(T, Ps, x);
+      if (x <= X_EPS) return satLiquidState(T, P);
+      if (1 - x <= X_EPS) return satVaporState(T, P);
+      return mixStates(T, P, x);
     }
 
-    const P = await solvePfromS(T, s);
+    const T = await solveTfromH(P, h, rgn);
+    return await singlePhaseIF97(T, P);
+  }
+
+  /* ======================= P–s ======================= */
+  if (mode === "Ps") {
+    const P = inputs.pressure;
+    const s = inputs.entropy;
+
+    const rgn = regionSelector({ P, s, mode: "Ps" });
+
+    if (rgn === 4) {
+      const T = Tsat(P);
+      const sf = s_f_sat(T);
+      const sg = s_g_sat(T);
+      const x = clamp01((s - sf) / (sg - sf));
+
+      if (x <= X_EPS) return satLiquidState(T, P);
+      if (1 - x <= X_EPS) return satVaporState(T, P);
+      return mixStates(T, P, x);
+    }
+
+    const T = await solveTfromS(P, s, rgn);
     return await singlePhaseIF97(T, P);
   }
 
@@ -151,25 +149,24 @@ async function singlePhaseIF97(T, P) {
   else throw new Error(`Invalid IF97 region: ${rgn}`);
 
   return {
-  phase: "single_phase",
-  phaseLabel: SINGLE_PHASE_LABEL[rgn] ?? `region_${rgn}`,
-  temperature: T,
-  pressure: P,
+    phase: "single_phase",
+    phaseLabel: SINGLE_PHASE_LABEL[rgn] ?? `region_${rgn}`,
+    temperature: T,
+    pressure: P,
 
-  rho: props.rho,
-  v: props.v,
-  h: props.h,
-  s: props.s,
-  cp: props.cp,
-  cv: props.cv,
-  k: props.k,
-  mu: props.mu
-};
-
+    rho: props.rho,
+    v: props.v,
+    h: props.h,
+    s: props.s,
+    cp: props.cp,
+    cv: props.cv,
+    k: props.k,
+    mu: props.mu
+  };
 }
 
 /* ============================================================
-   Saturated states (CANONICAL KEYS)
+   Saturated states
    ============================================================ */
 
 function satLiquidState(T, P) {
@@ -209,7 +206,7 @@ function satVaporState(T, P) {
 }
 
 /* ============================================================
-   Two-phase mixture (intentionally NaN transport)
+   Two-phase mixture
    ============================================================ */
 
 function mixStates(T, P, x) {
@@ -232,7 +229,7 @@ function mixStates(T, P, x) {
 }
 
 /* ============================================================
-   Root solvers
+   Root solvers (region-aware)
    ============================================================ */
 
 function clamp01(x) {
@@ -247,27 +244,30 @@ async function solveTfromH(P, h, region) {
     const mid = 0.5 * (lo + hi);
 
     let hm;
-    if (region === 1) {
-      hm = (await region1(mid, P)).h;
-    } else if (region === 2) {
-      hm = (await region2(mid, P)).h;
-    } else {
-      throw new Error(`solveTfromH: unsupported region ${region}`);
-    }
+    if (region === 1) hm = (await region1(mid, P)).h;
+    else if (region === 2) hm = (await region2(mid, P)).h;
+    else throw new Error(`solveTfromH: unsupported region ${region}`);
 
     hm > h ? (hi = mid) : (lo = mid);
   }
 
   return 0.5 * (lo + hi);
 }
- 
 
-async function solvePfromS(T, s) {
-  let lo = 0.000611, hi = 100.0;
+async function solveTfromS(P, s, region) {
+  let lo = 273.15;
+  let hi = 2273.15;
+
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-    const sm = (await singlePhaseIF97(T, mid)).s;
-    sm > s ? hi = mid : lo = mid;
+
+    let sm;
+    if (region === 1) sm = (await region1(mid, P)).s;
+    else if (region === 2) sm = (await region2(mid, P)).s;
+    else throw new Error(`solveTfromS: unsupported region ${region}`);
+
+    sm > s ? (hi = mid) : (lo = mid);
   }
+
   return 0.5 * (lo + hi);
 }
