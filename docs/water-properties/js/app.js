@@ -30,6 +30,11 @@ const PHASE_LABEL_MAP = {
 // ------------------------------------------------------------
 function mapSolverToUI(stateSolved) {
   return {
+    // 🔑 pass-through state variables
+    temperature: stateSolved.temperature,
+    pressure: stateSolved.pressure,
+
+    // thermodynamic properties
     density: stateSolved.rho,
     specificVolume: stateSolved.v,
     enthalpy: stateSolved.h,
@@ -40,6 +45,7 @@ function mapSolverToUI(stateSolved) {
     viscosity: stateSolved.mu
   };
 }
+
 
 
 /* ============================================================
