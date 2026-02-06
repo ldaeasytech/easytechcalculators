@@ -244,9 +244,9 @@ function clamp01(x) {
 }
 
 async function solveTfromH(P, h, region) {
-  let lo = 273.15, hi = 2273.15;
+  let lo = 273.15, hi = 1200;
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 500; i++) {
     const mid = 0.5 * (lo + hi);
     const hm =
       region === 1
@@ -260,9 +260,9 @@ async function solveTfromH(P, h, region) {
 }
 
 async function solveTfromS(P, s, region) {
-  let lo = 273.15, hi = 2273.15;
+  let lo = 273.15, hi = 1200;
 
-  for (let i = 0; i < 200; i++) {
+  for (let i = 0; i < 500; i++) {
     const mid = 0.5 * (lo + hi);
     const sm =
       region === 1
