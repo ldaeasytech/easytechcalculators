@@ -71,25 +71,29 @@ export async function solve(inputs) {
   }
 
   /* ======================= P–h ======================= */
-  if (mode === "Ph") {
-    const P = inputs.pressure;
-    const h = inputs.enthalpy;
-    const T = await solveTfromH(P, h);
-    const Ps = Psat(T);
+if (mode === "Ph") {
+  const P = inputs.pressure;
+  const h = inputs.enthalpy;
 
-    if (Math.abs(P - Ps) < SAT_EPS) {
-      const hf = h_f_sat(T);
-      const hg = h_g_sat(T);
-      const x = clamp01((h - hf) / (hg - hf));
+  const rgn = regionSelector({ P, h, mode: "Ph" });
 
-      if (x <= X_EPS) return satLiquidState(T, P);
-      if (1 - x <= X_EPS) return satVaporState(T, P);
-      return mixStates(T, P, x);
-    }
+  // Two-phase or saturation
+  if (rgn === 4) {
+    const T = Tsat(P);
+    const hf = h_f_sat(T);
+    const hg = h_g_sat(T);
+    const x = clamp01((h - hf) / (hg - hf));
 
-    return await singlePhaseIF97(T, P);
+    if (x <= X_EPS) return satLiquidState(T, P);
+    if (1 - x <= X_EPS) return satVaporState(T, P);
+    return mixStates(T, P, x);
   }
 
+  // Single-phase (Region 1 or 2)
+  const T = await solveTfromH(P, h, rgn);
+  return await singlePhaseIF97(T, P);
+}
+}
   /* ======================= T–s ======================= */
   if (mode === "Ts") {
     const T = inputs.temperature;
@@ -138,7 +142,7 @@ export async function solve(inputs) {
    ============================================================ */
 
 async function singlePhaseIF97(T, P) {
-  const rgn = regionSelector(T, P);
+  const rgn = regionSelector({ T, P, mode: "TP" });
 
   let props;
   if (rgn === 1) props = await region1(T, P);
@@ -235,15 +239,28 @@ function clamp01(x) {
   return Math.max(0, Math.min(1, x));
 }
 
-async function solveTfromH(P, h) {
-  let lo = 273.15, hi = 2273.15;
+async function solveTfromH(P, h, region) {
+  let lo = 273.15;
+  let hi = 2273.15;
+
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-    const hm = (await singlePhaseIF97(mid, P)).h;
-    hm > h ? hi = mid : lo = mid;
+
+    let hm;
+    if (region === 1) {
+      hm = (await region1(mid, P)).h;
+    } else if (region === 2) {
+      hm = (await region2(mid, P)).h;
+    } else {
+      throw new Error(`solveTfromH: unsupported region ${region}`);
+    }
+
+    hm > h ? (hi = mid) : (lo = mid);
   }
+
   return 0.5 * (lo + hi);
 }
+
 
 async function solvePfromS(T, s) {
   let lo = 0.000611, hi = 100.0;
