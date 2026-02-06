@@ -19,17 +19,39 @@
 
   <!-- MAIN -->
   <main class="container">
+
     <!-- INPUTS -->
     <section class="card">
       <h2>Inputs</h2>
 
-      <!-- MODE BUTTONS -->
-      <div class="input-tabs">
-        <button class="tab active" data-mode="TP">T–P</button>
-        <button class="tab" data-mode="Ph">P–h</button>
-        <button class="tab" data-mode="Ps">P–s</button>
-        <button class="tab" data-mode="Tx">T–x</button>
-        <button class="tab" data-mode="Px">P–x</button>
+      <!-- INPUT PAIR GROUPS -->
+      <div class="input-groups">
+
+        <!-- SINGLE PHASE -->
+        <div class="input-group">
+          <div class="group-title">
+            Single Phase Input Pairs
+          </div>
+
+          <div class="input-tabs">
+            <button class="tab active" data-mode="TP">T–P</button>
+            <button class="tab" data-mode="Ph">P–h</button>
+            <button class="tab" data-mode="Ps">P–s</button>
+          </div>
+        </div>
+
+        <!-- SATURATED / MIXED -->
+        <div class="input-group">
+          <div class="group-title">
+            Saturated and Mixed Phase Input Pairs
+          </div>
+
+          <div class="input-tabs">
+            <button class="tab" data-mode="Tx">T–x</button>
+            <button class="tab" data-mode="Px">P–x</button>
+          </div>
+        </div>
+
       </div>
 
       <div id="tabHelp" class="tab-help">
@@ -80,56 +102,6 @@
           Calculate Properties
         </button>
       </form>
-
-      <!-- ADVANCED SETTINGS TOGGLE -->
-      <button
-        type="button"
-        class="advanced-toggle"
-        onclick="document.getElementById('advancedPanel').classList.toggle('hidden')"
-      >
-        ⚙ Advanced Settings
-      </button>
-
-      <!-- ADVANCED SETTINGS PANEL -->
-      <div id="advancedPanel" class="advanced-panel hidden">
-        <h3>Advanced Settings</h3>
-
-        <div class="advanced-group">
-          <h4>Unit Preferences (Outputs)</h4>
-          <p class="advanced-hint">
-            Fine-tune how results are displayed. (Optional)
-          </p>
-
-          <!-- Placeholder selectors (safe, not yet wired) -->
-          <div class="advanced-row">
-            <label>Thermodynamic Properties</label>
-            <select disabled>
-              <option>Use Unit System</option>
-            </select>
-          </div>
-
-          <div class="advanced-row">
-            <label>Transport Properties</label>
-            <select disabled>
-              <option>Use Unit System</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="advanced-group">
-          <h4>Calculation Options</h4>
-          <p class="advanced-hint">
-            Reserved for future accuracy and performance controls.
-          </p>
-
-          <div class="advanced-row">
-            <label>
-              <input type="checkbox" disabled />
-              Strict IF97 region limits
-            </label>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- RESULTS -->
@@ -145,6 +117,7 @@
         <div id="suggestions" class="suggestions"></div>
       </div>
     </section>
+
   </main>
 
   <!-- FOOTER -->
