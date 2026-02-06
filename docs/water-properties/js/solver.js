@@ -34,6 +34,13 @@ import { region1 } from "./if97/region1.js";
 import region2 from "./if97/region2.js";
 import { region3 } from "./if97/region3.js";
 
+/* ============================================================
+   Constants
+   ============================================================ */
+
+const SAT_EPS = 1e-6;
+const X_EPS = 1e-10;
+
 const SINGLE_PHASE_LABEL = {
   1: "Compressed liquid",
   2: "Superheated vapor",
@@ -41,11 +48,22 @@ const SINGLE_PHASE_LABEL = {
 };
 
 /* ============================================================
-   Constants
+   Mode-aware output filter
    ============================================================ */
 
-const SAT_EPS = 1e-6;
-const X_EPS = 1e-10;
+function formatOutput(state, mode) {
+  const out = { ...state };
+
+  if (mode === "Ph" || mode === "Ps" || mode === "Px") {
+    out.temperature = state.temperature;
+  }
+
+  if (mode === "Tx") {
+    out.pressure = state.pressure;
+  }
+
+  return out;
+}
 
 /* ============================================================
    Main solver
@@ -61,9 +79,10 @@ export async function solve(inputs) {
     const Ps = Psat(T);
 
     if (Math.abs(P - Ps) < SAT_EPS) {
-      return satVaporState(T, Ps);
+      return formatOutput(satVaporState(T, Ps), mode);
     }
-    return await singlePhaseIF97(T, P);
+
+    return formatOutput(await singlePhaseIF97(T, P), mode);
   }
 
   /* ======================= P–h ======================= */
@@ -79,13 +98,13 @@ export async function solve(inputs) {
       const hg = h_g_sat(T);
       const x = clamp01((h - hf) / (hg - hf));
 
-      if (x <= X_EPS) return satLiquidState(T, P);
-      if (1 - x <= X_EPS) return satVaporState(T, P);
-      return mixStates(T, P, x);
+      if (x <= X_EPS) return formatOutput(satLiquidState(T, P), mode);
+      if (1 - x <= X_EPS) return formatOutput(satVaporState(T, P), mode);
+      return formatOutput(mixStates(T, P, x), mode);
     }
 
     const T = await solveTfromH(P, h, rgn);
-    return await singlePhaseIF97(T, P);
+    return formatOutput(await singlePhaseIF97(T, P), mode);
   }
 
   /* ======================= P–s ======================= */
@@ -101,13 +120,13 @@ export async function solve(inputs) {
       const sg = s_g_sat(T);
       const x = clamp01((s - sf) / (sg - sf));
 
-      if (x <= X_EPS) return satLiquidState(T, P);
-      if (1 - x <= X_EPS) return satVaporState(T, P);
-      return mixStates(T, P, x);
+      if (x <= X_EPS) return formatOutput(satLiquidState(T, P), mode);
+      if (1 - x <= X_EPS) return formatOutput(satVaporState(T, P), mode);
+      return formatOutput(mixStates(T, P, x), mode);
     }
 
     const T = await solveTfromS(P, s, rgn);
-    return await singlePhaseIF97(T, P);
+    return formatOutput(await singlePhaseIF97(T, P), mode);
   }
 
   /* ======================= T–x ======================= */
@@ -116,9 +135,9 @@ export async function solve(inputs) {
     const x = inputs.quality;
     const P = Psat(T);
 
-    if (x <= X_EPS) return satLiquidState(T, P);
-    if (1 - x <= X_EPS) return satVaporState(T, P);
-    return mixStates(T, P, x);
+    if (x <= X_EPS) return formatOutput(satLiquidState(T, P), mode);
+    if (1 - x <= X_EPS) return formatOutput(satVaporState(T, P), mode);
+    return formatOutput(mixStates(T, P, x), mode);
   }
 
   /* ======================= P–x ======================= */
@@ -127,9 +146,9 @@ export async function solve(inputs) {
     const x = inputs.quality;
     const T = Tsat(P);
 
-    if (x <= X_EPS) return satLiquidState(T, P);
-    if (1 - x <= X_EPS) return satVaporState(T, P);
-    return mixStates(T, P, x);
+    if (x <= X_EPS) return formatOutput(satLiquidState(T, P), mode);
+    if (1 - x <= X_EPS) return formatOutput(satVaporState(T, P), mode);
+    return formatOutput(mixStates(T, P, x), mode);
   }
 
   throw new Error(`Unsupported solver mode: ${mode}`);
@@ -150,23 +169,15 @@ async function singlePhaseIF97(T, P) {
 
   return {
     phase: "single_phase",
-    phaseLabel: SINGLE_PHASE_LABEL[rgn] ?? `region_${rgn}`,
+    phaseLabel: SINGLE_PHASE_LABEL[rgn],
     temperature: T,
     pressure: P,
-
-    rho: props.rho,
-    v: props.v,
-    h: props.h,
-    s: props.s,
-    cp: props.cp,
-    cv: props.cv,
-    k: props.k,
-    mu: props.mu
+    ...props
   };
 }
 
 /* ============================================================
-   Saturated states
+   Saturated & mixture helpers
    ============================================================ */
 
 function satLiquidState(T, P) {
@@ -205,14 +216,10 @@ function satVaporState(T, P) {
   };
 }
 
-/* ============================================================
-   Two-phase mixture
-   ============================================================ */
-
 function mixStates(T, P, x) {
   return {
     phase: "two_phase",
-    phaseLabel: "two_phase",
+    phaseLabel: "Two-phase",
     quality: x,
     temperature: T,
     pressure: P,
@@ -229,7 +236,7 @@ function mixStates(T, P, x) {
 }
 
 /* ============================================================
-   Root solvers (region-aware)
+   Root solvers
    ============================================================ */
 
 function clamp01(x) {
@@ -237,16 +244,14 @@ function clamp01(x) {
 }
 
 async function solveTfromH(P, h, region) {
-  let lo = 273.15;
-  let hi = 2273.15;
+  let lo = 273.15, hi = 2273.15;
 
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-
-    let hm;
-    if (region === 1) hm = (await region1(mid, P)).h;
-    else if (region === 2) hm = (await region2(mid, P)).h;
-    else throw new Error(`solveTfromH: unsupported region ${region}`);
+    const hm =
+      region === 1
+        ? (await region1(mid, P)).h
+        : (await region2(mid, P)).h;
 
     hm > h ? (hi = mid) : (lo = mid);
   }
@@ -255,16 +260,14 @@ async function solveTfromH(P, h, region) {
 }
 
 async function solveTfromS(P, s, region) {
-  let lo = 273.15;
-  let hi = 2273.15;
+  let lo = 273.15, hi = 2273.15;
 
   for (let i = 0; i < 200; i++) {
     const mid = 0.5 * (lo + hi);
-
-    let sm;
-    if (region === 1) sm = (await region1(mid, P)).s;
-    else if (region === 2) sm = (await region2(mid, P)).s;
-    else throw new Error(`solveTfromS: unsupported region ${region}`);
+    const sm =
+      region === 1
+        ? (await region1(mid, P)).s
+        : (await region2(mid, P)).s;
 
     sm > s ? (hi = mid) : (lo = mid);
   }
