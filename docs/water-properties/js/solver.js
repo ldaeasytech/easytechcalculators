@@ -56,7 +56,7 @@ const X_EPS = 1e-10;
 
 export async function solve(inputs) {
   let { mode } = inputs;
-  if (mode === "Ps") mode = "Ts";
+ // if (mode === "Ps") mode = "Ts";
 
   /* ======================= T–P ======================= */
   if (mode === "TP") {
