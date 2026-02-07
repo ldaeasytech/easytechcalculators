@@ -520,21 +520,10 @@ select:focus {
   margin: 0 auto;
 }
 
-.ad-sidebar {
-  position: sticky;
-  top: 100px;
-  height: fit-content;
-}
-
 @media (max-width: 1024px) {
   .page-layout {
     grid-template-columns: 1fr;
   }
-  .ad-sidebar {
-  min-width: 300px;
-  min-height: 250px;
-  margin: 20px;
-}
 
 }
 
