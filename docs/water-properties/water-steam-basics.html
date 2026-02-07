@@ -306,6 +306,66 @@
       and fluid flow calculations.
     </p>
 
+    <!-- SECTION 5 -->
+    <h2>5. How Mixed (Two-Phase) Properties Are Calculated</h2>
+    <p>
+    In the saturated two-phase (liquid–vapor) region, thermodynamic properties
+    are determined using the vapor quality, <strong>x</strong>, which represents
+    the mass fraction of vapor in the mixture.
+  </p>
+
+  <p>
+    For <strong>mass-additive specific properties</strong>, the mixture property
+    is calculated using a linear quality-weighted relation:
+  </p>
+
+  <div class="equation">
+    property<sub>mix</sub> =
+    property<sub>sat. liquid</sub>(1 − x)
+    + property<sub>sat. vapor</sub>x
+  </div>
+
+  <p>
+    This formulation is valid for the following specific thermodynamic properties:
+  </p>
+
+  <ul>
+    <li>Specific volume (v)</li>
+    <li>Specific enthalpy (h)</li>
+    <li>Specific entropy (s)</li>
+  </ul>
+
+  <p>
+    These properties are defined on a per-unit-mass basis and can be combined
+    directly using quality.
+  </p>
+
+  <h4>Important Note on Density</h4>
+
+  <p>
+    <strong>Density is not mass-additive</strong> and therefore must not be
+    calculated using the quality-weighted formula above.
+  </p>
+
+  <p>
+    Instead, density is obtained from the mixture specific volume:
+  </p>
+
+  <div class="equation">
+    ρ = 1 / v
+  </div>
+
+  <p>
+    where <em>v</em> is the mixture specific volume computed using the quality
+    relation.
+  </p>
+
+  <p class="engineering-note">
+    This distinction is critical in engineering calculations involving flow,
+    pumping power, and system sizing, where incorrect density estimation can
+    lead to significant design errors.
+  </p>
+
     <div class="footer">
       © easytechcalculators
     </div>
