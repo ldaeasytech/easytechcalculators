@@ -548,30 +548,30 @@ select:focus {
   margin-bottom: 6px;
 }
 
-.learning-link-card {
+.learning-hub-card {
   margin-top: 40px;
-  padding: 26px 30px;
+  padding: 28px 32px;
   background: linear-gradient(135deg, #0f172a, #111827);
   border: 1px solid #1f2937;
   border-radius: 10px;
 }
 
-.learning-link-card h3 {
+.learning-hub-card h3 {
   margin: 0 0 10px;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   color: #f9fafb;
 }
 
-.learning-link-card p {
+.learning-hub-card p {
   margin: 0 0 18px;
   font-size: 0.95rem;
   color: #cbd5f5;
   max-width: 900px;
 }
 
-.learning-link-button {
+.learning-hub-button {
   display: inline-block;
-  padding: 11px 18px;
+  padding: 12px 20px;
   font-size: 0.9rem;
   font-weight: 500;
   color: #0b1220;
@@ -580,7 +580,6 @@ select:focus {
   text-decoration: none;
 }
 
-.learning-link-button:hover {
+.learning-hub-button:hover {
   background: #3b82f6;
 }
-
