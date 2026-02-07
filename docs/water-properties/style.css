@@ -531,8 +531,11 @@ select:focus {
     grid-template-columns: 1fr;
   }
   .ad-sidebar {
-    display: none;
-  }
+  min-width: 300px;
+  min-height: 250px;
+  margin: 20px;
+}
+
 }
 
 .ad-below-results {
