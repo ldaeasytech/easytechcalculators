@@ -575,3 +575,40 @@ select:focus {
 .learning-hub-button:hover {
   background: #3b82f6;
 }
+
+.tooltip-icon {
+  position: relative;
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.85em;
+  color: #9aa4b2;
+  cursor: pointer;
+}
+
+.tooltip-icon:focus .tooltip,
+.tooltip-icon:hover .tooltip {
+  display: block;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: #ffffff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  z-index: 20;
+}
+
+.helper-text {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #8b97a8;
+}
+
