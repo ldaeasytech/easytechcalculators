@@ -49,7 +49,7 @@ body {
 .header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 2.5rem;
+  padding: 2.25rem 3rem;
 }
 
 
@@ -231,7 +231,7 @@ select:focus {
 }
 
 /* Laptops / Desktops */
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
   .container {
     grid-template-columns: 1fr 1fr;
   }
@@ -239,6 +239,13 @@ select:focus {
   .grid-form {
     grid-template-columns: 1fr 1fr;
   }
+    .brand-logo {
+    height: 96px;
+  }
+
+  .brand-text h1 {
+    font-size: 2.6rem;
+  } 
 }
 
 /* ============================================================
@@ -658,21 +665,46 @@ select:focus {
 .brand {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.75rem;
 }
 
 .brand-logo {
-  height: 56px;        /* Adjust if you want it bigger/smaller */
+  height: 88px;        /* Adjust if you want it bigger/smaller */
   width: auto;
+   flex-shrink: 0;
+   background: transparent;
   /* Subtle polish (optional but recommended) */
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.35));
 }
 
 .brand-text h1 {
   margin: 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.2px;
+
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-.brand-text .subtitle {
-  margin: 0.25rem 0 0;
+.capability-badge {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.45rem 0.9rem;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #e0f2fe;
+
+  background: linear-gradient(
+    90deg,
+    rgba(14, 165, 233, 0.35),
+    rgba(59, 130, 246, 0.35)
+  );
+
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
+
 
