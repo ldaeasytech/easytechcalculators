@@ -612,3 +612,8 @@ select:focus {
   color: #8b97a8;
 }
 
+.tooltip-icon:hover .tooltip,
+.tooltip-icon:focus .tooltip,
+.tooltip-icon.active .tooltip {
+  display: block;
+}
