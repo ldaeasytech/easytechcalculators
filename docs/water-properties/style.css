@@ -676,7 +676,7 @@ select:focus {
    border: none;
    padding: 0;
    margin: 0;
-   outline: 1px solid red;
+   outline: 1px solid blue;
   /* Subtle polish (optional but recommended) */
   filter: 
       drop-shadow(0 1px 2px rgba(255, 255, 255, 0.18));
