@@ -24,7 +24,7 @@ body {
   padding: 26px 16px;
 }*/
 
-.app-header {
+/*.app-header {
   background:
     linear-gradient(
       135deg,
@@ -34,7 +34,25 @@ body {
     );
    text-align: center;
   color: #ffffff;
+} */
+
+.app-header {
+  background: linear-gradient(
+    135deg,
+    #062a4d 0%,
+    #0b3f78 45%,
+    #0e5aa7 100%
+  );
+  color: #ffffff;
 }
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem;
+}
+
+
 
 .app-header h1 {
   color: #ffffff;
