@@ -1,11 +1,13 @@
 {
   "name": "EasyTechCalculators",
   "short_name": "EasyTech",
+  "description": "Engineering calculators for thermodynamic and transport properties, including water and steam properties.",
   "icons": [
     {
       "src": "/favicon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "theme_color": "#0b3a66",
