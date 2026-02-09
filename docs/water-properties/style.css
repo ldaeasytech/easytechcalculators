@@ -617,3 +617,34 @@ select:focus {
 .tooltip-icon.active .tooltip {
   display: block;
 }
+
+/* ===============================
+   HEADER BRANDING
+================================ */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand-logo {
+  height: 56px;        /* Adjust if you want it bigger/smaller */
+  width: auto;
+  display: block;
+
+  /* Critical: ensures blending */
+  background: transparent;
+
+  /* Subtle polish (optional but recommended) */
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.brand-text h1 {
+  margin: 0;
+}
+
+.brand-text .subtitle {
+  margin: 0.25rem 0 0;
+}
+
