@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pump Power Calculator | EasyTech Calculators</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+        content="Pump power calculator using mechanical energy balance. Includes pipe friction, fittings, elevation, and fluid properties." />
+
+  <link rel="stylesheet" href="css/pump.css" />
+</head>
+
+<body>
+<header class="site-header">
+  <h1>Pump Power Calculator</h1>
+  <p class="subtitle">
+    Mechanical energy balance–based pump power estimation
+  </p>
+</header>
+
+<main class="container">
+
+  <!-- POINTS -->
+  <section class="card">
+    <h2>System Definition</h2>
+
+    <div class="grid-2">
+      <label>
+        Elevation difference (z₂ − z₁) [m]
+        <input type="number" id="deltaZ" step="any">
+      </label>
+
+      <label>
+        Mass flow rate [kg/s]
+        <input type="number" id="mdot" step="any">
+      </label>
+    </div>
+  </section>
+
+  <!-- PIPE -->
+  <section class="card">
+    <h2>Pipe Information</h2>
+
+    <div class="grid-3">
+      <label>
+        Nominal Pipe Size
+        <select id="pipeSize"></select>
+      </label>
+
+      <label>
+        Schedule
+        <select id="pipeSchedule"></select>
+      </label>
+
+      <label>
+        Pipe Length [m]
+        <input type="number" id="pipeLength" step="any">
+      </label>
+    </div>
+
+    <label>
+      Pipe Material
+      <select id="pipeMaterial"></select>
+    </label>
+  </section>
+
+  <!-- FLUID -->
+  <section class="card">
+    <h2>Fluid Properties</h2>
+
+    <label>
+      <input type="checkbox" id="manualProps">
+      Manually specify density and viscosity
+    </label>
+
+    <div class="grid-2">
+      <label>
+        Density ρ [kg/m³]
+        <input type="number" id="rho" step="any">
+      </label>
+
+      <label>
+        Dynamic viscosity μ [Pa·s]
+        <input type="number" id="mu" step="any">
+      </label>
+    </div>
+  </section>
+
+  <button id="calculateBtn" class="btn-primary">
+    Calculate Pump Power
+  </button>
+
+  <!-- RESULTS -->
+  <section class="card results" id="results" hidden>
+    <h2>Results</h2>
+    <p id="pumpPower"></p>
+  </section>
+
+</main>
+
+<script type="module" src="js/pump.js"></script>
+</body>
+</html>
