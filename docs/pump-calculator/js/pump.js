@@ -66,9 +66,9 @@ document
     D,
     v: v_pipe,
     L,
-    e
+    e = PIPE_ROUGHNESS[selectedMaterial];
   });
-
+  
   const Kentrance = K_entrance({
     D1: null,
     D2: null,
