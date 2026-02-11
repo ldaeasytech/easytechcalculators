@@ -71,9 +71,6 @@ document
   /* ===============================
      2. VELOCITIES
   =============================== */
-
-  const A = Math.PI * D * D / 4;
-
   // v1: usually zero unless user specifies
   const v1 = point1AtTank
     ? 0
