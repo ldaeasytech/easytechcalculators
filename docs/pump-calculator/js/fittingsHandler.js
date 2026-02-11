@@ -1,0 +1,95 @@
+// js/fittingsHandler.js
+
+import { FIXED_FITTINGS } from "./data/fittings.js";
+import {
+  gateValveK,
+  diaphragmValveK,
+  globeValveK,
+  plugCockK,
+  butterflyValveK
+} from "./utils/valveLossModels.js";
+
+const fittingSelect = document.getElementById("fittingType");
+const qtyInput = document.getElementById("fittingQty");
+const valveField = document.getElementById("valveInputField");
+const valveLabel = document.getElementById("valveInputLabel");
+const valveValue = document.getElementById("valveInputValue");
+const listDiv = document.getElementById("fittingsList");
+
+window.Kf_total = 0;
+const fittings = [];
+
+/* ===============================
+   Populate dropdown
+=============================== */
+[
+  ...Object.keys(FIXED_FITTINGS),
+  "Gate valve",
+  "Globe valve",
+  "Diaphragm valve",
+  "Plug cock",
+  "Butterfly valve"
+].forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name;
+  opt.textContent = name;
+  fittingSelect.appendChild(opt);
+});
+
+/* ===============================
+   Dynamic input field
+=============================== */
+fittingSelect.addEventListener("change", () => {
+  const type = fittingSelect.value;
+  valveField.style.display = "none";
+
+  if (["Gate valve", "Globe valve", "Diaphragm valve"].includes(type)) {
+    valveLabel.textContent = "Percent opening (%)";
+    valveField.style.display = "block";
+  }
+
+  if (["Plug cock", "Butterfly valve"].includes(type)) {
+    valveLabel.textContent = "Degrees closed (°)";
+    valveField.style.display = "block";
+  }
+});
+
+/* ===============================
+   Add fitting
+=============================== */
+document.getElementById("addFitting").addEventListener("click", () => {
+  const type = fittingSelect.value;
+  const qty = Number(qtyInput.value);
+  let K = 0;
+
+  if (FIXED_FITTINGS[type] !== undefined) {
+    K = FIXED_FITTINGS[type];
+  } else {
+    const x = Number(valveValue.value);
+
+    switch (type) {
+      case "Gate valve":       K = gateValveK(x); break;
+      case "Globe valve":      K = globeValveK(x); break;
+      case "Diaphragm valve":  K = diaphragmValveK(x); break;
+      case "Plug cock":        K = plugCockK(x); break;
+      case "Butterfly valve":  K = butterflyValveK(x); break;
+    }
+  }
+
+  fittings.push({ type, qty, K });
+
+  updateFittings();
+});
+
+/* ===============================
+   Update totals & display
+=============================== */
+function updateFittings() {
+  window.Kf_total = fittings.reduce(
+    (sum, f) => sum + f.K * f.qty, 0
+  );
+
+  listDiv.innerHTML = fittings.map(f =>
+    `${f.qty} × ${f.type} → K = ${(f.K * f.qty).toFixed(3)}`
+  ).join("<br>");
+}
