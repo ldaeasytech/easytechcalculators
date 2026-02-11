@@ -1,12 +1,16 @@
 // pump.js
 
-import { initModeFlowHandlers } from "./modeFlowHandler.js";
+import {
+  initModeFlowHandlers,
+  getCurrentFlowType,
+  convertFlowToSI
+} from "./modeFlowHandler.js";
+
 import "./uiInit.js";
 import "./fittingsHandler.js";
 import "./elevationHandler.js";
 import "./pipeMaterialHandler.js";
 import "./schematicHandler.js";
-
 
 import { pumpPower } from "./energyBalance.js";
 import { totalFrictionLoss } from "./frictionLoss.js";
@@ -26,39 +30,41 @@ import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
-// fittings UI (side effects only)
-import "./fittingsHandler.js";
-
-import { g } from "./utils/constants.js";
-
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // 🔹 initialize flow/mode tabs AFTER DOM loads
+  // Initialize tabs once
   initModeFlowHandlers();
 
-  document
-    .getElementById("calculateBtn")
-    .addEventListener("click", () => {
+  const calculateBtn =
+    document.getElementById("calculateBtn");
+
+  calculateBtn.addEventListener("click", () => {
 
     /* ===============================
-       1. READ INPUTS
+       1. READ INPUTS (DOM ONLY HERE)
     =============================== */
 
     const rho = Number(document.getElementById("rho").value);
     const mu  = Number(document.getElementById("mu").value);
 
-    // Pipe geometry FIRST
-    const D = getPipeDiameter(PIPE_ID);
-    const A = Math.PI * D * D / 4;
+    const flowValue =
+      Number(document.getElementById("flowValue").value);
 
-    const m_flow = getFlowInSI(rho);
-      console.log("FLOW TYPE:", currentFlowType);
+    const flowUnit =
+      document.getElementById("flowUnit").value;
 
+    const flowType =
+      getCurrentFlowType();
 
-    const L = Number(document.getElementById("pipeLength").value);
-    const P1 = Number(document.getElementById("P1").value);
-    const P2 = Number(document.getElementById("P2").value);
+    const L  =
+      Number(document.getElementById("pipeLength").value);
+
+    const P1 =
+      Number(document.getElementById("P1").value);
+
+    const P2 =
+      Number(document.getElementById("P2").value);
 
     const h_input =
       Number(document.getElementById("deltaZ").value);
@@ -66,91 +72,127 @@ document.addEventListener("DOMContentLoaded", () => {
     const elevationRelation =
       document.getElementById("elevationRelation").value;
 
-    const h =
-      elevationRelation === "above"
-        ? h_input
-        : -h_input;
-
     const point1AtTank =
       document.getElementById("point1Tank").checked;
 
     const point2AtPipeOutlet =
       document.getElementById("point2PipeOutlet").checked;
 
+
     /* ===============================
-       2. VELOCITIES
+       2. FLOW CONVERSION
     =============================== */
 
-    const v1 = point1AtTank
-      ? 0
-      : Number(document.getElementById("v1").value || 0);
+    // Returns:
+    //  - kg/s if mass
+    //  - m³/s if volumetric
+    const flowSI =
+      convertFlowToSI(flowValue, flowUnit, flowType);
 
-    const elevationRef = getElevationReference();
+    const m_flow =
+      flowType === "mass"
+        ? flowSI
+        : flowSI * rho;
+
+
+    /* ===============================
+       3. GEOMETRY & VELOCITIES
+    =============================== */
+
+    const D =
+      getPipeDiameter(PIPE_ID);
+
+    const A =
+      Math.PI * D * D / 4;
+
+    const v1 =
+      point1AtTank
+        ? 0
+        : Number(document.getElementById("v1").value || 0);
+
+    const elevationRef =
+      getElevationReference();
 
     let v2 = 0;
     let KexitAdjustment = 0;
 
     if (elevationRef === "pipe") {
       v2 = m_flow / (rho * A);
-      KexitAdjustment = 0;
     } else {
       v2 = getSinkVelocity();
       KexitAdjustment = 1;
     }
 
-    const v_pipe = m_flow / (rho * A);
+    const v_pipe =
+      m_flow / (rho * A);
+
+    const h =
+      elevationRelation === "above"
+        ? h_input
+        : -h_input;
+
 
     /* ===============================
-       3. LOSS COEFFICIENTS
+       4. LOSS COEFFICIENTS
     =============================== */
 
-    const material = getPipeMaterial();
-    const e = PIPE_ROUGHNESS[material];
+    const material =
+      getPipeMaterial();
 
-    const Kpipe = K_pipe({
-      rho,
-      mu,
-      D,
-      v: v_pipe,
-      L,
-      e
-    });
+    const e =
+      PIPE_ROUGHNESS[material];
 
-    const Kentrance = K_entrance({
-      D1: null,
-      D2: null,
-      fromTank: point1AtTank
-    });
+    const Kpipe =
+      K_pipe({
+        rho,
+        mu,
+        D,
+        v: v_pipe,
+        L,
+        e
+      });
 
-    const Kexit = KexitAdjustment;
+    const Kentrance =
+      K_entrance({
+        D1: null,
+        D2: null,
+        fromTank: point1AtTank
+      });
 
     const Ktotal =
-      Kpipe + Kentrance + Kexit + window.Kf_total;
+      Kpipe +
+      Kentrance +
+      KexitAdjustment +
+      window.Kf_total;
+
 
     /* ===============================
-       4. FRICTION LOSS
+       5. FRICTION LOSS
     =============================== */
 
     const F_total =
       totalFrictionLoss(v_pipe, Ktotal);
 
+
     /* ===============================
-       5. ENERGY BALANCE
+       6. ENERGY BALANCE
     =============================== */
 
-    const result = pumpPower({
-      m_flow,
-      v1,
-      v2,
-      h,
-      P1,
-      P2,
-      rho,
-      F_total
-    });
+    const result =
+      pumpPower({
+        m_flow,
+        v1,
+        v2,
+        h,
+        P1,
+        P2,
+        rho,
+        F_total
+      });
+
 
     /* ===============================
-       6. DISPLAY
+       7. DISPLAY
     =============================== */
 
     document
@@ -159,7 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document
       .getElementById("pumpPowerValue")
-      .textContent = result.Ws.toFixed(3);
+      .textContent =
+      result.Ws.toFixed(3);
 
   });
 
