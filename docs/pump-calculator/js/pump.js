@@ -8,7 +8,6 @@ import {
 
 import "./uiInit.js";
 import "./fittingsHandler.js";
-import "./elevationHandler.js";
 import "./pipeMaterialHandler.js";
 import "./schematicHandler.js";
 
@@ -16,6 +15,7 @@ import { pumpPower } from "./energyBalance.js";
 import { totalFrictionLoss } from "./frictionLoss.js";
 import { K_pipe } from "./frictionPipe.js";
 import { K_entrance } from "./entranceExitLoss.js";
+import { getTotalFittingsK } from "./fittingsHandler.js";
 
 import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
 import { PIPE_ID } from "./data/pipeInnerDiameter.js";
@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Kpipe +
       Kentrance +
       K_exit +
-      window.Kf_total;
+      getTotalFittingsK();;
 
     /* ===============================
        8. FRICTION LOSS
