@@ -5,6 +5,7 @@ import { totalFrictionLoss } from "./frictionLoss.js";
 import { K_pipe } from "./frictionPipe.js";
 import { K_entrance, K_exit } from "./entranceExitLoss.js";
 import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
+import { PIPE_ID } from "./data/pipeInnerDiameter.js";
 
 // fittings UI (side effects only)
 import "./fittingsHandler.js";
@@ -23,10 +24,7 @@ document
   const rho = Number(document.getElementById("rho").value);
   const mu  = Number(document.getElementById("mu").value);
   const m_flow = Number(document.getElementById("mdot").value);
-
-  const D = Number(document.getElementById("pipeDiameter").value);
   const L = Number(document.getElementById("pipeLength").value);
-
   const h = Number(document.getElementById("deltaZ").value);
   const P1 = Number(document.getElementById("P1").value);
   const P2 = Number(document.getElementById("P2").value);
@@ -36,6 +34,12 @@ document
 
   const point2AtPipeOutlet =
     document.getElementById("point2PipeOutlet").checked;
+
+  // Pipe geometry
+  const nps = document.getElementById("pipeNPS").value;
+  const schedule = document.getElementById("pipeSchedule").value;
+  const D = PIPE_ID[nps][schedule];
+
 
   /* ===============================
      2. VELOCITIES
@@ -60,10 +64,9 @@ document
   /* ===============================
      3. LOSS COEFFICIENTS
   =============================== */
-
+  //Pipe roughness
   const selectedMaterial =
   document.getElementById("pipeMaterial").value;
-
   const e = PIPE_ROUGHNESS[selectedMaterial];
 
   const Kpipe = K_pipe({
