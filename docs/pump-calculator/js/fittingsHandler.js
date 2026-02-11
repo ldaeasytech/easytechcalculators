@@ -16,7 +16,6 @@ const valveLabel = document.getElementById("valveInputLabel");
 const valveValue = document.getElementById("valveInputValue");
 const listDiv = document.getElementById("fittingsList");
 
-window.Kf_total = 0;
 const fittings = [];
 
 /* ===============================
@@ -92,13 +91,9 @@ function removeFitting(index) {
 }
 
 /* ===============================
-   Update totals & display
+   Update display only
 =============================== */
 function updateFittings() {
-  window.Kf_total = fittings.reduce(
-    (sum, f) => sum + f.K * f.qty,
-    0
-  );
 
   if (fittings.length === 0) {
     listDiv.innerHTML = "<em>No fittings added</em>";
@@ -128,10 +123,19 @@ function updateFittings() {
     </div>
   `).join("");
 
-  // Attach remove handlers
   listDiv.querySelectorAll("button").forEach(btn => {
     btn.addEventListener("click", () =>
       removeFitting(Number(btn.dataset.index))
     );
   });
+}
+
+/* ===============================
+   Export total K
+=============================== */
+export function getTotalFittingsK() {
+  return fittings.reduce(
+    (sum, f) => sum + f.K * f.qty,
+    0
+  );
 }
