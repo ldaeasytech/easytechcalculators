@@ -34,6 +34,7 @@ export function initModeFlowHandlers() {
       updateFlowUI();
     });
   });
+  updateFlowUI();
 }
 
 export function getFlowInSI(rho) {
