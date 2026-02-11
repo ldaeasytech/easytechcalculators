@@ -51,6 +51,7 @@ function updateFlowUI() {
   flowUnitSelect.innerHTML = "";
 
   if (currentFlowType === "mass") {
+  console.log("Before update:", currentFlowType);
 
     flowLabel.textContent = "Mass Flow Rate";
 
@@ -64,6 +65,8 @@ function updateFlowUI() {
     `;
 
   } else {
+    console.log("Before update:", currentFlowType);
+
 
     flowLabel.textContent = "Volumetric Flow Rate";
 
