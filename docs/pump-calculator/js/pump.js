@@ -209,18 +209,110 @@ document.addEventListener("DOMContentLoaded", () => {
         F_total
       });
 
-    /* ===============================
-       10. DISPLAY
-    =============================== */
+/* ===============================
+   10. DISPLAY
+=============================== */
 
-    document
-      .getElementById("results")
-      .classList.remove("hidden");
+document
+  .getElementById("results")
+  .classList.remove("hidden");
 
-    document
-      .getElementById("pumpPowerValue")
-      .textContent =
-      result.Ws.toFixed(3);
+document
+  .getElementById("pumpPowerValue")
+  .textContent =
+  result.Ws.toFixed(3);
+
+
+/* ===============================
+   Reynolds Number
+=============================== */
+
+const Re =
+  (rho * v_pipe * D) / mu;
+
+
+/* ===============================
+   ENERGY BALANCE TABLE
+=============================== */
+
+const energyTable =
+  document.getElementById("energyTable");
+
+energyTable.innerHTML = `
+  <tr>
+    <th>Term</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Mass Flow Rate</td>
+    <td>${m_flow.toFixed(4)}</td>
+    <td>kg/s</td>
+  </tr>
+  <tr>
+    <td>Velocity at Inlet (v₁)</td>
+    <td>${v1.toFixed(4)}</td>
+    <td>m/s</td>
+  </tr>
+  <tr>
+    <td>Velocity at Outlet (v₂)</td>
+    <td>${v2.toFixed(4)}</td>
+    <td>m/s</td>
+  </tr>
+  <tr>
+    <td>Elevation Head (h)</td>
+    <td>${h.toFixed(4)}</td>
+    <td>m</td>
+  </tr>
+  <tr>
+    <td>Pressure Difference (P₂ − P₁)</td>
+    <td>${(P2 - P1).toFixed(2)}</td>
+    <td>Pa</td>
+  </tr>
+  <tr>
+    <td>Total Friction Term</td>
+    <td>${F_total.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+`;
+  
+
+/* ===============================
+   HYDRAULIC PARAMETERS TABLE
+=============================== */
+
+const hydraulicTable =
+  document.getElementById("hydraulicTable");
+
+hydraulicTable.innerHTML = `
+  <tr>
+    <th>Parameter</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Pipe Diameter (D)</td>
+    <td>${D.toFixed(4)}</td>
+    <td>m</td>
+  </tr>
+  <tr>
+    <td>Pipe Velocity (v)</td>
+    <td>${v_pipe.toFixed(4)}</td>
+    <td>m/s</td>
+  </tr>
+  <tr>
+    <td>Reynolds Number</td>
+    <td>${Re.toExponential(3)}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Total Loss Coefficient (ΣK)</td>
+    <td>${Ktotal.toFixed(4)}</td>
+    <td>—</td>
+  </tr>
+`;
+
+
 
   });
 
