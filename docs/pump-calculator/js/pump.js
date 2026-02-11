@@ -5,10 +5,11 @@ import { totalFrictionLoss } from "./frictionLoss.js";
 import { K_pipe } from "./frictionPipe.js";
 import { K_entrance, K_exit } from "./entranceExitLoss.js";
 
-// fittings logic (already implemented earlier)
-import "./fittingsHandler.js"; // assumes this updates global Kf_total
+// fittings UI (side effects only)
+import "./fittingsHandler.js";
 
 import { g } from "./utils/constants.js";
+
 
 document
   .getElementById("calculateBtn")
