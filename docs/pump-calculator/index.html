@@ -9,7 +9,7 @@
   <meta name="description"
     content="Pump power calculator using the mechanical energy balance equation. Includes pipe friction, fittings, entrance and exit losses." />
 
-  <link rel="stylesheet" href="../water-properties/style.css" />
+  <link rel="stylesheet" href="./pump-style.css" />
 
   <!-- Favicons -->
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -159,22 +159,23 @@
         
         <!-- PRESSURES -->
         <div class="field">
-          <label for="P1">Pressure at Point 1 (Pa)</label>
-          <input id="P1" type="number" step="any" />
-        </div>
-        <label>
-        <input type="checkbox" id="P1_atm">
-          Atmospheric Pressure
-        </label>
+  <label for="P1">Pressure at Point 1 (Pa)</label>
+  <input id="P1" type="number" step="any" />
+  <label class="inline-toggle">
+    <input type="checkbox" id="P1_atm">
+    Atmospheric Pressure (101325 Pa)
+  </label>
+</div>
 
         <div class="field">
-          <label for="P2">Pressure at Point 2 (Pa)</label>
-          <input id="P2" type="number" step="any" />
-        </div>
-        <label>
-        <input type="checkbox" id="P2_atm">
-        Atmospheric Pressure
-        </label>
+  <label for="P2">Pressure at Point 2 (Pa)</label>
+  <input id="P2" type="number" step="any" />
+  <label class="inline-toggle">
+    <input type="checkbox" id="P2_atm">
+    Atmospheric Pressure (101325 Pa)
+  </label>
+</div>
+
 
         <!-- PIPE -->
 <div class="input-group">
@@ -274,7 +275,25 @@
           </button>
         </div>
         
-        <section class="card" id="schematicCard">
+
+
+
+        
+        <div class="form-actions">
+  <button type="button" id="calculateBtn" class="primary">
+    Calculate Pump Power
+  </button>
+  </div>
+
+
+      </form>
+    </section>
+
+    
+    <!-- RESULTS -->
+    <section class="card">
+  
+  <section class="card" id="schematicCard">
 
   <h2>System Schematic</h2>
 
@@ -292,17 +311,7 @@
 
 </section>
 
-
-        
-        <button type="button" id="calculateBtn" class="primary">
-          Calculate Pump Power
-        </button>
-
-      </form>
-    </section>
-
-    <!-- RESULTS -->
-    <section class="card">
+      
   <h2>Results</h2>
 
   <div id="results" class="hidden">
