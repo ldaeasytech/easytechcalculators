@@ -1,7 +1,12 @@
 // pump.js
 
-import { initModeFlowHandlers, getFlowInSI }
-  from "./modeFlowHandler.js";
+import { initModeFlowHandlers } from "./modeFlowHandler.js";
+import "./uiInit.js";
+import "./fittingsHandler.js";
+import "./elevationHandler.js";
+import "./pipeMaterialHandler.js";
+import "./schematicHandler.js";
+
 
 import { pumpPower } from "./energyBalance.js";
 import { totalFrictionLoss } from "./frictionLoss.js";
