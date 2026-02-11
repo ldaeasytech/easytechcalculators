@@ -153,15 +153,48 @@ const Kexit = KexitAdjustment;
      6. DISPLAY RESULTS
   =============================== */
 
-  document.getElementById("results").hidden = false;
+  document.getElementById("results").classList.remove("hidden");
 
-  document.getElementById("pumpPower").textContent =
-    `Theoretical pump power: ${result.Ws.toFixed(3)} kW`;
+// Primary result
+document.getElementById("pumpPowerValue").textContent =
+  result.Ws.toFixed(3);
 
-  document.getElementById("lossBreakdown").innerHTML = `
-    ΔKE = ${result.deltaKE.toFixed(3)} J/kg<br>
-    ΔPE = ${result.deltaPE.toFixed(3)} J/kg<br>
-    ΔP  = ${result.deltaP.toFixed(3)} J/kg<br>
-    Friction = ${F_total.toFixed(3)} J/kg
-  `;
+// Energy table
+document.getElementById("energyTable").innerHTML = `
+<tr>
+  <td>ΔKE</td>
+  <td>${result.deltaKE.toFixed(3)}</td>
+  <td>J/kg</td>
+</tr>
+<tr>
+  <td>ΔPE</td>
+  <td>${result.deltaPE.toFixed(3)}</td>
+  <td>J/kg</td>
+</tr>
+<tr>
+  <td>ΔPressure</td>
+  <td>${result.deltaP.toFixed(3)}</td>
+  <td>J/kg</td>
+</tr>
+<tr>
+  <td>Friction Loss</td>
+  <td>${F_total.toFixed(3)}</td>
+  <td>J/kg</td>
+</tr>
+`;
+
+// Hydraulic table
+document.getElementById("hydraulicTable").innerHTML = `
+<tr>
+  <td>Pipe Velocity</td>
+  <td>${v_pipe.toFixed(3)}</td>
+  <td>m/s</td>
+</tr>
+<tr>
+  <td>Total Loss Coefficient (K)</td>
+  <td>${Ktotal.toFixed(3)}</td>
+  <td>-</td>
+</tr>
+`;
+
 });
