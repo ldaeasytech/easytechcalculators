@@ -1,54 +1,42 @@
-// modeFlowHandler.js
-
 let currentMode = "power";
 let currentFlowType = "mass";
 
-const modeTabs =
-  document.querySelectorAll(".mode-tabs .tab");
+export function initModeFlowHandlers() {
 
-const flowTabs =
-  document.querySelectorAll("[data-flow]");
+  const modeTabs =
+    document.querySelectorAll(".mode-tabs .tab");
 
-const flowUnitSelect =
-  document.getElementById("flowUnit");
+  const flowTabs =
+    document.querySelectorAll("[data-flow]");
 
-const flowLabel =
-  document.getElementById("flowLabel");
+  modeTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
 
-/* ============================
-   MODE SELECTION (scoped)
-============================ */
-modeTabs.forEach(tab => {
-  tab.addEventListener("click", () => {
+      modeTabs.forEach(t =>
+        t.classList.remove("active")
+      );
 
-    modeTabs.forEach(t =>
-      t.classList.remove("active")
-    );
-
-    tab.classList.add("active");
-    currentMode = tab.dataset.mode;
-
+      tab.classList.add("active");
+      currentMode = tab.dataset.mode;
+    });
   });
-});
 
-/* ============================
-   FLOW TYPE SELECTION (scoped)
-============================ */
-flowTabs.forEach(tab => {
-  tab.addEventListener("click", () => {
+  flowTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
 
-    flowTabs.forEach(t =>
-      t.classList.remove("active")
-    );
+      flowTabs.forEach(t =>
+        t.classList.remove("active")
+      );
 
-    tab.classList.add("active");
+      tab.classList.add("active");
 
-    currentFlowType = tab.dataset.flow;
-    updateFlowUI();
+      currentFlowType = tab.dataset.flow;
+      updateFlowUI();
+    });
   });
-});
+}
 
-export function getFlowInSI(rho, pipeArea) {
+export function getFlowInSI(rho) {
 
   const value =
     Number(document.getElementById("flowValue").value);
@@ -59,7 +47,6 @@ export function getFlowInSI(rho, pipeArea) {
   if (!value) return 0;
 
   if (currentFlowType === "mass") {
-
     switch (unit) {
       case "kg_s": return value;
       case "kg_min": return value / 60;
@@ -68,11 +55,8 @@ export function getFlowInSI(rho, pipeArea) {
       case "lb_min": return value * 0.453592 / 60;
       case "lb_h": return value * 0.453592 / 3600;
     }
-
   } else {
-
     let Q;
-
     switch (unit) {
       case "m3_s": Q = value; break;
       case "m3_h": Q = value / 3600; break;
@@ -82,7 +66,6 @@ export function getFlowInSI(rho, pipeArea) {
       case "ft3_min": Q = value * 0.0283168 / 60; break;
       case "gpm": Q = value * 0.00006309; break;
     }
-
     return rho * Q;
   }
 
