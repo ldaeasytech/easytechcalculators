@@ -51,6 +51,24 @@
 
   <main class="container">
 
+    <!--Calculation Mode-->
+    <div class="input-group">
+    <div class="group-title">Calculation Mode</div>
+
+    <div class="input-tabs">
+    <button class="tab active" data-mode="power">
+      Pump Power
+    </button>
+    <button class="tab" data-mode="optimize">
+      Optimize Pipe Diameter
+    </button>
+    <button class="tab" data-mode="tank">
+      Tank Discharge Flow
+    </button>
+    </div>
+    </div>
+
+
     <!-- INPUTS -->
     <section class="card">
       <h2>System Inputs</h2>
@@ -58,11 +76,30 @@
       <form class="grid-form" novalidate>
 
         <!-- FLOW -->
-        <div class="field">
-          <label for="mdot">Mass Flow Rate (kg/s)</label>
-          <input id="mdot" type="number" step="any" />
-        </div>
+<div class="input-group">
+  <div class="group-title">Flow Rate</div>
 
+  <div class="input-tabs">
+    <button class="tab active" data-flow="mass">
+      Mass Flow
+    </button>
+    <button class="tab" data-flow="vol">
+      Volumetric Flow
+    </button>
+  </div>
+
+  <div class="field">
+    <label id="flowLabel">Mass Flow Rate</label>
+    <input id="flowValue" type="number" step="any" />
+  </div>
+
+  <div class="field">
+    <label>Units</label>
+    <select id="flowUnit"></select>
+  </div>
+</div>
+
+<!--Elevation-->
         <div class="field">
           <label for="deltaZ">Elevation Difference h (m)</label>
           <input id="deltaZ" type="number" step="any" />
@@ -86,6 +123,30 @@
           </div>
         </div>
 
+        <div class="field">
+  <label for="elevationReference">
+    Elevation Measured Between
+  </label>
+  <select id="elevationReference">
+    <option value="pipe">
+      Source liquid surface and pipe discharge
+    </option>
+    <option value="sink">
+      Source liquid surface and sink liquid surface
+    </option>
+  </select>
+</div>
+
+<div class="field" id="sinkVelocityField" style="display:none;">
+  <label for="sinkVelocity">
+    Sink Liquid Velocity (m/s)
+  </label>
+  <input id="sinkVelocity" type="number" step="any" value="0" />
+  <div class="helper-text">
+    Only applicable when elevation is measured to sink surface.
+  </div>
+</div>
+
         
         <!-- PRESSURES -->
         <div class="field">
@@ -99,15 +160,41 @@
         </div>
 
         <!-- PIPE -->
-        <div class="field">
-          <label for="pipeNPS">Nominal Pipe Size</label>
-          <select id="pipeNPS"></select>
-        </div>
+<div class="input-group">
+  <div class="group-title">Pipe Specification</div>
 
-        <div class="field">
-          <label for="pipeSchedule">Pipe Schedule</label>
-          <select id="pipeSchedule"></select>
-        </div>
+  <div class="field">
+    <label for="pipeMaterial">Pipe Material</label>
+    <select id="pipeMaterial"></select>
+  </div>
+
+  <!-- Commercial steel selection -->
+  <div id="steelOptions">
+
+    <div class="field">
+      <label for="pipeNPS">Nominal Pipe Size</label>
+      <select id="pipeNPS"></select>
+    </div>
+
+    <div class="field">
+      <label for="pipeSchedule">Schedule Number</label>
+      <select id="pipeSchedule"></select>
+    </div>
+
+  </div>
+
+  <!-- Custom diameter input -->
+  <div id="customDiameterField" style="display:none;">
+    <div class="field">
+      <label for="customDiameter">
+        Inner Diameter (m)
+      </label>
+      <input id="customDiameter" type="number" step="any" />
+    </div>
+  </div>
+
+</div>
+
 
         <div class="field">
           <label for="pipeLength">Pipe Length (m)</label>
@@ -130,7 +217,7 @@
           <input id="mu" type="number" step="any" />
         </div>
 
-        <!-- REFERENCE POINTS -->
+        <!-- REFERENCE POINTS
         <div class="field full">
           <label>
             <input type="checkbox" id="point1Tank" />
@@ -143,7 +230,7 @@
             <input type="checkbox" id="point2PipeOutlet" />
             Point 2 is at pipe outlet (v₂ ≠ 0)
           </label>
-        </div>
+        </div> -->
   
         <!-- FITTINGS -->
         <div class="field full">
@@ -167,10 +254,26 @@
           </button>
         </div>
         
-        <div class="field full">
-          <div id="fittingsList" class="results-table"></div>
-        </div>
+        <section class="card" id="schematicCard">
 
+  <h2>System Schematic</h2>
+
+  <div id="schematicContainer" class="schematic-box">
+    <div id="schematicLabel">
+      Select elevation configuration to view schematic
+    </div>
+  </div>
+
+  <!-- Fittings list moves here -->
+  <div class="schematic-subsection">
+    <h3>Fittings</h3>
+    <div id="fittingsList" class="results-table"></div>
+  </div>
+
+</section>
+
+
+        
         <button type="button" id="calculateBtn" class="primary">
           Calculate Pump Power
         </button>
@@ -212,6 +315,10 @@
 
   <script type="module" src="./js/uiInit.js"></script>
 <script type="module" src="./js/fittingsHandler.js"></script>
+<script type="module" src="./js/modeFlowHandler.js"></script>
+  <script type="module" src="./js/elevationHandler.js"></script>
+  <script type="module" src="./js/pipeMaterialHandler.js"></script>
+  <script type="module" src="./js/schematicHandler.js"></script>
 <script type="module" src="./js/pump.js"></script>
 
 </body>
