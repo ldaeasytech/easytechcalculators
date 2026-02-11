@@ -81,7 +81,7 @@ document
     toTank: !point2AtPipeOutlet
   });
 
-  // Kf_total is accumulated from fittings UI
+  // Total friction coefficient
   const Ktotal =
     Kpipe + Kentrance + Kexit + window.Kf_total;
 
