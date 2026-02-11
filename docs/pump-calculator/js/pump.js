@@ -26,7 +26,6 @@ document
 
   const D = Number(document.getElementById("pipeDiameter").value);
   const L = Number(document.getElementById("pipeLength").value);
-  const e = Number(document.getElementById("roughness").value);
 
   const h = Number(document.getElementById("deltaZ").value);
   const P1 = Number(document.getElementById("P1").value);
