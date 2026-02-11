@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const A = Math.PI * D * D / 4;
 
     const m_flow = getFlowInSI(rho);
+      console.log("FLOW TYPE:", currentFlowType);
+
 
     const L = Number(document.getElementById("pipeLength").value);
     const P1 = Number(document.getElementById("P1").value);
