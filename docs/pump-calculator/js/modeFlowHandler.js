@@ -1,5 +1,5 @@
 let currentMode = "power";
-//let currentFlowType = "mass";
+let currentFlowType = "mass";
 
 export function initModeFlowHandlers() {
   console.log("INIT FLOW HANDLERS");
