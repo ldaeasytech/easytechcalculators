@@ -753,3 +753,54 @@ select:focus {
   color: #cbd5f5;
 }
 
+/* ===============================
+   RESULT HIGHLIGHT
+=============================== */
+
+.result-highlight {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 18px;
+  margin-bottom: 22px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(14,165,233,0.2),
+    rgba(59,130,246,0.2)
+  );
+
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.result-label {
+  font-size: 0.95rem;
+  color: #cbd5f5;
+}
+
+.result-value {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.result-unit {
+  font-size: 1rem;
+  color: #9fb0c9;
+}
+
+.result-section h3 {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: #cbd5f5;
+}
+
+/* Mobile improvement */
+@media (max-width: 600px) {
+  .result-highlight {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
