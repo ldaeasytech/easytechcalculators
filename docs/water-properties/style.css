@@ -804,3 +804,23 @@ select:focus {
   }
 }
 
+/* ===============================
+   MODE BAR LAYOUT FIX
+=============================== */
+
+.mode-wrapper {
+  grid-column: 1 / -1;
+  margin-bottom: 20px;
+}
+
+.mode-wrapper h2 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: #cbd5f5;
+}
+
+.mode-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
