@@ -1,5 +1,7 @@
 // pump.js
 
+import "./modeFlowHandler.js";
+
 import { pumpPower } from "./energyBalance.js";
 import { totalFrictionLoss } from "./frictionLoss.js";
 import { K_pipe } from "./frictionPipe.js";
