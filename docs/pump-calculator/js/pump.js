@@ -6,6 +6,18 @@ import { K_pipe } from "./frictionPipe.js";
 import { K_entrance, K_exit } from "./entranceExitLoss.js";
 import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
 import { PIPE_ID } from "./data/pipeInnerDiameter.js";
+import { getFlowInSI } from "./modeFlowHandler.js";
+
+import {
+  getElevationReference,
+  getSinkVelocity
+} from "./elevationHandler.js";
+
+import {
+  getPipeDiameter,
+  getPipeMaterial
+} from "./pipeMaterialHandler.js";
+
 
 // fittings UI (side effects only)
 import "./fittingsHandler.js";
@@ -23,7 +35,10 @@ document
 
   const rho = Number(document.getElementById("rho").value);
   const mu  = Number(document.getElementById("mu").value);
-  const m_flow = Number(document.getElementById("mdot").value);
+
+  const A = Math.PI * D * D / 4;
+  const m_flow = getFlowInSI(rho, A);
+
   const L = Number(document.getElementById("pipeLength").value);
   const P1 = Number(document.getElementById("P1").value);
   const P2 = Number(document.getElementById("P2").value);
@@ -50,7 +65,7 @@ document
   // Pipe geometry
   const nps = document.getElementById("pipeNPS").value;
   const schedule = document.getElementById("pipeSchedule").value;
-  const D = PIPE_ID[nps][schedule];
+  const D = getPipeDiameter(PIPE_ID);
 
 
   /* ===============================
@@ -65,10 +80,21 @@ document
     : Number(document.getElementById("v1").value || 0);
 
   // v2: only if point 2 is at pipe outlet
-  let v2 = 0;
-  if (point2AtPipeOutlet) {
-    v2 = m_flow / (rho * A);
-  }
+ const elevationRef = getElevationReference();
+
+let v2 = 0;
+let KexitAdjustment = 0;
+
+if (elevationRef === "pipe") {
+  // measured to pipe discharge
+  v2 = m_flow / (rho * A);
+  KexitAdjustment = 0;
+} else {
+  // measured to sink surface
+  v2 = getSinkVelocity();
+  KexitAdjustment = 1;
+}
+
 
   // velocity in pipe for friction
   const v_pipe = m_flow / (rho * A);
@@ -77,9 +103,8 @@ document
      3. LOSS COEFFICIENTS
   =============================== */
   //Pipe roughness
-  const selectedMaterial =
-  document.getElementById("pipeMaterial").value;
-  const e = PIPE_ROUGHNESS[selectedMaterial];
+  const material = getPipeMaterial();
+  const e = PIPE_ROUGHNESS[material];
 
   const Kpipe = K_pipe({
   rho,
@@ -96,11 +121,8 @@ document
     fromTank: point1AtTank
   });
 
-  const Kexit = K_exit({
-    D1: null,
-    D2: null,
-    toTank: !point2AtPipeOutlet
-  });
+const Kexit = KexitAdjustment;
+
 
   // Total friction coefficient
   const Ktotal =
