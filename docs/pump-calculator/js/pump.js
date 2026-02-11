@@ -4,6 +4,7 @@ import { pumpPower } from "./energyBalance.js";
 import { totalFrictionLoss } from "./frictionLoss.js";
 import { K_pipe } from "./frictionPipe.js";
 import { K_entrance, K_exit } from "./entranceExitLoss.js";
+import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
 
 // fittings UI (side effects only)
 import "./fittingsHandler.js";
@@ -61,13 +62,18 @@ document
      3. LOSS COEFFICIENTS
   =============================== */
 
+  const selectedMaterial =
+  document.getElementById("pipeMaterial").value;
+
+  const e = PIPE_ROUGHNESS[selectedMaterial];
+
   const Kpipe = K_pipe({
-    rho,
-    mu,
-    D,
-    v: v_pipe,
-    L,
-    e = PIPE_ROUGHNESS[selectedMaterial];
+  rho,
+  mu,
+  D,
+  v: v_pipe,
+  L,
+  e
   });
   
   const Kentrance = K_entrance({
