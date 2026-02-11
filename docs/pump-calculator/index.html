@@ -125,6 +125,32 @@
             Point 2 is at pipe outlet (v₂ ≠ 0)
           </label>
         </div>
+  
+        <!-- FITTINGS -->
+        <div class="field full">
+          <label for="fittingType">Fitting / Valve</label>
+          <select id="fittingType"></select>
+        </div>
+        
+        <div class="field">
+          <label for="fittingQty">Quantity</label>
+          <input id="fittingQty" type="number" min="1" value="1" />
+        </div>
+        
+        <div class="field" id="valveInputField" style="display:none;">
+          <label id="valveInputLabel"></label>
+          <input id="valveInputValue" type="number" step="any" />
+        </div>
+        
+        <div class="field full">
+          <button type="button" id="addFitting" class="primary">
+            Add Fitting
+          </button>
+        </div>
+        
+        <div class="field full">
+          <div id="fittingsList" class="results-table"></div>
+        </div>
 
         <button type="button" id="calculateBtn" class="primary">
           Calculate Pump Power
