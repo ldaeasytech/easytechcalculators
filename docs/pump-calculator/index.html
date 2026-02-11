@@ -49,7 +49,27 @@
 <!-- PAGE LAYOUT -->
 <div class="page-layout">
 
+  <!-- TOP MODE BAR -->
+  <div class="mode-wrapper card">
+    <div class="mode-header">
+      <h2>Calculation Mode</h2>
+    </div>
+
+    <div class="input-tabs mode-tabs">
+      <button class="tab active" data-mode="power">
+        Pump Power
+      </button>
+      <button class="tab" data-mode="optimize">
+        Optimize Pipe Diameter
+      </button>
+      <button class="tab" data-mode="tank">
+        Tank Discharge Flow
+      </button>
+    </div>
+  </div>
+
   <main class="container">
+
 
     <!--Calculation Mode-->
     <div class="input-group">
@@ -283,18 +303,38 @@
 
     <!-- RESULTS -->
     <section class="card">
-      <h2>Results</h2>
+  <h2>Results</h2>
 
-      <div id="results" hidden>
-        <div id="pumpPower" class="phase-banner"></div>
+  <div id="results" class="hidden">
 
-        <div id="lossBreakdown" class="results-table"></div>
+    <!-- Primary Result -->
+    <div class="result-highlight">
+      <div class="result-label">
+        Theoretical Pump Power
       </div>
-    </section>
+      <div class="result-value" id="pumpPowerValue">
+        --
+      </div>
+      <div class="result-unit">
+        kW
+      </div>
+    </div>
 
-  </main>
+    <!-- Energy Breakdown -->
+    <div class="result-section">
+      <h3>Energy Balance Terms</h3>
+      <table class="results-clean" id="energyTable"></table>
+    </div>
 
-</div>
+    <!-- Hydraulic Data -->
+    <div class="result-section">
+      <h3>Hydraulic Parameters</h3>
+      <table class="results-clean" id="hydraulicTable"></table>
+    </div>
+
+  </div>
+</section>
+
 
 <!-- FOOTER -->
 <footer class="site-footer">
