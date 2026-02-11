@@ -1,7 +1,7 @@
 // js/data/pipeRoughness.js
 export const PIPE_ROUGHNESS = {
-  "Drawn tubing": 1.52e-6,
   "Commercial steel": 4.57e-5,
+  "Drawn tubing": 1.52e-6,
   "Asphalted cast iron": 1.22e-4,
   "Galvanized iron": 1.52e-4,
   "Cast iron": 2.59e-4,
