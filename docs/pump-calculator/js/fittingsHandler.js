@@ -37,7 +37,7 @@ const fittings = [];
 });
 
 /* ===============================
-   Dynamic input field
+   Dynamic valve input
 =============================== */
 fittingSelect.addEventListener("change", () => {
   const type = fittingSelect.value;
@@ -62,34 +62,76 @@ document.getElementById("addFitting").addEventListener("click", () => {
   const qty = Number(qtyInput.value);
   let K = 0;
 
+  if (!qty || qty < 1) return;
+
   if (FIXED_FITTINGS[type] !== undefined) {
     K = FIXED_FITTINGS[type];
   } else {
-    const x = Number(valveValue.value);
+    const val = Number(valveValue.value);
+    if (isNaN(val)) return;
 
     switch (type) {
-      case "Gate valve":       K = gateValveK(x); break;
-      case "Globe valve":      K = globeValveK(x); break;
-      case "Diaphragm valve":  K = diaphragmValveK(x); break;
-      case "Plug cock":        K = plugCockK(x); break;
-      case "Butterfly valve":  K = butterflyValveK(x); break;
+      case "Gate valve":      K = gateValveK(val); break;
+      case "Globe valve":     K = globeValveK(val); break;
+      case "Diaphragm valve": K = diaphragmValveK(val); break;
+      case "Plug cock":       K = plugCockK(val); break;
+      case "Butterfly valve": K = butterflyValveK(val); break;
     }
   }
 
   fittings.push({ type, qty, K });
-
   updateFittings();
 });
+
+/* ===============================
+   Remove fitting
+=============================== */
+function removeFitting(index) {
+  fittings.splice(index, 1);
+  updateFittings();
+}
 
 /* ===============================
    Update totals & display
 =============================== */
 function updateFittings() {
   window.Kf_total = fittings.reduce(
-    (sum, f) => sum + f.K * f.qty, 0
+    (sum, f) => sum + f.K * f.qty,
+    0
   );
 
-  listDiv.innerHTML = fittings.map(f =>
-    `${f.qty} × ${f.type} → K = ${(f.K * f.qty).toFixed(3)}`
-  ).join("<br>");
+  if (fittings.length === 0) {
+    listDiv.innerHTML = "<em>No fittings added</em>";
+    return;
+  }
+
+  listDiv.innerHTML = fittings.map((f, i) => `
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
+      <span>
+        ${f.qty} × ${f.type}
+        &nbsp;→&nbsp; K = ${(f.K * f.qty).toFixed(3)}
+      </span>
+      <button
+        type="button"
+        data-index="${i}"
+        style="
+          background:none;
+          border:none;
+          color:#ff6b6b;
+          font-size:1.1rem;
+          cursor:pointer;
+        "
+        title="Remove fitting"
+      >
+        ×
+      </button>
+    </div>
+  `).join("");
+
+  // Attach remove handlers
+  listDiv.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () =>
+      removeFitting(Number(btn.dataset.index))
+    );
+  });
 }
