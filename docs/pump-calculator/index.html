@@ -254,29 +254,26 @@
         </div> -->
   
         <!-- FITTINGS -->
-        <div class="field full">
-          <label for="fittingType">Fitting / Valve</label>
-          <select id="fittingType"></select>
-        </div>
-        
-        <div class="field">
-          <label for="fittingQty">Quantity</label>
-          <input id="fittingQty" type="number" min="1" value="1" />
-        </div>
-        
-        <div class="field" id="valveInputField" style="display:none;">
-          <label id="valveInputLabel"></label>
-          <input id="valveInputValue" type="number" step="any" />
-        </div>
-        
-        <div class="field full">
-          <button type="button" id="addFitting" class="primary">
-            Add Fitting
-          </button>
-        </div>
-        
+<div class="field full">
+  <label for="fittingType">Fitting / Valve</label>
+  <select id="fittingType"></select>
+</div>
 
+<div class="field" id="valveInputField" style="display:none;">
+  <label id="valveInputLabel"></label>
+  <input id="valveInputValue" type="number" step="any" />
+</div>
 
+<div class="fitting-row full">
+  <div class="field">
+    <label for="fittingQty">Quantity</label>
+    <input id="fittingQty" type="number" min="1" value="1" />
+  </div>
+
+  <button type="button" id="addFitting" class="primary">
+    Add
+  </button>
+</div>
 
         
         <div class="form-actions">
