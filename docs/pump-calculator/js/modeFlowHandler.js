@@ -1,7 +1,7 @@
 // modeFlowHandler.js
 
 let currentMode = "power";
-let currentFlowType = "vol";
+let currentFlowType = "mass";
 let initialized = false;
 
 export function initModeFlowHandlers() {
