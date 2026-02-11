@@ -25,9 +25,21 @@ document
   const mu  = Number(document.getElementById("mu").value);
   const m_flow = Number(document.getElementById("mdot").value);
   const L = Number(document.getElementById("pipeLength").value);
-  const h = Number(document.getElementById("deltaZ").value);
   const P1 = Number(document.getElementById("P1").value);
   const P2 = Number(document.getElementById("P2").value);
+
+  const h_input =
+    Number(document.getElementById("deltaZ").value);
+  
+  const elevationRelation =
+    document.getElementById("elevationRelation").value;
+  
+  // Apply sign convention
+  const h =
+    elevationRelation === "above"
+      ? h_input
+      : -h_input;
+
 
   const point1AtTank =
     document.getElementById("point1Tank").checked;
