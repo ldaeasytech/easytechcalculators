@@ -33,7 +33,6 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Initialize tabs once
   initModeFlowHandlers();
 
   const calculateBtn =
@@ -42,7 +41,20 @@ document.addEventListener("DOMContentLoaded", () => {
   calculateBtn.addEventListener("click", () => {
 
     /* ===============================
-       1. READ INPUTS (DOM ONLY HERE)
+       1. READ MODE
+    =============================== */
+
+    const activeMode =
+      document.querySelector(".mode-tabs .tab.active")
+        ?.dataset.mode || "power";
+
+    if (activeMode !== "power") {
+      alert("This mode is under development.");
+      return;
+    }
+
+    /* ===============================
+       2. READ INPUTS
     =============================== */
 
     const rho = Number(document.getElementById("rho").value);
@@ -57,14 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const flowType =
       getCurrentFlowType();
 
-    const L  =
+    const L =
       Number(document.getElementById("pipeLength").value);
-
-    const P1 =
-      Number(document.getElementById("P1").value);
-
-    const P2 =
-      Number(document.getElementById("P2").value);
 
     const h_input =
       Number(document.getElementById("deltaZ").value);
@@ -72,20 +78,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const elevationRelation =
       document.getElementById("elevationRelation").value;
 
-    const point1AtTank =
-      document.getElementById("point1Tank").checked;
+    const elevationRef =
+      getElevationReference();
 
-    const point2AtPipeOutlet =
-      document.getElementById("point2PipeOutlet").checked;
+    const sinkVelocity =
+      getSinkVelocity();
+
+    /* ===============================
+       3. PRESSURE (ATM TOGGLE SUPPORT)
+    =============================== */
+
+    const P1_atm =
+      document.getElementById("P1_atm")?.checked;
+
+    const P2_atm =
+      document.getElementById("P2_atm")?.checked;
+
+    const P1 = P1_atm
+      ? 101325
+      : Number(document.getElementById("P1").value);
+
+    const P2 = P2_atm
+      ? 101325
+      : Number(document.getElementById("P2").value);
 
 
     /* ===============================
-       2. FLOW CONVERSION
+       4. FLOW CONVERSION
     =============================== */
 
-    // Returns:
-    //  - kg/s if mass
-    //  - m³/s if volumetric
     const flowSI =
       convertFlowToSI(flowValue, flowUnit, flowType);
 
@@ -94,9 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ? flowSI
         : flowSI * rho;
 
-
     /* ===============================
-       3. GEOMETRY & VELOCITIES
+       5. PIPE GEOMETRY
     =============================== */
 
     const D =
@@ -105,35 +125,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const A =
       Math.PI * D * D / 4;
 
-    const v1 =
-      point1AtTank
-        ? 0
-        : Number(document.getElementById("v1").value || 0);
-
-    const elevationRef =
-      getElevationReference();
-
-    let v2 = 0;
-    let KexitAdjustment = 0;
-
-    if (elevationRef === "pipe") {
-      v2 = m_flow / (rho * A);
-    } else {
-      v2 = getSinkVelocity();
-      KexitAdjustment = 1;
-    }
-
     const v_pipe =
       m_flow / (rho * A);
+
+    /* ===============================
+       6. VELOCITIES & EXIT LOSS
+    =============================== */
+
+    // Source liquid velocity (default zero)
+    const v1 = 0;
+
+    let v2 = 0;
+    let K_exit = 0;
+
+    if (elevationRef === "pipe") {
+      // elevation between source and pipe discharge
+      v2 = v_pipe;
+      K_exit = 0;
+    } else {
+      // elevation between source and sink
+      v2 = sinkVelocity || 0;
+      K_exit = 1;
+    }
 
     const h =
       elevationRelation === "above"
         ? h_input
         : -h_input;
 
-
     /* ===============================
-       4. LOSS COEFFICIENTS
+       7. LOSS COEFFICIENTS
     =============================== */
 
     const material =
@@ -156,26 +177,24 @@ document.addEventListener("DOMContentLoaded", () => {
       K_entrance({
         D1: null,
         D2: null,
-        fromTank: point1AtTank
+        fromTank: true
       });
 
     const Ktotal =
       Kpipe +
       Kentrance +
-      KexitAdjustment +
+      K_exit +
       window.Kf_total;
 
-
     /* ===============================
-       5. FRICTION LOSS
+       8. FRICTION LOSS
     =============================== */
 
     const F_total =
       totalFrictionLoss(v_pipe, Ktotal);
 
-
     /* ===============================
-       6. ENERGY BALANCE
+       9. ENERGY BALANCE
     =============================== */
 
     const result =
@@ -190,9 +209,8 @@ document.addEventListener("DOMContentLoaded", () => {
         F_total
       });
 
-
     /* ===============================
-       7. DISPLAY
+       10. DISPLAY
     =============================== */
 
     document
