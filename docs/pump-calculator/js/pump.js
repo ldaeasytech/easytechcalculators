@@ -262,7 +262,20 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===============================
        9. ENERGY BALANCE
     =============================== */
+    /* ===============================
+   ENERGY TERMS (per unit mass)
+=============================== */
 
+const deltaKE =
+  (v2 * v2 - v1 * v1) / 2;      // J/kg
+
+const deltaPE =
+  9.81 * h;                     // J/kg
+
+const deltaPressure =
+  (P2 - P1) / rho;              // J/kg
+
+    
     const result =
       pumpPower({
         m_flow,
@@ -288,6 +301,14 @@ document.addEventListener("DOMContentLoaded", () => {
       .getElementById("pumpPowerValue")
       .textContent =
       result.Ws.toFixed(3);
+
+    // Convert Watts → hp
+    const pumpPowerHP = result.Ws / 745.7;
+    
+    document
+      .getElementById("pumpPowerHP")
+      .textContent =
+      pumpPowerHP.toFixed(4);
 
 
     /* ===============================
