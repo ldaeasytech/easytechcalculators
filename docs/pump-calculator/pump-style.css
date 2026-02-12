@@ -209,7 +209,6 @@ body {
 
   .input-group .helper-text {
     grid-column: 1 / -1;
-    color: #ffffff;
   }
 
   .input-group .fitting-row {
@@ -224,6 +223,27 @@ body {
   color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
+
+/* Fluid properties helper link */
+.helper-text a {
+  color: #60a5fa;              /* bright blue */
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(96,165,250,0.4);
+  transition: all 0.2s ease;
+}
+
+.helper-text a:hover {
+  color: #93c5fd;
+  border-bottom: 1px solid #93c5fd;
+}
+
+.helper-text {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #cbd5f5;              /* lighter text */
+}
+
 
 /* =========================================================
    FIELD
