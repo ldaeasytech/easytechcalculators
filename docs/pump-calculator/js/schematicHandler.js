@@ -39,20 +39,24 @@ function generateSVG(relation, reference) {
   const pumpY = isAbove ? 190 : 130;
   const dischargeY = 80;
 
+  const sinkY = dischargeY + 10;
+
   const v2Label = isPipeRef ? "v₂ = v" : "v₂ = 0";
   const kExitLabel = isPipeRef ? "K_exit = 0" : "K_exit = 1";
 
   return `
-<svg viewBox="0 0 700 320" width="100%" height="100%"
+<svg viewBox="0 0 800 360" width="100%" height="100%"
      xmlns="http://www.w3.org/2000/svg">
 
 <style>
 .pipe { stroke:#d1d5db; stroke-width:6; fill:none; }
 .tank { stroke:#94a3b8; stroke-width:2; fill:none; }
 .water { fill:url(#waterGrad); }
-.label { fill:#e5e7eb; font-size:12px; font-family:Segoe UI, sans-serif; }
-.head { fill:#60a5fa; font-size:13px; font-weight:600; }
-.pump { stroke:#facc15; stroke-width:3; fill:none; }
+.label { fill:#e5e7eb; font-size:13px; font-family:Segoe UI, sans-serif; }
+.head { fill:#60a5fa; font-size:14px; font-weight:600; }
+.pump-body { stroke:#facc15; stroke-width:4; fill:none; }
+.impeller { stroke:#facc15; stroke-width:2; fill:none; }
+.nozzle { stroke:#d1d5db; stroke-width:4; }
 </style>
 
 <defs>
@@ -72,95 +76,84 @@ function generateSVG(relation, reference) {
   </marker>
 </defs>
 
-<!-- TANK -->
-<rect x="40" y="${tankY}" width="130" height="120"
-      class="tank"/>
-
-<rect x="40" y="${tankY + 60}"
-      width="130" height="60"
-      class="water"/>
-
-<text x="45" y="${tankY - 8}"
-      class="label">
-  Source
-</text>
+<!-- SOURCE TANK -->
+<rect x="40" y="${tankY}" width="130" height="120" class="tank"/>
+<rect x="40" y="${tankY + 60}" width="130" height="60" class="water"/>
+<text x="45" y="${tankY - 8}" class="label">Source</text>
 
 <!-- SUCTION PIPE -->
 <line x1="170" y1="${tankY + 80}"
-      x2="290" y2="${pumpY}"
+      x2="300" y2="${pumpY}"
       class="pipe"/>
 
-<!-- PUMP -->
-<circle cx="310" cy="${pumpY}"
-        r="22"
-        class="pump"/>
-<polygon points="${300},${pumpY-10}
-                 ${300},${pumpY+10}
-                 ${325},${pumpY}"
-         fill="#facc15"/>
+<!-- PUMP (Improved Centrifugal Style) -->
+<circle cx="330" cy="${pumpY}" r="28" class="pump-body"/>
+<circle cx="330" cy="${pumpY}" r="10" class="impeller"/>
+<line x1="330" y1="${pumpY-10}" x2="330" y2="${pumpY+10}" class="impeller"/>
+<line x1="320" y1="${pumpY}" x2="340" y2="${pumpY}" class="impeller"/>
 
-<text x="310" y="${pumpY + 40}"
-      text-anchor="middle"
-      class="label">
-  Pump
+<!-- Shaft -->
+<line x1="358" y1="${pumpY}" x2="380" y2="${pumpY}" 
+      stroke="#facc15" stroke-width="4"/>
+
+<text x="330" y="${pumpY + 50}" text-anchor="middle" class="label">
+  Centrifugal Pump
 </text>
 
 <!-- DISCHARGE PIPE -->
-<line x1="332" y1="${pumpY}"
-      x2="600" y2="${dischargeY}"
+<line x1="380" y1="${pumpY}"
+      x2="620" y2="${dischargeY}"
       class="pipe"
       marker-end="url(#arrow)"/>
 
-<!-- DISCHARGE OUTLET -->
-<line x1="600" y1="${dischargeY}"
-      x2="600" y2="${dischargeY - 30}"
-      class="pipe"/>
+<!-- DISCHARGE NOZZLE -->
+<polygon points="620,${dischargeY-12}
+                 660,${dischargeY}
+                 620,${dischargeY+12}"
+         fill="#d1d5db"/>
 
-<text x="605" y="${dischargeY - 35}"
-      class="label">
+<text x="600" y="${dischargeY - 20}" class="label">
   Discharge
 </text>
 
+<!-- SINK TANK -->
+<rect x="670" y="${sinkY}" width="120" height="100" class="tank"/>
+<rect x="670" y="${sinkY + 50}" width="120" height="50" class="water"/>
+
+<text x="675" y="${sinkY - 8}" class="label">
+  Sink
+</text>
+
 <!-- ELEVATION ARROW -->
-<line x1="220"
+<line x1="240"
       y1="${tankY + 60}"
-      x2="220"
+      x2="240"
       y2="${dischargeY}"
       stroke="#60a5fa"
       stroke-width="2"
       marker-end="url(#arrow)"/>
 
-<text x="228"
+<text x="248"
       y="${(tankY + dischargeY)/2}"
       class="head">
   h
 </text>
 
 <!-- DYNAMIC LABELS -->
-<text x="80" y="${tankY + 55}"
-      class="label">
-  P₁
-</text>
-
-<text x="550" y="${dischargeY + 20}"
-      class="label">
-  P₂
-</text>
-
-<text x="90" y="${tankY + 100}"
-      class="label">
+<text x="90" y="${tankY + 100}" class="label">
   v₁ = 0
 </text>
 
-<text x="480" y="${dischargeY - 10}"
-      class="label">
+<text x="520" y="${dischargeY - 10}" class="label">
   ${v2Label}
 </text>
 
-<text x="420" y="${dischargeY + 50}"
-      class="label">
+<text x="470" y="${dischargeY + 40}" class="label">
   ${kExitLabel}
 </text>
+
+<text x="80" y="${tankY + 50}" class="label">P₁</text>
+<text x="600" y="${dischargeY + 20}" class="label">P₂</text>
 
 </svg>
 `;
