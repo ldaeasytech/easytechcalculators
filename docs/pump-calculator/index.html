@@ -211,7 +211,7 @@
         </div>
 
         <div class="field">
-          <label for="mu">Viscosity μ (Pa·s)</label>
+          <label for="mu">Viscosity (μPa·s)</label>
           <input id="mu" type="number" step="any" />
         </div>
 
@@ -256,9 +256,26 @@
     </form>
   </section>
 
+<!-- ================= SCHEMATIC BELOW MAIN ================= -->
+<section class="card" id="schematicCard">
+  <h2>System Schematic</h2>
 
-  <!-- ================= RIGHT COLUMN – RESULTS ================= -->
-  <section class="card">
+  <div id="schematicContainer" class="schematic-box">
+    <div id="schematicLabel">
+      Select elevation configuration to view schematic
+    </div>
+  </div>
+
+  <div class="schematic-subsection">
+    <h3>Added Fittings</h3>
+    <div id="fittingsList" class="results-table"></div>
+  </div>
+<!--</section>
+
+
+  
+  <!-- ================= RIGHT COLUMN – RESULTS ================= --
+  <section class="card">-->
     <h2>Results</h2>
 
     <div id="results" class="hidden">
@@ -283,22 +300,6 @@
   </section>
 
 </main>
-
-<!-- ================= SCHEMATIC BELOW MAIN ================= -->
-<section class="card" id="schematicCard">
-  <h2>System Schematic</h2>
-
-  <div id="schematicContainer" class="schematic-box">
-    <div id="schematicLabel">
-      Select elevation configuration to view schematic
-    </div>
-  </div>
-
-  <div class="schematic-subsection">
-    <h3>Fittings</h3>
-    <div id="fittingsList" class="results-table"></div>
-  </div>
-</section>
 
 <!-- ================= FOOTER ================= -->
 <footer class="site-footer">
