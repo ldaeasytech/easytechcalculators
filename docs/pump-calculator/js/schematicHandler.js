@@ -104,16 +104,27 @@ function generateSVG(relation, reference) {
   Centrifugal Pump
 </text>
 
-<!-- DISCHARGE PIPE (with flow arrow centered) -->
+<!-- DISCHARGE PIPE -->
 <line x1="380" y1="${pumpY}"
       x2="600" y2="${dischargeY}"
       class="pipe"/>
 
-<line x1="470" y1="${(pumpY + dischargeY)/2}"
-      x2="510" y2="${(pumpY + dischargeY)/2}"
+<!-- FLOW DIRECTION ARROW (moved upward) -->
+<line x1="470" 
+      y1="${(pumpY + dischargeY)/2 - 25}"
+      x2="520" 
+      y2="${(pumpY + dischargeY)/2 - 25}"
       stroke="#d1d5db"
-      stroke-width="4"
+      stroke-width="3"
       marker-end="url(#flowArrow)"/>
+
+<text x="495"
+      y="${(pumpY + dischargeY)/2 - 35}"
+      text-anchor="middle"
+      class="label">
+  Flow Direction
+</text>
+
 
 
 <!-- CLEAN NOZZLE (Reducer + Outlet) -->
