@@ -330,9 +330,8 @@ document
   pumpPowerKW.toFixed(3);
 
 document
-  .getElementById("pumpPowerHP")
-  .textContent =
-  `${pumpPowerHP.toFixed(4)} hp`;
+  document.getElementById("pumpPowerHP").textContent =
+  pumpPowerHP.toFixed(2);
 
 
     /* ===============================
