@@ -116,7 +116,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 22px;
-  color: var(--text-secondary);
+  color: #cbd5f5;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -243,13 +243,13 @@ label {
 input,
 select {
   background: linear-gradient(
-    180deg,
-    #1c2433,
-    #18202d
+    145deg,
+    #1a2231,
+    #141b27
   );
-  border: 1px solid #2b3445;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
-  padding: 12px;
+  padding: 11px;
   color: #ffffff;
   font-size: 14px;
 
@@ -258,6 +258,11 @@ select {
     0 0 0 1px rgba(255,255,255,0.02);
 
   transition: all 0.2s ease;
+}
+
+input:hover,
+select:hover {
+  border-color: rgba(63,169,255,0.4);
 }
 
 input:focus,
@@ -352,12 +357,13 @@ select:focus {
 
   background: linear-gradient(
     135deg,
-    rgba(14,165,233,0.2),
-    rgba(59,130,246,0.2)
+    rgba(14,165,233,0.18),
+    rgba(59,130,246,0.22)
   );
 
   border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(59,130,246,0.35);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
 }
 
 .result-value {
@@ -369,6 +375,11 @@ select:focus {
 .result-unit {
   margin-left: 6px;
   color: var(--text-secondary);
+}
+
+.result-section h3 {
+  color: #cbd5f5;
+  font-weight: 600;
 }
 
 /* =========================================================
