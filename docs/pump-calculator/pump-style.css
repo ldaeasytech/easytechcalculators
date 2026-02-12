@@ -242,20 +242,16 @@ label {
 
 input,
 select {
-  background: linear-gradient(
-    145deg,
-    #1a2231,
-    #141b27
-  );
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
-  padding: 11px;
-  color: #ffffff;
-  font-size: 14px;
+  background: linear-gradient(135deg, #1a2434, #141e2c);
+  border: 1px solid rgba(63,169,255,0.35);
+  color: #e6edf5;
+  appearance: none;
+}
 
-  box-shadow:
-    inset 0 1px 2px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(255,255,255,0.02);
+select:focus {
+  border-color: #3fa9ff;
+  box-shadow: 0 0 0 3px rgba(63,169,255,0.15);
+}
 
   transition: all 0.2s ease;
 }
