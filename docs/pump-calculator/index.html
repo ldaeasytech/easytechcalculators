@@ -108,77 +108,63 @@
   </div>
 </div>
 
-<!--Elevation-->
-        <div class="field">
-          <label for="deltaZ">Elevation Difference h (m)</label>
-          <input id="deltaZ" type="number" step="any" />
-        </div>
+<!--Elevation--><div class="input-group full">
+  <div class="group-title">Elevation Profile</div>
 
-        <div class="field">
-          <label for="elevationRelation">
-            Relative Elevation
-          </label>
-          <select id="elevationRelation">
-            <option value="above">
-              Liquid source is ABOVE discharge
-            </option>
-            <option value="below">
-              Liquid source is BELOW discharge
-            </option>
-          </select>
-        
-          <div class="helper-text">
-            Determines the sign of elevation head automatically.
-          </div>
-        </div>
+  <div class="field">
+    <label for="deltaZ">Elevation Difference h (m)</label>
+    <input id="deltaZ" type="number" step="any" />
+  </div>
 
-        <div class="field">
-  <label for="elevationReference">
-    Elevation Measured Between
-  </label>
-  <select id="elevationReference">
-    <option value="pipe">
-      Source liquid surface and pipe discharge
-    </option>
-    <option value="sink">
-      Source liquid surface and sink liquid surface
-    </option>
-  </select>
-</div>
+  <div class="field">
+    <label for="elevationRelation">Relative Elevation</label>
+    <select id="elevationRelation">
+      <option value="above">Liquid source is ABOVE discharge</option>
+      <option value="below">Liquid source is BELOW discharge</option>
+    </select>
+  </div>
 
-<div class="field" id="sinkVelocityField" style="display:none;">
-  <label for="sinkVelocity">
-    Sink Liquid Velocity (m/s)
-  </label>
-  <input id="sinkVelocity" type="number" step="any" value="0" />
-  <div class="helper-text">
-    Only applicable when elevation is measured to sink surface.
+  <div class="field">
+    <label for="elevationReference">Elevation Measured Between</label>
+    <select id="elevationReference">
+      <option value="pipe">
+        Source liquid surface and pipe discharge
+      </option>
+      <option value="sink">
+        Source liquid surface and sink liquid surface
+      </option>
+    </select>
   </div>
 </div>
 
+
         
         <!-- PRESSURES -->
-        <div class="field">
-  <label for="P1">Pressure at Point 1 (Pa)</label>
-  <input id="P1" type="number" step="any" />
-  <label class="inline-toggle">
-    <input type="checkbox" id="P1_atm">
-    Atmospheric Pressure (101325 Pa)
-  </label>
-</div>
+<div class="input-group full">
+  <div class="group-title">Pressure Profile</div>
 
-        <div class="field">
-  <label for="P2">Pressure at Point 2 (Pa)</label>
-  <input id="P2" type="number" step="any" />
-  <label class="inline-toggle">
-    <input type="checkbox" id="P2_atm">
-    Atmospheric Pressure (101325 Pa)
-  </label>
+  <div class="field">
+    <label for="P1">Pressure at Point 1 (Pa)</label>
+    <input id="P1" type="number" step="any" />
+    <label class="inline-toggle">
+      <input type="checkbox" id="P1_atm">
+      Atmospheric pressure (101325 Pa)
+    </label>
+  </div>
+
+  <div class="field">
+    <label for="P2">Pressure at Point 2 (Pa)</label>
+    <input id="P2" type="number" step="any" />
+    <label class="inline-toggle">
+      <input type="checkbox" id="P2_atm">
+      Atmospheric pressure (101325 Pa)
+    </label>
+  </div>
 </div>
 
 
         <!-- PIPE -->
-<div class="input-group">
+<div class="input-group full">
   <div class="group-title">Pipe Specification</div>
 
   <div class="field">
@@ -186,20 +172,21 @@
     <select id="pipeMaterial"></select>
   </div>
 
-  <!-- Commercial steel selection -->
-  <div id="steelOptions">
-
-    <div class="field">
-      <label for="pipeNPS">Nominal Pipe Size</label>
-      <select id="pipeNPS"></select>
-    </div>
-
-    <div class="field">
-      <label for="pipeSchedule">Schedule Number</label>
-      <select id="pipeSchedule"></select>
-    </div>
-
+  <div class="field">
+    <label for="pipeNPS">Nominal Pipe Size</label>
+    <select id="pipeNPS"></select>
   </div>
+
+  <div class="field">
+    <label for="pipeSchedule">Schedule Number</label>
+    <select id="pipeSchedule"></select>
+  </div>
+
+  <div class="field">
+    <label for="pipeLength">Pipe Length (m)</label>
+    <input id="pipeLength" type="number" step="any" />
+  </div>
+</div>
 
   <!-- Custom diameter input -->
   <div id="customDiameterField" style="display:none;">
@@ -213,67 +200,54 @@
 
 </div>
 
-
-        <div class="field">
-          <label for="pipeLength">Pipe Length (m)</label>
-          <input id="pipeLength" type="number" step="any" />
-        </div>
-
         <!-- FLUID -->
-        <div class="field">
-          <label for="rho">Density ρ (kg/m³)</label>
-          <input id="rho" type="number" step="any" />
-        </div>
-        
-        <div class="helper-text">
-        Need fluid properties?
-        <a href="../water-properties/index.html" target="_blank">
-          Open Water & Steam Properties Calculator
-        </a>
-        </div>
+<div class="input-group full">
+  <div class="group-title">Fluid Properties</div>
 
-        
-        <div class="field">
-          <label for="mu">Viscosity μ (Pa·s)</label>
-          <input id="mu" type="number" step="any" />
-        </div>
-
-        <!-- REFERENCE POINTS
-        <div class="field full">
-          <label>
-            <input type="checkbox" id="point1Tank" />
-            Point 1 is at liquid surface (v₁ = 0)
-          </label>
-        </div>
-
-        <div class="field full">
-          <label>
-            <input type="checkbox" id="point2PipeOutlet" />
-            Point 2 is at pipe outlet (v₂ ≠ 0)
-          </label>
-        </div> -->
-  
-        <!-- FITTINGS -->
-<div class="field full">
-  <label for="fittingType">Fitting / Valve</label>
-  <select id="fittingType"></select>
-</div>
-
-<div class="field" id="valveInputField" style="display:none;">
-  <label id="valveInputLabel"></label>
-  <input id="valveInputValue" type="number" step="any" />
-</div>
-
-<div class="fitting-row full">
   <div class="field">
-    <label for="fittingQty">Quantity</label>
-    <input id="fittingQty" type="number" min="1" value="1" />
+    <label for="rho">Density ρ (kg/m³)</label>
+    <input id="rho" type="number" step="any" />
   </div>
 
-  <button type="button" id="addFitting" class="primary">
-    Add
-  </button>
+  <div class="field">
+    <label for="mu">Viscosity μ (Pa·s)</label>
+    <input id="mu" type="number" step="any" />
+  </div>
+
+  <div class="helper-text">
+    Need fluid properties?
+    <a href="../water-properties/index.html" target="_blank">
+      Open Water & Steam Properties Calculator
+    </a>
+  </div>
 </div>
+
+        <!-- FITTINGS -->
+<div class="input-group full">
+  <div class="group-title">Fittings and Valves</div>
+
+  <div class="field">
+    <label for="fittingType">Fitting / Valve</label>
+    <select id="fittingType"></select>
+  </div>
+
+  <div class="field" id="valveInputField" style="display:none;">
+    <label id="valveInputLabel"></label>
+    <input id="valveInputValue" type="number" step="any" />
+  </div>
+
+  <div class="fitting-row">
+    <div class="field">
+      <label for="fittingQty">Quantity</label>
+      <input id="fittingQty" type="number" min="1" value="1" />
+    </div>
+
+    <button type="button" id="addFitting" class="primary">
+      Add
+    </button>
+  </div>
+</div>
+
 
         
         <div class="form-actions">
