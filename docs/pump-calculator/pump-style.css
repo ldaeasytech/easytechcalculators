@@ -21,7 +21,7 @@ body {
 }
 
 body {
-  background: var(--bg-main);
+  background: #0b1220;
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   color: var(--text-primary);
   line-height: 1.55;
