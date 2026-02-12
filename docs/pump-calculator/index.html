@@ -152,36 +152,41 @@
       </div>
 
       <!-- PIPE SPECIFICATION -->
-      <div class="input-group">
-        <div class="group-title">Pipe Specification</div>
+     <div class="input-group">
+  <div class="group-title">Pipe Specification</div>
 
-        <div class="field">
-          <label for="pipeMaterial">Pipe Material</label>
-          <select id="pipeMaterial"></select>
-        </div>
+  <div class="field">
+    <label for="pipeMaterial">Pipe Material</label>
+    <select id="pipeMaterial"></select>
+  </div>
 
-        <div class="field">
-          <label for="pipeNPS">Nominal Pipe Size</label>
-          <select id="pipeNPS"></select>
-        </div>
+  <div id="steelOptions">
 
-        <div class="field">
-          <label for="pipeSchedule">Schedule Number</label>
-          <select id="pipeSchedule"></select>
-        </div>
+    <div class="field">
+      <label for="pipeNPS">Nominal Pipe Size</label>
+      <select id="pipeNPS"></select>
+    </div>
 
-        <div class="field">
-          <label for="pipeLength">Pipe Length (m)</label>
-          <input id="pipeLength" type="number" step="any" />
-        </div>
+    <div class="field">
+      <label for="pipeSchedule">Schedule Number</label>
+      <select id="pipeSchedule"></select>
+    </div>
 
-        <div id="customDiameterField" style="display:none;">
-          <div class="field">
-            <label for="customDiameter">Inner Diameter (m)</label>
-            <input id="customDiameter" type="number" step="any" />
-          </div>
-        </div>
-      </div>
+  </div>
+
+  <div id="customDiameterField" style="display:none;">
+    <div class="field">
+      <label for="customDiameter">Inner Diameter (m)</label>
+      <input id="customDiameter" type="number" step="any" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="pipeLength">Pipe Length (m)</label>
+    <input id="pipeLength" type="number" step="any" />
+  </div>
+</div>
+
 
       <!-- FLUID PROPERTIES -->
       <div class="input-group">
