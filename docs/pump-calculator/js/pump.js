@@ -220,7 +220,13 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===============================
        7. LOSS COEFFICIENTS
     =============================== */
+    const material =
+  getPipeMaterial();
 
+  const e =
+  PIPE_ROUGHNESS[material];
+
+    
     const Kpipe =
   K_pipe({
     rho,
