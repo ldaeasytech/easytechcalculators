@@ -11,6 +11,12 @@ export function initModeFlowHandlers() {
   const modeTabs = document.querySelectorAll(".mode-tabs .tab");
   const flowTabs = document.querySelectorAll("[data-flow]");
 
+  const flowUnitSelect = document.getElementById("flowUnit");
+  const flowLabel = document.getElementById("flowLabel");
+
+  /* ===============================
+     MODE TABS
+  =============================== */
   modeTabs.forEach(tab => {
     tab.addEventListener("click", () => {
       modeTabs.forEach(t => t.classList.remove("active"));
@@ -19,14 +25,68 @@ export function initModeFlowHandlers() {
     });
   });
 
+  /* ===============================
+     FLOW TABS
+  =============================== */
   flowTabs.forEach(tab => {
     tab.addEventListener("click", () => {
       flowTabs.forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
+
       currentFlowType = tab.dataset.flow;
+
+      updateFlowUI();
     });
   });
+
+  /* ===============================
+     INITIALIZE UNITS ON LOAD
+  =============================== */
+  updateFlowUI();
+
+
+  /* ===============================
+     UNIT POPULATOR
+  =============================== */
+  function updateFlowUI() {
+
+    if (!flowUnitSelect || !flowLabel) return;
+
+    flowUnitSelect.innerHTML = "";
+
+    if (currentFlowType === "mass") {
+
+      flowLabel.textContent = "Mass Flow Rate";
+
+      flowUnitSelect.innerHTML = `
+        <option value="kg_s">kg/s</option>
+        <option value="kg_min">kg/min</option>
+        <option value="kg_h">kg/h</option>
+        <option value="lb_s">lb/s</option>
+        <option value="lb_min">lb/min</option>
+        <option value="lb_h">lb/h</option>
+      `;
+
+    } else {
+
+      flowLabel.textContent = "Volumetric Flow Rate";
+
+      flowUnitSelect.innerHTML = `
+        <option value="m3_s">m³/s</option>
+        <option value="m3_h">m³/h</option>
+        <option value="L_s">L/s</option>
+        <option value="L_min">L/min</option>
+        <option value="ft3_s">ft³/s</option>
+        <option value="ft3_min">ft³/min</option>
+        <option value="gpm">gpm</option>
+      `;
+    }
+  }
 }
+
+/* ===============================
+   EXPORTS
+=============================== */
 
 export function getCurrentFlowType() {
   return currentFlowType;
