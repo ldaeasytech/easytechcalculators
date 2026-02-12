@@ -242,15 +242,23 @@ label {
 
 input,
 select {
-  background: linear-gradient(135deg, #1a2434, #141e2c);
-  border: 1px solid rgba(63,169,255,0.35);
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #111827
+  );
+  border: 1px solid #2b3a52;
+  border-radius: 12px;
+  padding: 10px 12px;
   color: #e6edf5;
-  appearance: none;
+  font-size: 0.9rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 select:focus {
+  outline: none;
   border-color: #3fa9ff;
-  box-shadow: 0 0 0 3px rgba(63,169,255,0.15);
+  box-shadow: 0 0 0 3px rgba(63,169,255,0.25);
 }
 
   transition: all 0.2s ease;
