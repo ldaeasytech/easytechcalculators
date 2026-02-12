@@ -221,42 +221,57 @@ document.addEventListener("DOMContentLoaded", () => {
        7. LOSS COEFFICIENTS
     =============================== */
 
-    const material =
-      getPipeMaterial();
-
-    const e =
-      PIPE_ROUGHNESS[material];
-
     const Kpipe =
-      K_pipe({
-        rho,
-        mu,
-        D,
-        v: v_pipe,
-        L,
-        e
-      });
+  K_pipe({
+    rho,
+    mu,
+    D,
+    v: v_pipe,
+    L,
+    e
+  });
 
-    const Kentrance =
-      K_entrance({
-        D1: null,
-        D2: null,
-        fromTank: true
-      });
+const Kentrance =
+  K_entrance({
+    D1: null,
+    D2: null,
+    fromTank: true
+  });
 
-    const Ktotal =
-      Kpipe +
-      Kentrance +
-      K_exit +
-      getTotalFittingsK();
+const Kfittings =
+  getTotalFittingsK();
+
+const Kexit = K_exit;
+
+const Ktotal =
+  Kpipe +
+  Kentrance +
+  Kexit +
+  Kfittings;
+
 
 
     /* ===============================
        8. FRICTION LOSS
     =============================== */
 
-    const F_total =
-      totalFrictionLoss(v_pipe, Ktotal);
+    const F_pipe =
+  totalFrictionLoss(v_pipe, Kpipe);
+
+const F_entrance =
+  totalFrictionLoss(v_pipe, Kentrance);
+
+const F_exit =
+  totalFrictionLoss(v_pipe, Kexit);
+
+const F_fittings =
+  totalFrictionLoss(v_pipe, Kfittings);
+
+const F_total =
+  F_pipe +
+  F_entrance +
+  F_exit +
+  F_fittings;
 
 
     /* ===============================
@@ -318,14 +333,26 @@ const deltaPressure =
     const Re =
       (rho * v_pipe * D) / mu;
 
+        /* ===============================
+       FLOW REGIME
+    =============================== */
+    
+    let flowRegime;
+    
+    if (Re < 2300) {
+      flowRegime = "Laminar";
+    } else if (Re >= 2300 && Re <= 4000) {
+      flowRegime = "Transitional";
+    } else {
+      flowRegime = "Turbulent";
+    }
 
     /* ===============================
        ENERGY BALANCE TABLE
     =============================== */
-
     const energyTable =
       document.getElementById("energyTable");
-
+    
     energyTable.innerHTML = `
   <tr>
     <th>Term</th>
@@ -338,28 +365,46 @@ const deltaPressure =
     <td>kg/s</td>
   </tr>
   <tr>
-    <td>Δ Kinetic Energy (v₂² − v₁²)/2</td>
+    <td>Δ Kinetic Energy</td>
     <td>${deltaKE.toFixed(4)}</td>
     <td>J/kg</td>
   </tr>
   <tr>
-    <td>Δ Potential Energy (g·h)</td>
+    <td>Δ Potential Energy</td>
     <td>${deltaPE.toFixed(4)}</td>
     <td>J/kg</td>
   </tr>
   <tr>
-    <td>Δ Pressure Energy (ΔP/ρ)</td>
+    <td>Δ Pressure Energy</td>
     <td>${deltaPressure.toFixed(4)}</td>
     <td>J/kg</td>
   </tr>
   <tr>
-    <td>Total Friction Loss</td>
-    <td>${F_total.toFixed(4)}</td>
+    <td>Pipe Friction Loss</td>
+    <td>${F_pipe.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Entrance Loss</td>
+    <td>${F_entrance.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Exit Loss</td>
+    <td>${F_exit.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Fittings Loss</td>
+    <td>${F_fittings.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td><strong>Total Friction Loss</strong></td>
+    <td><strong>${F_total.toFixed(4)}</strong></td>
     <td>J/kg</td>
   </tr>
 `;
-
-
 
     /* ===============================
        HYDRAULIC PARAMETERS TABLE
@@ -369,32 +414,38 @@ const deltaPressure =
       document.getElementById("hydraulicTable");
 
     hydraulicTable.innerHTML = `
-      <tr>
-        <th>Parameter</th>
-        <th>Value</th>
-        <th>Unit</th>
-      </tr>
-      <tr>
-        <td>Pipe Diameter (D)</td>
-        <td>${D.toFixed(4)}</td>
-        <td>m</td>
-      </tr>
-      <tr>
-        <td>Pipe Velocity (v)</td>
-        <td>${v_pipe.toFixed(4)}</td>
-        <td>m/s</td>
-      </tr>
-      <tr>
-        <td>Reynolds Number</td>
-        <td>${Re.toExponential(3)}</td>
-        <td>—</td>
-      </tr>
-      <tr>
-        <td>Total Loss Coefficient (ΣK)</td>
-        <td>${Ktotal.toFixed(4)}</td>
-        <td>—</td>
-      </tr>
-    `;
+  <tr>
+    <th>Parameter</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Pipe Diameter (D)</td>
+    <td>${D.toFixed(4)}</td>
+    <td>m</td>
+  </tr>
+  <tr>
+    <td>Pipe Velocity (v)</td>
+    <td>${v_pipe.toFixed(4)}</td>
+    <td>m/s</td>
+  </tr>
+  <tr>
+    <td>Reynolds Number</td>
+    <td>${Re.toExponential(3)}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Flow Regime</td>
+    <td>${flowRegime}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Total Loss Coefficient (ΣK)</td>
+    <td>${Ktotal.toFixed(4)}</td>
+    <td>—</td>
+  </tr>
+`;
+
 
   });
 
