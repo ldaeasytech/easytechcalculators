@@ -312,18 +312,21 @@ const deltaPressure =
       .getElementById("results")
       .classList.remove("hidden");
 
-    document
-      .getElementById("pumpPowerValue")
-      .textContent =
-      result.Ws.toFixed(3);
+  // Ws is already in kW
+const pumpPowerKW = result.Ws;
 
-    // Convert Watts → hp
-    const pumpPowerHP = result.Ws / 745.7;
-    
-    document
-      .getElementById("pumpPowerHP")
-      .textContent =
-      pumpPowerHP.toFixed(4);
+// Convert kW → hp
+const pumpPowerHP = pumpPowerKW * 1.341022;
+
+document
+  .getElementById("pumpPowerValue")
+  .textContent =
+  pumpPowerKW.toFixed(3);
+
+document
+  .getElementById("pumpPowerHP")
+  .textContent =
+  `${pumpPowerHP.toFixed(4)} hp`;
 
 
     /* ===============================
