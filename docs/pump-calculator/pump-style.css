@@ -367,3 +367,27 @@ select:focus {
 .fitting-row .primary {
   height: 42px;
 }
+
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.group-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #9fb3c8;
+  letter-spacing: 0.03em;
+}
+
+.fitting-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+  align-items: end;
+}
+
