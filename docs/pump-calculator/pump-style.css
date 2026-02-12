@@ -400,13 +400,14 @@ select:focus {
 
 .result-value {
   font-size: 2.4rem;
+  color: #ffffff;
   font-weight: 700;
   letter-spacing: -0.5px;
 }
 
 .result-unit {
   margin-left: 6px;
-  color: var(--text-secondary);
+  color: #ffffff;
 }
 
 .result-section h3 {
@@ -428,7 +429,7 @@ select:focus {
   text-align: left;
   padding: 8px 0;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #ffffff;
   border-bottom: 1px solid var(--border-soft);
 }
 
