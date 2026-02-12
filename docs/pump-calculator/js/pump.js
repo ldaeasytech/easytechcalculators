@@ -1,11 +1,5 @@
 // pump.js
 
-import {
-  initModeFlowHandlers,
-  getCurrentFlowType,
-  convertFlowToSI
-} from "./modeFlowHandler.js";
-
 import "./uiInit.js";
 import "./fittingsHandler.js";
 import "./pipeMaterialHandler.js";
@@ -33,7 +27,63 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  initModeFlowHandlers();
+  /* ===============================
+     FLOW INPUT CONTROL
+  =============================== */
+
+  const massInput = document.getElementById("massFlow");
+  const massUnit  = document.getElementById("massFlowUnit");
+  const volInput  = document.getElementById("volFlow");
+  const volUnit   = document.getElementById("volFlowUnit");
+
+  function updateFlowState() {
+    const hasMass = massInput.value.trim() !== "";
+    const hasVol  = volInput.value.trim() !== "";
+
+    volInput.disabled = hasMass;
+    volUnit.disabled  = hasMass;
+
+    massInput.disabled = hasVol;
+    massUnit.disabled  = hasVol;
+  }
+
+  massInput.addEventListener("input", updateFlowState);
+  volInput.addEventListener("input", updateFlowState);
+
+
+  /* ===============================
+     FLOW CONVERSION UTILITIES
+  =============================== */
+
+  function convertMassToKgPerSec(value, unit) {
+    const v = Number(value);
+
+    switch (unit) {
+      case "kg/s":   return v;
+      case "kg/min": return v / 60;
+      case "kg/h":   return v / 3600;
+      case "lb/s":   return v * 0.453592;
+      case "lb/min": return v * 0.453592 / 60;
+      case "lb/h":   return v * 0.453592 / 3600;
+      default: return 0;
+    }
+  }
+
+  function convertVolToM3PerSec(value, unit) {
+    const v = Number(value);
+
+    switch (unit) {
+      case "m3/s":    return v;
+      case "m3/h":    return v / 3600;
+      case "L/s":     return v / 1000;
+      case "L/min":   return v / 1000 / 60;
+      case "ft3/s":   return v * 0.0283168;
+      case "ft3/min": return v * 0.0283168 / 60;
+      case "gpm":     return v * 0.00378541 / 60;
+      default: return 0;
+    }
+  }
+
 
   const calculateBtn =
     document.getElementById("calculateBtn");
@@ -60,14 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const rho = Number(document.getElementById("rho").value);
     const mu  = Number(document.getElementById("mu").value);
 
-    const flowValue =
-      Number(document.getElementById("flowValue").value);
+    const massValue = massInput.value;
+    const massUnitValue = massUnit.value;
 
-    const flowUnit =
-      document.getElementById("flowUnit").value;
-
-    const flowType =
-      getCurrentFlowType();
+    const volValue = volInput.value;
+    const volUnitValue = volUnit.value;
 
     const L =
       Number(document.getElementById("pipeLength").value);
@@ -83,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const sinkVelocity =
       getSinkVelocity();
+
 
     /* ===============================
        3. PRESSURE (ATM TOGGLE SUPPORT)
@@ -107,13 +155,30 @@ document.addEventListener("DOMContentLoaded", () => {
        4. FLOW CONVERSION
     =============================== */
 
-    const flowSI =
-      convertFlowToSI(flowValue, flowUnit, flowType);
+    let m_flow;
 
-    const m_flow =
-      flowType === "mass"
-        ? flowSI
-        : flowSI * rho;
+    if (massValue.trim() !== "") {
+
+      m_flow = convertMassToKgPerSec(
+        massValue,
+        massUnitValue
+      );
+
+    } else if (volValue.trim() !== "") {
+
+      const Q = convertVolToM3PerSec(
+        volValue,
+        volUnitValue
+      );
+
+      m_flow = Q * rho;
+
+    } else {
+
+      alert("Please enter either mass flow or volumetric flow.");
+      return;
+    }
+
 
     /* ===============================
        5. PIPE GEOMETRY
@@ -128,22 +193,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const v_pipe =
       m_flow / (rho * A);
 
+
     /* ===============================
        6. VELOCITIES & EXIT LOSS
     =============================== */
 
-    // Source liquid velocity (default zero)
     const v1 = 0;
 
     let v2 = 0;
     let K_exit = 0;
 
     if (elevationRef === "pipe") {
-      // elevation between source and pipe discharge
       v2 = v_pipe;
       K_exit = 0;
     } else {
-      // elevation between source and sink
       v2 = sinkVelocity || 0;
       K_exit = 1;
     }
@@ -152,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
       elevationRelation === "above"
         ? h_input
         : -h_input;
+
 
     /* ===============================
        7. LOSS COEFFICIENTS
@@ -184,7 +248,8 @@ document.addEventListener("DOMContentLoaded", () => {
       Kpipe +
       Kentrance +
       K_exit +
-      getTotalFittingsK();;
+      getTotalFittingsK();
+
 
     /* ===============================
        8. FRICTION LOSS
@@ -192,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const F_total =
       totalFrictionLoss(v_pipe, Ktotal);
+
 
     /* ===============================
        9. ENERGY BALANCE
@@ -209,110 +275,109 @@ document.addEventListener("DOMContentLoaded", () => {
         F_total
       });
 
-/* ===============================
-   10. DISPLAY
-=============================== */
 
-document
-  .getElementById("results")
-  .classList.remove("hidden");
+    /* ===============================
+       10. DISPLAY
+    =============================== */
 
-document
-  .getElementById("pumpPowerValue")
-  .textContent =
-  result.Ws.toFixed(3);
+    document
+      .getElementById("results")
+      .classList.remove("hidden");
 
-
-/* ===============================
-   Reynolds Number
-=============================== */
-
-const Re =
-  (rho * v_pipe * D) / mu;
+    document
+      .getElementById("pumpPowerValue")
+      .textContent =
+      result.Ws.toFixed(3);
 
 
-/* ===============================
-   ENERGY BALANCE TABLE
-=============================== */
+    /* ===============================
+       Reynolds Number
+    =============================== */
 
-const energyTable =
-  document.getElementById("energyTable");
-
-energyTable.innerHTML = `
-  <tr>
-    <th>Term</th>
-    <th>Value</th>
-    <th>Unit</th>
-  </tr>
-  <tr>
-    <td>Mass Flow Rate</td>
-    <td>${m_flow.toFixed(4)}</td>
-    <td>kg/s</td>
-  </tr>
-  <tr>
-    <td>Velocity at Inlet (v₁)</td>
-    <td>${v1.toFixed(4)}</td>
-    <td>m/s</td>
-  </tr>
-  <tr>
-    <td>Velocity at Outlet (v₂)</td>
-    <td>${v2.toFixed(4)}</td>
-    <td>m/s</td>
-  </tr>
-  <tr>
-    <td>Elevation Head (h)</td>
-    <td>${h.toFixed(4)}</td>
-    <td>m</td>
-  </tr>
-  <tr>
-    <td>Pressure Difference (P₂ − P₁)</td>
-    <td>${(P2 - P1).toFixed(2)}</td>
-    <td>Pa</td>
-  </tr>
-  <tr>
-    <td>Total Friction Term</td>
-    <td>${F_total.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-`;
-  
-
-/* ===============================
-   HYDRAULIC PARAMETERS TABLE
-=============================== */
-
-const hydraulicTable =
-  document.getElementById("hydraulicTable");
-
-hydraulicTable.innerHTML = `
-  <tr>
-    <th>Parameter</th>
-    <th>Value</th>
-    <th>Unit</th>
-  </tr>
-  <tr>
-    <td>Pipe Diameter (D)</td>
-    <td>${D.toFixed(4)}</td>
-    <td>m</td>
-  </tr>
-  <tr>
-    <td>Pipe Velocity (v)</td>
-    <td>${v_pipe.toFixed(4)}</td>
-    <td>m/s</td>
-  </tr>
-  <tr>
-    <td>Reynolds Number</td>
-    <td>${Re.toExponential(3)}</td>
-    <td>—</td>
-  </tr>
-  <tr>
-    <td>Total Loss Coefficient (ΣK)</td>
-    <td>${Ktotal.toFixed(4)}</td>
-    <td>—</td>
-  </tr>
-`;
+    const Re =
+      (rho * v_pipe * D) / mu;
 
 
+    /* ===============================
+       ENERGY BALANCE TABLE
+    =============================== */
+
+    const energyTable =
+      document.getElementById("energyTable");
+
+    energyTable.innerHTML = `
+      <tr>
+        <th>Term</th>
+        <th>Value</th>
+        <th>Unit</th>
+      </tr>
+      <tr>
+        <td>Mass Flow Rate</td>
+        <td>${m_flow.toFixed(4)}</td>
+        <td>kg/s</td>
+      </tr>
+      <tr>
+        <td>Velocity at Inlet (v₁)</td>
+        <td>${v1.toFixed(4)}</td>
+        <td>m/s</td>
+      </tr>
+      <tr>
+        <td>Velocity at Outlet (v₂)</td>
+        <td>${v2.toFixed(4)}</td>
+        <td>m/s</td>
+      </tr>
+      <tr>
+        <td>Elevation Head (h)</td>
+        <td>${h.toFixed(4)}</td>
+        <td>m</td>
+      </tr>
+      <tr>
+        <td>Pressure Difference (P₂ − P₁)</td>
+        <td>${(P2 - P1).toFixed(2)}</td>
+        <td>Pa</td>
+      </tr>
+      <tr>
+        <td>Total Friction Term</td>
+        <td>${F_total.toFixed(4)}</td>
+        <td>J/kg</td>
+      </tr>
+    `;
+
+
+    /* ===============================
+       HYDRAULIC PARAMETERS TABLE
+    =============================== */
+
+    const hydraulicTable =
+      document.getElementById("hydraulicTable");
+
+    hydraulicTable.innerHTML = `
+      <tr>
+        <th>Parameter</th>
+        <th>Value</th>
+        <th>Unit</th>
+      </tr>
+      <tr>
+        <td>Pipe Diameter (D)</td>
+        <td>${D.toFixed(4)}</td>
+        <td>m</td>
+      </tr>
+      <tr>
+        <td>Pipe Velocity (v)</td>
+        <td>${v_pipe.toFixed(4)}</td>
+        <td>m/s</td>
+      </tr>
+      <tr>
+        <td>Reynolds Number</td>
+        <td>${Re.toExponential(3)}</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Total Loss Coefficient (ΣK)</td>
+        <td>${Ktotal.toFixed(4)}</td>
+        <td>—</td>
+      </tr>
+    `;
 
   });
 
