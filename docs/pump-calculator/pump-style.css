@@ -761,3 +761,12 @@ select:focus {
   align-items: center;
 }
 
+.result-highlight {
+  color: #ffffff;
+}
+
+.result-highlight .power-value,
+.result-highlight .power-unit,
+.result-highlight .power-secondary {
+  color: #ffffff;
+}
