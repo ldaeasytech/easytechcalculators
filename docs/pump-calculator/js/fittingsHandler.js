@@ -94,17 +94,17 @@ function removeFitting(index) {
    Update display only (Styled Version)
 =============================== */
 function updateFittings() {
-  document.getElementById("fittingsCount").textContent =
-  fittings.length;
-
+  
   if (fittings.length === 0) {
-    listDiv.innerHTML = `
-      <div class="fitting-empty">
-        No fittings added
-      </div>
-    `;
-    return;
-  }
+  listDiv.innerHTML = `
+    <div class="fittings-empty">
+      No fittings added
+    </div>
+  `;
+  document.getElementById("fittingsCount").textContent = 0;
+  return;
+}
+
 
   listDiv.innerHTML = fittings.map((f, i) => `
     <div class="fitting-item">
