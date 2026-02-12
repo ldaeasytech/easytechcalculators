@@ -461,3 +461,12 @@ select:focus {
   align-items: end;
 }
 
+/* Force Flow group to stay vertical */
+.flow-group {
+  grid-template-columns: 1fr !important;
+}
+
+/* Force Elevation group to be single column */
+.elevation-group {
+  grid-template-columns: 1fr !important;
+}
