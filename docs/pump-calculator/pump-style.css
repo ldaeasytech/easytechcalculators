@@ -1,16 +1,8 @@
 /* =========================================================
    PREMIUM ENGINEERING SAAS THEME
 ========================================================= */
-
-:root {
-  --bg-main: #0b1220;
-  --bg-card: #141b27;
-  --bg-soft: #1a2231;
-  --border-soft: rgba(255,255,255,0.06);
-  --accent: #3fa9ff;
-  --accent-soft: rgba(63,169,255,0.15);
-  --text-primary: #e6edf5;
-  --text-secondary: #9fb3c8;
+body {
+  background: #0b1220;
 }
 
 /* =========================================================
@@ -123,28 +115,30 @@ body {
 
 .mode-tabs {
   display: flex;
-  background: var(--bg-soft);
+  gap: 8px;
+  background: #101722;
   padding: 6px;
-  border-radius: 14px;
-  gap: 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .tab {
   flex: 1;
-  padding: 10px 0;
-  border-radius: 10px;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-weight: 500;
+  padding: 12px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: #1a2231;
+  color: #cfd8e3;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .tab.active {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(63,169,255,0.3);
+  background: #007acc;
+  border-color: #007acc;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0,122,204,0.35);
 }
 
 /* =========================================================
