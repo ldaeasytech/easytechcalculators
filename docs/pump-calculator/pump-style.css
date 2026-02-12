@@ -587,3 +587,61 @@ select:focus {
 .elevation-group {
   grid-template-columns: 1fr !important;
 }
+
+/* ===============================
+   ADDED FITTINGS LIST – UPGRADE
+================================ */
+
+#fittingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fitting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #111827
+  );
+
+  border: 1px solid rgba(59,130,246,0.25);
+
+  color: #e2e8f0;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+
+  transition: all 0.2s ease;
+}
+
+.fitting-item:hover {
+  border-color: rgba(59,130,246,0.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.fitting-text {
+  font-family: "JetBrains Mono", monospace;
+  color: #cbd5f5;
+}
+
+.fitting-remove {
+  cursor: pointer;
+  color: #f87171;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.fitting-remove:hover {
+  transform: scale(1.2);
+  color: #ef4444;
+}
+
