@@ -401,6 +401,12 @@ select:focus {
   letter-spacing: -0.5px;
 }
 
+.result-label {
+  color: #cbd5f5;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
 .result-unit {
   margin-left: 6px;
   color: #ffffff;
