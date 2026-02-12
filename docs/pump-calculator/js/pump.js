@@ -180,6 +180,125 @@ function displayOptimization(results, optimum) {
     return;
   }
 
+    const calculateBtn =
+  document.getElementById("calculateBtn");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+
+    tabs.forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const mode = tab.dataset.mode;
+
+    if (mode === "optimize") {
+      calculateBtn.textContent =
+        "Optimize Pipe Diameter";
+    } else if (mode === "power") {
+      calculateBtn.textContent =
+        "Calculate Pump Power";
+    }
+  });
+});
+
+
+    /* ===============================
+       Shared Flow Determination
+    =============================== */
+function determineMassFlow(rho) {
+
+  const massValue = massInput.value;
+  const volValue  = volInput.value;
+
+  if (massValue.trim() !== "") {
+    return convertMassToKgPerSec(
+      massValue,
+      massUnit.value
+    );
+  }
+
+  if (volValue.trim() !== "") {
+    const Q = convertVolToM3PerSec(
+      volValue,
+      volUnit.value
+    );
+    return Q * rho;
+  }
+
+  alert("Enter flow rate.");
+  throw new Error("No flow.");
+}
+
+    
+
+/* ===============================
+       Optimization Algorithm
+    =============================== */
+function runOptimization() {
+
+  const rho = Number(document.getElementById("rho").value);
+  const mu  = Number(document.getElementById("mu").value);
+  const L   = Number(document.getElementById("pipeLength").value);
+
+  const material = getPipeMaterial();
+  const e = PIPE_ROUGHNESS[material];
+
+  let m_flow = determineMassFlow(rho);
+
+  const diameters =
+    Object.values(PIPE_ID).sort((a,b) => a - b);
+
+  const results = [];
+
+  let previous = Infinity;
+  let riseCount = 0;
+
+  for (let D of diameters) {
+
+    const A = Math.PI * D * D / 4;
+    const v = m_flow / (rho * A);
+
+    const Kpipe = K_pipe({ rho, mu, D, v, L, e });
+    const Ktotal =
+      Kpipe +
+      K_entrance({fromTank:true}) +
+      getTotalFittingsK() +
+      1;
+
+    const F =
+      totalFrictionLoss(v, Ktotal);
+
+    const power =
+      pumpPower({
+        m_flow,
+        v1:0,
+        v2:v,
+        h:0,
+        P1:101325,
+        P2:101325,
+        rho,
+        F_total:F
+      }).Ws;
+
+    results.push({D, power});
+
+    if (power > previous) riseCount++;
+    else riseCount = 0;
+
+    if (riseCount >= 5) break;
+
+    previous = power;
+  }
+
+  const optimum =
+    results.reduce((min,r)=>
+      r.power < min.power ? r : min
+    );
+
+  displayOptimization(results, optimum);
+}
+
+    
     /* ===============================
        2. READ INPUTS
     =============================== */
@@ -410,102 +529,7 @@ document
   document.getElementById("pumpPowerHP").textContent =
   pumpPowerHP.toFixed(2);
 
-/* ===============================
-       Optimization Algorithm
-    =============================== */
-function runOptimization() {
 
-  const rho = Number(document.getElementById("rho").value);
-  const mu  = Number(document.getElementById("mu").value);
-  const L   = Number(document.getElementById("pipeLength").value);
-
-  const material = getPipeMaterial();
-  const e = PIPE_ROUGHNESS[material];
-
-  let m_flow = determineMassFlow(rho);
-
-  const diameters =
-    Object.values(PIPE_ID).sort((a,b) => a - b);
-
-  const results = [];
-
-  let previous = Infinity;
-  let riseCount = 0;
-
-  for (let D of diameters) {
-
-    const A = Math.PI * D * D / 4;
-    const v = m_flow / (rho * A);
-
-    const Kpipe = K_pipe({ rho, mu, D, v, L, e });
-    const Ktotal =
-      Kpipe +
-      K_entrance({fromTank:true}) +
-      getTotalFittingsK() +
-      1;
-
-    const F =
-      totalFrictionLoss(v, Ktotal);
-
-    const power =
-      pumpPower({
-        m_flow,
-        v1:0,
-        v2:v,
-        h:0,
-        P1:101325,
-        P2:101325,
-        rho,
-        F_total:F
-      }).Ws;
-
-    results.push({D, power});
-
-    if (power > previous) riseCount++;
-    else riseCount = 0;
-
-    if (riseCount >= 5) break;
-
-    previous = power;
-  }
-
-  const optimum =
-    results.reduce((min,r)=>
-      r.power < min.power ? r : min
-    );
-
-  displayOptimization(results, optimum);
-}
-
-/* ===============================
-       Shared Flow Determination
-    =============================== */
-function determineMassFlow(rho) {
-
-  const massValue = massInput.value;
-  const volValue  = volInput.value;
-
-  if (massValue.trim() !== "") {
-    return convertMassToKgPerSec(
-      massValue,
-      massUnit.value
-    );
-  }
-
-  if (volValue.trim() !== "") {
-    const Q = convertVolToM3PerSec(
-      volValue,
-      volUnit.value
-    );
-    return Q * rho;
-  }
-
-  alert("Enter flow rate.");
-  throw new Error("No flow.");
-}
-
-    
-    
     /* ===============================
        Reynolds Number
     =============================== */
