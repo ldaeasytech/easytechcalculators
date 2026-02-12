@@ -148,24 +148,65 @@ body {
 }
 
 /* =========================================================
-   FORM
+   FORM STRUCTURE (CLEANED)
 ========================================================= */
 
 .grid-form {
   display: grid;
-  gap: 14px;
+  gap: 20px;
 }
 
+/* Do NOT split the entire form into 2 columns.
+   We split inside groups instead */
 @media (min-width: 600px) {
   .grid-form {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
-.card {
-  padding: 22px;
+/* =========================================================
+   INPUT GROUPS (Proper Internal Grid)
+========================================================= */
+
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 18px;
+  display: grid;
+  gap: 14px;
 }
 
+/* Two-column layout inside group on desktop */
+@media (min-width: 800px) {
+  .input-group {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .input-group .group-title {
+    grid-column: 1 / -1;
+  }
+
+  .input-group .helper-text {
+    grid-column: 1 / -1;
+  }
+
+  .input-group .fitting-row {
+    grid-column: 1 / -1;
+  }
+}
+
+.group-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   FIELD
+========================================================= */
 
 .field {
   display: flex;
@@ -179,13 +220,12 @@ label {
   color: #aeb9cc;
 }
 
-
 input,
 select {
   background: var(--bg-soft);
   border: 1px solid var(--border-soft);
   border-radius: 10px;
-  padding: 11px;
+  padding: 10px;
   color: white;
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
@@ -196,6 +236,36 @@ select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
+
+/* =========================================================
+   ATM TOGGLE
+========================================================= */
+
+.inline-toggle {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* =========================================================
+   FITTING ROW (Compact Action Layout)
+========================================================= */
+
+.fitting-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+  align-items: end;
+}
+
+.fitting-row .primary {
+  height: 40px;
+  font-size: 0.85rem;
+}
+
 
 /* =========================================================
    ATM TOGGLE
