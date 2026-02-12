@@ -113,7 +113,7 @@ function generateSVG(relation, reference) {
       x2="510" y2="${(pumpY + dischargeY)/2}"
       stroke="#d1d5db"
       stroke-width="4"
-      marker-end="url(#flowArrow)"/>
+
 
 <!-- CLEAN NOZZLE (Reducer + Outlet) -->
 <polygon points="600,${dischargeY-10}
