@@ -94,6 +94,8 @@ function removeFitting(index) {
    Update display only (Styled Version)
 =============================== */
 function updateFittings() {
+  document.getElementById("fittingsCount").textContent =
+  fittings.length;
 
   if (fittings.length === 0) {
     listDiv.innerHTML = `
