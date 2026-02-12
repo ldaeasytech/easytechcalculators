@@ -686,3 +686,12 @@ select:focus {
   border: 1px solid rgba(59,130,246,0.4);
   color: #93c5fd;
 }
+
+.fittings-empty {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
