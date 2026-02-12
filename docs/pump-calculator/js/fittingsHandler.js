@@ -94,17 +94,21 @@ function removeFitting(index) {
    Update display only (Styled Version)
 =============================== */
 function updateFittings() {
-  
-  if (fittings.length === 0) {
-  listDiv.innerHTML = `
-    <div class="fittings-empty">
-      No fittings added
-    </div>
-  `;
-  document.getElementById("fittingsCount").textContent = 0;
-  return;
-}
 
+  // ✅ Always update count first
+  document.getElementById("fittingsCount").textContent =
+    fittings.length;
+
+  if (fittings.length === 0) {
+
+    listDiv.innerHTML = `
+      <div class="fittings-empty">
+        No fittings added
+      </div>
+    `;
+
+    return;
+  }
 
   listDiv.innerHTML = fittings.map((f, i) => `
     <div class="fitting-item">
@@ -126,7 +130,9 @@ function updateFittings() {
       removeFitting(Number(btn.dataset.index))
     );
   });
+
 }
+
 
 /* ===============================
    Export total K
