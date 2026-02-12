@@ -2,8 +2,13 @@
    PREMIUM ENGINEERING SAAS THEME
 ========================================================= */
 body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
   background: #0b1220;
+  color: #e6e9ef;
+  min-height: 100vh;
+  line-height: 1.4;
 }
+
 
 /* =========================================================
    BASE
@@ -115,19 +120,19 @@ body {
 
 .mode-tabs {
   display: flex;
-  gap: 8px;
-  background: #101722;
-  padding: 6px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
+  gap: 10px;
+  padding: 8px;
+  background: #141a24;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
 }
 
 .tab {
   flex: 1;
   padding: 12px 0;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: #1a2231;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #1e2533;
   color: #cfd8e3;
   font-weight: 600;
   cursor: pointer;
@@ -138,7 +143,7 @@ body {
   background: #007acc;
   border-color: #007acc;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(0,122,204,0.35);
+  box-shadow: 0 6px 18px rgba(0,122,204,0.35);
 }
 
 /* =========================================================
