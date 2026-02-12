@@ -91,39 +91,35 @@ function removeFitting(index) {
 }
 
 /* ===============================
-   Update display only
+   Update display only (Styled Version)
 =============================== */
 function updateFittings() {
 
   if (fittings.length === 0) {
-    listDiv.innerHTML = "<em>No fittings added</em>";
+    listDiv.innerHTML = `
+      <div class="fitting-empty">
+        No fittings added
+      </div>
+    `;
     return;
   }
 
   listDiv.innerHTML = fittings.map((f, i) => `
-    <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0;">
-      <span>
-        ${f.qty} × ${f.type}
-        &nbsp;→&nbsp; K = ${(f.K * f.qty).toFixed(3)}
+    <div class="fitting-item">
+      <span class="fitting-text">
+        ${f.qty} × ${f.type} → K = ${(f.K * f.qty).toFixed(3)}
       </span>
-      <button
-        type="button"
+      <span 
+        class="fitting-remove"
         data-index="${i}"
-        style="
-          background:none;
-          border:none;
-          color:#ff6b6b;
-          font-size:1.1rem;
-          cursor:pointer;
-        "
         title="Remove fitting"
       >
         ×
-      </button>
+      </span>
     </div>
   `).join("");
 
-  listDiv.querySelectorAll("button").forEach(btn => {
+  listDiv.querySelectorAll(".fitting-remove").forEach(btn => {
     btn.addEventListener("click", () =>
       removeFitting(Number(btn.dataset.index))
     );
