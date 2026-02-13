@@ -736,13 +736,6 @@ const v_new =
   }
 
   /* ===============================
-     4. DRAIN TIME (constant head approx)
-  =============================== */
-
- const totalDrainTime = time;
-
-
-  /* ===============================
      5. DISPLAY
   =============================== */
 
@@ -831,8 +824,7 @@ const v_new =
 const initialHeight =
   Number(document.getElementById("initialHeight").value);
 
-if (!isNaN(A_tank) && A_tank > 0 &&
-    !isNaN(initialHeight) && initialHeight > 0) {
+if (!isNaN(initialHeight) && initialHeight > 0) {
 
   const staticHead =
     Number(document.getElementById("deltaZ").value);
