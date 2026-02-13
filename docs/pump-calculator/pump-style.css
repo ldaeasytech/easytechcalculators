@@ -520,6 +520,7 @@ select:focus {
   max-width: 1350px;
   margin: 40px auto;
   padding: 0 24px;
+  margin-bottom: 30px;
 }
 
 .schematic-box {
@@ -812,3 +813,24 @@ select:focus {
   color: #ffffff;
   margin-top: 4px;
 }
+
+.results-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+#optimumBlock {
+  padding: 10px 15px;
+}
+
+#optimumBlock h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+#optimumDiameter {
+  font-size: 1rem;
+}
+
