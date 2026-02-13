@@ -72,7 +72,7 @@ const optimumBlock =
 
 
 /* ===== POWER MODE ===== */
-else if (mode === "power") {
+if (mode === "power") {
 
   if (optimumBlock)
   optimumBlock.classList.add("hidden");
