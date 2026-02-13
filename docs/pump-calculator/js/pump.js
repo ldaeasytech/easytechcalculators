@@ -138,20 +138,37 @@ document.getElementById("powerCard")
     data: {
       labels: sliced.map(r => r.inch),
       datasets: [
-        {
-          label: "Total Annual Cost ($)",
-          data: sliced.map(r => r.totalAnnualCost),
-          borderWidth: 3,
-          fill: false,
-          pointRadius: sliced.map(r =>
-            r.inch === optimum.inch ? 8 : 4
-          ),
-          pointBackgroundColor: sliced.map(r =>
-            r.inch === optimum.inch ? "#ffcc00" : "#4da6ff"
-          ),
-          pointBorderColor: "#ffffff"
-        }
-      ]
+  {
+    label: "Annual Energy Cost ($)",
+    data: sliced.map(r => r.annualEnergyCost),
+    borderWidth: 2,
+    fill: false,
+    borderColor: "#4da6ff",
+    pointRadius: 4
+  },
+  {
+    label: "Annualized Capital Cost ($)",
+    data: sliced.map(r => r.annualizedCapital),
+    borderWidth: 2,
+    fill: false,
+    borderColor: "#ff4d88",
+    pointRadius: 4
+  },
+  {
+    label: "Total Annual Cost ($)",
+    data: sliced.map(r => r.totalAnnualCost),
+    borderWidth: 3,
+    fill: false,
+    borderColor: "#ffaa00",
+    pointRadius: sliced.map(r =>
+      r.inch === optimum.inch ? 8 : 4
+    ),
+    pointBackgroundColor: sliced.map(r =>
+      r.inch === optimum.inch ? "#ffcc00" : "#ffaa00"
+    )
+  }
+]
+
     },
     options: {
       responsive: true,
@@ -324,10 +341,13 @@ function runOptimization() {
   const results = [];
 
   // Get total number of fittings currently added
-  const fittingsList =
-    document.querySelectorAll(".fitting-item");
+  const totalFittings =
+  Array.from(document.querySelectorAll(".fitting-text"))
+    .reduce((sum, el) => {
+      const match = el.textContent.match(/^(\d+)/);
+      return sum + (match ? Number(match[1]) : 0);
+    }, 0);
 
-  const totalFittings = fittingsList.length;
 
   for (let inch of nominalInches) {
 
