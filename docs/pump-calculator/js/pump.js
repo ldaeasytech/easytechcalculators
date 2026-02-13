@@ -98,6 +98,9 @@ if (mode === "power") {
 
 else if (mode === "elevation") {
 
+  if (optimumBlock)
+  optimumBlock.classList.add("hidden")
+
   if (flowSection) flowSection.style.display = "";
   if (tankInputs) tankInputs.style.display = "none";
   if (economicSection) economicSection.style.display = "none";
@@ -379,11 +382,15 @@ document.getElementById("powerCard")
   }
 
   if (activeMode === "elevation") {
+    document.getElementById("optimumBlock")
+  ?.classList.add("hidden");
   runRequiredElevation();
   return;
 }
   
   if (activeMode !== "power") {
+    document.getElementById("optimumBlock")
+  ?.classList.add("hidden");
     alert("This mode is under development.");
     return;
   }
@@ -605,6 +612,18 @@ function runRequiredElevation() {
   const F_total =
     totalFrictionLoss(v_pipe, Ktotal);
 
+  const F_pipe =
+  totalFrictionLoss(v_pipe, Kpipe);
+
+const F_entrance =
+  totalFrictionLoss(v_pipe, Kentrance);
+
+const F_fittings =
+  totalFrictionLoss(v_pipe, Kfittings);
+
+const F_exit =
+  totalFrictionLoss(v_pipe, K_exit);
+
   // =========================
   // Solve for h
   // Energy equation:
@@ -623,6 +642,10 @@ function runRequiredElevation() {
   const h =
     -(deltaKE + deltaPressure + F_total) / g;
 
+  const deltaPE =
+  9.81 * h;
+
+
   // =========================
   // Display
   // =========================
@@ -631,17 +654,125 @@ function runRequiredElevation() {
     .getElementById("results")
     .classList.remove("hidden");
 
-  document.getElementById("powerCard")
-    .style.display = "none";
+  // Hide pump power
+document.getElementById("powerCard")
+  .style.display = "none";
 
-  document.getElementById("hydraulicTable")
-    .innerHTML += `
-    <tr>
-      <td><strong>Required Elevation (Δz)</strong></td>
-      <td><strong>${Math.abs(h).toFixed(4)}</strong></td>
-      <td>m</td>
-    </tr>
-  `;
+  // Hide optimization
+document.getElementById("optimumBlock")
+  ?.classList.add("hidden");
+
+  const energyTable =
+  document.getElementById("energyTable");
+
+energyTable.innerHTML = `
+  <tr>
+    <th>Term</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Mass Flow Rate</td>
+    <td>${m_flow.toFixed(4)}</td>
+    <td>kg/s</td>
+  </tr>
+  <tr>
+    <td>Δ Kinetic Energy</td>
+    <td>${deltaKE.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Δ Potential Energy</td>
+    <td>${deltaPE.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Δ Pressure Energy</td>
+    <td>${deltaPressure.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Pipe Friction Loss</td>
+    <td>${F_pipe.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Entrance Loss</td>
+    <td>${F_entrance.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Exit Loss</td>
+    <td>${F_exit.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Fittings Loss</td>
+    <td>${F_fittings.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td><strong>Total Friction Loss</strong></td>
+    <td><strong>${F_total.toFixed(4)}</strong></td>
+    <td>J/kg</td>
+  </tr>
+`;
+
+  const Re =
+  (rho * v_pipe * D) / mu;
+
+let flowRegime;
+
+if (Re < 2300) {
+  flowRegime = "Laminar";
+} else if (Re <= 4000) {
+  flowRegime = "Transitional";
+} else {
+  flowRegime = "Turbulent";
+}
+
+const hydraulicTable =
+  document.getElementById("hydraulicTable");
+
+hydraulicTable.innerHTML = `
+  <tr>
+    <th>Parameter</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Pipe Diameter (D)</td>
+    <td>${D.toFixed(4)}</td>
+    <td>m</td>
+  </tr>
+  <tr>
+    <td>Pipe Velocity (v)</td>
+    <td>${v_pipe.toFixed(4)}</td>
+    <td>m/s</td>
+  </tr>
+  <tr>
+    <td>Reynolds Number</td>
+    <td>${Re.toExponential(3)}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Flow Regime</td>
+    <td>${flowRegime}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Total Loss Coefficient (ΣK)</td>
+    <td>${Ktotal.toFixed(4)}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><strong>Required Elevation (Δz)</strong></td>
+    <td><strong>${Math.abs(h).toFixed(4)}</strong></td>
+    <td>m</td>
+  </tr>
+`;
+
+
 }
 
 
