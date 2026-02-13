@@ -31,10 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
      Hide Diameter Input in Optimize Mode
   =============================== */
 const tabs = document.querySelectorAll(".tab");
+const calculateBtn = document.getElementById("calculateBtn");
 
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
 
+    // Switch active class
     tabs.forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
 
@@ -46,11 +48,22 @@ tabs.forEach(tab => {
     const customField =
       document.getElementById("customDiameterField");
 
+    // Toggle pipe diameter inputs
     if (mode === "optimize") {
       steelOptions.style.display = "none";
       customField.style.display = "none";
-    } else {
+
+      // ✅ Update button label
+      calculateBtn.textContent = "Optimize Pipe Size";
+
+    } else if (mode === "power") {
       steelOptions.style.display = "";
+
+      // ✅ Restore button label
+      calculateBtn.textContent = "Calculate Pump Power";
+
+    } else {
+      calculateBtn.textContent = "Calculate";
     }
 
   });
