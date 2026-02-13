@@ -773,12 +773,12 @@ const v_new =
   <td>Total Drain Time</td>
   <td>${
     totalDrainTime !== null
-      ? totalDrainTime.toFixed(2)
+      ? totalDrainTime/60.toFixed(2)
       : "—"
   }</td>
   <td>${
     totalDrainTime !== null
-      ? "s"
+      ? "min"
       : "—"
   }</td>
 </tr>
@@ -938,20 +938,29 @@ if (!isNaN(initialHeight) && initialHeight > 0) {
 
   /* ---- Display total drain time ---- */
 
-  totalDrainTime = time;
+ let drainCompleted = (h_tank <= 0);
 
-  const energyTable =
-    document.getElementById("energyTable");
+totalDrainTime = drainCompleted ? time : null;
 
-  energyTable.innerHTML += `
-  ${totalDrainTime !== null ? `
+const energyTable =
+  document.getElementById("energyTable");
+
+energyTable.innerHTML += `
 <tr>
   <td>Total Drain Time</td>
-  <td>${totalDrainTime.toFixed(2)}</td>
-  <td>s</td>
+  <td>${
+    totalDrainTime !== null
+      ? totalDrainTime.toFixed(2)
+      : "Not fully drained"
+  }</td>
+  <td>${
+    totalDrainTime !== null
+      ? "s"
+      : "—"
+  }</td>
 </tr>
-` : ``}
 `;
+
 
   renderDrainChart(timeData, heightData);
 }
