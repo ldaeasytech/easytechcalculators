@@ -180,28 +180,6 @@ function displayOptimization(results, optimum) {
     return;
   }
 
-    const calculateBtn =
-  document.getElementById("calculateBtn");
-
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-
-    tabs.forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    const mode = tab.dataset.mode;
-
-    if (mode === "optimize") {
-      calculateBtn.textContent =
-        "Optimize Pipe Diameter";
-    } else if (mode === "power") {
-      calculateBtn.textContent =
-        "Calculate Pump Power";
-    }
-  });
-});
-
-
     /* ===============================
        Shared Flow Determination
     =============================== */
@@ -297,6 +275,27 @@ function runOptimization() {
 
   displayOptimization(results, optimum);
 }
+
+  const calculateBtn =
+  document.getElementById("calculateBtn");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+
+    tabs.forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const mode = tab.dataset.mode;
+
+    if (mode === "optimize") {
+      calculateBtn.textContent =
+        "Optimize Pipe Diameter";
+    } else if (mode === "power") {
+      calculateBtn.textContent =
+        "Calculate Pump Power";
+    }
+  });
+});
 
     
     /* ===============================
