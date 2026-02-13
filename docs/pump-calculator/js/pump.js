@@ -70,6 +70,8 @@ document.querySelectorAll(".collapse-toggle")
 /* ===============================
      Implement displayOptimization()
   =============================== */
+let optChartInstance = null;
+
 function displayOptimization(results, optimum) {
 
   document.getElementById("results")
@@ -78,23 +80,61 @@ function displayOptimization(results, optimum) {
   document.getElementById("optimumBlock")
     .classList.remove("hidden");
 
+  // Display optimum nominal size in inches
   document.getElementById("optimumDiameter")
     .textContent =
-    optimum.D.toFixed(4) + " m";
+    optimum.inch + " in";
 
   const ctx =
     document.getElementById("optChart").getContext("2d");
 
-  new Chart(ctx, {
+  if (optChartInstance) {
+    optChartInstance.destroy();
+  }
+
+  optChartInstance = new Chart(ctx, {
     type: "line",
     data: {
-      labels: results.map(r => r.D.toFixed(3)),
+      labels: results.map(r => r.inch),
       datasets: [{
         label: "Pump Power (kW)",
         data: results.map(r => r.powerKW),
         borderWidth: 2,
-        fill: false
+        fill: false,
+        tension: 0.25
       }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: "#ffffff"
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Nominal Pipe Diameter (inches)",
+            color: "#ffffff"
+          },
+          ticks: {
+            color: "#ffffff"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Pump Power (kW)",
+            color: "#ffffff"
+          },
+          ticks: {
+            color: "#ffffff"
+          }
+        }
+      }
     }
   });
 }
@@ -221,83 +261,77 @@ function runOptimization() {
   const material = getPipeMaterial();
   const e = PIPE_ROUGHNESS[material];
 
-  let m_flow = determineMassFlow(rho);
+  const m_flow = determineMassFlow(rho);
 
-  const diameters =
-    Object.values(PIPE_ID).sort((a,b) => a - b);
+  // Nominal pipe sizes in inches
+  const nominalInches = [
+    0.125, 0.25, 0.375, 0.5, 0.75,
+    1, 1.25, 1.5, 2, 2.5,
+    3, 3.5, 4, 5, 6,
+    8, 10, 12, 14, 16,
+    18, 20, 24, 30
+  ];
 
   const results = [];
 
-  let previous = Infinity;
+  let previousPower = Infinity;
   let riseCount = 0;
 
-  for (let D of diameters) {
+  for (let inch of nominalInches) {
+
+    const D = inch * 0.0254; // inch → meter
 
     const A = Math.PI * D * D / 4;
     const v = m_flow / (rho * A);
 
     const Kpipe = K_pipe({ rho, mu, D, v, L, e });
+
     const Ktotal =
       Kpipe +
-      K_entrance({fromTank:true}) +
+      K_entrance({ fromTank: true }) +
       getTotalFittingsK() +
       1;
 
-    const F =
+    const F_total =
       totalFrictionLoss(v, Ktotal);
 
-    const power =
+    const powerKW =
       pumpPower({
         m_flow,
-        v1:0,
-        v2:v,
-        h:0,
-        P1:101325,
-        P2:101325,
+        v1: 0,
+        v2: v,
+        h: 0,
+        P1: 101325,
+        P2: 101325,
         rho,
-        F_total:F
+        F_total
       }).Ws;
 
-    results.push({D, power});
+    results.push({
+      inch,
+      D,
+      powerKW
+    });
 
-    if (power > previous) riseCount++;
-    else riseCount = 0;
+    if (powerKW > previousPower) {
+      riseCount++;
+    } else {
+      riseCount = 0;
+    }
 
     if (riseCount >= 5) break;
 
-    previous = power;
+    previousPower = powerKW;
   }
 
   const optimum =
-    results.reduce((min,r)=>
-      r.power < min.power ? r : min
+    results.reduce((min, r) =>
+      r.powerKW < min.powerKW ? r : min
     );
 
   displayOptimization(results, optimum);
 }
 
-  const calculateBtn =
-  document.getElementById("calculateBtn");
-
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-
-    tabs.forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    const mode = tab.dataset.mode;
-
-    if (mode === "optimize") {
-      calculateBtn.textContent =
-        "Optimize Pipe Diameter";
-    } else if (mode === "power") {
-      calculateBtn.textContent =
-        "Calculate Pump Power";
-    }
-  });
-});
-
-    
     /* ===============================
        2. READ INPUTS
     =============================== */
