@@ -741,8 +741,8 @@ const v_new =
 
   let drainTime = null;
 
-  if (!isNaN(tankArea) && tankArea > 0) {
-    const tankVolume = tankArea * h;
+  if (!isNaN(A_tank) && A_tank > 0) {
+    const tankVolume = A_tank * h;
     drainTime = tankVolume / Q; // seconds
   }
 
@@ -835,7 +835,7 @@ const v_new =
 const initialHeight =
   Number(document.getElementById("initialHeight").value);
 
-if (!isNaN(tankArea) && tankArea > 0 &&
+if (!isNaN(A_tank) && A_tank > 0 &&
     !isNaN(initialHeight) && initialHeight > 0) {
 
   const staticHead =
