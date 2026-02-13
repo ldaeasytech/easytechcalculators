@@ -274,7 +274,12 @@ document.getElementById("powerCard")
   runOptimization();
   return;
   }
-  
+
+  if (activeMode === "tank") {
+    runTankDischarge();
+    return;
+}
+    
   if (activeMode !== "power") {
     alert("This mode is under development.");
     return;
