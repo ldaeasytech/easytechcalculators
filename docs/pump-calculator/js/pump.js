@@ -93,9 +93,18 @@ function displayEconomicOptimization(results, optimum) {
   document.getElementById("optimumBlock")
     .classList.remove("hidden");
 
+// Show optimum diameter
   document.getElementById("optimumDiameter")
-    .textContent =
-    optimum.inch + " in";
+  .innerHTML = `
+    <span class="optimum-value">
+      ${optimum.inch} in
+    </span>
+    <br>
+    <span class="optimum-power">
+      Pump Power: ${optimum.powerKW.toFixed(3)} kW
+      (${(optimum.powerKW * 1.341022).toFixed(2)} hp)
+    </span>
+  `;
 
   const ctx =
     document.getElementById("optChart").getContext("2d");
@@ -151,7 +160,8 @@ function displayEconomicOptimization(results, optimum) {
             text: "Annual Cost ($)",
             color: "#ffffff"
           },
-          ticks: { color: "#ffffff" }
+          ticks: { color: "#ffffff" },
+          suggestedMin: 0 
         }
       }
     }
@@ -288,7 +298,7 @@ function runOptimization() {
   const m_flow = determineMassFlow(rho);
 
   const nominalInches = [
-    0.125, 0.25, 0.375, 0.5, 0.75,
+    0.25, 0.375, 0.5, 0.75,
     1, 1.25, 1.5, 2, 2.5,
     3, 3.5, 4, 5, 6,
     8, 10, 12, 14, 16,
