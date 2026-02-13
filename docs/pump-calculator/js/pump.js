@@ -209,10 +209,6 @@ function displayOptimization(results, optimum) {
     }
   }
 
-
-  const calculateBtn =
-    document.getElementById("calculateBtn");
-
   calculateBtn.addEventListener("click", () => {
 
     /* ===============================
