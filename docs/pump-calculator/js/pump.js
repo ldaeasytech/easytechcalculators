@@ -642,6 +642,8 @@ const P2 = P2_atm
     PIPE_ROUGHNESS[material];
 
   const g = 9.81;
+  let totalDrainTime = null;
+
 
   /* ===============================
      2. ITERATIVE SOLUTION FOR v
@@ -927,17 +929,19 @@ if (!isNaN(initialHeight) && initialHeight > 0) {
 
   /* ---- Display total drain time ---- */
 
-  const totalDrainTime = time;
+  totalDrainTime = time;
 
   const energyTable =
     document.getElementById("energyTable");
 
   energyTable.innerHTML += `
-  <tr>
-    <td>Total Drain Time</td>
-    <td>${totalDrainTime.toFixed(2)}</td>
-    <td>s</td>
-  </tr>
+  ${totalDrainTime !== null ? `
+<tr>
+  <td>Total Drain Time</td>
+  <td>${totalDrainTime.toFixed(2)}</td>
+  <td>s</td>
+</tr>
+` : ``}
 `;
 
   renderDrainChart(timeData, heightData);
