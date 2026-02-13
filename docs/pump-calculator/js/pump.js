@@ -73,6 +73,9 @@ const optimumBlock =
 /* ===== TANK MODE ===== */
 if (mode === "tank") {
 
+  if (optimumBlock)
+  optimumBlock.classList.add("hidden");
+
   // Hide flow inputs
   if (flowSection) flowSection.style.display = "none";
 
@@ -114,6 +117,9 @@ if (mode === "tank") {
 
 /* ===== POWER MODE ===== */
 else if (mode === "power") {
+
+  if (optimumBlock)
+  optimumBlock.classList.add("hidden");
 
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
