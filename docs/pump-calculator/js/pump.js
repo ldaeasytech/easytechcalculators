@@ -96,6 +96,32 @@ else if (mode === "power") {
     "Calculate Pump Power";
 }
 
+else if (mode === "elevation") {
+
+  if (flowSection) flowSection.style.display = "";
+  if (tankInputs) tankInputs.style.display = "none";
+  if (economicSection) economicSection.style.display = "none";
+
+  if (elevationRelationSelect) {
+    elevationRelationSelect.value = "above";
+    elevationRelationSelect.disabled = true;
+  }
+
+  if (elevationRefSelect) {
+    elevationRefSelect.value = "pipe";
+    elevationRefSelect.disabled = true;
+  }
+
+  if (deltaZInput) {
+    deltaZInput.disabled = true;
+    deltaZInput.value = "";
+  }
+
+  calculateBtn.textContent =
+    "Calculate Required Elevation";
+}
+
+  
 /* ===== OPTIMIZE MODE ===== */
 else if (mode === "optimize") {
 
@@ -351,7 +377,12 @@ document.getElementById("powerCard")
   runOptimization();
   return;
   }
-    
+
+  if (activeMode === "elevation") {
+  runRequiredElevation();
+  return;
+}
+  
   if (activeMode !== "power") {
     alert("This mode is under development.");
     return;
@@ -516,7 +547,105 @@ function runOptimization() {
   displayEconomicOptimization(results, optimum);
 }
 
+function runRequiredElevation() {
 
+  const rho = Number(document.getElementById("rho").value);
+  const mu  = Number(document.getElementById("mu").value);
+  const L   = Number(document.getElementById("pipeLength").value);
+
+  const material = getPipeMaterial();
+  const e = PIPE_ROUGHNESS[material];
+
+  const m_flow = determineMassFlow(rho);
+
+  const D = getPipeDiameter(PIPE_ID);
+  const A = Math.PI * D * D / 4;
+  const v_pipe = m_flow / (rho * A);
+
+  // LOCKED LOGIC
+  const v1 = 0;
+  const v2 = v_pipe;
+  const K_exit = 0;
+
+  const P1_atm = document.getElementById("P1_atm")?.checked;
+  const P2_atm = document.getElementById("P2_atm")?.checked;
+
+  const P1 = P1_atm ? 101325 :
+    Number(document.getElementById("P1").value);
+
+  const P2 = P2_atm ? 101325 :
+    Number(document.getElementById("P2").value);
+
+  // =========================
+  // Loss Coefficients
+  // =========================
+  const Kpipe = K_pipe({
+    rho,
+    mu,
+    D,
+    v: v_pipe,
+    L,
+    e
+  });
+
+  const Kentrance = K_entrance({
+    D1: null,
+    D2: null,
+    fromTank: true
+  });
+
+  const Kfittings = getTotalFittingsK();
+
+  const Ktotal =
+    Kpipe +
+    Kentrance +
+    K_exit +
+    Kfittings;
+
+  const F_total =
+    totalFrictionLoss(v_pipe, Ktotal);
+
+  // =========================
+  // Solve for h
+  // Energy equation:
+  // 0 = ΔKE + g*h + ΔP/ρ + F_total
+  // h = -(ΔKE + ΔP/ρ + F_total) / g
+  // =========================
+
+  const deltaKE =
+    (v2 * v2 - v1 * v1) / 2;
+
+  const deltaPressure =
+    (P2 - P1) / rho;
+
+  const g = 9.81;
+
+  const h =
+    -(deltaKE + deltaPressure + F_total) / g;
+
+  // =========================
+  // Display
+  // =========================
+
+  document
+    .getElementById("results")
+    .classList.remove("hidden");
+
+  document.getElementById("powerCard")
+    .style.display = "none";
+
+  document.getElementById("hydraulicTable")
+    .innerHTML += `
+    <tr>
+      <td><strong>Required Elevation (Δz)</strong></td>
+      <td><strong>${Math.abs(h).toFixed(4)}</strong></td>
+      <td>m</td>
+    </tr>
+  `;
+}
+
+
+    
     /* ===============================
        2. READ INPUTS
     =============================== */
