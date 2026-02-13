@@ -26,7 +26,7 @@ import {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-let drainChartInstance = null;
+
 /* ===============================
      Hide Diameter Input in Optimize Mode
   =============================== */
@@ -972,10 +972,12 @@ function renderDrainChart(timeData, heightData) {
     document.getElementById("drainChart")
       .getContext("2d");
 
-  if (drainChartInstance)
-    drainChartInstance.destroy();
+  // Destroy previous chart safely
+  if (renderDrainChart.instance) {
+    renderDrainChart.instance.destroy();
+  }
 
-  drainChartInstance = new Chart(ctx, {
+  renderDrainChart.instance = new Chart(ctx, {
     type: "line",
     data: {
       labels: timeData,
