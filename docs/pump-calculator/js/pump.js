@@ -85,7 +85,13 @@ document.querySelectorAll(".collapse-toggle")
   =============================== */
 let optChartInstance = null;
 
+let optChartInstance = null;
+
 function displayEconomicOptimization(results, optimum) {
+
+  // Hide theoretical pump power card
+document.getElementById("powerCard")
+  .style.display = "none";
 
   document.getElementById("results")
     .classList.remove("hidden");
@@ -93,18 +99,34 @@ function displayEconomicOptimization(results, optimum) {
   document.getElementById("optimumBlock")
     .classList.remove("hidden");
 
-// Show optimum diameter
+  // Hide theoretical pump power card
+  document.getElementById("powerCard")
+    .style.display = "none";
+
+  // Display optimum
   document.getElementById("optimumDiameter")
-  .innerHTML = `
-    <span class="optimum-value">
-      ${optimum.inch} in
-    </span>
-    <br>
-    <span class="optimum-power">
-      Pump Power: ${optimum.powerKW.toFixed(3)} kW
-      (${(optimum.powerKW * 1.341022).toFixed(2)} hp)
-    </span>
-  `;
+    .innerHTML = `
+      <span class="optimum-value">
+        ${optimum.inch} in
+      </span>
+      <br>
+      <span class="optimum-power">
+        Pump Power: ${optimum.powerKW.toFixed(3)} kW
+        (${(optimum.powerKW * 1.341022).toFixed(2)} hp)
+      </span>
+    `;
+
+  const optimumIndex =
+    results.findIndex(r => r.inch === optimum.inch);
+
+  const start =
+    Math.max(0, optimumIndex - 2);
+
+  const end =
+    Math.min(results.length, optimumIndex + 3);
+
+  const sliced =
+    results.slice(start, end);
 
   const ctx =
     document.getElementById("optChart").getContext("2d");
@@ -116,25 +138,20 @@ function displayEconomicOptimization(results, optimum) {
   optChartInstance = new Chart(ctx, {
     type: "line",
     data: {
-      labels: results.map(r => r.inch),
+      labels: sliced.map(r => r.inch),
       datasets: [
         {
-          label: "Annual Energy Cost ($)",
-          data: results.map(r => r.annualEnergyCost),
-          borderWidth: 2,
-          fill: false
-        },
-        {
-          label: "Annualized Pipe Cost ($)",
-          data: results.map(r => r.annualizedPipeCost),
-          borderWidth: 2,
-          fill: false
-        },
-        {
           label: "Total Annual Cost ($)",
-          data: results.map(r => r.totalAnnualCost),
+          data: sliced.map(r => r.totalAnnualCost),
           borderWidth: 3,
-          fill: false
+          fill: false,
+          pointRadius: sliced.map(r =>
+            r.inch === optimum.inch ? 8 : 4
+          ),
+          pointBackgroundColor: sliced.map(r =>
+            r.inch === optimum.inch ? "#ffcc00" : "#4da6ff"
+          ),
+          pointBorderColor: "#ffffff"
         }
       ]
     },
@@ -157,11 +174,11 @@ function displayEconomicOptimization(results, optimum) {
         y: {
           title: {
             display: true,
-            text: "Annual Cost ($)",
+            text: "Total Annual Cost ($)",
             color: "#ffffff"
           },
           ticks: { color: "#ffffff" },
-          suggestedMin: 0 
+          suggestedMin: 0
         }
       }
     }
@@ -297,8 +314,9 @@ function runOptimization() {
 
   const m_flow = determineMassFlow(rho);
 
+  // Start from 1/4 inch (removed 1/8)
   const nominalInches = [
-    0.25, 0.375, 0.5, 0.75,
+    0.125, 0.25, 0.375, 0.5, 0.75,
     1, 1.25, 1.5, 2, 2.5,
     3, 3.5, 4, 5, 6,
     8, 10, 12, 14, 16,
@@ -307,9 +325,15 @@ function runOptimization() {
 
   const results = [];
 
+  // Get total number of fittings currently added
+  const fittingsList =
+    document.querySelectorAll(".fitting-item");
+
+  const totalFittings = fittingsList.length;
+
   for (let inch of nominalInches) {
 
-    const D = inch * 0.0254;
+    const D = inch * 0.0254; // convert to meters
 
     const A = Math.PI * D * D / 4;
     const v = m_flow / (rho * A);
@@ -347,8 +371,7 @@ function runOptimization() {
       operatingHours *
       electricityRate;
 
-    // Pipe capital cost model
-    // Approx scaling: Cost ∝ D^1.8
+    // Pipe cost scaling (D^1.8)
     const pipeCostPerMeter =
       pipeCostIndex *
       Math.pow(inch, 1.8);
@@ -356,20 +379,33 @@ function runOptimization() {
     const totalPipeCost =
       pipeCostPerMeter * L;
 
-    // Simple annualization (10 year life assumption)
-    const annualizedPipeCost =
-      totalPipeCost / 10;
+    // Fitting cost scaling (D^2)
+    const fittingCostPerUnit =
+      pipeCostIndex * 0.4 *
+      Math.pow(inch, 2);
+
+    const totalFittingCost =
+      fittingCostPerUnit *
+      totalFittings;
+
+    const totalCapitalCost =
+      totalPipeCost +
+      totalFittingCost;
+
+    // Annualized over 10 years
+    const annualizedCapital =
+      totalCapitalCost / 10;
 
     const totalAnnualCost =
       annualEnergyCost +
-      annualizedPipeCost;
+      annualizedCapital;
 
     results.push({
       inch,
       D,
       powerKW,
       annualEnergyCost,
-      annualizedPipeCost,
+      annualizedCapital,
       totalAnnualCost
     });
   }
@@ -381,6 +417,7 @@ function runOptimization() {
 
   displayEconomicOptimization(results, optimum);
 }
+
 
     /* ===============================
        2. READ INPUTS
@@ -596,6 +633,10 @@ const deltaPressure =
     document
       .getElementById("results")
       .classList.remove("hidden");
+
+    document.getElementById("powerCard")
+  .style.display = "flex";
+
 
   // Ws is already in kW
 const pumpPowerKW = result.Ws;
