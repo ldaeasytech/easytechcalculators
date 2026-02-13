@@ -42,6 +42,17 @@ tabs.forEach(tab => {
 
     const mode = tab.dataset.mode;
 
+    const tankInputs =
+  document.getElementById("tankInputs");
+
+if (mode === "tank") {
+  tankInputs.style.display = "";
+  calculateBtn.textContent = "Calculate Discharge";
+} else {
+  tankInputs.style.display = "none";
+}
+
+
     const steelOptions =
       document.getElementById("steelOptions");
 
@@ -445,6 +456,214 @@ function runOptimization() {
 }
 
 
+/* ===============================
+   TANK DISCHARGE MODE
+=============================== */
+function runTankDischarge() {
+
+  /* ===============================
+     1. READ INPUTS
+  =============================== */
+
+  const rho = Number(document.getElementById("rho").value);
+  const mu  = Number(document.getElementById("mu").value);
+
+  const L   = Number(document.getElementById("pipeLength").value);
+
+  const D   = getPipeDiameter(PIPE_ID);
+  const A   = Math.PI * D * D / 4;
+
+  const h =
+    Number(document.getElementById("initialHeight").value);
+
+  const tankArea =
+    Number(document.getElementById("tankArea").value);
+
+  const material =
+    getPipeMaterial();
+
+  const e =
+    PIPE_ROUGHNESS[material];
+
+  const g = 9.81;
+
+  /* ===============================
+     2. ITERATIVE SOLUTION FOR v
+  =============================== */
+
+  let v = 1;          // initial guess
+  let error = 1;
+  const tol = 1e-6;
+
+  let Kpipe, Kentrance, Kfittings, Kexit, Ktotal;
+
+  while (error > tol) {
+
+    Kpipe = K_pipe({
+      rho,
+      mu,
+      D,
+      v,
+      L,
+      e
+    });
+
+    Kentrance = K_entrance({
+      D1: null,
+      D2: null,
+      fromTank: true
+    });
+
+    Kfittings = getTotalFittingsK();
+
+    Kexit = 1; // free discharge
+
+    Ktotal =
+      Kpipe +
+      Kentrance +
+      Kexit +
+      Kfittings;
+
+    const v_new =
+      Math.sqrt((2 * g * h) / (1 + Ktotal));
+
+    error = Math.abs(v_new - v);
+    v = v_new;
+  }
+
+  /* ===============================
+     3. FINAL CALCULATIONS
+  =============================== */
+
+  const Q = v * A;          // m3/s
+  const m_flow = rho * Q;   // kg/s
+
+  const Re =
+    (rho * v * D) / mu;
+
+  const F_pipe =
+    totalFrictionLoss(v, Kpipe);
+
+  const F_entrance =
+    totalFrictionLoss(v, Kentrance);
+
+  const F_exit =
+    totalFrictionLoss(v, Kexit);
+
+  const F_fittings =
+    totalFrictionLoss(v, Kfittings);
+
+  const F_total =
+    F_pipe +
+    F_entrance +
+    F_exit +
+    F_fittings;
+
+  let flowRegime;
+
+  if (Re < 2300) {
+    flowRegime = "Laminar";
+  } else if (Re <= 4000) {
+    flowRegime = "Transitional";
+  } else {
+    flowRegime = "Turbulent";
+  }
+
+  /* ===============================
+     4. DRAIN TIME (constant head approx)
+  =============================== */
+
+  let drainTime = null;
+
+  if (!isNaN(tankArea) && tankArea > 0) {
+    const tankVolume = tankArea * h;
+    drainTime = tankVolume / Q; // seconds
+  }
+
+  /* ===============================
+     5. DISPLAY
+  =============================== */
+
+  document
+    .getElementById("results")
+    .classList.remove("hidden");
+
+  document.getElementById("powerCard")
+    .style.display = "none";
+
+  /* ENERGY TABLE (Hydraulic Summary) */
+
+  const energyTable =
+    document.getElementById("energyTable");
+
+  energyTable.innerHTML = `
+  <tr>
+    <th>Term</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Mass Flow Rate</td>
+    <td>${m_flow.toFixed(4)}</td>
+    <td>kg/s</td>
+  </tr>
+  <tr>
+    <td>Total Friction Loss</td>
+    <td>${F_total.toFixed(4)}</td>
+    <td>J/kg</td>
+  </tr>
+  <tr>
+    <td>Drain Time</td>
+    <td>${drainTime ? drainTime.toFixed(2) : "—"}</td>
+    <td>${drainTime ? "s" : "—"}</td>
+  </tr>
+`;
+
+  /* HYDRAULIC TABLE */
+
+  const hydraulicTable =
+    document.getElementById("hydraulicTable");
+
+  hydraulicTable.innerHTML = `
+  <tr>
+    <th>Parameter</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  <tr>
+    <td>Pipe Diameter (D)</td>
+    <td>${D.toFixed(4)}</td>
+    <td>m</td>
+  </tr>
+  <tr>
+    <td>Pipe Velocity (v)</td>
+    <td>${v.toFixed(4)}</td>
+    <td>m/s</td>
+  </tr>
+  <tr>
+    <td>Volumetric Flow Rate</td>
+    <td>${Q.toExponential(4)}</td>
+    <td>m³/s</td>
+  </tr>
+  <tr>
+    <td>Reynolds Number</td>
+    <td>${Re.toExponential(3)}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Flow Regime</td>
+    <td>${flowRegime}</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td>Total Loss Coefficient (ΣK)</td>
+    <td>${Ktotal.toFixed(4)}</td>
+    <td>—</td>
+  </tr>
+`;
+}
+
+    
     /* ===============================
        2. READ INPUTS
     =============================== */
