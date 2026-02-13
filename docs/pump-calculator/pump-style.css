@@ -777,3 +777,14 @@ select:focus {
 .collapse-toggle {
   cursor: pointer;
 }
+
+.optimum-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.optimum-power {
+  color: #9ecbff;
+  font-size: 0.95rem;
+}
