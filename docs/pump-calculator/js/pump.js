@@ -848,7 +848,7 @@ if (!isNaN(initialHeight) && initialHeight > 0) {
   let h_tank = initialHeight;
   let time = 0;
 
-  const maxSteps = 200000;
+  const maxSteps = 2000000000;
   let steps = 0;
 
   while (h_tank > 0 && steps < maxSteps) {
