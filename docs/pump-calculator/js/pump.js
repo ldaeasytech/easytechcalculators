@@ -635,9 +635,6 @@ const P2 = P2_atm
   const h =
     Number(document.getElementById("deltaZ").value);
 
-  const tankArea =
-    Number(document.getElementById("tankArea").value);
-
   const material =
     getPipeMaterial();
 
