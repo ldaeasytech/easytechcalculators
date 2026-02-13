@@ -85,8 +85,6 @@ document.querySelectorAll(".collapse-toggle")
   =============================== */
 let optChartInstance = null;
 
-let optChartInstance = null;
-
 function displayEconomicOptimization(results, optimum) {
 
   // Hide theoretical pump power card
