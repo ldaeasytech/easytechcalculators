@@ -74,8 +74,8 @@ const optimumBlock =
 /* ===== POWER MODE ===== */
 if (mode === "power") {
 
-  if (optimumBlock)
-  optimumBlock.classList.add("hidden");
+document.getElementById("optimumBlock")
+  .style.display = "none";
 
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
@@ -98,8 +98,8 @@ if (mode === "power") {
 
 else if (mode === "elevation") {
 
-  if (optimumBlock)
-  optimumBlock.classList.add("hidden")
+ document.getElementById("optimumBlock")
+  .style.display = "none";
 
   if (flowSection) flowSection.style.display = "";
   if (tankInputs) tankInputs.style.display = "none";
