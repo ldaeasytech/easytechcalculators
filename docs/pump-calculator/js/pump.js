@@ -739,12 +739,8 @@ const v_new =
      4. DRAIN TIME (constant head approx)
   =============================== */
 
-  let drainTime = null;
+ const totalDrainTime = time;
 
-  if (!isNaN(A_tank) && A_tank > 0) {
-    const tankVolume = A_tank * h;
-    drainTime = tankVolume / Q; // seconds
-  }
 
   /* ===============================
      5. DISPLAY
@@ -779,9 +775,9 @@ const v_new =
     <td>J/kg</td>
   </tr>
   <tr>
-    <td>Drain Time</td>
-    <td>${drainTime ? drainTime.toFixed(2) : "—"}</td>
-    <td>${drainTime ? "s" : "—"}</td>
+    <td>Total Drain Time</td>
+    <td>${totalDrainTime.toFixed(2)}</td>
+    <td>s</td>
   </tr>
 `;
 
