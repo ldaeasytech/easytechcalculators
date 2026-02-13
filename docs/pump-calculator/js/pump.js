@@ -26,7 +26,7 @@ import {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
+let drainChartInstance = null;
 /* ===============================
      Hide Diameter Input in Optimize Mode
   =============================== */
@@ -599,8 +599,6 @@ function runOptimization() {
 /* ===============================
    TANK DISCHARGE MODE
 =============================== */
-let drainChartInstance = null;
-    
 function runTankDischarge() {
 
   /* ===============================
