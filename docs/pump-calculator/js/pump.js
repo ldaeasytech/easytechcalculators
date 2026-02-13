@@ -580,6 +580,25 @@ function runTankDischarge() {
   const rho = Number(document.getElementById("rho").value);
   const mu  = Number(document.getElementById("mu").value);
 
+  /* ===============================
+   PRESSURE PROFILE
+=============================== */
+
+const P1_atm =
+  document.getElementById("P1_atm")?.checked;
+
+const P2_atm =
+  document.getElementById("P2_atm")?.checked;
+
+const P1 = P1_atm
+  ? 101325
+  : Number(document.getElementById("P1").value);
+
+const P2 = P2_atm
+  ? 101325
+  : Number(document.getElementById("P2").value);
+
+
   const L   = Number(document.getElementById("pipeLength").value);
 
   const D   = getPipeDiameter(PIPE_ID);
@@ -636,8 +655,18 @@ function runTankDischarge() {
       Kexit +
       Kfittings;
 
-    const v_new =
-      Math.sqrt((2 * g * h) / (1 + Ktotal));
+    const drivingTerm =
+  2 * g * h - 2 * (P2 - P1) / rho;
+
+// Prevent negative inside sqrt
+if (drivingTerm <= 0) {
+  v = 0;
+  break;
+}
+
+const v_new =
+  Math.sqrt(drivingTerm / (1 + Ktotal));
+;
 
     error = Math.abs(v_new - v);
     v = v_new;
