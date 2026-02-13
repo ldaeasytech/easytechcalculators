@@ -102,6 +102,9 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
+  document.getElementById("elevation-group")
+  ?.classList.add("hidden");
+
   if (flowSection) flowSection.style.display = "";
   if (tankInputs) tankInputs.style.display = "none";
   if (economicSection) economicSection.style.display = "none";
