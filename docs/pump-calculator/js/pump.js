@@ -97,8 +97,7 @@ if (mode === "tank") {
 
   // Disable deltaZ since tank uses initialHeight instead
   if (deltaZInput) {
-    deltaZInput.value = "";
-    deltaZInput.disabled = true;
+    deltaZInput.disabled = false;
   }
 
   // Hide pump power
