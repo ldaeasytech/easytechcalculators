@@ -988,6 +988,10 @@ const deltaPressure =
        10. DISPLAY
     =============================== */
 
+      // Hide optimization
+document.getElementById("optimumBlock")
+  ?.classList.add("hidden")
+    
     document
       .getElementById("results")
       .classList.remove("hidden");
@@ -1036,6 +1040,7 @@ document
     /* ===============================
        ENERGY BALANCE TABLE
     =============================== */
+    
     const energyTable =
       document.getElementById("energyTable");
     
