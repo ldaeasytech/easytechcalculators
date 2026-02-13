@@ -773,12 +773,12 @@ const v_new =
   <td>Total Drain Time</td>
   <td>${
     totalDrainTime !== null
-      ? totalDrainTime/60.toFixed(2)
+      ? totalDrainTime.toFixed(2)
       : "—"
   }</td>
   <td>${
     totalDrainTime !== null
-      ? "min"
+      ? "s"
       : "—"
   }</td>
 </tr>
