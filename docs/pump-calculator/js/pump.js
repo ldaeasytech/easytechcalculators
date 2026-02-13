@@ -599,6 +599,8 @@ function runOptimization() {
 /* ===============================
    TANK DISCHARGE MODE
 =============================== */
+let drainChartInstance = null;
+    
 function runTankDischarge() {
 
   /* ===============================
@@ -959,7 +961,7 @@ if (!isNaN(initialHeight) && initialHeight > 0) {
   
 }
 
-    let drainChartInstance = null;
+   
 
 function renderDrainChart(timeData, heightData) {
 
