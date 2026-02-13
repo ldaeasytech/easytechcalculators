@@ -222,18 +222,54 @@
 
       <div id="tankInputs" style="display:none;">
 
+ <div class="input-group">
+  <label for="tankType">Tank Type</label>
+  <select id="tankType">
+    <option value="cylindrical" selected>Cylindrical</option>
+    <option value="cone">Inverted Cone</option>
+    <option value="spherical">Spherical</option>
+  </select>
+</div>
+
+<!-- CYLINDRICAL -->
+<div id="tankCylindrical">
   <div class="input-group">
-    <label>Initial Liquid Height Above Outlet (m)</label>
+    <label>Tank Inner Diameter (m)</label>
+    <input type="number" id="tankDiameter" step="any">
+  </div>
+
+  <div class="input-group">
+    <label>Initial Fluid Height (m)</label>
     <input type="number" id="initialHeight" step="any">
   </div>
+</div>
 
+<!-- INVERTED CONE -->
+<div id="tankCone" style="display:none;">
   <div class="input-group">
-    <label>Tank Cross-Sectional Area (m²)</label>
-    <input type="number" id="tankArea" step="any">
+    <label>Top Diameter (m)</label>
+    <input type="number" id="coneTopDiameter" step="any">
   </div>
 
+  <div class="input-group">
+    <label>Initial Fluid Height (m)</label>
+    <input type="number" id="initialHeightCone" step="any">
+  </div>
 </div>
-      
+
+<!-- SPHERICAL -->
+<div id="tankSphere" style="display:none;">
+  <div class="input-group">
+    <label>Sphere Diameter (m)</label>
+    <input type="number" id="sphereDiameter" step="any">
+  </div>
+
+  <div class="input-group">
+    <label>Initial Fluid Height (m)</label>
+    <input type="number" id="initialHeightSphere" step="any">
+  </div>
+</div>
+
 <div class="input-group" id="economicSection">
   <div class="group-title">Economic Parameters</div>
 
