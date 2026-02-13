@@ -24,7 +24,7 @@ import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
-
+if (economicSection) economicSection.style.display = "none";
 document.addEventListener("DOMContentLoaded", () => {
 
 /* ===============================
