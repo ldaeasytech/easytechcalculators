@@ -103,17 +103,20 @@ document.getElementById("powerCard")
 
   // Display optimum
   document.getElementById("optimumDiameter")
-    .innerHTML = `
-      <span class="optimum-value">
+  .innerHTML = `
+    <div class="optimum-container">
+      <div class="optimum-label">
+        OPTIMUM PIPE SIZE
+      </div>
+      <div class="optimum-value">
         ${optimum.inch} in
-      </span>
-      <br>
-      <span class="optimum-power">
+      </div>
+      <div class="optimum-power">
         Pump Power: ${optimum.powerKW.toFixed(3)} kW
         (${(optimum.powerKW * 1.341022).toFixed(2)} hp)
-      </span>
-    `;
-
+      </div>
+    </div>
+  `;
   const optimumIndex =
     results.findIndex(r => r.inch === optimum.inch);
 
