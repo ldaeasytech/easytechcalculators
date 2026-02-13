@@ -80,6 +80,7 @@ document.getElementById("optimumBlock")
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
     economicSection.disabled = true;
+  if (economicSection) economicSection.style.display = "none";
   if (tankInputs)
     tankInputs.style.display = "none";
 
