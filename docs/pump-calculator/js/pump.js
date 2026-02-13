@@ -355,7 +355,29 @@ document.getElementById("powerCard")
   massInput.addEventListener("input", updateFlowState);
   volInput.addEventListener("input", updateFlowState);
 
+ /*-------Tank Type select---------*/ 
+const tankTypeSelect =
+  document.getElementById("tankType");
 
+tankTypeSelect?.addEventListener("change", () => {
+
+  document.getElementById("tankCylindrical")
+    .style.display =
+      tankTypeSelect.value === "cylindrical" ? "" : "none";
+
+  document.getElementById("tankCone")
+    .style.display =
+      tankTypeSelect.value === "cone" ? "" : "none";
+
+  document.getElementById("tankSphere")
+    .style.display =
+      tankTypeSelect.value === "spherical" ? "" : "none";
+});
+
+
+
+
+  
   /* ===============================
      FLOW CONVERSION UTILITIES
   =============================== */
@@ -808,9 +830,231 @@ const v_new =
     <td>—</td>
   </tr>
 `;
+
+  /* ===============================
+   FULL PHYSICS TRANSIENT DRAINING
+=============================== */
+
+const initialHeight =
+  Number(document.getElementById("initialHeight").value);
+
+if (!isNaN(tankArea) && tankArea > 0 &&
+    !isNaN(initialHeight) && initialHeight > 0) {
+
+  const staticHead =
+    Number(document.getElementById("deltaZ").value);
+
+  const g = 9.81;
+
+  const timeData = [];
+  const heightData = [];
+
+  let h_tank = initialHeight;
+  let time = 0;
+
+  const maxSteps = 200000;
+  let steps = 0;
+
+  while (h_tank > 0 && steps < maxSteps) {
+
+    const totalHead =
+      staticHead + h_tank;
+
+    /* ---- Solve velocity iteratively ---- */
+
+    let v_inst = 1;
+    let error = 1;
+    const tol = 1e-6;
+
+    let Kpipe_i, Kentrance_i, Kfittings_i, Kexit_i, Ktotal_i;
+
+    while (error > tol) {
+
+      Kpipe_i = K_pipe({
+        rho,
+        mu,
+        D,
+        v: v_inst,
+        L,
+        e
+      });
+
+      Kentrance_i = K_entrance({
+        D1: null,
+        D2: null,
+        fromTank: true
+      });
+
+      Kfittings_i = getTotalFittingsK();
+
+      Kexit_i = 1;
+
+      Ktotal_i =
+        Kpipe_i +
+        Kentrance_i +
+        Kexit_i +
+        Kfittings_i;
+
+      const drivingTerm =
+        2 * g * totalHead -
+        2 * (P2 - P1) / rho;
+
+      if (drivingTerm <= 0) {
+        v_inst = 0;
+        break;
+      }
+
+      const v_new =
+        Math.sqrt(drivingTerm / (1 + Ktotal_i));
+
+      error = Math.abs(v_new - v_inst);
+      v_inst = v_new;
+    }
+
+    if (v_inst <= 0) break;
+
+    /* ---- Adaptive timestep ---- */
+
+    const A_tank =
+  getTankArea(h_tank, D);
+
+    const dhdt =
+      -(A / A_tank) * v_inst;
+
+
+    const dt =
+      Math.min(
+        0.5,
+        0.02 * Math.abs(h_tank / dhdt)
+      );
+
+    h_tank += dhdt * dt;
+
+    if (h_tank < 0) h_tank = 0;
+
+    time += dt;
+
+    timeData.push(time);
+    heightData.push(h_tank);
+
+    steps++;
+  }
+
+  /* ---- Display total drain time ---- */
+
+  const totalDrainTime = time;
+
+  const energyTable =
+    document.getElementById("energyTable");
+
+  energyTable.innerHTML += `
+  <tr>
+    <td>Total Drain Time</td>
+    <td>${totalDrainTime.toFixed(2)}</td>
+    <td>s</td>
+  </tr>
+`;
+
+  renderDrainChart(timeData, heightData);
 }
 
-    
+  
+}
+
+    let drainChartInstance = null;
+
+function renderDrainChart(timeData, heightData) {
+
+  const block =
+    document.getElementById("drainProfileBlock");
+
+  block.style.display = "block";
+
+  const ctx =
+    document.getElementById("drainChart")
+      .getContext("2d");
+
+  if (drainChartInstance)
+    drainChartInstance.destroy();
+
+  drainChartInstance = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: timeData,
+      datasets: [{
+        label: "Liquid Height (m)",
+        data: heightData,
+        borderWidth: 2,
+        fill: false,
+        tension: 0.2
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: { display: true, text: "Time (s)" }
+        },
+        y: {
+          title: { display: true, text: "Height (m)" },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+/* ===============================
+   TANK AREA FUNCTION
+=============================== */
+
+function getTankArea(h, D_pipe) {
+
+  const tankType =
+    document.getElementById("tankType").value;
+
+  /* ---- CYLINDRICAL ---- */
+  if (tankType === "cylindrical") {
+
+    const D =
+      Number(document.getElementById("tankDiameter").value);
+
+    return Math.PI * D * D / 4;
+  }
+
+  /* ---- INVERTED CONE ---- */
+  if (tankType === "cone") {
+
+    const D_top =
+      Number(document.getElementById("coneTopDiameter").value);
+
+    const H =
+      Number(document.getElementById("initialHeightCone").value);
+
+    const R_top = D_top / 2;
+    const R_bottom = D_pipe / 2;
+
+    const r_h =
+      R_bottom +
+      (R_top - R_bottom) * (h / H);
+
+    return Math.PI * r_h * r_h;
+  }
+
+  /* ---- SPHERICAL ---- */
+  if (tankType === "spherical") {
+
+    const D =
+      Number(document.getElementById("sphereDiameter").value);
+
+    const R = D / 2;
+
+    return Math.PI * (2 * R * h - h * h);
+  }
+
+  return 0;
+}
+
     /* ===============================
        2. READ INPUTS
     =============================== */
