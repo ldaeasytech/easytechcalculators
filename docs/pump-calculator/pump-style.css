@@ -788,3 +788,27 @@ select:focus {
   color: #9ecbff;
   font-size: 0.95rem;
 }
+
+.optimum-container {
+  margin-top: 8px;
+}
+
+.optimum-label {
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  color: #9ecbff;
+  opacity: 0.8;
+}
+
+.optimum-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffcc00;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.35);
+}
+
+.optimum-power {
+  font-size: 0.95rem;
+  color: #ffffff;
+  margin-top: 4px;
+}
