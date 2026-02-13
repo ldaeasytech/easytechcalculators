@@ -157,11 +157,7 @@ else if (mode === "optimize") {
     "Optimize Pipe Size";
 }
 
-    
-
-    const tankInputs =
-  document.getElementById("tankInputs");
-
+//Toggle calculate discharge button
 if (mode === "tank") {
   tankInputs.style.display = "";
   calculateBtn.textContent = "Calculate Discharge";
