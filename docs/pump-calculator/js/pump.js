@@ -586,7 +586,7 @@ function runTankDischarge() {
   const A   = Math.PI * D * D / 4;
 
   const h =
-    Number(document.getElementById("initialHeight").value);
+    Number(document.getElementById("deltaZ").value);
 
   const tankArea =
     Number(document.getElementById("tankArea").value);
