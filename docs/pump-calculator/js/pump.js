@@ -42,6 +42,123 @@ tabs.forEach(tab => {
 
     const mode = tab.dataset.mode;
 
+/* ===============================
+   MODE-SPECIFIC UI CONTROL
+=============================== */
+
+const flowSection =
+  document.querySelector(".flow-section");
+
+const economicSection =
+  document.getElementById("economicSection");
+
+const tankInputs =
+  document.getElementById("tankInputs");
+
+const elevationRelationSelect =
+  document.getElementById("elevationRelation");
+
+const elevationRefSelect =
+  document.getElementById("elevationReference");
+
+const deltaZInput =
+  document.getElementById("deltaZ");
+
+const powerCard =
+  document.getElementById("powerCard");
+
+const optimumBlock =
+  document.getElementById("optimumBlock");
+
+/* ===== TANK MODE ===== */
+if (mode === "tank") {
+
+  // Hide flow inputs
+  if (flowSection) flowSection.style.display = "none";
+
+  // Hide economic parameters
+  if (economicSection)
+    economicSection.style.display = "none";
+
+  // Show tank inputs
+  if (tankInputs)
+    tankInputs.style.display = "";
+
+  // Lock elevation configuration
+  if (elevationRelationSelect) {
+    elevationRelationSelect.value = "above";
+    elevationRelationSelect.disabled = true;
+  }
+
+  if (elevationRefSelect) {
+    elevationRefSelect.value = "pipe";
+    elevationRefSelect.disabled = true;
+  }
+
+  // Disable deltaZ since tank uses initialHeight instead
+  if (deltaZInput) {
+    deltaZInput.value = "";
+    deltaZInput.disabled = true;
+  }
+
+  // Hide pump power
+  if (powerCard)
+    powerCard.style.display = "none";
+
+  // Hide optimization
+  if (optimumBlock)
+    optimumBlock.classList.add("hidden");
+
+  calculateBtn.textContent =
+    "Calculate Discharge";
+}
+
+/* ===== POWER MODE ===== */
+else if (mode === "power") {
+
+  if (flowSection) flowSection.style.display = "";
+  if (economicSection)
+    economicSection.style.display = "none";
+  if (tankInputs)
+    tankInputs.style.display = "none";
+
+  if (elevationRelationSelect)
+    elevationRelationSelect.disabled = false;
+
+  if (elevationRefSelect)
+    elevationRefSelect.disabled = false;
+
+  if (deltaZInput)
+    deltaZInput.disabled = false;
+
+  calculateBtn.textContent =
+    "Calculate Pump Power";
+}
+
+/* ===== OPTIMIZE MODE ===== */
+else if (mode === "optimize") {
+
+  if (flowSection) flowSection.style.display = "";
+  if (economicSection)
+    economicSection.style.display = "";
+  if (tankInputs)
+    tankInputs.style.display = "none";
+
+  if (elevationRelationSelect)
+    elevationRelationSelect.disabled = false;
+
+  if (elevationRefSelect)
+    elevationRefSelect.disabled = false;
+
+  if (deltaZInput)
+    deltaZInput.disabled = false;
+
+  calculateBtn.textContent =
+    "Optimize Pipe Size";
+}
+
+    
+
     const tankInputs =
   document.getElementById("tankInputs");
 
