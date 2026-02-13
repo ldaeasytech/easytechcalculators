@@ -79,7 +79,7 @@ else if (mode === "power") {
 
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
-    economicSection.style.display = "none";
+    economicSection.disabled = true;
   if (tankInputs)
     tankInputs.style.display = "none";
 
