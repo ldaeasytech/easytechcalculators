@@ -770,10 +770,19 @@ const v_new =
     <td>J/kg</td>
   </tr>
   <tr>
-    <td>Total Drain Time</td>
-    <td>${totalDrainTime.toFixed(2)}</td>
-    <td>s</td>
-  </tr>
+  <td>Total Drain Time</td>
+  <td>${
+    totalDrainTime !== null
+      ? totalDrainTime.toFixed(2)
+      : "—"
+  }</td>
+  <td>${
+    totalDrainTime !== null
+      ? "s"
+      : "—"
+  }</td>
+</tr>
+
 `;
 
   /* HYDRAULIC TABLE */
