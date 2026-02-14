@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Pump power calculator</title>
+  <title>Tank Elevation calculator</title>
 
   <meta name="description"
-    content="Pump power calculator" />
+    content="Tank Elevation calculator" />
 
   <link rel="stylesheet" href="pump-style.css" />
 
@@ -52,7 +52,7 @@
         class="brand-logo"
       />
       <div class="brand-text">
-        <h1>Pump Power Calculator</h1>
+        <h1>Tank Elevation Calculator</h1>
         <div class="capability-line">
           Mechanical Energy Balance · Pipe & Fitting Losses
         </div>
@@ -117,50 +117,6 @@
   </div>
 
 </div>
-
-      <!-- ELEVATION PROFILE -->
-      
-   <div class="input-group elevation-group">
-  <div class="group-title">Elevation Profile</div>
-
-  <div class="field">
-    <label for="deltaZ">Elevation Difference h (m)</label>
-    <input id="deltaZ" type="number" step="any" />
-  </div>
-
-  <div class="field">
-    <label for="elevationRelation">Relative Elevation</label>
-    <select id="elevationRelation">
-      <option value="above">Liquid source is ABOVE discharge</option>
-      <option value="below">Liquid source is BELOW discharge</option>
-    </select>
-  </div>
-
-     <div class="field">
-    <label for="elevationReference">Elevation Measured Between</label>
-    <select id="elevationReference">
-      <option value="pipe">
-        Source liquid surface and pipe outlet
-      </option>
-      <option value="surface">
-        Source liquid surface and sink liquid surface
-      </option>
-    </select>
-  </div>
-
-  <!-- 🔹 Velocity at discharge -->
-  <div class="field" id="sinkVelocityField" style="display:none;">
-    <label for="sinkVelocity">
-      Sink Liquid Velocity (m/s)
-    </label>
-    <input id="sinkVelocity" type="number" step="any" value="0" />
-    <div class="helper-text">
-      Only applicable when elevation is measured to sink surface.
-    </div>
-  </div>
-
-</div>
-
 
       <!-- PRESSURE PROFILE -->
       <div class="input-group">
@@ -306,23 +262,21 @@
 
      <div class="result-highlight" id="powerCard">
 
+<div class="result-highlight" id="elevationResult">
   <div class="result-label">
-    Theoretical Pump Power
+    Required Tank Elevation
   </div>
-
   <div class="power-display">
 
     <div class="power-primary">
-      <span class="power-value" id="pumpPowerValue">--</span>
-      <span class="power-unit">kW</span>
-    </div>
-
-    <div class="power-secondary">
-      <span id="pumpPowerHP">--</span>
-      <span class="power-unit-secondary">hp</span>
+      <span class="power-value" id="requiredElevationValue">--</span>
+      <span class="power-unit">m</span>
     </div>
 
   </div>
+
+</div>
+
 </div>
     
       <div class="result-section">
