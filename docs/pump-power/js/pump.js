@@ -129,9 +129,19 @@ document.querySelectorAll(".collapse-toggle")
        1. READ MODE
     =============================== */
 
-    const activeMode =
+       const activeMode =
       document.querySelector(".mode-tabs .tab.active")
         ?.dataset.mode || "power";
+
+    if (activeMode === "optimize") {
+
+  return;
+  }
+
+  if (activeMode === "elevation") {
+
+  return;
+}
 
   if (activeMode !== "power") {
     alert("This mode is under development.");
