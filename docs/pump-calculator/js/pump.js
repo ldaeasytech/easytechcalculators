@@ -24,7 +24,6 @@ import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
-if (economicSection) economicSection.classList.add("hidden");
 document.addEventListener("DOMContentLoaded", () => {
 
 /* ===============================
@@ -166,9 +165,6 @@ else if (mode === "optimize") {
   document.getElementById("steelOptions")
    ?.classList.add("hidden");
 
-document.getElementById("NPSHCard")
-  ?.classList.add("hidden");
-
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
@@ -195,32 +191,6 @@ document.getElementById("NPSHCard")
   calculateBtn.textContent =
     "Optimize Pipe Size";
 }
-
-
-    const steelOptions =
-      document.getElementById("steelOptions");
-
-    const customField =
-      document.getElementById("customDiameterField");
-
-    // Toggle pipe diameter inputs
-    if (mode === "optimize") {
-      steelOptions.classList.add("hidden");
-      customField.classList.add("hidden");
-
-      // ✅ Update button label
-      //calculateBtn.textContent = "Optimize Pipe Size";
-
-    } else if (mode === "power") {
-      steelOptions.style.display = "";
-
-      // ✅ Restore button label
-      //calculateBtn.textContent = "Calculate Pump Power";
-
-    } else {
-      //calculateBtn.textContent = "Calculate Required Elevation";
-      steelOptions.style.display = "";
-    }
 
   });
 });
