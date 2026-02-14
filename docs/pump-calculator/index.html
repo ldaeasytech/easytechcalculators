@@ -65,6 +65,7 @@
 <div class="mode-wrapper">
   <div class="mode-tabs">
     <button class="tab active" data-mode="power">Pump Power</button>
+    <button class="mode-tab" data-mode="npsh">NPSH Available</button>
     <button class="tab" data-mode="optimize">Optimize Pipe Diameter</button>
     <button class="tab" data-mode="elevation">Required Tank Elevation</button>
   </div>
@@ -120,7 +121,7 @@
 
       <!-- ELEVATION PROFILE -->
       
-      <div class="input-group elevation-group">
+  <div class="input-group elevation-group">
   <div class="group-title">Elevation Profile</div>
 
   <div class="field">
@@ -136,14 +137,27 @@
     </select>
   </div>
 
+  <div class="input-group elevation-group-npsh">
+  <div class="group-title">Elevation Profile</div>
+
+  <div class="field">
+    <label for="deltaZ">Elevation Difference h (m)</label>
+    <input id="deltaZ" type="number" step="any" />
+  </div>
+
+  <div class="field">
+    <label for="elevationRelation">Relative Elevation</label>
+    <select id="elevationRelation">
+      <option value="above">Liquid source is ABOVE pump</option>
+      <option value="below">Liquid source is BELOW pump</option>
+    </select>
+  </div>
+
   <div class="field">
     <label for="elevationReference">Elevation Measured Between</label>
-    <select id="elevationReference">
+    <select id="elevationReference" disabled>
       <option value="pipe">
-        Source liquid surface and pipe discharge
-      </option>
-      <option value="sink">
-        Source liquid surface and sink liquid surface
+        Source liquid surface and pump centerline
       </option>
     </select>
   </div>
@@ -184,6 +198,18 @@
           </label>
         </div>
       </div>
+
+      <div class="input-group">
+      <label>Vapor Pressure (Pa)</label>
+      <input type="number" id="vaporPressure" />
+      <small>
+        If using water/steam, use Tx mode (x=0 or x=1) in the
+        <a href="https://easytechcalculators/water-properties" target="_blank">
+          Water & Steam Properties Calculator
+        </a>.
+      </small>
+      </div>
+
 
       <!-- PIPE SPECIFICATION -->
      <div class="input-group">
@@ -356,13 +382,24 @@
 
   </div>
 </div>
+
+
+ <div class="result-highlight" id="NPSHCard">      
+ <div class="result-label">
+      Available Net Positive Suction Head
+  </div> 
+  <div class="power-display">
+    <div class="power-primary">
+      <span class="power-value" id="npshValue">--</span>
+      <span class="power-unit">m</span>
+  </div>
+</div>
+</div>
          
 <div class="result-highlight" id="elevationResult">
-
   <div class="result-label">
     Required Tank Elevation
   </div>
-
   <div class="power-display">
 
     <div class="power-primary">
@@ -373,8 +410,7 @@
   </div>
 
 </div>
-
-
+      
 <div id="optimumBlock" class="hidden result-section">
   <h3>Optimization Result</h3>
   <div>
