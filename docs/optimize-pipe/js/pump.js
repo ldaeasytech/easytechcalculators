@@ -69,6 +69,9 @@ const elevationRefSelect =
 const deltaZInput =
   document.getElementById("deltaZ");
 
+const steelOptions =
+  document.querySelector("#steelOptions");;
+
 const powerCard =
   document.getElementById("powerCard");
 
@@ -82,8 +85,7 @@ if (mode === "power") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
-document.getElementById("steelOptions")
-   ?.classList.remove("hidden");
+steelOptions?.classList.remove("hidden");
 
    elevationGroup?.classList.remove("hidden");
 
@@ -120,8 +122,7 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
-  document.getElementById("steelOptions")
-   ?.classList.remove("hidden");
+steelOptions?.classList.remove("hidden");;
 
 document.getElementById("elevationResult")
   ?.classList.remove("hidden");
@@ -162,9 +163,6 @@ else if (mode === "optimize") {
   document.getElementById("optimumBlock")
   ?.classList.remove("hidden");
 
-  document.getElementById("steelOptions")
-   ?.classList.add("hidden");
-
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
@@ -172,7 +170,8 @@ else if (mode === "optimize") {
   ?.classList.add("hidden");
   
   elevationGroup?.classList.remove("hidden");
-
+  steelOptions?.classList.add("hidden");
+  
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
     economicSection.style.display = "";
@@ -393,6 +392,8 @@ document.getElementById("powerCard")
         ?.dataset.mode || "power";
 
     if (activeMode === "optimize") {
+
+      steelOptions?.classList.add("hidden")
   runOptimization();
   return;
   }
