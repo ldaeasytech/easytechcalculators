@@ -39,7 +39,7 @@ tabs.forEach(tab => {
     tabs.forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
 
-    const mode = tab.dataset.mode;
+   // const mode = tab.dataset.mode;
 
     const mode = "elevation";
 /* ===============================
