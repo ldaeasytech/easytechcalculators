@@ -167,7 +167,7 @@ else if (mode === "optimize") {
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
-?document.getElementById("powerCard")
+  document.getElementById("powerCard")
   ?.classList.add("hidden");
   
   elevationGroup?.classList.remove("hidden");
