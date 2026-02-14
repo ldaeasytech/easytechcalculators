@@ -703,8 +703,9 @@ const F_exit =
   document.getElementById("optimumBlock")
     ?.classList.add("hidden");
   
-  document.getElementById("results")
-  ?.classList.remove("hidden");
+  document
+      .getElementById("results")
+      .classList.remove("hidden");
   
   // Show elevation card
 
