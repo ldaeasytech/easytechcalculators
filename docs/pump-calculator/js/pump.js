@@ -55,8 +55,8 @@ const economicSection =
 const tankInputs =
   document.getElementById("tankInputs");
 
-const elevationCard =
-  document.getElementById("elevationCard");
+const elevationResult =
+  document.getElementById("elevationResult");
     
 const elevationGroup =
   document.querySelector(".elevation-group");
@@ -85,7 +85,7 @@ document.getElementById("optimumBlock")
 
    elevationGroup?.classList.remove("hidden");
 
-  document.getElementById("elevationCard")
+  document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
   document.getElementById("powerCard")
@@ -116,8 +116,8 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
-document.getElementById("elevationCard")
-  .classList.add("hidden");
+document.getElementById("elevationResult")
+  .classList.remove("hidden");
 
   document.getElementById("powerCard")
   .classList.add("hidden")
@@ -152,7 +152,10 @@ document.getElementById("elevationCard")
 /* ===== OPTIMIZE MODE ===== */
 else if (mode === "optimize") {
 
-  document.getElementById("elevationCard")
+  document.getElementById("optimumBlock")
+  ?.classList.remove("hidden");
+
+  document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
 document.getElementById("powerCard")
@@ -235,10 +238,6 @@ document.getElementById("powerCard")
 
   document.getElementById("optimumBlock")
     .classList.remove("hidden");
-
-  // Hide theoretical pump power card
-  document.getElementById("powerCard")
-    .classList.add("hidden");
 
   // Display optimum
   document.getElementById("optimumDiameter")
@@ -587,6 +586,11 @@ function runOptimization() {
   displayEconomicOptimization(results, optimum);
 }
 
+
+ // ================================
+  // Required Elevation Calculation
+  // ===============================
+
 function runRequiredElevation() {
 
   const rho = Number(document.getElementById("rho").value);
@@ -682,21 +686,20 @@ const F_exit =
   // =========================
   // Display
   // =========================
-
+    // Hide pump power
+  document.getElementById("powerCard")
+    .classList.add("hidden");
+  
+    // Hide optimization
+  document.getElementById("optimumBlock")
+    ?.classList.add("hidden");
+  
   document.getElementById("results")
   ?.classList.remove("hidden");
-
-  // Hide pump power
-document.getElementById("powerCard")
-  .classList.add("hidden");
-
-  // Hide optimization
-document.getElementById("optimumBlock")
-  ?.classList.add("hidden");
-
+  
   // Show elevation card
 
-document.getElementById("elevationCard")
+document.getElementById("elevationResult")
   ?.classList.remove("hidden");
 
 // Display required elevation
@@ -1032,6 +1035,9 @@ const deltaPressure =
       // Hide optimization
 document.getElementById("optimumBlock")
   ?.classList.add("hidden")
+
+document.getElementById("elevationResult")
+  ?.classList.add("hidden");
     
     document
       .getElementById("results")
