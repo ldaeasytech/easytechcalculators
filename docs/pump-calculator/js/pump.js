@@ -612,6 +612,7 @@ function updateHydraulicTable(data) {
     data.vaporHead.toFixed(3);
 }
 
+hydraulicTable.innerHTML = `
 <tr>
   <td>Suction velocity</td>
   <td id="suctionVelocity"></td>
@@ -628,7 +629,7 @@ function updateHydraulicTable(data) {
   <td>Vapor pressure head (m)</td>
   <td id="vaporHead"></td>
 </tr>
-
+`;
 }
 
 
