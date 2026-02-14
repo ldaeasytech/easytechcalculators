@@ -70,7 +70,7 @@ const deltaZInput =
   document.getElementById("deltaZ");
 
 const steelOptions =
-  document.querySelector("steelOptions");
+  document.getElementById("steelOptions");
 
 const powerCard =
   document.getElementById("powerCard");
