@@ -941,8 +941,8 @@ hydraulicTable.innerHTML = `
 
     const h =
       elevationRelation === "above"
-        ? h_input
-        : -h_input;
+        ? -h_input
+        : h_input;
 
 
     /* ===============================
