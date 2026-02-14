@@ -80,6 +80,8 @@ if (mode === "power") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
+   elevationGroup?.classList.remove("hidden");
+
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
     economicSection.disabled = true;
@@ -133,6 +135,8 @@ document.getElementById("optimumBlock")
   
 /* ===== OPTIMIZE MODE ===== */
 else if (mode === "optimize") {
+  
+  elevationGroup?.classList.remove("hidden");
 
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
