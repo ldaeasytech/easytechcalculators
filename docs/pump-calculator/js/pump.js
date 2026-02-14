@@ -53,7 +53,7 @@ const economicSection =
   document.getElementById("economicSection");
 
 const tankInputs =
-  document.getElementById("tankInputs");'
+  document.getElementById("tankInputs");
   
 const elevationGroup =
   document.querySelector(".elevation-group");
