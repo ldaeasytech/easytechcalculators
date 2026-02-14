@@ -679,9 +679,8 @@ const F_exit =
   // Display
   // =========================
 
-  document
-    .getElementById("results")
-    .classList.remove("hidden");
+  document.getElementById("results")
+  ?.classList.remove("hidden");
 
   // Hide pump power
 document.getElementById("powerCard")
