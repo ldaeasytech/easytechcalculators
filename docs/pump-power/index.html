@@ -234,34 +234,6 @@
   </div>
 </div>
 
-<div class="input-group" id="economicSection">
-  <div class="group-title">Economic Parameters</div>
-
-
-  <div class="field">
-    <label for="electricityRate">
-      Electricity Cost ($/kWh)
-    </label>
-    <input id="electricityRate" type="number" step="any" value="0.12" />
-  </div>
-
-  <div class="field">
-    <label for="operatingHours">
-      Operating Hours per Year
-    </label>
-    <input id="operatingHours" type="number" step="any" value="8000" />
-  </div>
-
-  <div class="field">
-    <label for="pipeCostIndex">
-      Pipe Cost Index (Relative Multiplier)
-    </label>
-    <input id="pipeCostIndex" type="number" step="any" value="100" />
-  </div>
-</div>
-
-
-
       <!-- FLUID PROPERTIES -->
       <div class="input-group">
         <div class="group-title">Fluid Properties</div>
@@ -339,10 +311,6 @@
 
 </div>
 
-  <!--</section>
-
-
-  
   <!-- ================= RIGHT COLUMN – RESULTS ================= 
   <section class="card">-->
     <h2 class="results-title">Results</h2>
@@ -370,30 +338,6 @@
   </div>
 </div>
     
-<div class="result-highlight" id="elevationResult">
-  <div class="result-label">
-    Required Tank Elevation
-  </div>
-  <div class="power-display">
-
-    <div class="power-primary">
-      <span class="power-value" id="requiredElevationValue">--</span>
-      <span class="power-unit">m</span>
-    </div>
-
-  </div>
-
-</div>
-      
-<div id="optimumBlock" class="hidden result-section">
-  <h3>Optimization Result</h3>
-  <div>
-    Optimum Inner Diameter:
-    <strong id="optimumDiameter">--</strong>
-  </div>
-  <canvas id="optChart" style="margin-top:15px;"></canvas>
-</div>
-
       <div class="result-section">
         <h3 class="collapse-toggle">Energy Balance Terms</h3>
         <table class="results-clean" id="energyTable"></table>
