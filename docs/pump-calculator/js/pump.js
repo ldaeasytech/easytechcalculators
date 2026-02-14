@@ -116,8 +116,11 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
+document.getElementById("elevationCard")
+  .style.display = "flex";
+  
    elevationGroup?.classList.add("hidden");
-  elevationCard?.classList.remove("hidden");
+
 
   if (flowSection) flowSection.style.display = "";
   if (tankInputs) tankInputs.style.display = "none";
@@ -195,7 +198,7 @@ document.getElementById("powerCard")
       calculateBtn.textContent = "Calculate Pump Power";
 
     } else {
-      calculateBtn.textContent = "Calculate";
+      calculateBtn.textContent = "Calculate Required Elevation";
     }
 
   });
