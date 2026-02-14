@@ -83,13 +83,16 @@ if (mode === "power") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
+document.getElementById("steelOptions")
+   ?.classList.remove("hidden");
+
    elevationGroup?.classList.remove("hidden");
 
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
   document.getElementById("powerCard")
-  .classList.remove("hidden");
+  ?.classList.remove("hidden");
 
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
@@ -116,11 +119,14 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
+  document.getElementById("steelOptions")
+   ?.classList.remove("hidden");
+
 document.getElementById("elevationResult")
-  .classList.remove("hidden");
+  ?.classList.remove("hidden");
 
   document.getElementById("powerCard")
-  .classList.add("hidden")
+  ?.classList.add("hidden")
   
    elevationGroup?.classList.add("hidden");
 
@@ -155,11 +161,14 @@ else if (mode === "optimize") {
   document.getElementById("optimumBlock")
   ?.classList.remove("hidden");
 
+  document.getElementById("steelOptions")
+   ?.classList.add("hidden");
+
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
-document.getElementById("powerCard")
-  .classList.add("hidden");
+?document.getElementById("powerCard")
+  ?.classList.add("hidden");
   
   elevationGroup?.classList.remove("hidden");
 
