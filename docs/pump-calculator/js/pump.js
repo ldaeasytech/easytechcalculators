@@ -82,6 +82,12 @@ document.getElementById("optimumBlock")
 
    elevationGroup?.classList.remove("hidden");
 
+  document.getElementById("elevationCard")
+  ?.classList.add("hidden");
+
+  document.getElementById("powerCard")
+  .style.display = "flex";
+
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
     economicSection.disabled = true;
@@ -135,6 +141,12 @@ document.getElementById("optimumBlock")
   
 /* ===== OPTIMIZE MODE ===== */
 else if (mode === "optimize") {
+
+  document.getElementById("elevationCard")
+  ?.classList.add("hidden");
+
+document.getElementById("powerCard")
+  .style.display = "none";
   
   elevationGroup?.classList.remove("hidden");
 
@@ -671,6 +683,16 @@ document.getElementById("powerCard")
   // Hide optimization
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
+
+  // Show elevation card
+const elevationCard =
+  document.getElementById("elevationCard");
+
+elevationCard.classList.remove("hidden");
+
+// Display required elevation
+document.getElementById("requiredElevationValue")
+  .textContent = Math.abs(h).toFixed(3);
 
   const energyTable =
   document.getElementById("energyTable");
