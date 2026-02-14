@@ -471,7 +471,7 @@ function determineMassFlow(rho) {
 function runOptimization() {
 
   const rho = Number(document.getElementById("rho").value);
-  const mu  = Number(document.getElementById("mu").value);
+  const mu  = Number(document.getElementById("mu").value)*1e-6;
   const L   = Number(document.getElementById("pipeLength").value);
 
   const electricityRate =
@@ -603,7 +603,7 @@ function runOptimization() {
 function runRequiredElevation() {
 
   const rho = Number(document.getElementById("rho").value);
-  const mu  = Number(document.getElementById("mu").value);
+  const mu  = Number(document.getElementById("mu").value)*1e-6;
   const L   = Number(document.getElementById("pipeLength").value);
 
   const material = getPipeMaterial();
@@ -836,7 +836,7 @@ hydraulicTable.innerHTML = `
     =============================== */
 
     const rho = Number(document.getElementById("rho").value);
-    const mu  = Number(document.getElementById("mu").value);
+    const mu  = Number(document.getElementById("mu").value)*1e-6;
 
     const massValue = massInput.value;
     const massUnitValue = massUnit.value;
