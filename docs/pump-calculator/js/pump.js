@@ -73,6 +73,9 @@ const deltaZInput =
 const powerCard =
   document.getElementById("powerCard");
 
+const NPSHCard =
+  document.getElementById("NPSHCard");
+
 const optimumBlock =
   document.getElementById("optimumBlock");
 
@@ -81,6 +84,9 @@ const optimumBlock =
 if (mode === "power") {
 
 document.getElementById("optimumBlock")
+  ?.classList.add("hidden");
+
+document.getElementById("NPSHCard")
   ?.classList.add("hidden");
 
 document.getElementById("steelOptions")
@@ -114,9 +120,55 @@ document.getElementById("steelOptions")
     "Calculate Pump Power";
 }
 
+/* ===== NPSH MODE ===== */
+else if (mode === "npsh") {
+
+document.getElementById("optimumBlock")
+  ?.classList.add("hidden");
+
+  document.getElementById("NPSHCard")
+  ?.classList.remove("hidden");
+
+document.getElementById("steelOptions")
+   ?.classList.remove("hidden");
+
+   elevationGroup?.classList.remove("hidden");
+
+  document.getElementById("elevationResult")
+  ?.classList.add("hidden");
+
+  document.getElementById("powerCard")
+  ?.classList.add("hidden");
+
+  if (flowSection) flowSection.style.display = "";
+  if (economicSection)
+    economicSection.disabled = true;
+  if (economicSection) economicSection.classList.add("hidden");
+  if (tankInputs)
+    tankInputs.classList.add("hidden");
+
+  if (elevationRelationSelect)
+    elevationRelationSelect.disabled = false;
+
+  if (elevationRefSelect)
+    elevationRefSelect.disabled = false;
+
+  if (deltaZInput)
+    deltaZInput.disabled = false;
+
+  calculateBtn.textContent =
+    "Calculate Avaible NPSH";
+}
+
+  
+
+ /* ===== Elevation MODE ===== */ 
 else if (mode === "elevation") {
 
 document.getElementById("optimumBlock")
+  ?.classList.add("hidden");
+
+document.getElementById("NPSHCard")
   ?.classList.add("hidden");
 
   document.getElementById("steelOptions")
@@ -163,6 +215,9 @@ else if (mode === "optimize") {
 
   document.getElementById("steelOptions")
    ?.classList.add("hidden");
+
+document.getElementById("NPSHCard")
+  ?.classList.add("hidden");
 
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
@@ -423,15 +478,14 @@ document.getElementById("powerCard")
   }
 
   if (activeMode === "elevation") {
-    document.getElementById("optimumBlock")
-  ?.classList.add("hidden");
   runRequiredElevation();
   return;
 }
-  
+    if (activeMode === "npsh") {
+  runNPSHMode();
+  return;
+}
   if (activeMode !== "power") {
-    document.getElementById("optimumBlock")
-  ?.classList.add("hidden");
     alert("This mode is under development.");
     return;
   }
@@ -464,7 +518,121 @@ function determineMassFlow(rho) {
 }
 
     
+/* ===============================
+       Calculate NPSH
+    =============================== */
+export function runNPSHMode() {
 
+  const g = 9.81;
+
+  // =========================
+  // 1️⃣ INPUTS
+  // =========================
+
+  const rho = parseFloat(document.getElementById("density").value);
+  const mu  = parseFloat(document.getElementById("viscosity").value);
+  const D   = parseFloat(document.getElementById("pipeDiameter").value);
+  const L   = parseFloat(document.getElementById("pipeLength").value);
+
+  const m_flow = getMassFlow();   // reuse your existing flow resolver
+  const A = Math.PI * D * D / 4;
+  const v = m_flow / (rho * A);
+
+  const P1 = getPressure1();      // reuse atmospheric toggle logic
+  const Pv = parseFloat(document.getElementById("vaporPressure").value);
+
+  const elevationValue = parseFloat(
+    document.getElementById("elevationValue").value
+  );
+
+  const elevationSign =
+    document.getElementById("relativeElevation").value === "above"
+      ? 1
+      : -1;
+
+  const z = elevationSign * elevationValue;
+
+  // =========================
+  // 2️⃣ FRICTION (REUSED)
+  // =========================
+
+  const Re = rho * v * D / mu;
+
+  const Ktotal =
+      K_pipe(Re, D, L)
+    + K_entrance()
+    + getTotalFittingsK();
+
+  const hf = Ktotal * (v * v) / (2 * g);
+
+  // =========================
+  // 3️⃣ HEAD TERMS
+  // =========================
+
+  const ha  = P1 / (rho * g);
+  const hvp = Pv / (rho * g);
+
+  // =========================
+  // 4️⃣ NPSHa
+  // =========================
+  // NPSHa = ha + z - hf - hvp
+
+  const NPSHa = ha + z - hf - hvp;
+
+  // =========================
+  // 5️⃣ DISPLAY
+  // =========================
+
+  document.getElementById("npshValue").textContent =
+    NPSHa.toFixed(3);
+
+  updateHydraulicTable({
+    velocity: v,
+    reynolds: Re,
+    frictionLoss: hf,
+    vaporHead: hvp
+  });
+
+  document.getElementById("npshResultBlock")
+    .classList.remove("hidden");
+
+
+function updateHydraulicTable(data) {
+
+  document.getElementById("suctionVelocity").textContent =
+    data.velocity.toFixed(3);
+
+  document.getElementById("reynoldsNumber").textContent =
+    data.reynolds.toExponential(3);
+
+  document.getElementById("suctionFriction").textContent =
+    data.frictionLoss.toFixed(3);
+
+  document.getElementById("vaporHead").textContent =
+    data.vaporHead.toFixed(3);
+}
+
+<tr>
+  <td>Suction velocity</td>
+  <td id="suctionVelocity"></td>
+</tr>
+<tr>
+  <td>Reynolds number</td>
+  <td id="reynoldsNumber"></td>
+</tr>
+<tr>
+  <td>Suction line friction loss (m)</td>
+  <td id="suctionFriction"></td>
+</tr>
+<tr>
+  <td>Vapor pressure head (m)</td>
+  <td id="vaporHead"></td>
+</tr>
+
+}
+
+
+    
 /* ===============================
        Optimization Algorithm
     =============================== */
