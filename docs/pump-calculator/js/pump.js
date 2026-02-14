@@ -24,7 +24,7 @@ import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
-if (economicSection) economicSection.style.display = "none";
+if (economicSection) economicSection.classList.add("hidden");
 document.addEventListener("DOMContentLoaded", () => {
 
 /* ===============================
@@ -89,14 +89,14 @@ document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
   document.getElementById("powerCard")
-  .style.display = "flex";
+  .classList.remove("hidden");
 
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
     economicSection.disabled = true;
-  if (economicSection) economicSection.style.display = "none";
+  if (economicSection) economicSection.classList.add("hidden");
   if (tankInputs)
-    tankInputs.style.display = "none";
+    tankInputs.classList.add("hidden");
 
   if (elevationRelationSelect)
     elevationRelationSelect.disabled = false;
@@ -117,14 +117,17 @@ document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
 document.getElementById("elevationCard")
-  .style.display = "flex";
+  .classList.add("hidden");
+
+  document.getElementById("powerCard")
+  .classList.add("hidden")
   
    elevationGroup?.classList.add("hidden");
 
 
   if (flowSection) flowSection.style.display = "";
-  if (tankInputs) tankInputs.style.display = "none";
-  if (economicSection) economicSection.style.display = "none";
+  if (tankInputs) tankInputs.classList.add("hidden");
+  if (economicSection) economicSection.classList.add("hidden");
 
   if (elevationRelationSelect) {
     elevationRelationSelect.value = "above";
@@ -153,7 +156,7 @@ else if (mode === "optimize") {
   ?.classList.add("hidden");
 
 document.getElementById("powerCard")
-  .style.display = "none";
+  .classList.add("hidden");
   
   elevationGroup?.classList.remove("hidden");
 
@@ -161,7 +164,7 @@ document.getElementById("powerCard")
   if (economicSection)
     economicSection.style.display = "";
   if (tankInputs)
-    tankInputs.style.display = "none";
+    tankInputs.classList.add("hidden");
 
   if (elevationRelationSelect)
     elevationRelationSelect.disabled = false;
@@ -185,20 +188,21 @@ document.getElementById("powerCard")
 
     // Toggle pipe diameter inputs
     if (mode === "optimize") {
-      steelOptions.style.display = "none";
-      customField.style.display = "none";
+      steelOptions.classList.add("hidden");
+      customField.classList.add("hidden");
 
       // ✅ Update button label
-      calculateBtn.textContent = "Optimize Pipe Size";
+      //calculateBtn.textContent = "Optimize Pipe Size";
 
     } else if (mode === "power") {
       steelOptions.style.display = "";
 
       // ✅ Restore button label
-      calculateBtn.textContent = "Calculate Pump Power";
+      //calculateBtn.textContent = "Calculate Pump Power";
 
     } else {
-      calculateBtn.textContent = "Calculate Required Elevation";
+      //calculateBtn.textContent = "Calculate Required Elevation";
+      steelOptions.style.display = "";
     }
 
   });
@@ -224,7 +228,7 @@ function displayEconomicOptimization(results, optimum) {
 
   // Hide theoretical pump power card
 document.getElementById("powerCard")
-  .style.display = "none";
+  .classList.add("hidden");
 
   document.getElementById("results")
     .classList.remove("hidden");
@@ -234,7 +238,7 @@ document.getElementById("powerCard")
 
   // Hide theoretical pump power card
   document.getElementById("powerCard")
-    .style.display = "none";
+    .classList.add("hidden");
 
   // Display optimum
   document.getElementById("optimumDiameter")
@@ -684,7 +688,7 @@ const F_exit =
 
   // Hide pump power
 document.getElementById("powerCard")
-  .style.display = "none";
+  .classList.add("hidden");
 
   // Hide optimization
 document.getElementById("optimumBlock")
@@ -692,7 +696,8 @@ document.getElementById("optimumBlock")
 
   // Show elevation card
 
-elevationCard.classList.remove("hidden");
+document.getElementById("elevationCard")
+  ?.classList.remove("hidden");
 
 // Display required elevation
 document.getElementById("requiredElevationValue")
@@ -1033,7 +1038,7 @@ document.getElementById("optimumBlock")
       .classList.remove("hidden");
 
     document.getElementById("powerCard")
-  .style.display = "flex";
+  .classList.remove("hidden");
 
 
   // Ws is already in kW
@@ -1047,7 +1052,6 @@ document
   .textContent =
   pumpPowerKW.toFixed(3);
 
-document
   document.getElementById("pumpPowerHP").textContent =
   pumpPowerHP.toFixed(2);
 
