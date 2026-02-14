@@ -521,7 +521,7 @@ function determineMassFlow(rho) {
 /* ===============================
        Calculate NPSH
     =============================== */
-export function runNPSHMode() {
+  function runNPSHMode() {
 
   const g = 9.81;
 
