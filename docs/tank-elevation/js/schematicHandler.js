@@ -1,10 +1,8 @@
 // schematicHandler.js
 
-const relationSelect =
-  document.getElementById("elevationRelation");
+const relationSelect = "above";
 
-const referenceSelect =
-  document.getElementById("elevationReference");
+const referenceSelect = "pipe";
 
 const container =
   document.getElementById("schematicContainer");
