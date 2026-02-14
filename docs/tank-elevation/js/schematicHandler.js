@@ -1,8 +1,10 @@
 // schematicHandler.js
 
-//const relationSelect = "above";
+const relationSelect =
+  document.getElementById("elevationRelation");
 
-//const referenceSelect = "pipe";
+const referenceSelect =
+  document.getElementById("elevationReference");
 
 const container =
   document.getElementById("schematicContainer");
@@ -13,8 +15,8 @@ const container =
 
 function updateSchematic() {
 
-  const relation = "above";
-  const reference = "pipe";
+  const relation = relationSelect.value;
+  const reference = referenceSelect.value;
 
   container.innerHTML = generateSVG(relation, reference);
 }
@@ -162,4 +164,3 @@ function generateSVG(relation, reference) {
 </svg>
 `;
 }
-
