@@ -39,20 +39,22 @@ tabs.forEach(tab => {
     tabs.forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
 
-   const mode = tab.dataset.mode;
+    const mode = tab.dataset.mode;
 
-    //const mode = "elevation";
 /* ===============================
    MODE-SPECIFIC UI CONTROL
 =============================== */
 
  /* ===== Elevation MODE ===== */ 
-if (mode === "elevation") {
+ if (mode === "elevation") {
 
   calculateBtn.textContent =
     "Calculate Required Elevation";
 }
-  }
+
+
+  });
+});
 
   /* ===============================
      Toggle Energy Balance Terms and Hydraulic Parameters
@@ -404,6 +406,8 @@ hydraulicTable.innerHTML = `
     <td>m</td>
   </tr>
 `;
+
+
 }
 
 
