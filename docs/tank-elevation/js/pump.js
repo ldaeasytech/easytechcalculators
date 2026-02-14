@@ -52,7 +52,7 @@ if (mode === "elevation") {
   calculateBtn.textContent =
     "Calculate Required Elevation";
 }
-
+  }
 
   /* ===============================
      Toggle Energy Balance Terms and Hydraulic Parameters
@@ -404,8 +404,6 @@ hydraulicTable.innerHTML = `
     <td>m</td>
   </tr>
 `;
-
-
 }
 
 
