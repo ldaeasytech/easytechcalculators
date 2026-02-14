@@ -70,7 +70,7 @@ const deltaZInput =
   document.getElementById("deltaZ");
 
 const steelOptions =
-  document.getElementById("steelOptions");
+  document.querySelector("#steelOptions");;
 
 const powerCard =
   document.getElementById("powerCard");
@@ -163,9 +163,6 @@ else if (mode === "optimize") {
   document.getElementById("optimumBlock")
   ?.classList.remove("hidden");
 
-document.getElementById("steelOptions")
-  ?.classList.add("hidden");
-
   document.getElementById("elevationResult")
   ?.classList.add("hidden");
 
@@ -173,7 +170,8 @@ document.getElementById("steelOptions")
   ?.classList.add("hidden");
   
   elevationGroup?.classList.remove("hidden");
-
+  steelOptions?.classList.add("hidden");
+  
   if (flowSection) flowSection.style.display = "";
   if (economicSection)
     economicSection.style.display = "";
