@@ -53,7 +53,10 @@ const economicSection =
   document.getElementById("economicSection");
 
 const tankInputs =
-  document.getElementById("tankInputs");
+  document.getElementById("tankInputs");'
+  
+const elevationGroup =
+  document.querySelector(".elevation-group");
 
 const elevationRelationSelect =
   document.getElementById("elevationRelation");
@@ -102,8 +105,7 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
-  document.getElementById("elevation-group")
-  ?.classList.add("hidden");
+   elevationGroup?.classList.add("hidden");
 
   if (flowSection) flowSection.style.display = "";
   if (tankInputs) tankInputs.style.display = "none";
