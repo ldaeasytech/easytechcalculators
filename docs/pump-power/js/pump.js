@@ -69,6 +69,9 @@ const elevationRefSelect =
 const deltaZInput =
   document.getElementById("deltaZ");
 
+const steelOptions =
+  document.querySelector("steelOptions");
+
 const powerCard =
   document.getElementById("powerCard");
 
