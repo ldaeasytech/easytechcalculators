@@ -14,6 +14,11 @@ import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
 import { PIPE_ID } from "./data/pipeInnerDiameter.js";
 
 import {
+  getElevationReference,
+  getSinkVelocity
+} from "./elevationHandler.js";
+
+import {
   getPipeDiameter,
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
@@ -100,6 +105,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const volValue = volInput.value;
     const volUnitValue = volUnit.value;
+
+    const elevationRelation =
+    document.getElementById("elevationRelation").value;
+
+    const elevationRef = getElevationReference();
+    const sinkVelocity = getSinkVelocity();
+      
 
     let m_flow;
 
