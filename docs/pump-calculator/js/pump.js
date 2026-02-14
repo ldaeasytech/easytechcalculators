@@ -431,10 +431,7 @@ document.getElementById("powerCard")
   runRequiredElevation();
   return;
 }
-    if (activeMode === "npsh") {
-  runNPSHMode();
-  return;
-}
+
   if (activeMode !== "power") {
     alert("This mode is under development.");
     return;
