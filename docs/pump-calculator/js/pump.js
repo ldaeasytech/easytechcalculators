@@ -116,7 +116,8 @@ else if (mode === "elevation") {
 document.getElementById("optimumBlock")
   ?.classList.add("hidden");
 
-   elevationGroup?.classList.remove("hidden");
+   elevationGroup?.classList.add("hidden");
+  elevationCard?.classList.remove("hidden");
 
   if (flowSection) flowSection.style.display = "";
   if (tankInputs) tankInputs.style.display = "none";
