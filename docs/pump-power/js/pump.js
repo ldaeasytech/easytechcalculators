@@ -392,6 +392,8 @@ document.getElementById("powerCard")
         ?.dataset.mode || "power";
 
     if (activeMode === "optimize") {
+
+      steelOptions?.classList.add("hidden")
   runOptimization();
   return;
   }
