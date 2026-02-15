@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Tank Elevation calculator</title>
+  <title>Tank Elevation Calculator</title>
 
   <meta name="description"
-    content="Tank Elevation calculator" />
+    content="Tank Elevation Calculator" />
 
   <link rel="stylesheet" href="pump-style.css" />
 
@@ -117,6 +117,50 @@
   </div>
 
 </div>
+
+      <!-- ELEVATION PROFILE -->
+      
+   <div class="input-group elevation-group">
+  <div class="group-title">Elevation Profile</div>
+
+  <div class="field">
+    <label for="deltaZ">Elevation Difference h (m)</label>
+    <input id="deltaZ" type="number" step="any" />
+  </div>
+
+  <div class="field">
+    <label for="elevationRelation">Relative Elevation</label>
+    <select id="elevationRelation">
+      <option value="above">Liquid source is ABOVE discharge</option>
+      <option value="below">Liquid source is BELOW discharge</option>
+    </select>
+  </div>
+
+     <div class="field">
+    <label for="elevationReference">Elevation Measured Between</label>
+    <select id="elevationReference">
+      <option value="pipe">
+        Source liquid surface and pipe outlet
+      </option>
+      <option value="sink">
+        Source liquid surface and sink liquid surface
+      </option>
+    </select>
+  </div>
+
+  <!-- 🔹 Velocity at discharge -->
+  <div class="field" id="sinkVelocityField" style="display:none;">
+    <label for="sinkVelocity">
+      Sink Liquid Velocity (m/s)
+    </label>
+    <input id="sinkVelocity" type="number" step="any" value="0" />
+    <div class="helper-text">
+      Only applicable when elevation is measured to sink surface.
+    </div>
+  </div>
+
+</div>
+
 
       <!-- PRESSURE PROFILE -->
       <div class="input-group">
@@ -260,8 +304,6 @@
 
     <div id="results" class="hidden">
 
-     <div class="result-highlight" id="powerCard">
-
 <div class="result-highlight" id="elevationResult">
   <div class="result-label">
     Required Tank Elevation
@@ -275,10 +317,7 @@
 
   </div>
 
-</div>
-
-</div>
-    
+      
       <div class="result-section">
         <h3 class="collapse-toggle">Energy Balance Terms</h3>
         <table class="results-clean" id="energyTable"></table>
