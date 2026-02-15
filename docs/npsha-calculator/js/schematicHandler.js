@@ -30,14 +30,12 @@ updateSchematic();
    SVG GENERATOR
 ============================ */
 
-function generateSVG(relation, reference) {
+function generateNPSHSVG(relation) {
 
   const isAbove = relation === "above";
 
-  const tankY = isAbove ? 40 : 150;
-  const pumpY = isAbove ? 190 : 130;
-  const dischargeY = 90;
-  const sinkY = dischargeY + 20;
+  const tankY = isAbove ? 40 : 170;
+  const pumpY = isAbove ? 200 : 90;
 
   return `
 <svg viewBox="0 0 820 360" width="100%" height="100%"
@@ -51,6 +49,7 @@ function generateSVG(relation, reference) {
 .head { fill:#60a5fa; font-size:14px; font-weight:600; }
 .pump-body { stroke:#facc15; stroke-width:4; fill:none; }
 .impeller { stroke:#facc15; stroke-width:2; fill:none; }
+.suction { fill:#9ecbff; font-size:12px; }
 </style>
 
 <defs>
@@ -59,7 +58,7 @@ function generateSVG(relation, reference) {
     <stop offset="100%" stop-color="#0ea5e9"/>
   </linearGradient>
 
-  <marker id="flowArrow"
+  <marker id="arrow"
           markerWidth="8"
           markerHeight="8"
           refX="6"
@@ -81,84 +80,64 @@ function generateSVG(relation, reference) {
 </defs>
 
 <!-- SOURCE TANK -->
-<rect x="40" y="${tankY}" width="130" height="120" class="tank"/>
-<rect x="40" y="${tankY + 60}" width="130" height="60" class="water"/>
-<text x="45" y="${tankY - 8}" class="label">Source</text>
-<text x="85" y="${tankY + 100}" class="label">v₁ = 0</text>
-<text x="85" y="${tankY + 50}" class="label">P₁</text>
+<rect x="60" y="${tankY}" width="150" height="120" class="tank"/>
+<rect x="60" y="${tankY + 60}" width="150" height="60" class="water"/>
+<text x="65" y="${tankY - 10}" class="label">Source Tank</text>
+<text x="105" y="${tankY + 50}" class="label">Pₐₜₘ</text>
 
 <!-- SUCTION PIPE -->
-<line x1="170" y1="${tankY + 80}"
-      x2="300" y2="${pumpY}"
+<line x1="210" y1="${tankY + 80}"
+      x2="400" y2="${pumpY}"
       class="pipe"/>
 
-<!-- PUMP -->
-<circle cx="330" cy="${pumpY}" r="28" class="pump-body"/>
-<circle cx="330" cy="${pumpY}" r="10" class="impeller"/>
-<line x1="330" y1="${pumpY-10}" x2="330" y2="${pumpY+10}" class="impeller"/>
-<line x1="320" y1="${pumpY}" x2="340" y2="${pumpY}" class="impeller"/>
-<line x1="358" y1="${pumpY}" x2="380" y2="${pumpY}" 
-      stroke="#facc15" stroke-width="4"/>
-
-<text x="330" y="${pumpY + 50}" text-anchor="middle" class="label">
-  Centrifugal Pump
+<text x="280"
+      y="${(tankY + pumpY)/2 - 10}"
+      class="suction">
+  Suction Line
 </text>
 
-<!-- DISCHARGE PIPE -->
-<line x1="380" y1="${pumpY}"
-      x2="600" y2="${dischargeY}"
-      class="pipe"/>
-
-<!-- FLOW DIRECTION ARROW (moved upward) -->
-<line x1="470" 
-      y1="${(pumpY + dischargeY)/2 - 25}"
-      x2="520" 
-      y2="${(pumpY + dischargeY)/2 - 25}"
+<!-- FLOW ARROW -->
+<line x1="290"
+      y1="${(tankY + pumpY)/2}"
+      x2="340"
+      y2="${(tankY + pumpY)/2}"
       stroke="#d1d5db"
       stroke-width="3"
-      marker-end="url(#flowArrow)"/>
+      marker-end="url(#arrow)"/>
 
-<text x="495"
-      y="${(pumpY + dischargeY)/2 - 35}"
+<!-- PUMP INLET -->
+<circle cx="430" cy="${pumpY}" r="28" class="pump-body"/>
+<circle cx="430" cy="${pumpY}" r="10" class="impeller"/>
+<line x1="430" y1="${pumpY-10}" x2="430" y2="${pumpY+10}" class="impeller"/>
+<line x1="420" y1="${pumpY}" x2="440" y2="${pumpY}" class="impeller"/>
+
+<text x="430"
+      y="${pumpY + 55}"
       text-anchor="middle"
       class="label">
-  Flow Direction
+  Pump Inlet
 </text>
 
-
-
-<!-- CLEAN NOZZLE (Reducer + Outlet) -->
-<polygon points="600,${dischargeY-10}
-                 630,${dischargeY}
-                 600,${dischargeY+10}"
-         fill="#d1d5db"/>
-
-<text x="590" y="${dischargeY - 18}" class="label">
-  Discharge
-</text>
-
-<text x="600" y="${dischargeY + 20}" class="label">
-  P₂
-</text>
-
-<!-- SINK TANK -->
-<rect x="660" y="${sinkY}" width="120" height="100" class="tank"/>
-<rect x="660" y="${sinkY + 50}" width="120" height="50" class="water"/>
-<text x="665" y="${sinkY - 8}" class="label">Sink</text>
-
-<!-- ELEVATION ARROW (shifted left so no intersection) -->
-<line x1="230"
+<!-- ELEVATION HEAD -->
+<line x1="260"
       y1="${tankY + 50}"
-      x2="230"
-      y2="${dischargeY - 20}"
+      x2="260"
+      y2="${pumpY}"
       stroke="#60a5fa"
       stroke-width="3"
       marker-end="url(#headArrow)"/>
 
-<text x="240"
-      y="${(tankY + dischargeY)/2}"
+<text x="270"
+      y="${(tankY + pumpY)/2}"
       class="head">
-  h
+  H_z
+</text>
+
+<!-- Vapor Pressure Label -->
+<text x="450"
+      y="${pumpY - 45}"
+      class="label">
+  Vapor Pressure (P_v)
 </text>
 
 </svg>
