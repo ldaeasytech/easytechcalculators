@@ -242,6 +242,12 @@ const deltaZInput =
        DISPLAY
     =============================== */
 
+      document.getElementById("results")
+  ?.classList.remove("hidden");
+
+      document.getElementById("elevationResult")
+  ?.classList.remove("hidden");
+
     document.getElementById("requiredElevationValue")
       .textContent = Math.abs(h).toFixed(4);
 
