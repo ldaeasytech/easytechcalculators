@@ -120,13 +120,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const sinkVelocity = getSinkVelocity();
 
     const P1_atm = document.getElementById("P1_atm")?.checked;
-    const P2_atm = document.getElementById("P2_atm")?.checked;
 
     const P1 = P1_atm ? 101325 :
       Number(document.getElementById("P1").value);
-
-    const P2 = P2_atm ? 101325 :
-      Number(document.getElementById("P2").value);
 
     /* ===============================
        2. Flow Conversion
@@ -248,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("results")
     .classList.remove("hidden");
 
-  document.getElementById("pumpPowerValue")
+  document.getElementById("NPSHa")
     .textContent = NPSHa.toFixed(3);
 
   document.querySelector(".power-unit")
