@@ -56,11 +56,6 @@ const deltaZInput =
 
  elevationGroup?.classList.add("hidden");
 
-
-  if (flowSection) flowSection.style.display = "";
-  if (tankInputs) tankInputs.classList.add("hidden");
-  if (economicSection) economicSection.classList.add("hidden");
-
   if (elevationRelationSelect) {
     elevationRelationSelect.value = "above";
     elevationRelationSelect.disabled = true;
