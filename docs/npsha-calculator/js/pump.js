@@ -103,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const mu  = Number(document.getElementById("mu").value) * 1e-6;
     const L   = Number(document.getElementById("pipeLength").value);
 
+    const Pv  = Number(document.getElementById("Pv").value);
+
     const massValue = massInput.value;
     const massUnitValue = massUnit.value;
 
@@ -182,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         : h_input;
 
     /* ===============================
-       5. Loss Coefficients
+       SUCTION LINE LOSSES
     =============================== */
 
     const Kpipe = K_pipe({ rho, mu, D, v: v_pipe, L, e });
@@ -192,8 +194,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const Ktotal =
       Kpipe +
       Kentrance +
-      K_exit +
       Kfittings;
+
+       const Hf =
+    totalFrictionLoss(v, Ktotal) / 9.81; // convert J/kg to meters
 
     /* ===============================
        6. Friction Loss
@@ -207,93 +211,71 @@ document.addEventListener("DOMContentLoaded", () => {
     const F_total =
       F_pipe +
       F_entrance +
-      F_exit +
       F_fittings;
 
     /* ===============================
-       7. Energy Balance
-    =============================== */
+     HEAD TERMS
+  =============================== */
 
-    const deltaKE =
-      (v2 * v2 - v1 * v1) / 2;
+  const Ha =
+    101325 / (rho * 9.81); // atmospheric head
 
-    const deltaPE =
-      9.81 * h;
+  const Hz =
+    elevationRelation === "above"
+      ? h_input
+      : -h_input;
 
-    const deltaPressure =
-      (P2 - P1) / rho;
+  const Hvp =
+    Pv / (rho * 9.81);
 
-    const result = pumpPower({
-      m_flow,
-      v1,
-      v2,
-      h,
-      P1,
-      P2,
-      rho,
-      F_total
-    });
+  const NPSHa =
+    Ha + Hz - Hf - Hvp;
 
-    /* ===============================
-       8. Display Results
-    =============================== */
+    * ===============================
+     Recommended NPSHr (Your Image Rule)
+  =============================== */
 
-    document.getElementById("results")
-      .classList.remove("hidden");
+  const NPSHr1 = NPSHa - 1.524; // 5 ft = 1.524 m
+  const NPSHr2 = NPSHa / 1.35;
 
-    document.getElementById("powerCard")
-      .classList.remove("hidden");
+  const recommendedNPSHr =
+    Math.min(NPSHr1, NPSHr2);
 
-    const pumpPowerKW = result.Ws;
-    const pumpPowerHP = pumpPowerKW * 1.341022;
+  /* ===============================
+     DISPLAY
+  =============================== */
 
-    document.getElementById("pumpPowerValue")
-      .textContent = pumpPowerKW.toFixed(3);
+  document.getElementById("results")
+    .classList.remove("hidden");
 
-    document.getElementById("pumpPowerHP")
-      .textContent = pumpPowerHP.toFixed(2);
+  document.getElementById("pumpPowerValue")
+    .textContent = NPSHa.toFixed(3);
 
-    /* ===============================
-       Reynolds Number
-    =============================== */
+  document.querySelector(".power-unit")
+    .textContent = "m";
 
-    const Re = (rho * v_pipe * D) / mu;
+  /* ===============================
+     ENERGY TABLE
+  =============================== */
 
-    let flowRegime;
-    if (Re < 2300) flowRegime = "Laminar";
-    else if (Re <= 4000) flowRegime = "Transitional";
-    else flowRegime = "Turbulent";
+  document.getElementById("energyTable").innerHTML = `
+    <tr><th>Term</th><th>Value</th><th>Unit</th></tr>
+    <tr><td>Atmospheric Head (Ha)</td><td>${Ha.toFixed(3)}</td><td>m</td></tr>
+    <tr><td>Static Head (Hz)</td><td>${Hz.toFixed(3)}</td><td>m</td></tr>
+    <tr><td>Friction Loss (Hf)</td><td>${Hf.toFixed(3)}</td><td>m</td></tr>
+    <tr><td>Vapor Pressure Head (Hvp)</td><td>${Hvp.toFixed(3)}</td><td>m</td></tr>
+    <tr><td><strong>NPSH Available</strong></td>
+        <td><strong>${NPSHa.toFixed(3)}</strong></td><td>m</td></tr>
+  `;
 
-    /* ===============================
-       Energy Table
-    =============================== */
-
-    document.getElementById("energyTable").innerHTML = `
-      <tr><th>Term</th><th>Value</th><th>Unit</th></tr>
-      <tr><td>Mass Flow Rate</td><td>${m_flow.toFixed(4)}</td><td>kg/s</td></tr>
-      <tr><td>Δ Kinetic Energy</td><td>${deltaKE.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td>Δ Potential Energy</td><td>${deltaPE.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td>Δ Pressure Energy</td><td>${deltaPressure.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td>Pipe Friction Loss</td><td>${F_pipe.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td>Entrance Loss</td><td>${F_entrance.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td>Exit Loss</td><td>${F_exit.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td>Fittings Loss</td><td>${F_fittings.toFixed(4)}</td><td>J/kg</td></tr>
-      <tr><td><strong>Total Friction Loss</strong></td>
-          <td><strong>${F_total.toFixed(4)}</strong></td><td>J/kg</td></tr>
-    `;
-
-    /* ===============================
-       Hydraulic Table
-    =============================== */
-
-    document.getElementById("hydraulicTable").innerHTML = `
-      <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
-      <tr><td>Pipe Diameter (D)</td><td>${D.toFixed(4)}</td><td>m</td></tr>
-      <tr><td>Pipe Velocity (v)</td><td>${v_pipe.toFixed(4)}</td><td>m/s</td></tr>
-      <tr><td>Reynolds Number</td><td>${Re.toExponential(3)}</td><td>—</td></tr>
-      <tr><td>Flow Regime</td><td>${flowRegime}</td><td>—</td></tr>
-      <tr><td>Total Loss Coefficient (ΣK)</td><td>${Ktotal.toFixed(4)}</td><td>—</td></tr>
-    `;
+  document.getElementById("hydraulicTable").innerHTML = `
+    <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
+    <tr><td>Velocity</td><td>${v.toFixed(3)}</td><td>m/s</td></tr>
+    <tr><td>Reynolds Number</td>
+        <td>${((rho * v * D)/mu).toExponential(3)}</td><td>—</td></tr>
+    <tr><td>Recommended NPSHr</td>
+        <td>${recommendedNPSHr.toFixed(3)}</td><td>m</td></tr>
+  `;
 
   });
 
