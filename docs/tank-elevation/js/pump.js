@@ -35,6 +35,47 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+ 
+   /* ===============================
+     Hide Elevation Group
+  =============================== */
+  const elevationResult =
+  document.getElementById("elevationResult");
+    
+const elevationGroup =
+  document.querySelector(".elevation-group");
+
+const elevationRelationSelect =
+  document.getElementById("elevationRelation");
+
+const elevationRefSelect =
+  document.getElementById("elevationReference");
+
+const deltaZInput =
+  document.getElementById("deltaZ");
+
+ elevationGroup?.classList.add("hidden");
+
+
+  if (flowSection) flowSection.style.display = "";
+  if (tankInputs) tankInputs.classList.add("hidden");
+  if (economicSection) economicSection.classList.add("hidden");
+
+  if (elevationRelationSelect) {
+    elevationRelationSelect.value = "above";
+    elevationRelationSelect.disabled = true;
+  }
+
+  if (elevationRefSelect) {
+    elevationRefSelect.value = "pipe";
+    elevationRefSelect.disabled = true;
+  }
+
+  if (deltaZInput) {
+    deltaZInput.disabled = true;
+    deltaZInput.value = "";
+  }
+
   /* ===============================
      Flow Mutual Disable
   =============================== */
