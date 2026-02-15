@@ -30,7 +30,7 @@ updateSchematic();
    SVG GENERATOR
 ============================ */
 
-function generateNPSHSVG(relation) {
+function generateSVG(relation) {
 
   const isAbove = relation === "above";
 
