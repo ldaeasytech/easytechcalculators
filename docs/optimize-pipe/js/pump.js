@@ -14,6 +14,11 @@ import { getTotalFittingsK } from "./fittingsHandler.js";
 import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
 
 import {
+  getElevationReference,
+  getSinkVelocity
+} from "./elevationHandler.js";
+
+import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
@@ -107,6 +112,15 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===============================
        6. VELOCITIES & EXIT LOSS
     =============================== */
+
+   const elevationRef =
+      getElevationReference();
+
+  const sinkVelocity =
+      getSinkVelocity();
+
+  const elevationRelation =
+      document.getElementById("elevationRelation").value;
 
     const v1 = 0;
 
