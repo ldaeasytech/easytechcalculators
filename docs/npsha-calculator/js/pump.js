@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("hydraulicTable").innerHTML = `
     <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
-    <tr><td>Velocity</td><td>${v.toFixed(3)}</td><td>m/s</td></tr>
+    <tr><td>Velocity</td><td>${v2.toFixed(3)}</td><td>m/s</td></tr>
     <tr><td>Reynolds Number</td>
         <td>${((rho * v * D)/mu).toExponential(3)}</td><td>—</td></tr>
     <tr><td>Recommended NPSHr</td>
