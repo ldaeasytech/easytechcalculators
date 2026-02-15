@@ -178,52 +178,58 @@ document.addEventListener("DOMContentLoaded", () => {
          Economic Model
       =============================== */
 
-      const annualEnergyCost =
-        powerKW *
-        operatingHours *
-        electricityRate;
+      // Annual energy cost
+    const annualEnergyCost =
+      powerKW *
+      operatingHours *
+      electricityRate;
 
-      const pipeCostPerMeter =
-        pipeCostIndex *
-        Math.pow(inch, 1.8);
+    // Pipe cost scaling (D^1.8)
+    const pipeCostPerMeter =
+      pipeCostIndex *
+      Math.pow(inch, 1.8);
 
-      const totalPipeCost =
-        pipeCostPerMeter * L;
+    const totalPipeCost =
+      pipeCostPerMeter * L;
 
-      const fittingCostPerUnit =
-        pipeCostIndex * 0.4 *
-        Math.pow(inch, 2);
+    // Fitting cost scaling (D^2)
+    const fittingCostPerUnit =
+      pipeCostIndex * 0.4 *
+      Math.pow(inch, 2);
 
-      const totalFittingCost =
-        fittingCostPerUnit *
-        totalFittings;
+    const totalFittingCost =
+      fittingCostPerUnit *
+      totalFittings;
 
-      const totalCapitalCost =
-        totalPipeCost +
-        totalFittingCost;
+    const totalCapitalCost =
+      totalPipeCost +
+      totalFittingCost;
 
-      const annualizedCapital =
-        totalCapitalCost / 10;
+    // Annualized over 10 years
+    const annualizedCapital =
+      totalCapitalCost / 10;
 
-      const totalAnnualCost =
-        annualEnergyCost +
-        annualizedCapital;
+    const totalAnnualCost =
+      annualEnergyCost +
+      annualizedCapital;
 
-      results.push({
-        inch,
-        powerKW,
-        annualEnergyCost,
-        annualizedCapital,
-        totalAnnualCost
-      });
-    }
+    results.push({
+      inch,
+      D,
+      powerKW,
+      annualEnergyCost,
+      annualizedCapital,
+      totalAnnualCost
+    });
+  }
+
 
     const optimum =
       results.reduce((min, r) =>
         r.totalAnnualCost < min.totalAnnualCost ? r : min
       );
 
-    displayOptimization(results, optimum);
+    displayEconomicOptimization(results, optimum);
   });
 
   /* ===============================
@@ -233,10 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
 function displayEconomicOptimization(results, optimum) {
 
     let optChartInstance = null;
-
-  // Hide theoretical pump power card
-document.getElementById("powerCard")
-  .classList.add("hidden");
 
   document.getElementById("results")
     .classList.remove("hidden");
