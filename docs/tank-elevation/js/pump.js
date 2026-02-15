@@ -85,9 +85,6 @@ const deltaZInput =
   const volInput  = document.getElementById("volFlow");
   const volUnit   = document.getElementById("volFlowUnit");
 
-  const elevationGroup =
-  document.querySelector(".elevation-group");
-
   function updateFlowState() {
     const hasMass = massInput.value.trim() !== "";
     const hasVol  = volInput.value.trim() !== "";
