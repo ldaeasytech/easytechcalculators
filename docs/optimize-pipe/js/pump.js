@@ -109,37 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ? 101325
       : Number(document.getElementById("P2").value);
 
-    /* ===============================
-       6. VELOCITIES & EXIT LOSS
-    =============================== */
-
-   const elevationRef =
-      getElevationReference();
-
-  const sinkVelocity =
-      getSinkVelocity();
-
-  const elevationRelation =
-      document.getElementById("elevationRelation").value;
-
-    const v1 = 0;
-
-    let v2 = 0;
-    let K_exit = 0;
-
-    if (elevationRef === "pipe") {
-      v2 = v_pipe;
-      K_exit = 0;
-    } else {
-      v2 = sinkVelocity || 0;
-      K_exit = 1;
-    }
-
-    const h =
-      elevationRelation === "above"
-        ? -h_input
-        : h_input;
-
   /* ===============================
      Optimization Logic
   =============================== */
@@ -208,13 +177,44 @@ document.addEventListener("DOMContentLoaded", () => {
       const A = Math.PI * D * D / 4;
       const v = m_flow / (rho * A);
 
+      /* ===============================
+       6. VELOCITIES & EXIT LOSS
+    =============================== */
+
+   const elevationRef =
+      getElevationReference();
+
+  const sinkVelocity =
+      getSinkVelocity();
+
+  const elevationRelation =
+      document.getElementById("elevationRelation").value;
+
+    const v1 = 0;
+
+    let v2 = 0;
+    let K_exit = 0;
+
+    if (elevationRef === "pipe") {
+      v2 = v;
+      K_exit = 0;
+    } else {
+      v2 = sinkVelocity || 0;
+      K_exit = 1;
+    }
+
+    const h =
+      elevationRelation === "above"
+        ? -h_input
+        : h_input;
+
       const Kpipe = K_pipe({ rho, mu, D, v, L, e });
 
       const Ktotal =
         Kpipe +
         K_entrance({ fromTank: true }) +
         getTotalFittingsK() +
-        1;
+        K_exit;
 
       const F_total = totalFrictionLoss(v, Ktotal);
 
