@@ -193,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       Kfittings;
 
        const Hf =
-    totalFrictionLoss(v, Ktotal) / 9.81; // convert J/kg to meters
+    totalFrictionLoss(v2, Ktotal) / 9.81; // convert J/kg to meters
 
     /* ===============================
        6. Friction Loss
