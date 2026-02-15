@@ -230,68 +230,121 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
      Display Optimization
   =============================== */
+  let optChartInstance = null;
 
-  function displayOptimization(results, optimum) {
+function displayEconomicOptimization(results, optimum) {
 
-    document.getElementById("results")
-      .classList.remove("hidden");
+  // Hide theoretical pump power card
+document.getElementById("powerCard")
+  .classList.add("hidden");
 
-    document.getElementById("powerCard")
-      ?.classList.add("hidden");
+  document.getElementById("results")
+    .classList.remove("hidden");
 
-    document.getElementById("elevationResult")
-      ?.classList.add("hidden");
+  document.getElementById("optimumBlock")
+    .classList.remove("hidden");
 
-    document.getElementById("optimumBlock")
-      ?.classList.remove("hidden");
-
-    document.getElementById("optimumDiameter")
-      .innerHTML = `
+  // Display optimum
+  document.getElementById("optimumDiameter")
+  .innerHTML = `
+    <div class="optimum-container">
+      <div class="optimum-label">
+        OPTIMUM PIPE SIZE
+      </div>
+      <div class="optimum-value">
         ${optimum.inch} in
-        <br>
-        <small>
+      </div>
+      <div class="optimum-power">
         Pump Power: ${optimum.powerKW.toFixed(3)} kW
-        </small>
-      `;
+        (${(optimum.powerKW * 1.341022).toFixed(2)} hp)
+      </div>
+    </div>
+  `;
+  const optimumIndex =
+    results.findIndex(r => r.inch === optimum.inch);
 
-    const ctx =
-      document.getElementById("optChart").getContext("2d");
+  const start =
+    Math.max(0, optimumIndex - 2);
 
-    if (optChartInstance) {
-      optChartInstance.destroy();
-    }
+  const end =
+    Math.min(results.length, optimumIndex + 3);
 
-    optChartInstance = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: results.map(r => r.inch),
-        datasets: [
-          {
-            label: "Total Annual Cost ($)",
-            data: results.map(r => r.totalAnnualCost),
-            borderWidth: 3,
-            fill: false
-          }
-        ]
+  const sliced =
+    results.slice(start, end);
+
+  const ctx =
+    document.getElementById("optChart").getContext("2d");
+
+  if (optChartInstance) {
+    optChartInstance.destroy();
+  }
+
+  optChartInstance = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: sliced.map(r => r.inch),
+      datasets: [
+  {
+    label: "Annual Energy Cost ($)",
+    data: sliced.map(r => r.annualEnergyCost),
+    borderWidth: 2,
+    fill: false,
+    borderColor: "#4da6ff",
+    pointRadius: 4
+  },
+  {
+    label: "Annualized Capital Cost ($)",
+    data: sliced.map(r => r.annualizedCapital),
+    borderWidth: 2,
+    fill: false,
+    borderColor: "#ff4d88",
+    pointRadius: 4
+  },
+  {
+    label: "Total Annual Cost ($)",
+    data: sliced.map(r => r.totalAnnualCost),
+    borderWidth: 3,
+    fill: false,
+    borderColor: "#ffaa00",
+    pointRadius: sliced.map(r =>
+      r.inch === optimum.inch ? 8 : 4
+    ),
+    pointBackgroundColor: sliced.map(r =>
+      r.inch === optimum.inch ? "#ffcc00" : "#ffaa00"
+    )
+  }
+]
+
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: { color: "#ffffff" }
+        }
       },
-      options: {
-        responsive: true,
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: "Nominal Pipe Diameter (inches)"
-            }
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Nominal Pipe Diameter (inches)",
+            color: "#ffffff"
           },
-          y: {
-            title: {
-              display: true,
-              text: "Total Annual Cost ($)"
-            }
-          }
+          ticks: { color: "#ffffff" }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Total Annual Cost ($)",
+            color: "#ffffff"
+          },
+          ticks: { color: "#ffffff" },
+          suggestedMin: 0
         }
       }
-    });
-  }
+    }
+  });
+}
+  
 
 });
