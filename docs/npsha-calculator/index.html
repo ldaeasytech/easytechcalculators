@@ -136,13 +136,27 @@
     </select>
   </div>
 
-     <div class="field">
+    <div class="field">
     <label for="elevationReference">Elevation Measured Between</label>
     <select id="elevationReference">
       <option value="pipe">
         Source liquid surface and pump's inlet
       </option>
+      <option value="sink">
+        
+      </option>
     </select>
+  </div>
+
+  <!-- 🔹 Velocity at discharge -->
+  <div class="field" id="sinkVelocityField" style="display:none;">
+    <label for="sinkVelocity">
+      Sink Liquid Velocity (m/s)
+    </label>
+    <input id="sinkVelocity" type="number" step="any" value="0" />
+    <div class="helper-text">
+      Only applicable when elevation is measured to sink surface.
+    </div>
   </div>
 
 </div>
