@@ -230,8 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
      Display Optimization
   =============================== */
-  let optChartInstance = null;
-
+  
 function displayEconomicOptimization(results, optimum) {
 
   // Hide theoretical pump power card
