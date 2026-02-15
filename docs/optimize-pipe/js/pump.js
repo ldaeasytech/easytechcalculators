@@ -19,6 +19,8 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+     const h_input =
+      Number(document.getElementById("deltaZ").value);
 
 //Hide Pipe Diameter and Schedule number
     const steelOptions =
@@ -83,6 +85,46 @@ document.addEventListener("DOMContentLoaded", () => {
       default: return 0;
     }
   }
+
+   /* ===============================
+       3. PRESSURE (ATM TOGGLE SUPPORT)
+    =============================== */
+
+    const P1_atm =
+      document.getElementById("P1_atm")?.checked;
+
+    const P2_atm =
+      document.getElementById("P2_atm")?.checked;
+
+    const P1 = P1_atm
+      ? 101325
+      : Number(document.getElementById("P1").value);
+
+    const P2 = P2_atm
+      ? 101325
+      : Number(document.getElementById("P2").value);
+
+    /* ===============================
+       6. VELOCITIES & EXIT LOSS
+    =============================== */
+
+    const v1 = 0;
+
+    let v2 = 0;
+    let K_exit = 0;
+
+    if (elevationRef === "pipe") {
+      v2 = v_pipe;
+      K_exit = 0;
+    } else {
+      v2 = sinkVelocity || 0;
+      K_exit = 1;
+    }
+
+    const h =
+      elevationRelation === "above"
+        ? -h_input
+        : h_input;
 
   /* ===============================
      Optimization Logic
@@ -165,11 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const powerKW =
         pumpPower({
           m_flow,
-          v1: 0,
-          v2: v,
-          h: 0,
-          P1: 101325,
-          P2: 101325,
+          v1,
+          v2,
+          h,
+          P1,
+          P2,
           rho,
           F_total
         }).Ws;
