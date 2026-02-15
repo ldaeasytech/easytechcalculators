@@ -19,7 +19,6 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  let optChartInstance = null;
 
 //Hide Pipe Diameter and Schedule number
     const steelOptions =
@@ -232,6 +231,8 @@ document.addEventListener("DOMContentLoaded", () => {
   =============================== */
   
 function displayEconomicOptimization(results, optimum) {
+
+    let optChartInstance = null;
 
   // Hide theoretical pump power card
 document.getElementById("powerCard")
