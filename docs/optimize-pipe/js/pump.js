@@ -269,14 +269,28 @@ document.addEventListener("DOMContentLoaded", () => {
       annualEnergyCost +
       annualizedCapital;
 
-    results.push({
-      inch,
-      D,
-      powerKW,
-      annualEnergyCost,
-      annualizedCapital,
-      totalAnnualCost
-    });
+  const Re = (rho * v * D) / mu;
+
+let flowRegime;
+if (Re < 2300) flowRegime = "Laminar";
+else if (Re <= 4000) flowRegime = "Transitional";
+else flowRegime = "Turbulent";
+
+results.push({
+  inch,
+  D,
+  v,
+  Re,
+  flowRegime,
+  Kpipe,
+  Ktotal,
+  F_total,
+  powerKW,
+  annualEnergyCost,
+  annualizedCapital,
+  totalAnnualCost
+});
+
   }
 
 
@@ -286,6 +300,8 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     displayEconomicOptimization(results, optimum);
+    displayOptimumTables(optimum, rho, mu);
+
   });
 
   /* ===============================
@@ -404,105 +420,70 @@ function displayEconomicOptimization(results, optimum) {
   });
 }
 
-    /* ===============================
-       ENERGY BALANCE TABLE
-    =============================== */
-    
-    const energyTable =
-      document.getElementById("energyTable");
-    
-    energyTable.innerHTML = `
-  <tr>
-    <th>Term</th>
-    <th>Value</th>
-    <th>Unit</th>
-  </tr>
-  <tr>
-    <td>Mass Flow Rate</td>
-    <td>${m_flow.toFixed(4)}</td>
-    <td>kg/s</td>
-  </tr>
-  <tr>
-    <td>Δ Kinetic Energy</td>
-    <td>${deltaKE.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td>Δ Potential Energy</td>
-    <td>${deltaPE.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td>Δ Pressure Energy</td>
-    <td>${deltaPressure.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td>Pipe Friction Loss</td>
-    <td>${F_pipe.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td>Entrance Loss</td>
-    <td>${F_entrance.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td>Exit Loss</td>
-    <td>${F_exit.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td>Fittings Loss</td>
-    <td>${F_fittings.toFixed(4)}</td>
-    <td>J/kg</td>
-  </tr>
-  <tr>
-    <td><strong>Total Friction Loss</strong></td>
-    <td><strong>${F_total.toFixed(4)}</strong></td>
-    <td>J/kg</td>
-  </tr>
-`;
+   function displayOptimumTables(optimum, rho, mu) {
 
-    /* ===============================
-       HYDRAULIC PARAMETERS TABLE
-    =============================== */
+  const energyTable =
+    document.getElementById("energyTable");
 
-    const hydraulicTable =
-      document.getElementById("hydraulicTable");
+  energyTable.innerHTML = `
+    <tr>
+      <th>Term</th>
+      <th>Value</th>
+      <th>Unit</th>
+    </tr>
+    <tr>
+      <td>Pipe Velocity</td>
+      <td>${optimum.v.toFixed(4)}</td>
+      <td>m/s</td>
+    </tr>
+    <tr>
+      <td>Total Head Loss</td>
+      <td>${optimum.F_total.toFixed(4)}</td>
+      <td>J/kg</td>
+    </tr>
+    <tr>
+      <td>Annual Energy Cost</td>
+      <td>${optimum.annualEnergyCost.toFixed(2)}</td>
+      <td>$</td>
+    </tr>
+    <tr>
+      <td>Annualized Capital Cost</td>
+      <td>${optimum.annualizedCapital.toFixed(2)}</td>
+      <td>$</td>
+    </tr>
+  `;
 
-    hydraulicTable.innerHTML = `
-  <tr>
-    <th>Parameter</th>
-    <th>Value</th>
-    <th>Unit</th>
-  </tr>
-  <tr>
-    <td>Pipe Diameter (D)</td>
-    <td>${D.toFixed(4)}</td>
-    <td>m</td>
-  </tr>
-  <tr>
-    <td>Pipe Velocity (v)</td>
-    <td>${v_pipe.toFixed(4)}</td>
-    <td>m/s</td>
-  </tr>
-  <tr>
-    <td>Reynolds Number</td>
-    <td>${Re.toExponential(3)}</td>
-    <td>—</td>
-  </tr>
-  <tr>
-    <td>Flow Regime</td>
-    <td>${flowRegime}</td>
-    <td>—</td>
-  </tr>
-  <tr>
-    <td>Total Loss Coefficient (ΣK)</td>
-    <td>${Ktotal.toFixed(4)}</td>
-    <td>—</td>
-  </tr>
-`;
- 
+  const hydraulicTable =
+    document.getElementById("hydraulicTable");
+
+  hydraulicTable.innerHTML = `
+    <tr>
+      <th>Parameter</th>
+      <th>Value</th>
+      <th>Unit</th>
+    </tr>
+    <tr>
+      <td>Optimum Diameter</td>
+      <td>${optimum.inch}</td>
+      <td>in</td>
+    </tr>
+    <tr>
+      <td>Reynolds Number</td>
+      <td>${optimum.Re.toExponential(3)}</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Flow Regime</td>
+      <td>${optimum.flowRegime}</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Total Loss Coefficient (ΣK)</td>
+      <td>${optimum.Ktotal.toFixed(4)}</td>
+      <td>—</td>
+    </tr>
+  `;
+}
+
 
 });
