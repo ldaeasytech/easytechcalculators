@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Pump power calculator</title>
+  <title>Optimum Pipe Calculator</title>
 
   <meta name="description"
-    content="Pump power calculator" />
+    content="Optimum Pipe Calculator" />
 
   <link rel="stylesheet" href="pump-style.css" />
 
@@ -52,7 +52,7 @@
         class="brand-logo"
       />
       <div class="brand-text">
-        <h1>Pump Power Calculator</h1>
+        <h1>Optimum Pipe Calculator</h1>
         <div class="capability-line">
           Mechanical Energy Balance · Pipe & Fitting Losses
         </div>
@@ -142,7 +142,7 @@
       <option value="pipe">
         Source liquid surface and pipe outlet
       </option>
-      <option value="surface">
+      <option value="sink">
         Source liquid surface and sink liquid surface
       </option>
     </select>
@@ -160,7 +160,6 @@
   </div>
 
 </div>
-
 
       <!-- PRESSURE PROFILE -->
       <div class="input-group">
@@ -220,6 +219,34 @@
     <input id="pipeLength" type="number" step="any" />
   </div>
 </div>
+
+<div class="input-group" id="economicSection">
+  <div class="group-title">Economic Parameters</div>
+
+
+  <div class="field">
+    <label for="electricityRate">
+      Electricity Cost ($/kWh)
+    </label>
+    <input id="electricityRate" type="number" step="any" value="0.12" />
+  </div>
+
+  <div class="field">
+    <label for="operatingHours">
+      Operating Hours per Year
+    </label>
+    <input id="operatingHours" type="number" step="any" value="8000" />
+  </div>
+
+  <div class="field">
+    <label for="pipeCostIndex">
+      Pipe Cost Index (Relative Multiplier)
+    </label>
+    <input id="pipeCostIndex" type="number" step="any" value="100" />
+  </div>
+</div>
+
+
 
       <!-- FLUID PROPERTIES -->
       <div class="input-group">
@@ -298,33 +325,25 @@
 
 </div>
 
+  <!--</section>
+
+
+  
   <!-- ================= RIGHT COLUMN – RESULTS ================= 
   <section class="card">-->
     <h2 class="results-title">Results</h2>
 
     <div id="results" class="hidden">
-
-     <div class="result-highlight" id="powerCard">
-
-  <div class="result-label">
-    Theoretical Pump Power
+          
+<div id="optimumBlock" class="hidden result-section">
+  <h3>Optimization Result</h3>
+  <div>
+    Optimum Inner Diameter:
+    <strong id="optimumDiameter">--</strong>
   </div>
-
-  <div class="power-display">
-
-    <div class="power-primary">
-      <span class="power-value" id="pumpPowerValue">--</span>
-      <span class="power-unit">kW</span>
-    </div>
-
-    <div class="power-secondary">
-      <span id="pumpPowerHP">--</span>
-      <span class="power-unit-secondary">hp</span>
-    </div>
-
-  </div>
+  <canvas id="optChart" style="margin-top:15px;"></canvas>
 </div>
-    
+
       <div class="result-section">
         <h3 class="collapse-toggle">Energy Balance Terms</h3>
         <table class="results-clean" id="energyTable"></table>
