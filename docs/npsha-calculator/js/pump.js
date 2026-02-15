@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const NPSHa =
     Ha + Hz - Hf - Hvp;
 
-    * ===============================
+    /* ===============================
      Recommended NPSHr (Your Image Rule)
   =============================== */
 
