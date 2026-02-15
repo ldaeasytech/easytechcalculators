@@ -22,16 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let optChartInstance = null;
 
 //Hide Pipe Diameter and Schedule number
-  const tabs = document.querySelectorAll(".tab");
-
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-
-    tabs.forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    const mode = tab.dataset.mode;
-
     const steelOptions =
       document.getElementById("steelOptions");
 
@@ -40,12 +30,6 @@ tabs.forEach(tab => {
 
       steelOptions.style.display = "none";
       customField.style.display = "none";
-    
-  });
-});
-
-
-
   
   /* ===============================
      Flow Mutual Disable
