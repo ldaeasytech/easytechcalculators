@@ -4,10 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>NPSH Calculator</title>
+  <title>NPSH Available Calculator | Prevent Pump Cavitation</title>
 
-  <meta name="description"
-    content="NPSH Calculator" />
+<meta name="description"
+  content="Free NPSH Available Calculator to prevent pump cavitation. Learn the difference between NPSH available and NPSH required, why NPSH is critical in pump design, and how to ensure NPSHa > NPSHr." />
+
+<link rel="canonical" href="https://easytechcalculators.com/npsh-available-calculator/" />
+
 
   <link rel="stylesheet" href="pump-style.css" />
 
@@ -26,6 +29,30 @@
 }
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+    "@type": "Question",
+    "name": "What is NPSH Available?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "NPSH Available is the total suction head at the pump inlet that prevents cavitation."
+    }
+  },
+  {
+    "@type": "Question",
+    "name": "What is the difference between NPSH Available and NPSH Required?",
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "NPSH Available is the system suction head, while NPSH Required is the minimum suction head specified by the pump manufacturer."
+    }
+  }]
+}
+</script>
+
+  
 <!-- Web App Manifest -->
 <link rel="manifest" href="/site.webmanifest">
 
@@ -52,9 +79,9 @@
         class="brand-logo"
       />
       <div class="brand-text">
-        <h1>NPSH Calculator</h1>
+        <h1>NPSH Available Calculator (NPSHa) – Prevent Pump Cavitation</h1>
         <div class="capability-line">
-          Mechanical Energy Balance · Pipe & Fitting Losses
+          Suction Head Analysis · Cavitation Prevention · Pump System Design
         </div>
       </div>
     </div>
@@ -326,6 +353,63 @@
   </section>
 
 </main>
+
+<section class="learning-section">
+  <h2>What is NPSH Available and NPSH Required?</h2>
+
+  <p>
+    Net Positive Suction Head (NPSH) is a critical parameter in pump system design.
+    <strong>NPSH Available (NPSHa)</strong> is the total suction head available at the pump inlet,
+    while <strong>NPSH Required (NPSHr)</strong> is the minimum suction head required by the pump
+    to avoid cavitation.
+  </p>
+
+  <p>
+    For safe pump operation:
+    <strong>NPSHa must always be greater than NPSHr.</strong>
+  </p>
+
+  <h2>Why is NPSH Important in Pumps?</h2>
+  <p>
+    Insufficient NPSH causes cavitation — the formation and collapse of vapor bubbles
+    inside the pump. This leads to vibration, noise, reduced efficiency, and severe
+    impeller damage.
+  </p>
+
+  <h2>What is Cavitation?</h2>
+  <p>
+    Cavitation occurs when the local pressure at the pump suction drops below
+    the vapor pressure of the liquid. Vapor bubbles form and violently collapse
+    as pressure recovers inside the impeller.
+  </p>
+
+  <ul>
+    <li>Impeller pitting</li>
+    <li>Loss of flow rate</li>
+    <li>Reduced pump head</li>
+    <li>Mechanical seal damage</li>
+    <li>Shortened pump lifespan</li>
+  </ul>
+
+  <h2>General Rule to Prevent Cavitation</h2>
+  <p>
+    Always maintain a safety margin:
+  </p>
+
+  <p><strong>NPSHa ≥ NPSHr + Safety Margin (typically 0.5 to 1 meter)</strong></p>
+
+  <p>
+    Increase NPSHa by:
+  </p>
+
+  <ul>
+    <li>Raising the liquid source level</li>
+    <li>Reducing suction pipe losses</li>
+    <li>Using larger suction pipe diameter</li>
+    <li>Lowering fluid temperature</li>
+  </ul>
+</section>
+
 
 <!-- Related Pump Calculators -->
 <section class="related-calculators">
