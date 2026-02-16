@@ -24,6 +24,11 @@ import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
+import "./pumpEfficiencyHandler.js";
+import { getEfficiencyDecimal }
+  from "./pumpEfficiencyHandler.js";
+
+
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ===============================
@@ -234,6 +239,14 @@ document.addEventListener("DOMContentLoaded", () => {
       F_total
     });
 
+const eta = getEfficiencyDecimal();
+
+let actualPower = null;
+
+if (eta && eta > 0) {
+  actualPower = result.Ws / eta;
+}
+
     /* ===============================
        8. Display Results
     =============================== */
@@ -293,6 +306,16 @@ document.addEventListener("DOMContentLoaded", () => {
       <tr><td>Reynolds Number</td><td>${Re.toExponential(3)}</td><td>—</td></tr>
       <tr><td>Flow Regime</td><td>${flowRegime}</td><td>—</td></tr>
       <tr><td>Total Loss Coefficient (ΣK)</td><td>${Ktotal.toFixed(4)}</td><td>—</td></tr>
+      <tr>
+      <td>Pump Efficiency</td>
+      <td>${(eta * 100).toFixed(1)}</td>
+      <td>%</td>
+    </tr>
+    <tr>
+      <td>Actual Power Required</td>
+      <td>${actualPower ? actualPower.toFixed(3) : "--"}</td>
+      <td>kW</td>
+    </tr>
     `;
 
   });
