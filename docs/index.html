@@ -233,19 +233,48 @@
 }
 
 /* ===============================
-   Brand Header
+   HERO HEADER
 ================================ */
 
-.brand-header {
+.hero-header {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  gap: 24px;
+  margin-bottom: 40px;
 }
 
-.brand-logo {
-  height: 60px;
+.hero-logo {
+  height: 85px;
   width: auto;
   object-fit: contain;
+}
+
+.hero-text h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  color: #ffffff;
+}
+
+.hero-text .subtitle {
+  margin-top: 8px;
+  max-width: 700px;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .hero-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-logo {
+    height: 70px;
+  }
+}
+
+.hero-logo {
+  height: 85px;
+  filter: drop-shadow(0 0 8px rgba(96,165,250,0.25));
 }
 
 
@@ -256,20 +285,23 @@
 <body>
   <main class="container">
 
-    <!-- BRAND HEADER -->
-<div class="brand-header">
-  <img src="logo-easytechcalculators.png"
-       alt="EasyTechCalculators engineering calculator logo"
-       class="brand-logo">
-</div>
+  <!-- ================= HERO HEADER ================= -->
+<div class="hero-header">
 
+  <img src="/docs/logo-easytechcalculators.png"
+       alt="EasyTech Calculators Logo"
+       class="hero-logo">
 
-    <!-- HEADER -->
+  <div class="hero-text">
     <h1>EasyTech Calculators</h1>
     <p class="subtitle">
       Practical engineering and technical calculators designed to make everyday
       calculations fast, reliable, and easy to use.
     </p>
+  </div>
+
+</div>
+
 
     <!-- ABOUT -->
     <h2>About EasyTech Calculators</h2>
