@@ -4,10 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Pump Actual Flow</title>
+ <title>Pump Operating Point Calculator | System & Pump Curve Intersection</title>
 
-  <meta name="description"
-    content="Pump Actual Flow" />
+<meta name="description"
+  content="Calculate the actual pump flow rate and operating head using pump and system curve intersection. Determine pump operating point and analyze performance." />
+
+<link rel="canonical" href="https://easytechcalculators.com/pump-operating-point-calculator/" />
+
 
   <link rel="stylesheet" href="pump-style.css" />
 
@@ -25,6 +28,30 @@
   "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
 }
 </script>
+
+  <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [{
+   "@type": "Question",
+   "name": "What is a pump operating point?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "The pump operating point is the intersection of the pump curve and the system curve where pump head equals required system head."
+   }
+ },
+ {
+   "@type": "Question",
+   "name": "What is a system curve?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "The system curve represents the required head versus flow rate in a piping system including static head and friction losses."
+   }
+ }]
+}
+</script>
+
 
 <!-- Web App Manifest -->
 <link rel="manifest" href="/site.webmanifest">
@@ -52,9 +79,9 @@
         class="brand-logo"
       />
       <div class="brand-text">
-        <h1>Pump Actual Flow</h1>
+        <h1>Pump Operating Point Calculator – System & Pump Curve Analysis</h1>
         <div class="capability-line">
-          Mechanical Energy Balance · Pipe & Fitting Losses
+          Pump Curve Analysis · System Curve Modeling · Operating Point Determination
         </div>
       </div>
     </div>
@@ -317,6 +344,88 @@
   </section>
 
 </main>
+
+<section class="learning-section">
+
+<h2>What is a System Curve?</h2>
+<p>
+The system curve represents the relationship between flow rate and required head
+in a piping system. It includes static head and friction losses.
+</p>
+
+<p>
+As flow rate increases, friction losses increase proportionally to velocity squared,
+causing the system curve to rise.
+</p>
+
+<h2>How is the System Curve Calculated?</h2>
+<p>
+Total system head is calculated as:
+</p>
+
+<p><strong>Total Head = Static Head + Friction Loss</strong></p>
+
+<p>
+Friction loss typically follows:
+</p>
+
+<p><strong>Head Loss ∝ Q²</strong></p>
+
+<p>
+Where Q is the volumetric flow rate.
+</p>
+
+<h2>What are Pump Characteristic Curves?</h2>
+<p>
+Pump characteristic curves describe how a pump performs at different flow rates.
+The primary curve shows Head vs Flow Rate.
+</p>
+
+<p>
+Each pump has unique curves depending on:
+</p>
+
+<ul>
+  <li>Impeller diameter</li>
+  <li>Rotational speed</li>
+  <li>Design geometry</li>
+  <li>Fluid properties</li>
+</ul>
+
+<h2>What Factors Affect Pump Curves?</h2>
+<ul>
+  <li>Impeller trimming</li>
+  <li>Speed changes (Affinity Laws)</li>
+  <li>Fluid viscosity</li>
+  <li>Wear and mechanical condition</li>
+</ul>
+
+<p>
+Changing speed shifts the curve according to pump affinity laws.
+</p>
+
+<h2>How is the Actual Operating Flow Rate Determined?</h2>
+<p>
+The actual operating point occurs at the intersection of:
+</p>
+
+<ul>
+  <li><strong>System Curve</strong></li>
+  <li><strong>Pump Curve</strong></li>
+</ul>
+
+<p>
+At this intersection:
+</p>
+
+<p><strong>Pump Head = System Required Head</strong></p>
+
+<p>
+This determines the real discharge flow rate and operating head of the pump.
+</p>
+
+</section>
+
 
 <!-- Related Pump Calculators -->
 <section class="related-calculators">
