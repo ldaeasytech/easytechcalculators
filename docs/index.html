@@ -277,7 +277,10 @@
   filter: drop-shadow(0 0 8px rgba(96,165,250,0.25));
 }
 
-
+.footer-copy {
+  font-size: 0.8rem;
+  color: #777;
+}
     
   </style>
 </head>
@@ -425,9 +428,17 @@
     </div>
 
     <!-- FOOTER -->
-    <footer>
-      © easytechcalculators
-    </footer>
+     <div class="footer-copy">
+      © <span id="year"></span> EasyTechCalculators. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 
   </main>
 </body>
