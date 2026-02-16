@@ -172,82 +172,111 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===============================
        AUTO PLOT CURVES
     =============================== */
+/* ===============================
+   AUTO PLOT CURVES (Focused View)
+=============================== */
 
-    const Qvals = [];
-    const pumpVals = [];
-    const systemVals = [];
+const Qvals = [];
+const pumpVals = [];
+const systemVals = [];
 
-    for (let Q = 0; Q <= Q_operating * 1.5; Q += Q_operating / 25) {
-      Qvals.push(Q);
-      pumpVals.push(pumpHead(Q));
-      systemVals.push(systemHead(Q));
-    }
+const Qmax = Q_operating * 1.5;
+const step = Qmax / 60;
 
-    const ctx =
-      document.getElementById("curveChart").getContext("2d");
+// Build full resolution curves
+for (let Q = 0; Q <= Qmax; Q += step) {
+  Qvals.push(Q);
+  pumpVals.push(pumpHead(Q));
+  systemVals.push(systemHead(Q));
+}
 
-    if (chartInstance) {
-      chartInstance.destroy();
-    }
+// Find closest index to operating point
+let closestIndex = 0;
+let minDiff = Infinity;
 
-    chartInstance = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: Qvals,
-        datasets: [
-          {
-            label: "Pump Curve",
-            data: pumpVals,
-            borderWidth: 3,
-            borderColor: "#4da6ff",
-            fill: false
-          },
-          {
-            label: "System Curve",
-            data: systemVals,
-            borderWidth: 3,
-            borderColor: "#ffaa00",
-            fill: false
-          },
-          {
-            label: "Operating Point",
-            data: [{
-              x: Q_operating,
-              y: H_operating
-            }],
-            type: "scatter",
-            backgroundColor: "#ffcc00",
-            pointRadius: 8
-          }
-        ]
+Qvals.forEach((Q, i) => {
+  const diff = Math.abs(Q - Q_operating);
+  if (diff < minDiff) {
+    minDiff = diff;
+    closestIndex = i;
+  }
+});
+
+// Slice only 3 before and 3 after
+const start = Math.max(0, closestIndex - 3);
+const end   = Math.min(Qvals.length, closestIndex + 4);
+
+const Qslice = Qvals.slice(start, end);
+const pumpSlice = pumpVals.slice(start, end);
+const systemSlice = systemVals.slice(start, end);
+
+const ctx =
+  document.getElementById("curveChart").getContext("2d");
+
+if (chartInstance) {
+  chartInstance.destroy();
+}
+
+chartInstance = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: Qslice.map(q => q.toFixed(4)),
+    datasets: [
+      {
+        label: "Pump Curve",
+        data: pumpSlice,
+        borderWidth: 3,
+        borderColor: "#4da6ff",
+        fill: false
       },
-      options: {
-        responsive: true,
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: "Flow Rate (m³/s)",
-              color: "#ffffff"
-            },
-            ticks: { color: "#ffffff" }
-          },
-          y: {
-            title: {
-              display: true,
-              text: "Head (m)",
-              color: "#ffffff"
-            },
-            ticks: { color: "#ffffff" }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: { color: "#ffffff" }
-          }
-        }
+      {
+        label: "System Curve",
+        data: systemSlice,
+        borderWidth: 3,
+        borderColor: "#ffaa00",
+        fill: false
+      },
+      {
+        label: "Operating Point",
+        type: "scatter",
+        data: [{
+          x: Q_operating.toFixed(4),
+          y: H_operating
+        }],
+        backgroundColor: "#ffcc00",
+        pointRadius: 8
       }
-    });
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { color: "#ffffff" }
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Flow Rate (m³/s)",
+          color: "#ffffff"
+        },
+        ticks: { color: "#ffffff" }
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Head (m)",
+          color: "#ffffff"
+        },
+        ticks: { color: "#ffffff" }
+      }
+    }
+  }
+});
+
+
 
   });
 
