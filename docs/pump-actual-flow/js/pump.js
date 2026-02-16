@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function solveIntersection(pumpHead, systemHead) {
 
     let Qmin = 0;
-    let Qmax = 5;
+    let Qmax = 50;
     const tol = 1e-6;
 
     function f(Q) {
