@@ -142,11 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("results")
       .classList.remove("hidden");
 
-    document.getElementById("pumpPowerValue")
+    document.getElementById("Q_operating")
       .textContent =
       Q_operating.toFixed(4);
 
-    document.getElementById("pumpPowerHP")
+    document.getElementById("H_operating")
       .textContent =
       H_operating.toFixed(3);
 
