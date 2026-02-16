@@ -30,10 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function solveIntersection(pumpHead, systemHead) {
 
   const tol = 1e-6;
-  const maxIter = 100;
+  const maxIter = 1000;
 
   let Q = 0;
-  let step = 0.05; // adaptive search step
+  let step = 0.01; // adaptive search step
   let Qprev = Q;
 
   function f(Q) {
@@ -87,6 +87,15 @@ function solveIntersection(pumpHead, systemHead) {
     const D   = getPipeDiameter(PIPE_ID);
     const A   = Math.PI * D * D / 4;
 
+    const P1_atm = document.getElementById("P1_atm")?.checked;
+    const P2_atm = document.getElementById("P2_atm")?.checked;
+
+    const P1 = P1_atm ? 101325 :
+      Number(document.getElementById("P1").value);
+
+    const P2 = P2_atm ? 101325 :
+      Number(document.getElementById("P2").value);
+
     const h_input =
       Number(document.getElementById("deltaZ").value);
 
@@ -117,9 +126,25 @@ function solveIntersection(pumpHead, systemHead) {
 
       const v = Q / A;
 
-      let K_exit = 0;
-      if (elevationRef !== "pipe")
-        K_exit = 1;
+       const v1 = 0;
+
+    let v2 = 0;
+    let K_exit = 0;
+
+    if (elevationRef === "pipe") {
+      v2 = v;
+      K_exit = 0;
+    } else {
+      v2 = sinkVelocity || 0;
+      K_exit = 1;
+    }
+
+    const h_KE = (v2*v2 - v1*v1)/(2*9.81);
+
+    const deltaPressure =
+      (P2 - P1) / rho;
+
+    const h_deltP = deltaPressure/9.81;
 
       const Kpipe =
         K_pipe({ rho, mu, D, v, L, e });
@@ -138,7 +163,7 @@ function solveIntersection(pumpHead, systemHead) {
           ? -h_input
           : h_input;
 
-      return staticHead + hf;
+      return staticHead + hf + h_KE + h_deltP;
     };
 
     let Q_operating;
