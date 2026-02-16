@@ -201,6 +201,38 @@
       color: #60a5fa;
     }  
 
+    /* ===============================
+   Highlight Section
+================================ */
+
+.highlight-section {
+  margin-top: 40px;
+  padding: 32px 28px;
+  background: #0f172a;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+}
+
+.highlight-title {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  color: #ffffff;
+  border-left: 4px solid #60a5fa;
+  padding-left: 12px;
+}
+
+/* Category blocks */
+.category-block {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: #93c5fd;
+}
+
+
     
   </style>
 </head>
@@ -223,8 +255,14 @@
       on clarity, correctness, and practical usefulness.
     </p>
 
-    <!-- CALCULATORS -->
-    <h2>Available Calculators</h2>
+    <!-- ================= AVAILABLE CALCULATORS ================= -->
+<section class="highlight-section">
+
+  <h2 class="highlight-title">Available Calculators</h2>
+
+  <!-- THERMODYNAMIC -->
+  <div class="category-block">
+    <h3 class="category-title">Thermodynamic Property Calculators</h3>
 
     <a class="calculator-card" href="water-properties/">
       <div class="calculator-title">
@@ -234,76 +272,64 @@
         Thermodynamic and transport properties from multiple input pairs
         (TP, Ph, Ps, Tx, Px).
       </div>
+      <div class="calculator-cta">Open calculator →</div>
+    </a>
+  </div>
 
-      <div class="calculator-cta">
-        Open calculator →
+  <!-- PUMP -->
+  <div class="category-block">
+    <h3 class="category-title">Pump & Fluid Flow Calculators</h3>
+
+    <a class="calculator-card" href="docs/pump-power-calculator/">
+      <div class="calculator-title">Pump Power Calculator</div>
+      <div class="calculator-desc">
+        Calculate theoretical and actual pump power including friction and elevation.
       </div>
+      <div class="calculator-cta">Open calculator →</div>
     </a>
 
+    <a class="calculator-card" href="docs/pump-operating-point-calculator/">
+      <div class="calculator-title">Pump Operating Point Calculator</div>
+      <div class="calculator-desc">
+        Determine operating flow rate using pump and system curve intersection.
+      </div>
+      <div class="calculator-cta">Open calculator →</div>
+    </a>
 
-    <!-- PUMP & FLUID FLOW CALCULATORS -->
-<h2>Pump & Fluid Flow Calculators</h2>
-<p>
-Comprehensive tools for pump design, hydraulic analysis, economic pipe sizing,
-gravity systems, and cavitation prevention.
-</p>
+    <a class="calculator-card" href="docs/optimum-pipe-diameter-calculator/">
+      <div class="calculator-title">Optimum Pipe Diameter Calculator</div>
+      <div class="calculator-desc">
+        Economic pipe sizing based on minimum annual cost.
+      </div>
+      <div class="calculator-cta">Open calculator →</div>
+    </a>
 
-<a class="calculator-card" href="docs/pump-power-calculator/">
-  <div class="calculator-title">
-    Pump Power Calculator
-  </div>
-  <div class="calculator-desc">
-    Calculate theoretical and actual pump power including friction, fittings,
-    elevation head, and pipe material effects.
-  </div>
-  <div class="calculator-cta">Open calculator →</div>
-</a>
+    <a class="calculator-card" href="docs/npsh-available-calculator/">
+      <div class="calculator-title">NPSH Available Calculator</div>
+      <div class="calculator-desc">
+        Evaluate suction head to prevent cavitation.
+      </div>
+      <div class="calculator-cta">Open calculator →</div>
+    </a>
 
-<a class="calculator-card" href="docs/pump-operating-point-calculator/">
-  <div class="calculator-title">
-    Pump Operating Point Calculator
-  </div>
-  <div class="calculator-desc">
-    Determine actual flow rate and operating head using system and pump curve intersection.
-  </div>
-  <div class="calculator-cta">Open calculator →</div>
-</a>
+    <a class="calculator-card" href="docs/tank-elevation-calculator/">
+      <div class="calculator-title">Tank Elevation Calculator</div>
+      <div class="calculator-desc">
+        Required tank height for gravity-driven flow systems.
+      </div>
+      <div class="calculator-cta">Open calculator →</div>
+    </a>
 
-<a class="calculator-card" href="docs/optimum-pipe-diameter-calculator/">
-  <div class="calculator-title">
-    Optimum Pipe Diameter Calculator
   </div>
-  <div class="calculator-desc">
-    Find the economic pipe size that minimizes total annual capital and operating cost.
-  </div>
-  <div class="calculator-cta">Open calculator →</div>
-</a>
-
-<a class="calculator-card" href="docs/npsh-available-calculator/">
-  <div class="calculator-title">
-    NPSH Available Calculator
-  </div>
-  <div class="calculator-desc">
-    Evaluate suction head and prevent cavitation by ensuring NPSHa exceeds NPSHr.
-  </div>
-  <div class="calculator-cta">Open calculator →</div>
-</a>
-
-<a class="calculator-card" href="docs/tank-elevation-calculator/">
-  <div class="calculator-title">
-    Tank Elevation Calculator
-  </div>
-  <div class="calculator-desc">
-    Calculate required tank height to achieve desired gravity flow rate.
-  </div>
-  <div class="calculator-cta">Open calculator →</div>
-</a>
-
 
     <p>
       Additional calculators covering common engineering and technical topics
       are currently in development.
     </p>
+  
+</section>
+
+    
 
     <!-- ADS NOTE -->
     <h2>About Advertisements</h2>
