@@ -260,10 +260,19 @@ if (eta && eta > 0) {
     const pumpPowerKW = result.Ws;
     const pumpPowerHP = pumpPowerKW * 1.341022;
 
+    const pumpPowerKW_actual = actualPower;
+    const pumpPowerHP_actual = pumpPowerKW_actual * 1.341022;
+
     document.getElementById("pumpPowerValue")
       .textContent = pumpPowerKW.toFixed(3);
 
     document.getElementById("pumpPowerHP")
+      .textContent = pumpPowerHP.toFixed(2);
+
+    document.getElementById("pumpPowerValue_actual")
+      .textContent = pumpPowerKW.toFixed(3);
+
+    document.getElementById("pumpPowerHP_actual")
       .textContent = pumpPowerHP.toFixed(2);
 
     /* ===============================
@@ -310,11 +319,6 @@ if (eta && eta > 0) {
       <td>Pump Efficiency</td>
       <td>${(eta * 100).toFixed(1)}</td>
       <td>%</td>
-    </tr>
-    <tr>
-      <td>Actual Power Required</td>
-      <td>${actualPower ? actualPower.toFixed(3) : "--"}</td>
-      <td>kW</td>
     </tr>
     `;
 
