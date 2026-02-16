@@ -127,10 +127,6 @@ function solveIntersection(pumpHead, systemHead) {
     return;
   }
 
-
-    const pumpHead = Q =>
-      Function("Q", `return ${pumpEq}`)(Q);
-
     const systemHead = Q => {
 
       const v = Q / A;
