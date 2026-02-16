@@ -111,34 +111,20 @@ function solveIntersection(pumpHead, systemHead) {
     const e =
       PIPE_ROUGHNESS[material];
 
-/* ===============================
-   Read Pump Characteristic Equation
-=============================== */
+  const pumpEq =
+      document.getElementById("pumpCurveEq").value;
 
-const pumpEq = document
-  .getElementById("pumpEquation")
-  .value
-  .trim();
+    if (!pumpEq) {
+      alert("Enter pump curve equation.");
+      return;
+    }
 
-if (!pumpEq) {
-  alert("Please enter pump characteristic equation.");
-  return;
-}
-    /* ===============================
-   Build Pump Head Function
-=============================== */
-  let cleanedEq = pumpEq
-    .replace(/\^/g, "**")   // convert power operator
-    .replace(/Q/g, "(Q)");  // ensure proper substitution
-  
-  let pumpHead;
-  
-  try {
-    pumpHead = new Function("Q", `return ${cleanedEq};`);
-  } catch (err) {
-    alert("Invalid pump equation.");
-    return;
-  }
+    /* ============================================
+       Pump Curve Function
+    ============================================ */
+
+    const pumpHead = Q =>
+      Function("Q", `return ${pumpEq}`)(Q);
 
     const systemHead = Q => {
 
