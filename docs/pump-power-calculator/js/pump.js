@@ -270,10 +270,10 @@ if (eta && eta > 0) {
       .textContent = pumpPowerHP.toFixed(2);
 
     document.getElementById("pumpPowerValue_actual")
-      .textContent = pumpPowerKW.toFixed(3);
+      .textContent = pumpPowerKW_actual.toFixed(3);
 
     document.getElementById("pumpPowerHP_actual")
-      .textContent = pumpPowerHP.toFixed(2);
+      .textContent = pumpPowerHP_actual.toFixed(2);
 
     /* ===============================
        Reynolds Number
