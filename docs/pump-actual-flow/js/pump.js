@@ -216,18 +216,15 @@ function solveIntersection(pumpHead, systemHead) {
       <tr><td>Flow Regime</td><td>${regime}</td><td>—</td></tr>
     `;
 
-    /* ===============================
-       AUTO PLOT CURVES
-    =============================== */
 /* ===============================
    AUTO PLOT CURVES (Focused View)
-=============================== */
+===============================
 
 const Qvals = [];
 const pumpVals = [];
 const systemVals = [];
 
-const Qmax = Q_operating * 1.5;
+const Qmax = Q_operating * 2;
 const step = Qmax / 60;
 
 // Build full resolution curves
@@ -320,10 +317,100 @@ chartInstance = new Chart(ctx, {
         ticks: { color: "#ffffff" }
       }
     }
+  } 
+});*/
+
+/* ===============================
+   AUTO PLOT CURVES (FULL RANGE)
+=============================== */
+
+// Build full Q range automatically
+const Qvals = [];
+const pumpVals = [];
+const systemVals = [];
+
+// Define a reasonable plotting range
+const QmaxPlot = Q_operating * 2 || 1;
+const stepPlot = QmaxPlot / 150;
+
+for (let Q = 0; Q <= QmaxPlot; Q += stepPlot) {
+  Qvals.push(Q);
+  pumpVals.push(pumpHead(Q));
+  systemVals.push(systemHead(Q));
+}
+
+const ctx =
+  document.getElementById("curveChart").getContext("2d");
+
+if (chartInstance) {
+  chartInstance.destroy();
+}
+
+chartInstance = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: Qvals,
+    datasets: [
+      {
+        label: "Pump Curve",
+        data: pumpVals,
+        borderWidth: 3,
+        borderColor: "#4da6ff",
+        fill: false,
+        pointRadius: 0,          // 🔹 remove markers
+        tension: 0.25
+      },
+      {
+        label: "System Curve",
+        data: systemVals,
+        borderWidth: 3,
+        borderColor: "#ffaa00",
+        fill: false,
+        pointRadius: 0,          // 🔹 remove markers
+        tension: 0.25
+      },
+      {
+        label: "Operating Point",
+        type: "scatter",
+        data: [{
+          x: Q_operating,
+          y: H_operating
+        }],
+        backgroundColor: "#ffcc00",
+        borderColor: "#ffffff",
+        borderWidth: 2,
+        pointRadius: 8
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        labels: { color: "#ffffff" }
+      }
+    },
+    scales: {
+      x: {
+        type: "linear",
+        title: {
+          display: true,
+          text: "Flow Rate (m³/s)",
+          color: "#ffffff"
+        },
+        ticks: { color: "#ffffff" }
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Head (m)",
+          color: "#ffffff"
+        },
+        ticks: { color: "#ffffff" }
+      }
+    }
   }
 });
-
-
 
   });
 
