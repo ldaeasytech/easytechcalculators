@@ -266,10 +266,32 @@
         </div>
       </div>
 
+      <!-- PUMP CHARACTERISTIC CURVE -->
+<div class="input-group">
+  <div class="group-title">Pump Characteristic Curve</div>
+
+  <div class="field">
+    <label for="pumpCurveEq">
+      Head Equation H(Q) in meters
+    </label>
+    <input
+      id="pumpCurveEq"
+      type="text"
+      placeholder="Example: 30 - 120*Q^2"
+    />
+  </div>
+
+  <div class="helper-text">
+    Enter equation using Q in m³/s. Example: 30 - 120*Q^2  
+    Q must be flow rate in m³/s.
+  </div>
+</div>
+
+      
       <!-- CALCULATE BUTTON -->
       <div class="form-actions">
         <button type="button" id="calculateBtn" class="primary">
-          Calculate Pump Power
+          Calculate Operating Point
         </button>
       </div>
 
