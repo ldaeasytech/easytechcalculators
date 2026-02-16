@@ -25,47 +25,36 @@ import {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ============================================
-     Numerical Solver (Bisection Method)
-  ============================================ */
+  let chartInstance = null;
 
   function solveIntersection(pumpHead, systemHead) {
 
     let Qmin = 0;
-    let Qmax = 5; // m³/s upper guess
+    let Qmax = 5;
     const tol = 1e-6;
-    const maxIter = 100;
 
     function f(Q) {
       return pumpHead(Q) - systemHead(Q);
     }
 
     if (f(Qmin) * f(Qmax) > 0) {
-      throw new Error("No intersection found in search range.");
+      throw new Error("No intersection found.");
     }
 
-    for (let i = 0; i < maxIter; i++) {
-
+    for (let i = 0; i < 100; i++) {
       const Qmid = (Qmin + Qmax) / 2;
       const fmid = f(Qmid);
 
-      if (Math.abs(fmid) < tol) {
-        return Qmid;
-      }
+      if (Math.abs(fmid) < tol) return Qmid;
 
-      if (f(Qmin) * fmid < 0) {
+      if (f(Qmin) * fmid < 0)
         Qmax = Qmid;
-      } else {
+      else
         Qmin = Qmid;
-      }
     }
 
     return (Qmin + Qmax) / 2;
   }
-
-  /* ============================================
-     CALCULATE BUTTON
-  ============================================ */
 
   document.getElementById("calculateBtn")
     .addEventListener("click", () => {
@@ -85,9 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const elevationRef =
       getElevationReference();
 
-    const sinkVelocity =
-      getSinkVelocity();
-
     const material =
       getPipeMaterial();
 
@@ -102,26 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    /* ============================================
-       Pump Curve Function
-    ============================================ */
-
     const pumpHead = Q =>
       Function("Q", `return ${pumpEq}`)(Q);
-
-    /* ============================================
-       System Curve Function
-    ============================================ */
 
     const systemHead = Q => {
 
       const v = Q / A;
 
       let K_exit = 0;
-
-      if (elevationRef !== "pipe") {
+      if (elevationRef !== "pipe")
         K_exit = 1;
-      }
 
       const Kpipe =
         K_pipe({ rho, mu, D, v, L, e });
@@ -143,17 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return staticHead + hf;
     };
 
-    /* ============================================
-       Solve Intersection
-    ============================================ */
-
     let Q_operating;
 
     try {
       Q_operating =
         solveIntersection(pumpHead, systemHead);
     } catch (err) {
-      alert("No intersection found. Adjust equation.");
+      alert("No intersection found.");
       return;
     }
 
@@ -163,14 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const v_pipe =
       Q_operating / A;
 
-    /* ============================================
-       Display Results
-    ============================================ */
+    /* ===============================
+       DISPLAY HIGHLIGHT
+    =============================== */
 
     document.getElementById("results")
-      .classList.remove("hidden");
-
-    document.getElementById("powerCard")
       .classList.remove("hidden");
 
     document.getElementById("pumpPowerValue")
@@ -181,31 +150,104 @@ document.addEventListener("DOMContentLoaded", () => {
       .textContent =
       H_operating.toFixed(3);
 
-    /* ============================================
-       Hydraulic Parameters
-    ============================================ */
+    /* ===============================
+       HYDRAULIC TABLE
+    =============================== */
 
     const Re =
       (rho * v_pipe * D) / mu;
 
-    let flowRegime;
-    if (Re < 2300) flowRegime = "Laminar";
-    else if (Re <= 4000) flowRegime = "Transitional";
-    else flowRegime = "Turbulent";
+    let regime;
+    if (Re < 2300) regime = "Laminar";
+    else if (Re <= 4000) regime = "Transitional";
+    else regime = "Turbulent";
 
     document.getElementById("hydraulicTable").innerHTML = `
       <tr><th>Parameter</th><th>Value</th><th>Unit</th></tr>
-      <tr><td>Operating Flow Rate (Q)</td>
-          <td>${Q_operating.toFixed(4)}</td><td>m³/s</td></tr>
-      <tr><td>Operating Head</td>
-          <td>${H_operating.toFixed(3)}</td><td>m</td></tr>
-      <tr><td>Velocity</td>
-          <td>${v_pipe.toFixed(4)}</td><td>m/s</td></tr>
-      <tr><td>Reynolds Number</td>
-          <td>${Re.toExponential(3)}</td><td>—</td></tr>
-      <tr><td>Flow Regime</td>
-          <td>${flowRegime}</td><td>—</td></tr>
+      <tr><td>Velocity</td><td>${v_pipe.toFixed(4)}</td><td>m/s</td></tr>
+      <tr><td>Reynolds Number</td><td>${Re.toExponential(3)}</td><td>—</td></tr>
+      <tr><td>Flow Regime</td><td>${regime}</td><td>—</td></tr>
     `;
+
+    /* ===============================
+       AUTO PLOT CURVES
+    =============================== */
+
+    const Qvals = [];
+    const pumpVals = [];
+    const systemVals = [];
+
+    for (let Q = 0; Q <= Q_operating * 1.5; Q += Q_operating / 25) {
+      Qvals.push(Q);
+      pumpVals.push(pumpHead(Q));
+      systemVals.push(systemHead(Q));
+    }
+
+    const ctx =
+      document.getElementById("curveChart").getContext("2d");
+
+    if (chartInstance) {
+      chartInstance.destroy();
+    }
+
+    chartInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: Qvals,
+        datasets: [
+          {
+            label: "Pump Curve",
+            data: pumpVals,
+            borderWidth: 3,
+            borderColor: "#4da6ff",
+            fill: false
+          },
+          {
+            label: "System Curve",
+            data: systemVals,
+            borderWidth: 3,
+            borderColor: "#ffaa00",
+            fill: false
+          },
+          {
+            label: "Operating Point",
+            data: [{
+              x: Q_operating,
+              y: H_operating
+            }],
+            type: "scatter",
+            backgroundColor: "#ffcc00",
+            pointRadius: 8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: "Flow Rate (m³/s)",
+              color: "#ffffff"
+            },
+            ticks: { color: "#ffffff" }
+          },
+          y: {
+            title: {
+              display: true,
+              text: "Head (m)",
+              color: "#ffffff"
+            },
+            ticks: { color: "#ffffff" }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { color: "#ffffff" }
+          }
+        }
+      }
+    });
 
   });
 
