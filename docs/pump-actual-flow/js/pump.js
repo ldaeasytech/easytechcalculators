@@ -27,34 +27,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let chartInstance = null;
 
-  function solveIntersection(pumpHead, systemHead) {
+function solveIntersection(pumpHead, systemHead) {
 
-    let Qmin = 0;
-    let Qmax = 50;
-    const tol = 1e-6;
+  const tol = 1e-6;
+  const maxIter = 100;
 
-    function f(Q) {
-      return pumpHead(Q) - systemHead(Q);
-    }
+  let Q = 0;
+  let step = 0.05; // adaptive search step
+  let Qprev = Q;
 
-    if (f(Qmin) * f(Qmax) > 0) {
-      throw new Error("No intersection found.");
-    }
-
-    for (let i = 0; i < 100; i++) {
-      const Qmid = (Qmin + Qmax) / 2;
-      const fmid = f(Qmid);
-
-      if (Math.abs(fmid) < tol) return Qmid;
-
-      if (f(Qmin) * fmid < 0)
-        Qmax = Qmid;
-      else
-        Qmin = Qmid;
-    }
-
-    return (Qmin + Qmax) / 2;
+  function f(Q) {
+    return pumpHead(Q) - systemHead(Q);
   }
+
+  // 1️⃣ March forward until sign change
+  while (Q < 100) {
+
+    if (f(Qprev) * f(Q) < 0) {
+      break;
+    }
+
+    Qprev = Q;
+    Q += step;
+  }
+
+  if (Q >= 100) {
+    throw new Error("No intersection found in range.");
+  }
+
+  // 2️⃣ Refine with bisection
+  let Qmin = Qprev;
+  let Qmax = Q;
+
+  for (let i = 0; i < maxIter; i++) {
+
+    const Qmid = (Qmin + Qmax) / 2;
+    const fmid = f(Qmid);
+
+    if (Math.abs(fmid) < tol) {
+      return Qmid;
+    }
+
+    if (f(Qmin) * fmid < 0)
+      Qmax = Qmid;
+    else
+      Qmin = Qmid;
+  }
+
+  return (Qmin + Qmax) / 2;
+}
+
 
   document.getElementById("calculateBtn")
     .addEventListener("click", () => {
