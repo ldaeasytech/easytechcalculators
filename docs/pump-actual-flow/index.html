@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Pump power calculator</title>
+  <title>Pump Actual Flow</title>
 
   <meta name="description"
-    content="Pump power calculator" />
+    content="Pump Actual Flow" />
 
   <link rel="stylesheet" href="pump-style.css" />
 
@@ -52,7 +52,7 @@
         class="brand-logo"
       />
       <div class="brand-text">
-        <h1>Pump Power Calculator</h1>
+        <h1>Pump Actual Flow</h1>
         <div class="capability-line">
           Mechanical Energy Balance · Pipe & Fitting Losses
         </div>
@@ -329,28 +329,28 @@
      <div class="result-highlight" id="powerCard">
 
   <div class="result-label">
-    Theoretical Pump Power
+    Actual Operating Flow Rate
   </div>
 
   <div class="power-display">
 
     <div class="power-primary">
-      <span class="power-value" id="pumpPowerValue">--</span>
-      <span class="power-unit">kW</span>
+      <span class="power-value" id="Q_operating">--</span>
+      <span class="power-unit">m^3/s</span>
     </div>
 
     <div class="power-secondary">
-      <span id="pumpPowerHP">--</span>
-      <span class="power-unit-secondary">hp</span>
+      <span id="H_operating">--</span>
+      <span class="power-unit-secondary">m Head</span>
     </div>
 
   </div>
 </div>
     
-      <div class="result-section">
-        <h3 class="collapse-toggle">Energy Balance Terms</h3>
-        <table class="results-clean" id="energyTable"></table>
-      </div>
+    <div class="result-section">
+  <h3>Pump & System Curve</h3>
+  <canvas id="curveChart"></canvas>
+</div>
 
       <div class="result-section">
        <h3 class="collapse-toggle">Hydraulic Parameters</h3>
