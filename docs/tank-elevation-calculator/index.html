@@ -4,12 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Tank Elevation Calculator</title>
+  <title>Tank Elevation Calculator | Required Height for Desired Flow Rate</title>
 
-  <meta name="description"
-    content="Tank Elevation Calculator" />
+<meta name="description"
+  content="Calculate required tank elevation to achieve a desired gravity flow rate considering pipe material, diameter, elevation difference, and fittings losses." />
 
-  <link rel="stylesheet" href="pump-style.css" />
+<link rel="canonical" href="https://easytechcalculators.com/tank-elevation-calculator/" />
+
+
+  <link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
 
   <!-- Favicons -->
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -25,6 +28,30 @@
   "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
 }
 </script>
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [{
+   "@type": "Question",
+   "name": "Why are water tanks elevated?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Water tanks are elevated to create static pressure using gravity, allowing fluid to flow without continuous pumping."
+   }
+ },
+ {
+   "@type": "Question",
+   "name": "How do you calculate required tank height?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Required tank height equals static head needed plus friction and fitting losses in the piping system."
+   }
+ }]
+}
+</script>
+
 
 <!-- Web App Manifest -->
 <link rel="manifest" href="/site.webmanifest">
@@ -52,9 +79,9 @@
         class="brand-logo"
       />
       <div class="brand-text">
-        <h1>Tank Elevation Calculator</h1>
+        <h1>Tank Elevation Calculator – Required Height for Gravity Flow</h1>
         <div class="capability-line">
-          Mechanical Energy Balance · Pipe & Fitting Losses
+          Gravity Flow Analysis · Static Head · Friction & Fitting Losses
         </div>
       </div>
     </div>
@@ -325,26 +352,135 @@
 
 </main>
 
+<section class="learning-section">
+
+<h2>Why Do We Use Elevated Tanks?</h2>
+<p>
+Elevated tanks store fluid at a higher elevation to create pressure using gravity.
+The elevation generates static head, allowing fluid to flow without continuous pumping.
+</p>
+
+<p>
+Advantages of elevated tanks:
+</p>
+
+<ul>
+  <li>Reduced energy consumption</li>
+  <li>Emergency water supply during power outages</li>
+  <li>Stable pressure distribution</li>
+  <li>Lower operating costs</li>
+</ul>
+
+<h2>Is Using an Elevated Tank Better Than Using Pumps?</h2>
+<p>
+It depends on the application. Pumps provide flexibility and high flow rates,
+but require continuous power and maintenance.
+</p>
+
+<p>
+Elevated tanks:
+</p>
+
+<ul>
+  <li>Reduce long-term operating cost</li>
+  <li>Improve system reliability</li>
+  <li>Provide passive pressure generation</li>
+</ul>
+
+<p>
+Many systems use both: pumps fill the tank, and gravity distributes the fluid.
+</p>
+
+<h2>Why Must Gravity Tanks Be Elevated?</h2>
+<p>
+Fluid flows from high pressure to low pressure. Elevating the tank increases
+static head:
+</p>
+
+<p><strong>Static Head = Elevation Difference</strong></p>
+
+<p>
+Without elevation difference, gravity-driven flow cannot occur.
+</p>
+
+<h2>What Determines the Required Tank Height?</h2>
+<p>
+Tank height must overcome:
+</p>
+
+<ul>
+  <li>Friction loss in pipes</li>
+  <li>Fitting losses</li>
+  <li>Entrance and exit losses</li>
+  <li>Required discharge pressure</li>
+</ul>
+
+<p>
+Total required head:
+</p>
+
+<p><strong>Tank Elevation = Static Requirement + Total Losses</strong></p>
+
+<h2>How Do Pipe Material and Diameter Affect Tank Elevation?</h2>
+<p>
+Rougher materials increase friction factor, requiring higher tank elevation.
+Smaller pipe diameters increase velocity and friction losses.
+</p>
+
+<p>
+Larger diameters reduce losses but increase capital cost.
+</p>
+
+<h2>Can Tank Height Be Too High?</h2>
+<p>
+Yes. Excessive elevation may:
+</p>
+
+<ul>
+  <li>Increase structural cost</li>
+  <li>Create excessive downstream pressure</li>
+  <li>Require pressure reducing valves</li>
+</ul>
+
+<h2>What Happens If Tank Elevation is Too Low?</h2>
+<p>
+Flow rate will be lower than desired, and downstream pressure may be insufficient
+to overcome system resistance.
+</p>
+
+<h2>How is Desired Flow Rate Achieved in Gravity Systems?</h2>
+<p>
+Flow rate depends on:
+</p>
+
+<p><strong>Available Head − Friction Loss</strong></p>
+
+<p>
+Higher tank elevation increases available head and flow rate.
+</p>
+
+</section>
+
   <!-- Related Pump Calculators -->
 <section class="related-calculators">
   <h3>Related Pump Calculators</h3>
 
   <nav class="related-links">
-    <a href="../pump-power/" aria-label="Pump Power Calculator">
+    <a href="../pump-power-calculator/" aria-label="Pump Power Calculator">
       ▸ Pump Power
     </a>
 
    <span class="active-link">▸ Tank Elevation Calculator</span>
 
-    <a href="../optimize-pipe/" aria-label="Optimize Pipe Diameter Calculator">
+    <a href="../optimum-pipe-diameter-calculator/" aria-label="Optimize Pipe Diameter Calculator">
       ▸ Optimize Pipe Diameter
     </a>
 
-    <a href="../npsha-calculator/" aria-label="Available NPSH Calculator">
+    <a href="../npsh-available-calculator/" aria-label="Available NPSH Calculator">
       ▸ Available NPSH
     </a>
 
-    <a href="../pump-actual-flow/" aria-label="Actual Flow Rate Calculator">
+    <a href="../pump-operating-point-calculator/" aria-label="Actual Flow Rate Calculator">
       ▸ Actual Flow Rate
     </a>
   </nav>
