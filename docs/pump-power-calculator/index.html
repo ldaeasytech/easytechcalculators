@@ -4,12 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Pump power calculator</title>
+  <title>Pump Power Calculator | Theoretical & Actual Power Requirement</title>
 
-  <meta name="description"
-    content="Pump power calculator" />
+<meta name="description"
+  content="Calculate theoretical and actual pump power requirements including pipe friction loss, fittings loss, elevation head, and material effects." />
 
-  <link rel="stylesheet" href="pump-style.css" />
+<link rel="canonical" href="https://easytechcalculators.com/pump-power-calculator/" />
+
+
+  <link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
+
 
   <!-- Favicons -->
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -25,6 +29,30 @@
   "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
 }
 </script>
+
+  <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [{
+   "@type": "Question",
+   "name": "What is pump power?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Pump power is the energy required to move fluid through a system including elevation and friction losses."
+   }
+ },
+ {
+   "@type": "Question",
+   "name": "Why is actual pump power higher than theoretical power?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Actual pump power accounts for efficiency losses, making it higher than the theoretical hydraulic power."
+   }
+ }]
+}
+</script>
+
 
 <!-- Web App Manifest -->
 <link rel="manifest" href="/site.webmanifest">
@@ -332,6 +360,78 @@
 
 </main>
 
+<section class="learning-section">
+
+<h2>Why Do We Use Pumps?</h2>
+<p>
+Pumps are used to move fluids from one location to another by increasing
+their mechanical energy. They overcome elevation differences, friction losses,
+and system resistance in piping networks.
+</p>
+
+<h2>Theoretical vs Actual Pump Power</h2>
+<p>
+Theoretical pump power is the hydraulic power required to move the fluid:
+</p>
+
+<p><strong>Hydraulic Power = ρ g Q H</strong></p>
+
+<p>
+Where ρ is density, g is gravity, Q is flow rate, and H is total head.
+</p>
+
+<p>
+Actual power requirement accounts for pump efficiency:
+</p>
+
+<p><strong>Actual Power = Hydraulic Power / Pump Efficiency</strong></p>
+
+<p>
+Because no pump is 100% efficient, actual power is always higher than theoretical power.
+</p>
+
+<h2>Pipe and Fitting Losses</h2>
+
+<p><strong>1. Pipe Friction Loss (Darcy-Weisbach):</strong></p>
+<p>h<sub>f</sub> = f (L/D) (V² / 2g)</p>
+
+<p><strong>2. Fitting Loss:</strong></p>
+<p>h<sub>fittings</sub> = K (V² / 2g)</p>
+
+<p><strong>3. Entrance Loss:</strong></p>
+<p>h<sub>entrance</sub> = K<sub>e</sub> (V² / 2g)</p>
+
+<p><strong>4. Exit Loss:</strong></p>
+<p>h<sub>exit</sub> = K<sub>exit</sub> (V² / 2g)</p>
+
+<p>
+Total head loss is the sum of all losses plus elevation head.
+</p>
+
+<h2>How Does Pipe Material Affect Flow?</h2>
+<p>
+Pipe material affects surface roughness, which influences the friction factor.
+Rougher materials increase friction loss and pumping power requirements.
+</p>
+
+<h2>Pipe Diameter and Schedule Number</h2>
+<p>
+Pipe diameter directly affects velocity and friction loss:
+</p>
+
+<ul>
+  <li>Smaller diameter → higher velocity → higher friction loss</li>
+  <li>Larger diameter → lower velocity → lower friction loss</li>
+</ul>
+
+<p>
+Schedule number determines wall thickness. Higher schedule means thicker walls,
+smaller internal diameter, and potentially higher friction losses.
+</p>
+
+</section>
+
+  
   <!-- Related Pump Calculators -->
 <section class="related-calculators">
   <h3>Related Pump Calculators</h3>
