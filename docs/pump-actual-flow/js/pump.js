@@ -111,6 +111,19 @@ function solveIntersection(pumpHead, systemHead) {
     const e =
       PIPE_ROUGHNESS[material];
 
+/* ===============================
+   Read Pump Characteristic Equation
+=============================== */
+
+const pumpEq = document
+  .getElementById("pumpEquation")
+  .value
+  .trim();
+
+if (!pumpEq) {
+  alert("Please enter pump characteristic equation.");
+  return;
+}
     /* ===============================
    Build Pump Head Function
 =============================== */
