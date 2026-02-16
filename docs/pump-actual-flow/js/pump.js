@@ -321,22 +321,25 @@ chartInstance = new Chart(ctx, {
 });*/
 
 /* ===============================
-   AUTO PLOT CURVES (FULL RANGE)
+   AUTO PLOT CURVES (Correct XY)
 =============================== */
 
-// Build full Q range automatically
-const Qvals = [];
-const pumpVals = [];
-const systemVals = [];
+const pumpData = [];
+const systemData = [];
 
-// Define a reasonable plotting range
 const QmaxPlot = Q_operating * 2 || 1;
-const stepPlot = QmaxPlot / 150;
+const stepPlot = QmaxPlot / 200;
 
 for (let Q = 0; Q <= QmaxPlot; Q += stepPlot) {
-  Qvals.push(Q);
-  pumpVals.push(pumpHead(Q));
-  systemVals.push(systemHead(Q));
+  pumpData.push({
+    x: Q,
+    y: pumpHead(Q)
+  });
+
+  systemData.push({
+    x: Q,
+    y: systemHead(Q)
+  });
 }
 
 const ctx =
@@ -349,24 +352,23 @@ if (chartInstance) {
 chartInstance = new Chart(ctx, {
   type: "line",
   data: {
-    labels: Qvals,
     datasets: [
       {
         label: "Pump Curve",
-        data: pumpVals,
+        data: pumpData,
         borderWidth: 3,
         borderColor: "#4da6ff",
         fill: false,
-        pointRadius: 0,          // 🔹 remove markers
+        pointRadius: 0,
         tension: 0.25
       },
       {
         label: "System Curve",
-        data: systemVals,
+        data: systemData,
         borderWidth: 3,
         borderColor: "#ffaa00",
         fill: false,
-        pointRadius: 0,          // 🔹 remove markers
+        pointRadius: 0,
         tension: 0.25
       },
       {
@@ -385,11 +387,6 @@ chartInstance = new Chart(ctx, {
   },
   options: {
     responsive: true,
-    plugins: {
-      legend: {
-        labels: { color: "#ffffff" }
-      }
-    },
     scales: {
       x: {
         type: "linear",
@@ -408,9 +405,15 @@ chartInstance = new Chart(ctx, {
         },
         ticks: { color: "#ffffff" }
       }
+    },
+    plugins: {
+      legend: {
+        labels: { color: "#ffffff" }
+      }
     }
   }
 });
+
 
   });
 
