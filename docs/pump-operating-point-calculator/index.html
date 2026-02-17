@@ -349,16 +349,28 @@
 
 <h2>What is a System Curve?</h2>
 <p>
-The system curve represents the relationship between flow rate and required head
-in a piping system. It includes static head and friction losses.
+The system curve represents the relationship between flow rate (Q)
+and the total head required by a piping system.
+It describes how much energy the system demands at different flow rates.
 </p>
 
 <p>
-As flow rate increases, friction losses increase proportionally to velocity squared,
-causing the system curve to rise.
+The system head includes:
+</p>
+
+<ul>
+  <li>Static head (elevation difference)</li>
+  <li>Friction loss in pipes</li>
+  <li>Minor losses from fittings, valves, entrances, and exits</li>
+</ul>
+
+<p>
+As flow rate increases, friction losses increase approximately
+with the square of velocity, causing the system curve to rise nonlinearly.
 </p>
 
 <h2>How is the System Curve Calculated?</h2>
+
 <p>
 Total system head is calculated as:
 </p>
@@ -366,65 +378,183 @@ Total system head is calculated as:
 <p><strong>Total Head = Static Head + Friction Loss</strong></p>
 
 <p>
-Friction loss typically follows:
+For turbulent flow, friction loss follows:
 </p>
 
 <p><strong>Head Loss ∝ Q²</strong></p>
 
 <p>
-Where Q is the volumetric flow rate.
+This quadratic relationship explains why small increases in flow rate
+can significantly increase required pump head.
 </p>
 
-<h2>What are Pump Characteristic Curves?</h2>
-<p>
-Pump characteristic curves describe how a pump performs at different flow rates.
-The primary curve shows Head vs Flow Rate.
-</p>
+<h2>What is a Pump Characteristic Curve?</h2>
 
 <p>
-Each pump has unique curves depending on:
+A pump characteristic curve describes how a pump performs
+at different flow rates. The primary curve shows:
 </p>
+
+<p><strong>Head vs Flow Rate</strong></p>
+
+<p>
+Additional curves often include:
+</p>
+
+<ul>
+  <li>Efficiency vs Flow</li>
+  <li>Power vs Flow</li>
+  <li>NPSH Required vs Flow</li>
+</ul>
+
+<p>
+Each pump model has a unique characteristic curve
+determined by its design and operating conditions.
+</p>
+
+<h2>What Factors Affect Pump Characteristic Curves?</h2>
 
 <ul>
   <li>Impeller diameter</li>
   <li>Rotational speed</li>
-  <li>Design geometry</li>
-  <li>Fluid properties</li>
-</ul>
-
-<h2>What Factors Affect Pump Curves?</h2>
-<ul>
   <li>Impeller trimming</li>
-  <li>Speed changes (Affinity Laws)</li>
-  <li>Fluid viscosity</li>
-  <li>Wear and mechanical condition</li>
+  <li>Fluid density and viscosity</li>
+  <li>Mechanical wear and internal clearances</li>
 </ul>
 
 <p>
-Changing speed shifts the curve according to pump affinity laws.
-</p>
-
-<h2>How is the Actual Operating Flow Rate Determined?</h2>
-<p>
-The actual operating point occurs at the intersection of:
+Changing rotational speed shifts the curve according to the pump affinity laws:
 </p>
 
 <ul>
-  <li><strong>System Curve</strong></li>
-  <li><strong>Pump Curve</strong></li>
+  <li>Flow ∝ Speed</li>
+  <li>Head ∝ Speed²</li>
+  <li>Power ∝ Speed³</li>
+</ul>
+
+<h2>What is the Pump Operating Point?</h2>
+
+<p>
+The operating point is the intersection between:
+</p>
+
+<ul>
+  <li><strong>The Pump Curve</strong></li>
+  <li><strong>The System Curve</strong></li>
 </ul>
 
 <p>
-At this intersection:
+At this point:
 </p>
 
 <p><strong>Pump Head = System Required Head</strong></p>
 
 <p>
-This determines the real discharge flow rate and operating head of the pump.
+This determines the actual discharge flow rate and operating head.
+</p>
+
+<h2>Why is the Operating Point Important?</h2>
+
+<p>
+The operating point determines:
+</p>
+
+<ul>
+  <li>Actual flow rate delivered</li>
+  <li>Energy consumption</li>
+  <li>Pump efficiency</li>
+  <li>Mechanical loading</li>
+  <li>System stability</li>
+</ul>
+
+<p>
+If the operating point is far from the pump’s Best Efficiency Point (BEP),
+energy consumption increases and mechanical stress rises.
+</p>
+
+<h2>What is the Best Efficiency Point (BEP)?</h2>
+
+<p>
+The Best Efficiency Point is the flow rate at which
+the pump operates with maximum hydraulic efficiency.
+</p>
+
+<p>
+Operating near BEP:
+</p>
+
+<ul>
+  <li>Reduces vibration</li>
+  <li>Minimizes wear</li>
+  <li>Improves energy efficiency</li>
+  <li>Extends pump lifespan</li>
+</ul>
+
+<h2>What Happens if the System Curve Changes?</h2>
+
+<p>
+Changing system conditions shifts the operating point.
+Examples include:
+</p>
+
+<ul>
+  <li>Valve throttling</li>
+  <li>Pipe roughness changes</li>
+  <li>Blockages</li>
+  <li>Elevation changes</li>
+</ul>
+
+<p>
+A higher system resistance shifts the operating point
+to lower flow rates and higher required head.
+</p>
+
+<h2>Can a Pump Deliver Any Flow Rate?</h2>
+
+<p>
+No. A pump cannot deliver a flow rate independent of the system.
+The actual flow rate is determined by the interaction
+between pump capability and system resistance.
+</p>
+
+<h2>How Does Pipe Diameter Affect the Operating Point?</h2>
+
+<p>
+Reducing pipe diameter increases friction loss,
+making the system curve steeper.
+This shifts the operating point to:
+</p>
+
+<ul>
+  <li>Lower flow rate</li>
+  <li>Higher head requirement</li>
+</ul>
+
+<p>
+Increasing diameter flattens the system curve
+and increases achievable flow rate.
+</p>
+
+<h2>Why is Operating Point Analysis Important?</h2>
+
+<p>
+Understanding pump-system interaction ensures:
+</p>
+
+<ul>
+  <li>Correct pump selection</li>
+  <li>Energy-efficient operation</li>
+  <li>Prevention of overload conditions</li>
+  <li>Stable and predictable system performance</li>
+</ul>
+
+<p>
+Proper operating point analysis is essential in water supply,
+industrial processing, HVAC systems, and irrigation networks.
 </p>
 
 </section>
+
 
 
 <!-- Related Pump Calculators -->
