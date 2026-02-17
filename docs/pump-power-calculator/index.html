@@ -419,28 +419,39 @@
 
 <h2>Why Do We Use Pumps?</h2>
 <p>
-Pumps are mechanical devices used to transfer fluids from one location to another.
-They add mechanical energy to the fluid in order to overcome elevation differences,
-pressure differences, and resistance caused by pipe friction and fittings.
+Pumps are mechanical devices that add energy to fluids in order to move them
+through piping systems. They overcome elevation differences, pressure requirements,
+and friction losses caused by pipes and fittings.
 </p>
 
 <p>
-In practical systems, pumps are essential for water supply, irrigation,
-cooling systems, chemical processing, oil transport, and many other industrial
-applications.
+Pumps are essential in:
 </p>
+
+<ul>
+  <li>Municipal water supply systems</li>
+  <li>Irrigation and agriculture</li>
+  <li>Cooling and HVAC systems</li>
+  <li>Chemical and process industries</li>
+  <li>Oil and fuel transport</li>
+</ul>
+
+<h2>What Determines Pump Power Requirement?</h2>
+
+<p>
+Pump power depends on the total head the system requires and the desired flow rate.
+The total head includes elevation difference and all friction losses.
+</p>
+
+<p><strong>Total Head = Elevation Head + Friction Losses</strong></p>
 
 <h2>Theoretical vs Actual Pump Power</h2>
 
 <p>
-Theoretical pump power represents the hydraulic energy required to move the fluid:
+Theoretical (hydraulic) power represents the ideal energy required to move the fluid:
 </p>
 
 <p><strong>Hydraulic Power = ρ g Q H</strong></p>
-
-<p>
-Where:
-</p>
 
 <ul>
   <li>ρ = fluid density</li>
@@ -450,28 +461,46 @@ Where:
 </ul>
 
 <p>
-This value assumes ideal conditions with no mechanical losses.
+This assumes no mechanical or hydraulic losses.
 </p>
 
 <p>
-Actual pump power must account for pump efficiency:
+Actual pump power accounts for efficiency:
 </p>
 
 <p><strong>Actual Power = Hydraulic Power / Pump Efficiency</strong></p>
 
 <p>
-Since all real pumps experience mechanical and hydraulic losses,
-actual power input is always greater than the theoretical hydraulic power.
+Since no pump is perfectly efficient, input power is always higher than hydraulic power.
+Losses occur due to mechanical friction, turbulence, leakage, and internal recirculation.
 </p>
+
+<h2>Understanding Head in Pump Systems</h2>
+
+<p>
+Head represents energy per unit weight of fluid.
+It is independent of fluid density when expressed in meters or feet.
+</p>
+
+<p>
+Head consists of:
+</p>
+
+<ul>
+  <li>Static head (elevation difference)</li>
+  <li>Pressure head</li>
+  <li>Velocity head</li>
+  <li>Friction losses</li>
+</ul>
 
 <h2>Pipe and Fitting Losses</h2>
 
 <p>
-As fluid flows through a piping system, energy is lost due to friction and disturbances.
-These losses increase the required pump power.
+As fluid flows through pipes, energy is dissipated due to wall friction
+and flow disturbances. These losses increase required pump power.
 </p>
 
-<p><strong>1. Pipe Friction Loss (Darcy–Weisbach Equation):</strong></p>
+<p><strong>1. Pipe Friction Loss (Darcy–Weisbach):</strong></p>
 <p>h<sub>f</sub> = f (L/D) (V² / 2g)</p>
 
 <p><strong>2. Fitting Loss:</strong></p>
@@ -484,117 +513,121 @@ These losses increase the required pump power.
 <p>h<sub>exit</sub> = K<sub>exit</sub> (V² / 2g)</p>
 
 <p>
-The total required head is the sum of elevation head and all frictional losses.
+Total head loss is the sum of all frictional and minor losses.
 </p>
 
-<h2>How Does Pipe Material Affect Flow?</h2>
+<h2>How Does Pipe Material Affect Pump Power?</h2>
+
 <p>
-Pipe surface roughness affects the friction factor in turbulent flow.
-Rougher materials create more resistance, increasing head loss and required pump power.
+Pipe roughness influences the friction factor.
+Rough materials create greater turbulence in turbulent flow,
+increasing energy dissipation.
 </p>
 
 <p>
-Smooth materials such as drawn tubing generate lower friction losses,
-while rough materials such as cast iron or concrete produce higher resistance.
-</p>
-
-<h2>Pipe Diameter and Schedule Number</h2>
-
-<p>
-Pipe diameter strongly influences velocity and friction loss:
+For the same diameter and flow rate:
 </p>
 
 <ul>
-  <li>Smaller diameter → higher velocity → greater friction loss</li>
-  <li>Larger diameter → lower velocity → reduced friction loss</li>
+  <li>Smoother pipes → lower friction → lower pump power</li>
+  <li>Rougher pipes → higher friction → higher pump power</li>
 </ul>
 
-<p>
-The schedule number defines wall thickness.
-Higher schedules result in thicker walls and smaller internal diameters,
-which can increase velocity and friction losses.
-</p>
-
-<h2>Types of Pumps and How They Work</h2>
+<h2>Effect of Pipe Diameter on Pump Power</h2>
 
 <p>
-Pumps are generally classified into two main categories:
-</p>
-
-<h3>1. Dynamic Pumps</h3>
-
-<p>
-Dynamic pumps increase fluid velocity and convert that velocity into pressure.
-They are best suited for continuous flow applications.
-</p>
-
-<h4>Centrifugal Pumps</h4>
-<p>
-Centrifugal pumps use a rotating impeller to accelerate fluid outward.
-The kinetic energy is converted into pressure in the volute casing.
-</p>
-<p>
-Typical applications include water supply systems, HVAC circulation,
-irrigation, and industrial cooling.
-</p>
-
-<h4>Axial Flow Pumps</h4>
-<p>
-Axial flow pumps move fluid parallel to the pump shaft using a propeller-like
-impeller. They are designed for high flow rates at relatively low heads.
-</p>
-<p>
-Common uses include flood control, drainage, and large-scale water movement.
-</p>
-
-<h4>Mixed Flow Pumps</h4>
-<p>
-Mixed flow pumps combine radial and axial movement, providing moderate
-head and flow characteristics.
-</p>
-
-<h3>2. Positive Displacement Pumps</h3>
-
-<p>
-Positive displacement pumps move fluid by trapping a fixed volume and forcing
-it through the system. They are ideal for high-pressure or viscous fluid applications.
-</p>
-
-<h4>Gear Pumps</h4>
-<p>
-Gear pumps use rotating gears to trap and transport fluid.
-They provide steady flow and are widely used for oils and lubricants.
-</p>
-
-<h4>Piston Pumps</h4>
-<p>
-Piston pumps use reciprocating motion to compress and move fluid.
-They are capable of generating very high pressures.
-</p>
-
-<h4>Screw Pumps</h4>
-<p>
-Screw pumps use intermeshing screws to move fluid smoothly.
-They are suitable for viscous fluids and applications requiring low pulsation.
-</p>
-
-<h2>Choosing the Right Pump</h2>
-
-<p>
-Selecting a pump depends on:
+Velocity is inversely proportional to pipe cross-sectional area.
+Smaller diameters increase velocity and friction loss.
 </p>
 
 <ul>
-  <li>Required flow rate</li>
-  <li>Total head</li>
-  <li>Fluid properties (density and viscosity)</li>
-  <li>System losses</li>
-  <li>Efficiency requirements</li>
+  <li>Small diameter → high velocity → high friction → higher power</li>
+  <li>Large diameter → lower velocity → lower friction → lower power</li>
 </ul>
 
 <p>
-Proper pump selection ensures energy efficiency, operational reliability,
-and reduced long-term operating costs.
+However, larger pipes increase capital cost, which is why economic optimization
+is important in system design.
+</p>
+
+<h2>What is Pump Efficiency?</h2>
+
+<p>
+Pump efficiency is the ratio of hydraulic power delivered to the fluid
+to the mechanical power supplied to the shaft.
+</p>
+
+<p>
+Efficiency varies with flow rate and is typically highest near
+the Best Efficiency Point (BEP).
+</p>
+
+<p>
+Operating far from BEP reduces efficiency and increases energy cost.
+</p>
+
+<h2>How Does Flow Rate Affect Pump Power?</h2>
+
+<p>
+Pump power generally increases with flow rate because:
+</p>
+
+<ul>
+  <li>Velocity increases</li>
+  <li>Friction losses increase approximately with V²</li>
+  <li>Total head demand increases</li>
+</ul>
+
+<p>
+Proper sizing ensures the pump operates efficiently at the required duty point.
+</p>
+
+<h2>Common Causes of Excessive Pump Power Consumption</h2>
+
+<ul>
+  <li>Undersized piping</li>
+  <li>Excessive fittings and valves</li>
+  <li>Rough or aged pipe material</li>
+  <li>Operating far from design point</li>
+  <li>Cavitation or internal recirculation</li>
+</ul>
+
+<h2>Types of Pumps and Power Characteristics</h2>
+
+<p>
+Different pump types exhibit different power-flow relationships.
+</p>
+
+<h3>Dynamic Pumps</h3>
+<p>
+Dynamic pumps (e.g., centrifugal pumps) generate head by increasing
+fluid velocity. Power typically rises with increasing flow rate.
+</p>
+
+<h3>Positive Displacement Pumps</h3>
+<p>
+Positive displacement pumps move a fixed volume per cycle.
+Power requirement depends more strongly on discharge pressure
+than on flow rate.
+</p>
+
+<h2>Why Accurate Pump Power Calculation Matters</h2>
+
+<p>
+Accurate pump power estimation ensures:
+</p>
+
+<ul>
+  <li>Proper motor selection</li>
+  <li>Energy efficiency</li>
+  <li>Reduced operational cost</li>
+  <li>Improved system reliability</li>
+  <li>Compliance with energy standards</li>
+</ul>
+
+<p>
+Even small inefficiencies can lead to significant energy costs
+over the lifetime of the system.
 </p>
 
 </section>
