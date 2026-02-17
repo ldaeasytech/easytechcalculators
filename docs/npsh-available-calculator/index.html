@@ -354,61 +354,71 @@
 
 </main>
 
-<section class="learning-section">
-  <h2>What is NPSH Available and NPSH Required?</h2>
+<h2>What is the Difference Between NPSH and Suction Head?</h2>
+<p>
+Suction head refers to the elevation or pressure conditions at the pump inlet.
+NPSH, however, accounts specifically for the pressure above the liquid’s vapor
+pressure. While related, NPSH focuses on preventing vapor formation inside the pump.
+</p>
 
-  <p>
-    Net Positive Suction Head (NPSH) is a critical parameter in pump system design.
-    <strong>NPSH Available (NPSHa)</strong> is the total suction head available at the pump inlet,
-    while <strong>NPSH Required (NPSHr)</strong> is the minimum suction head required by the pump
-    to avoid cavitation.
-  </p>
+<h2>What Happens if NPSHa is Less Than NPSHr?</h2>
+<p>
+If NPSH Available is lower than NPSH Required, cavitation will occur.
+This leads to noise, vibration, unstable flow, and progressive mechanical damage.
+Long-term operation under insufficient NPSH can severely reduce pump lifespan.
+</p>
 
-  <p>
-    For safe pump operation:
-    <strong>NPSHa must always be greater than NPSHr.</strong>
-  </p>
+<h2>How Does Temperature Affect NPSH?</h2>
+<p>
+As fluid temperature increases, vapor pressure increases.
+Higher vapor pressure reduces NPSH Available, making cavitation more likely.
+Hot liquids require greater attention to suction design.
+</p>
 
-  <h2>Why is NPSH Important in Pumps?</h2>
-  <p>
-    Insufficient NPSH causes cavitation — the formation and collapse of vapor bubbles
-    inside the pump. This leads to vibration, noise, reduced efficiency, and severe
-    impeller damage.
-  </p>
+<h2>Does Increasing Pump Speed Affect NPSH Required?</h2>
+<p>
+Yes. Increasing pump speed increases NPSH Required.
+Higher rotational speeds create lower pressure at the impeller eye,
+raising the risk of cavitation if suction conditions are not improved.
+</p>
 
-  <h2>What is Cavitation?</h2>
-  <p>
-    Cavitation occurs when the local pressure at the pump suction drops below
-    the vapor pressure of the liquid. Vapor bubbles form and violently collapse
-    as pressure recovers inside the impeller.
-  </p>
+<h2>How Can Engineers Increase NPSH Available?</h2>
+<ul>
+  <li>Shorten suction pipe length</li>
+  <li>Reduce number of fittings</li>
+  <li>Increase suction pipe diameter</li>
+  <li>Lower fluid temperature</li>
+  <li>Raise liquid source elevation</li>
+</ul>
 
-  <ul>
-    <li>Impeller pitting</li>
-    <li>Loss of flow rate</li>
-    <li>Reduced pump head</li>
-    <li>Mechanical seal damage</li>
-    <li>Shortened pump lifespan</li>
-  </ul>
+<h2>What is a Safe NPSH Margin?</h2>
+<p>
+A common engineering practice is to maintain NPSHa greater than NPSHr
+by at least 0.5 to 1 meter (or 10–20% above NPSHr).
+Critical systems may require higher safety margins.
+</p>
 
-  <h2>General Rule to Prevent Cavitation</h2>
-  <p>
-    Always maintain a safety margin:
-  </p>
+<h2>Is NPSH the Same for All Pumps?</h2>
+<p>
+No. NPSH Required varies depending on pump design, impeller geometry,
+speed, and manufacturer specifications. Always refer to the pump’s
+performance curve for accurate NPSHr values.
+</p>
 
-  <p><strong>NPSHa ≥ NPSHr + Safety Margin (typically 0.5 to 1 meter)</strong></p>
+<h2>How is NPSH Related to Cavitation Damage?</h2>
+<p>
+When vapor bubbles collapse inside the impeller, they generate localized
+high-pressure shock waves. These repeated micro-impacts cause surface
+erosion, known as cavitation pitting.
+</p>
 
-  <p>
-    Increase NPSHa by:
-  </p>
+<h2>Can Cavitation Occur Even if NPSHa is Slightly Higher Than NPSHr?</h2>
+<p>
+Yes. Transient conditions such as startup, flow fluctuations, or temperature
+changes may temporarily reduce NPSHa below safe limits.
+Maintaining an adequate safety margin helps prevent this.
+</p>
 
-  <ul>
-    <li>Raising the liquid source level</li>
-    <li>Reducing suction pipe losses</li>
-    <li>Using larger suction pipe diameter</li>
-    <li>Lowering fluid temperature</li>
-  </ul>
-</section>
 
 
 <!-- Related Pump Calculators -->
