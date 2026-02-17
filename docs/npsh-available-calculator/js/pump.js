@@ -238,6 +238,80 @@ document.addEventListener("DOMContentLoaded", () => {
     Math.min(NPSHr1, NPSHr2);
 
   /* ===============================
+   NPSH MARGIN EVALUATION
+=============================== */
+
+const npshRequired =
+  Number(document.getElementById("npshRequired").value);
+
+if (!npshRequired) {
+  return; // skip if not provided
+}
+
+const margin =
+  NPSHa - npshRequired;
+
+const messageDiv =
+  document.getElementById("npshMessage");
+
+const bar =
+  document.getElementById("npshBar");
+
+const valueDiv =
+  document.getElementById("npshMarginValue");
+
+valueDiv.textContent =
+  `Margin = ${margin.toFixed(3)} m`;
+
+let percent =
+  Math.max(0, Math.min(100,
+    (margin / (npshRequired + 2)) * 100
+  ));
+
+bar.style.width = percent + "%";
+
+if (margin < 0) {
+
+  bar.style.background = "#ff4d4d";
+  messageDiv.textContent =
+    "🚨 NPSHa is LESS than required NPSHr. Cavitation will occur. Lower pump or reduce suction losses.";
+  messageDiv.style.color = "#ff4d4d";
+
+}
+else if (margin < 0.5) {
+
+  bar.style.background = "#ff884d";
+  messageDiv.textContent =
+    "⚠ Very low NPSH margin. High cavitation risk.";
+  messageDiv.style.color = "#ff884d";
+
+}
+else if (margin < 1) {
+
+  bar.style.background = "#ffaa00";
+  messageDiv.textContent =
+    "⚠ Marginal NPSH. Increase safety margin if possible.";
+  messageDiv.style.color = "#ffaa00";
+
+}
+else if (margin < 2) {
+
+  bar.style.background = "#4da6ff";
+  messageDiv.textContent =
+    "✅ Acceptable NPSH margin.";
+  messageDiv.style.color = "#4da6ff";
+
+}
+else {
+
+  bar.style.background = "#2ecc71";
+  messageDiv.textContent =
+    "🟢 Excellent NPSH margin.";
+  messageDiv.style.color = "#2ecc71";
+}
+
+
+  /* ===============================
      DISPLAY
   =============================== */
 
