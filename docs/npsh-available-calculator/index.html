@@ -261,6 +261,22 @@
         </div>
       </div>
 
+      <div class="input-group">
+  <div class="group-title">Pump Required NPSH</div>
+
+  <div class="field">
+    <label for="npshRequired">
+      NPSHᵣ (m)
+    </label>
+    <input id="npshRequired" type="number" step="any" />
+  </div>
+
+  <div class="helper-text">
+    Obtain from pump manufacturer curve.
+  </div>
+</div>
+
+
       <!-- FITTINGS -->
       <div class="input-group">
         <div class="group-title">Fittings and Valves</div>
@@ -355,7 +371,19 @@
 
   </div>
 </div>
-    
+
+      <div class="result-section">
+  <h3>NPSH Margin</h3>
+
+  <div id="npshMessage" class="npsh-message"></div>
+
+  <div class="npsh-bar-container">
+    <div id="npshBar" class="npsh-bar"></div>
+  </div>
+
+  <div id="npshMarginValue" class="npsh-margin-value"></div>
+</div>
+
       <div class="result-section">
         <h3 class="collapse-toggle">Energy Balance Terms</h3>
         <table class="results-clean" id="energyTable"></table>
