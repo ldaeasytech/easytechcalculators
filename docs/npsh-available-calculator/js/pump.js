@@ -247,6 +247,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("NPSHa")
     .textContent = NPSHa.toFixed(3);
 
+  document.getElementById("NPSHa_req")
+    .textContent = recommendedNPSHr.toFixed(3);
+
   document.querySelector(".power-unit")
     .textContent = "m";
 
@@ -269,8 +272,6 @@ document.addEventListener("DOMContentLoaded", () => {
     <tr><td>Velocity</td><td>${v2.toFixed(3)}</td><td>m/s</td></tr>
     <tr><td>Reynolds Number</td>
         <td>${((rho * v2 * D)/mu).toExponential(3)}</td><td>—</td></tr>
-    <tr><td>Recommended NPSHr</td>
-        <td>${recommendedNPSHr.toFixed(3)}</td><td>m</td></tr>
   `;
 
   });
