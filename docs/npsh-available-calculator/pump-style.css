@@ -119,6 +119,12 @@ body {
   gap: 28px;
 }
 
+.container-learning {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+
 h1 {
       font-size: 1.8rem;
       margin-bottom: 16px;
