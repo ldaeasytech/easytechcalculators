@@ -119,6 +119,24 @@ body {
   gap: 28px;
 }
 
+h1 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      color: #f9fafb;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 40px;
+      color: #d1d5db;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin-top: 24px;
+      color: #cbd5f5;
+    }
+
 p {
       margin: 12px 0;
       color: #cbd5f5;
