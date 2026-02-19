@@ -1059,3 +1059,26 @@ select:focus {
       margin-top: 24px;
       color: #cbd5f5;
     }
+
+p {
+      margin: 12px 0;
+      color: #cbd5f5;
+    }
+
+    ul {
+      margin: 12px 0 12px 20px;
+      color: #cbd5f5;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
