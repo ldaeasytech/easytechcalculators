@@ -1000,7 +1000,7 @@ select:focus {
   font-size: 0.9rem;
 }
 
-.learning-hub-card {
+.related-calc-card {
   margin-top: 40px;
   padding: 28px 32px;
   background: linear-gradient(135deg, #0f172a, #111827);
@@ -1008,20 +1008,20 @@ select:focus {
   border-radius: 10px;
 }
 
-.learning-hub-card h3 {
+.related-calc-card h3 {
   margin: 0 0 10px;
   font-size: 1.35rem;
   color: #f9fafb;
 }
 
-.learning-hub-card p {
+.related-calc-card p {
   margin: 0 0 18px;
   font-size: 0.95rem;
   color: #cbd5f5;
   max-width: 900px;
 }
 
-.learning-hub-button {
+.related-calc-button {
   display: inline-block;
   padding: 12px 20px;
   font-size: 0.9rem;
@@ -1032,6 +1032,6 @@ select:focus {
   text-decoration: none;
 }
 
-.learning-hub-button:hover {
+.related-calc-button:hover {
   background: #3b82f6;
 }
