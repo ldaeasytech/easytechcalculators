@@ -119,9 +119,32 @@ body {
   gap: 28px;
 }
 
-@media (min-width: 1200px) {
+p {
+      margin: 12px 0;
+      color: #cbd5f5;
+    }
+
+    ul {
+      margin: 12px 0 12px 20px;
+      color: #cbd5f5;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+@media (min-width: 1100px) {
   .container {
-    grid-template-columns: 240px 1.4fr 300px;
+    grid-template-columns: 1.3fr 0.9fr;
   }
 }
 
@@ -975,31 +998,6 @@ select:focus {
   }
 }
 
-.npsh-bar-container {
-  width: 100%;
-  height: 18px;
-  background: #2a2f38;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 8px;
-}
-
-.npsh-bar {
-  height: 100%;
-  width: 0%;
-  transition: width 0.4s ease;
-}
-
-.npsh-message {
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.npsh-margin-value {
-  margin-top: 6px;
-  font-size: 0.9rem;
-}
-
 /* ===============================
    Related Calculators Upgrade
 ================================ */
@@ -1054,63 +1052,4 @@ select:focus {
 .related-card span {
   font-size: 0.85rem;
   color: #9fb3d9;
-}
-
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-      color: #f9fafb;
-    }
-
-    h2 {
-      font-size: 1.3rem;
-      margin-top: 40px;
-      color: #d1d5db;
-    }
-
-    h3 {
-      font-size: 1.05rem;
-      margin-top: 24px;
-      color: #cbd5f5;
-    }
-
-p {
-      margin: 12px 0;
-      color: #cbd5f5;
-    }
-
-    ul {
-      margin: 12px 0 12px 20px;
-      color: #cbd5f5;
-    }
-
-    li {
-      margin: 6px 0;
-    }
-
-    a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-.left-sidebar,
-.right-sidebar {
-  position: sticky;
-  top: 100px;
-  align-self: start;
-}
-
-@media (max-width: 1199px) {
-  .container {
-    grid-template-columns: 1fr;
-  }
-
-  .left-sidebar,
-  .right-sidebar {
-    position: static;
-  }
 }
