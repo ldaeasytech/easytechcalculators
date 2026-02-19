@@ -119,9 +119,9 @@ body {
   gap: 28px;
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1200px) {
   .container {
-    grid-template-columns: 1.3fr 0.9fr;
+    grid-template-columns: 240px 1.4fr 300px;
   }
 }
 
@@ -1056,13 +1056,6 @@ select:focus {
   color: #9fb3d9;
 }
 
-
-.container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 48px 20px;
-    }
-
     h1 {
       font-size: 1.8rem;
       margin-bottom: 16px;
@@ -1103,3 +1096,21 @@ p {
     a:hover {
       text-decoration: underline;
     }
+
+.left-sidebar,
+.right-sidebar {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+
+@media (max-width: 1199px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .left-sidebar,
+  .right-sidebar {
+    position: static;
+  }
+}
