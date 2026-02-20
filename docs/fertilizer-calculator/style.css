@@ -1524,6 +1524,7 @@ select:focus {
 
 .result-values {
   font-size: 0.85rem;
+  color: #93c5fd;
   line-height: 1.6;
   margin-bottom: 10px;
 }
