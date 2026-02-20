@@ -286,7 +286,7 @@ function displayResults(results, economicMode) {
           ? `
         <div class="total-row cost-row">
           <div>Total Cost</div>
-          <div>₱ ${formattedCost} /ha</div>
+          <div> ${formattedCost} /ha</div>
         </div>
       `
           : ""
