@@ -238,6 +238,7 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 // =====================================================
 // DISPLAY RESULTS
 // =====================================================
+
 function displayResults(results, economicMode) {
 
   const block = document.getElementById("resultsBlock");
@@ -247,10 +248,7 @@ function displayResults(results, economicMode) {
 
   container.innerHTML = "";
 
-  // ===============================
   // Dynamic Title
-  // ===============================
-
   if (economicMode) {
     resultsTitle.textContent =
       "Top 10 Most Economical Fertilizer Combinations (Lowest Cost per Hectare)";
@@ -263,95 +261,12 @@ function displayResults(results, economicMode) {
       "Ranked from lowest to highest total fertilizer required.";
   }
 
-  // ===============================
   // Determine max value for ranking bars
-  // ===============================
-
-  let maxValue;
-
-  if (economicMode) {
-    maxValue = Math.max(...results.map(r => r.totalCost));
-  } else {
-    maxValue = Math.max(...results.map(r => r.totalMass));
-  }
-
-  // ===============================
-  // Render Results
-  // ===============================
-function displayResults(results, economicMode) {
-
-  const block = document.getElementById("resultsBlock");
-  const container = document.getElementById("resultsContainer");
-  const resultsTitle = document.getElementById("resultsTitle");
-  const resultsSubtitle = document.getElementById("resultsSubtitle");
-
-  container.innerHTML = "";
-
-  // ===============================
-  // Dynamic Title
-  // ===============================
-
-  if (economicMode) {
-    resultsTitle.textContent =
-      "Top 10 Most Economical Fertilizer Combinations (Lowest Cost per Hectare)";
-    resultsSubtitle.textContent =
-      "Ranked from lowest to highest total fertilizer cost.";
-  } else {
-    resultsTitle.textContent =
-      "Feasible Fertilizer Combinations Ranked by Minimum Total Application Rate";
-    resultsSubtitle.textContent =
-      "Ranked from lowest to highest total fertilizer required.";
-  }
-
-  // ===============================
-  // Determine max value for ranking bars
-  // ===============================
-
-  let maxValue = economicMode
+  const maxValue = economicMode
     ? Math.max(...results.map(r => r.totalCost))
     : Math.max(...results.map(r => r.totalMass));
 
-  // ===============================
   // Render Results
-  // ===============================
-
-  function displayResults(results, economicMode) {
-
-  const block = document.getElementById("resultsBlock");
-  const container = document.getElementById("resultsContainer");
-  const resultsTitle = document.getElementById("resultsTitle");
-  const resultsSubtitle = document.getElementById("resultsSubtitle");
-
-  container.innerHTML = "";
-
-  // ===============================
-  // Dynamic Title
-  // ===============================
-
-  if (economicMode) {
-    resultsTitle.textContent =
-      "Top 10 Most Economical Fertilizer Combinations (Lowest Cost per Hectare)";
-    resultsSubtitle.textContent =
-      "Ranked from lowest to highest total fertilizer cost.";
-  } else {
-    resultsTitle.textContent =
-      "Feasible Fertilizer Combinations Ranked by Minimum Total Application Rate";
-    resultsSubtitle.textContent =
-      "Ranked from lowest to highest total fertilizer required.";
-  }
-
-  // ===============================
-  // Determine max value for ranking bars
-  // ===============================
-
-  let maxValue = economicMode
-    ? Math.max(...results.map(r => r.totalCost))
-    : Math.max(...results.map(r => r.totalMass));
-
-  // ===============================
-  // Render Results
-  // ===============================
-
   results.forEach((r, index) => {
 
     const value = economicMode ? r.totalCost : r.totalMass;
