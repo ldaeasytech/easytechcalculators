@@ -134,16 +134,35 @@
 
 </div>
 
-      <!-- Fertilizer Prices -->
+      <!-- Fertilizer Prices 
           <div class="input-group" id="priceSection">
-      <div class="group-title">Fertilizer Prices (per bag)</div>
+      <div class="price-group">
+      <div class="helper-text">
+      Prices are normalized internally to cost per kg for accurate comparison.
+      </div>
+      <label>Price per bag</label>
+      <input type="number" id="ureaPrice" step="any">
     
-      <div id="priceInputs" class="price-grid"></div>
+      <label>Bag weight (kg)</label>
+      <input type="number" id="ureaBagWeight" value="50" step="any">
+      </div>
     
       <div class="price-note">
         Only fertilizer sets with complete pricing will be evaluated in economic ranking.
       </div>
-    </div>
+    </div> -->
+
+      <section class="card">
+
+       <h2>Fertilizer Prices</h2>
+      
+        <div class="helper-text">
+          Enter price per bag. Ranking will be based on total cost per hectare.
+        </div>
+      
+        <div id="priceInputs" class="price-grid"></div>
+      
+      </section>
 
   </form>
 
