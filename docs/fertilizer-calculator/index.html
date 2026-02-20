@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fertilizer Calculator | NPK Optimization</title>
+  <meta name="description"
+    content="Fertilizer calculator that computes optimal 3-fertilizer combinations to meet crop NPK requirement at minimum cost.">
+
+  <link rel="stylesheet" href="fertilizer-style.css">
+</head>
+<body>
+
+<h1>Fertilizer Optimization Calculator</h1>
+
+<section>
+  <h3>Nutrient Requirement (kg/ha)</h3>
+  <input id="nitrogen" placeholder="Nitrogen">
+  <input id="phosphorus" placeholder="Phosphorus">
+  <input id="potassium" placeholder="Potassium">
+</section>
+
+<section>
+  <h3>Fertilizer Prices (per bag)</h3>
+  <!-- Dynamically generate later -->
+  <input id="price_A" placeholder="Price A">
+  <input id="price_B" placeholder="Price B">
+  ...
+</section>
+
+<button id="calculateBtn">Calculate</button>
+
+<div id="results"></div>
+
+<script type="module" src="js/fertilizer.js"></script>
+
+</body>
+</html>
