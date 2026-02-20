@@ -129,7 +129,7 @@ function displayResults(results, economicMode) {
 
   results.forEach((r, index) => {
 
-    const setNames = r.set.map(code => fertilizers[code].name);
+    const setNames = r.set.map(code => fertilizers[code].display);
 
     const formattedCost = economicMode
       ? new Intl.NumberFormat().format(r.totalCost.toFixed(2))
