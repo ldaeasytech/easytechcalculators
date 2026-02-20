@@ -1434,3 +1434,25 @@ select:focus {
   font-size: 0.8rem;
   color: #93c5fd;
 }
+
+/* ===============================
+   CALCULATE WRAPPER FIX
+================================ */
+
+.calculate-wrapper {
+  max-width: 1350px;
+  margin: 40px auto;
+  padding: 0 24px;
+}
+
+.calculate-section {
+  padding: 28px 24px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(14,165,233,0.08),
+    rgba(59,130,246,0.05)
+  );
+  border: 1px solid rgba(59,130,246,0.25);
+  text-align: center;
+}
