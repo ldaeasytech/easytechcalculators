@@ -1,36 +1,239 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Fertilizer Calculator | NPK Optimization</title>
-  <meta name="description"
-    content="Fertilizer calculator that computes optimal 3-fertilizer combinations to meet crop NPK requirement at minimum cost.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="fertilizer-style.css">
+  <title>Fertilizer Calculator | NPK Optimization & Cost Ranking</title>
+
+<meta name="description"
+  content="Free Fertilizer Calculator to determine optimal 3-fertilizer combinations to meet crop NPK requirements at lowest cost. Solve nutrient equations and rank top 10 most economical fertilizer sets." />
+
+<link rel="canonical" href="https://easytechcalculators.com/fertilizer-calculator/" />
+
+ <link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<!-- Organization Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "EasyTechCalculators",
+  "url": "https://easytechcalculators.com",
+  "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
+}
+</script>
+
+<!-- Web App Manifest -->
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Google AdSense -->
+<script async
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341457826307951"
+  crossorigin="anonymous"></script>
+
 </head>
+
 <body>
 
-<h1>Fertilizer Optimization Calculator</h1>
+<!-- ================= HEADER ================= -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <img
+        src="/logo-easytechcalculators.png"
+        alt="EasyTechCalculators engineering calculator logo"
+        class="brand-logo"
+      />
+      <div class="brand-text">
+        <h1>Fertilizer Optimization Calculator – NPK & Economic Ranking</h1>
+        <div class="capability-line">
+          Crop Nutrient Planning · Soil Analysis · Cost Optimization
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
 
-<section>
-  <h3>Nutrient Requirement (kg/ha)</h3>
-  <input id="nitrogen" placeholder="Nitrogen">
-  <input id="phosphorus" placeholder="Phosphorus">
-  <input id="potassium" placeholder="Potassium">
+<!-- ================= MAIN ================= -->
+<main class="container">
+
+  <!-- ================= INPUT CARD ================= -->
+  <section class="card">
+    <h2>Farm Inputs</h2>
+
+    <form class="grid-form" novalidate>
+
+      <!-- Soil & Area -->
+      <div class="input-group">
+        <div class="group-title">Field Information</div>
+
+        <div class="field">
+          <label for="landArea">Land Area (ha)</label>
+          <input id="landArea" type="number" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="cropType">Crop Type</label>
+          <select id="cropType">
+            <option value="">Select crop</option>
+            <option value="rice">Rice</option>
+            <option value="corn">Corn</option>
+            <option value="vegetables">Vegetables</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Soil Analysis -->
+      <div class="input-group">
+        <div class="group-title">Soil Test Result (kg/ha available)</div>
+
+        <div class="field">
+          <label for="soilN">Available Nitrogen</label>
+          <input id="soilN" type="number" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="soilP">Available Phosphorus</label>
+          <input id="soilP" type="number" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="soilK">Available Potassium</label>
+          <input id="soilK" type="number" step="any" />
+        </div>
+      </div>
+
+      <!-- Target Requirement -->
+      <div class="input-group">
+        <div class="group-title">Target Crop Requirement (kg/ha)</div>
+
+        <div class="field">
+          <label for="targetN">Nitrogen Required</label>
+          <input id="targetN" type="number" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="targetP">Phosphorus Required</label>
+          <input id="targetP" type="number" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="targetK">Potassium Required</label>
+          <input id="targetK" type="number" step="any" />
+        </div>
+      </div>
+
+      <!-- Fertilizer Prices -->
+      <div class="input-group">
+        <div class="group-title">Fertilizer Prices (per bag)</div>
+
+        <div id="priceInputs"></div>
+
+        <div class="helper-text">
+          Only fertilizer sets with complete prices will be evaluated.
+        </div>
+      </div>
+
+      <!-- Button -->
+      <div class="form-actions">
+        <button type="button" id="calculateBtn" class="primary">
+          Calculate Optimal Fertilizer Mix
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- ================= RESULTS ================= -->
+  <section class="card">
+    <h2 class="results-title">Top 10 Most Economical Fertilizer Sets</h2>
+
+    <div id="results" class="hidden">
+
+      <div class="result-section">
+        <table class="results-clean" id="resultsTable"></table>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= RELATED ================= -->
+<section class="related-calculators">
+  <h2>Related Calculators</h2>
+
+  <div class="related-grid">
+    <a href="../pump-power-calculator/" class="related-card">
+      <strong>Pump Power Calculator</strong>
+      <span>Hydraulic energy balance and power requirement.</span>
+    </a>
+
+    <a href="../optimum-pipe-diameter-calculator/" class="related-card">
+      <strong>Economic Pipe Diameter</strong>
+      <span>Minimize total annual pipe cost.</span>
+    </a>
+  </div>
 </section>
 
-<section>
-  <h3>Fertilizer Prices (per bag)</h3>
-  <!-- Dynamically generate later -->
-  <input id="price_A" placeholder="Price A">
-  <input id="price_B" placeholder="Price B">
-  ...
-</section>
+<!-- ================= LEARNING (SEO BOOST) ================= -->
+<main class="container-learning">
 
-<button id="calculateBtn">Calculate</button>
+<h1>How to Calculate Fertilizer Requirements</h1>
 
-<div id="results"></div>
+<h2>What is NPK in Fertilizers?</h2>
+<p>
+NPK refers to Nitrogen (N), Phosphorus (P), and Potassium (K),
+the three primary nutrients required for plant growth.
+</p>
 
-<script type="module" src="js/fertilizer.js"></script>
+<h2>Why Use Fertilizer Optimization?</h2>
+<p>
+Instead of applying a single fertilizer, combining multiple fertilizers
+allows farmers to meet exact nutrient requirements at lower cost.
+</p>
+
+<h2>How Does This Calculator Work?</h2>
+<p>
+The calculator solves three simultaneous nutrient equations (N, P, K)
+for 50 predefined fertilizer combinations and ranks them
+based on total cost.
+</p>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <div class="footer-disclaimer">
+      Results should be verified by agricultural professionals before field application.
+    </div>
+
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../policy.html">Privacy Policy</a>
+      <a href="../terms-of-service.html">Terms of Use</a>
+      <a href="../disclaimer.html">Disclaimer</a>
+    </div>
+
+    <div class="footer-copy">
+      © <span id="year"></span> EasyTechCalculators. All rights reserved.
+    </div>
+
+  </div>
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<script type="module" src="./js/fertilizer.js"></script>
 
 </body>
 </html>
