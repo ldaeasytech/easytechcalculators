@@ -68,15 +68,6 @@
 
     <form class="grid-form" novalidate>
 
-      <!-- Soil & Area -->
-      <div class="input-group">
-        <div class="group-title">Field Information</div>
-
-        <select id="cropType">
-          <option value="">Select crop</option>
-        </select>
-      </div>
-
       <!-- Soil Analysis -->
       <div class="input-group">
         <div class="group-title">Soil Test Result (kg/ha available)</div>
@@ -98,34 +89,50 @@
       </div>
 
       <!-- Target Requirement -->
-      <div class="input-group">
-        <div class="group-title">Target Crop Requirement (kg/ha)</div>
+  <div class="input-group" id="targetSection">
 
-        <div class="field">
-          <label for="targetN">Nitrogen Required</label>
-          <input id="targetN" type="number" step="any" />
-        </div>
+  <div class="group-title">
+    Crop Selection & Nutrient Requirement (kg/ha)
+  </div>
 
-        <div class="field">
-          <label for="targetP">Phosphorus Required</label>
-          <input id="targetP" type="number" step="any" />
-        </div>
+  <!-- Crop Selector -->
+  <div class="field">
+    <label for="cropType">Crop Type</label>
+    <select id="cropType">
+      <option value="">Select crop</option>
+    </select>
+  </div>
 
-        <div class="field">
-          <label for="targetK">Potassium Required</label>
-          <input id="targetK" type="number" step="any" />
-        </div>
-          
-         <!--Guidance box -->
-        <div id="nutrientGuidance" class="guidance-box hidden"></div>
+  <!-- Guidance Box -->
+  <div id="nutrientGuidance" class="guidance-box hidden"></div>
+  <div class="global-note">
+  Recommendations are based on typical international agronomic ranges.
+  </div>
 
-        <button type="button" id="useSuggestedBtn" class="secondary hidden">
-          Use Suggested Midpoint Values
-        </button>
-        
-      </div>
+  <!-- Use Suggested Button -->
+  <button type="button" id="useSuggestedBtn" class="secondary hidden">
+    Use Suggested Midpoint Values
+  </button>
 
-     
+  <div class="divider-light"></div>
+
+  <!-- Nutrient Inputs -->
+  <div class="field">
+    <label for="targetN">Nitrogen Required</label>
+    <input id="targetN" type="number" step="any" />
+  </div>
+
+  <div class="field">
+    <label for="targetP">Phosphorus Required</label>
+    <input id="targetP" type="number" step="any" />
+  </div>
+
+  <div class="field">
+    <label for="targetK">Potassium Required</label>
+    <input id="targetK" type="number" step="any" />
+  </div>
+
+</div>
 
       <!-- Fertilizer Prices -->
       <div class="input-group">
@@ -181,28 +188,236 @@
   </div>
 </section>
 
-<!-- ================= LEARNING (SEO BOOST) ================= -->
+
+<!-- ================= LEARNING SECTION ================= -->
 <main class="container-learning">
 
-<h1>How to Calculate Fertilizer Requirements</h1>
+<h1>Complete Guide to Fertilizer Management, Soil Fertility, and Crop Nutrition</h1>
 
-<h2>What is NPK in Fertilizers?</h2>
 <p>
-NPK refers to Nitrogen (N), Phosphorus (P), and Potassium (K),
-the three primary nutrients required for plant growth.
+Understanding fertilizer management is essential for maximizing crop yield,
+improving soil health, and ensuring sustainable agricultural productivity.
+This guide explains macronutrients (NPK), soil nutrient depletion,
+fertilizer calculation methods, soil testing procedures,
+and the role of micronutrients and organic matter in crop growth.
 </p>
 
-<h2>Why Use Fertilizer Optimization?</h2>
+<!-- ========================================================= -->
+<h2>1. What Are Macronutrients (N, P, K) and Their Role in Crop Growth?</h2>
+
 <p>
-Instead of applying a single fertilizer, combining multiple fertilizers
-allows farmers to meet exact nutrient requirements at lower cost.
+Plants require essential nutrients to complete their life cycle.
+Among these, Nitrogen (N), Phosphorus (P), and Potassium (K)
+are known as macronutrients because they are required in the largest amounts.
+These nutrients directly influence plant growth, yield, and quality.
 </p>
 
-<h2>How Does This Calculator Work?</h2>
+<h3>Nitrogen (N)</h3>
+<ul>
+<li>Promotes leaf and stem growth</li>
+<li>Essential for chlorophyll production</li>
+<li>Critical for protein and enzyme formation</li>
+<li>Enhances vegetative development</li>
+</ul>
+
 <p>
-The calculator solves three simultaneous nutrient equations (N, P, K)
-for 50 predefined fertilizer combinations and ranks them
-based on total cost.
+Nitrogen deficiency typically causes yellowing of older leaves
+and reduced plant vigor. Excess nitrogen may cause excessive vegetative growth
+and delayed maturity.
+</p>
+
+<h3>Phosphorus (P)</h3>
+<ul>
+<li>Supports strong root development</li>
+<li>Plays a key role in energy transfer (ATP)</li>
+<li>Improves flowering and seed formation</li>
+<li>Enhances early plant establishment</li>
+</ul>
+
+<p>
+Phosphorus deficiency may result in slow growth and
+dark green or purplish leaf coloration.
+</p>
+
+<h3>Potassium (K)</h3>
+<ul>
+<li>Regulates water balance in plants</li>
+<li>Improves stress tolerance</li>
+<li>Enhances disease resistance</li>
+<li>Improves grain filling and fruit quality</li>
+</ul>
+
+<p>
+Potassium strengthens plant structure and improves overall crop resilience.
+</p>
+
+<!-- ========================================================= -->
+<h2>2. Why Do We Need Synthetic Fertilizers?</h2>
+
+<p>
+Natural soils contain nutrients, but continuous cropping removes large quantities
+of nitrogen, phosphorus, and potassium every growing season.
+Without replenishment, soil fertility declines over time.
+</p>
+
+<h3>How Nutrients Are Depleted</h3>
+<ul>
+<li>Harvest removal (nutrients exported in grain and biomass)</li>
+<li>Leaching due to rainfall or irrigation</li>
+<li>Soil erosion</li>
+<li>Volatilization losses (especially nitrogen)</li>
+<li>Denitrification under waterlogged conditions</li>
+</ul>
+
+<p>
+For example, a high-yield corn crop may remove over 150 kg of nitrogen per hectare.
+If this nitrogen is not replaced, soil productivity decreases.
+</p>
+
+<p>
+Synthetic fertilizers provide concentrated, predictable nutrient sources that allow
+precise application rates. When used responsibly, they maintain soil fertility,
+support food production, and improve farm profitability.
+</p>
+
+<!-- ========================================================= -->
+<h2>3. How to Perform Accurate Soil Analysis</h2>
+
+<p>
+Soil testing is the foundation of precision fertilizer management.
+Proper sampling ensures accurate nutrient recommendations.
+</p>
+
+<h3>Step 1: Soil Sampling</h3>
+<ul>
+<li>Divide the field into uniform sections</li>
+<li>Collect 10–20 subsamples randomly</li>
+<li>Avoid sampling near fertilizer bands or field edges</li>
+<li>Mix subsamples thoroughly to create a composite sample</li>
+</ul>
+
+<h3>Step 2: Sampling Depth</h3>
+<ul>
+<li>0–15 cm for most annual crops</li>
+<li>Deeper sampling for perennial crops</li>
+</ul>
+
+<h3>Step 3: Laboratory Testing</h3>
+<p>
+Laboratories typically analyze:
+</p>
+<ul>
+<li>Available Nitrogen (N)</li>
+<li>Available Phosphorus (P)</li>
+<li>Exchangeable Potassium (K)</li>
+<li>Soil pH</li>
+<li>Organic matter content</li>
+</ul>
+
+<p>
+Accurate soil testing prevents over-application and reduces input costs.
+</p>
+
+<!-- ========================================================= -->
+<h2>4. How to Calculate Fertilizer Requirement</h2>
+
+<p>
+Fertilizer calculation is based on crop nutrient requirement minus available soil nutrients.
+</p>
+
+<h3>Basic Formula</h3>
+<p>
+Nutrient to apply = Crop requirement − Soil available nutrient
+</p>
+
+<p>
+Example:
+If crop requires 160 kg N/ha and soil supplies 60 kg N/ha,
+then 100 kg N/ha must be applied through fertilizer.
+</p>
+
+<h3>Converting Nutrient Requirement to Fertilizer Amount</h3>
+<p>
+If a fertilizer contains a known percentage of nutrient,
+the required fertilizer amount is:
+</p>
+
+<p>
+Fertilizer required (kg) = Nutrient needed ÷ Nutrient fraction
+</p>
+
+<p>
+Example:
+Urea contains 46% nitrogen (0.46 fraction).
+To supply 100 kg N:
+</p>
+
+<p>
+100 ÷ 0.46 = 217 kg urea per hectare
+</p>
+
+<p>
+When combining multiple fertilizers, simultaneous equations are solved
+to meet nitrogen, phosphorus, and potassium requirements —
+this calculator performs that automatically.
+</p>
+
+<!-- ========================================================= -->
+<h2>5. Micronutrients and Organic Matter in Soil Fertility</h2>
+
+<p>
+In addition to NPK, crops require micronutrients in smaller quantities.
+Even small deficiencies can reduce yield significantly.
+</p>
+
+<h3>Important Micronutrients</h3>
+<ul>
+<li>Zinc (Zn)</li>
+<li>Iron (Fe)</li>
+<li>Manganese (Mn)</li>
+<li>Copper (Cu)</li>
+<li>Boron (B)</li>
+<li>Molybdenum (Mo)</li>
+</ul>
+
+<p>
+Micronutrient availability is strongly influenced by soil pH and organic matter.
+</p>
+
+<h3>Role of Organic Matter</h3>
+<ul>
+<li>Improves soil structure</li>
+<li>Enhances water holding capacity</li>
+<li>Increases microbial activity</li>
+<li>Reduces nutrient leaching</li>
+<li>Improves long-term soil health</li>
+</ul>
+
+<p>
+Combining synthetic fertilizers with organic amendments often results in better
+nutrient efficiency and sustainable crop production.
+</p>
+
+<!-- ========================================================= -->
+<h2>Balanced Fertilization and Sustainable Agriculture</h2>
+
+<p>
+Efficient nutrient management improves profitability while minimizing environmental impact.
+Best practices include:
+</p>
+
+<ul>
+<li>Regular soil testing</li>
+<li>Applying nutrients based on crop removal</li>
+<li>Avoiding excessive nitrogen application</li>
+<li>Maintaining proper soil pH</li>
+<li>Incorporating organic matter into soil systems</li>
+</ul>
+
+<p>
+Balanced fertilization ensures optimal crop growth,
+maintains soil productivity,
+and supports long-term agricultural sustainability.
 </p>
 
 </main>
