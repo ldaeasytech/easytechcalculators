@@ -5,6 +5,10 @@ import { fertilizerSets } from "./fertilizerOptions.js";
 import { solveFertilizerSet } from "./linearSolver.js";
 import { calculateCost } from "./economicRanking.js";
 
+function getPricePerKg(pricePerBag, bagWeight) {
+  const weight = bagWeight > 0 ? bagWeight : 50;
+  return pricePerBag / weight;
+}
 
 // =====================================================
 // CROP NUTRIENT GUIDANCE DATABASE
@@ -127,7 +131,6 @@ populateCropDropdown();
 // =====================================================
 // GENERATE PRICE INPUTS
 // =====================================================
-
 function generatePriceInputs() {
 
   const container = document.getElementById("priceInputs");
@@ -136,26 +139,34 @@ function generatePriceInputs() {
   Object.entries(fertilizers).forEach(([code, data]) => {
 
     const wrapper = document.createElement("div");
-    wrapper.className = "field";
+    wrapper.className = "price-group";
 
     wrapper.innerHTML = `
-  <label for="price_${code}" class="price-label">
-    ${data.display}
-  </label>
-  <input 
-    type="number"
-    id="price_${code}"
-    step="any"
-    placeholder="Enter price per bag"
-  >
-  `;
+      <label for="price_${code}">
+        ${data.display} – Price per bag (₱)
+      </label>
+      <input 
+        type="number"
+        id="price_${code}"
+        step="any"
+        placeholder="Enter price per bag"
+      >
+
+      <label for="bag_${code}">
+        Bag weight (kg)
+      </label>
+      <input
+        type="number"
+        id="bag_${code}"
+        value="50"
+        min="1"
+        step="any"
+      >
+    `;
 
     container.appendChild(wrapper);
   });
 }
-
-generatePriceInputs();
-
 
 // =====================================================
 // CALCULATE BUTTON
@@ -191,14 +202,21 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 
     if (anyPriceEntered) {
 
-      const prices = set.map(code =>
-        parseFloat(document.getElementById("price_" + code).value)
-      );
+     const pricesPerKg = set.map(code => {
+
+  const pricePerBag =
+    parseFloat(document.getElementById("price_" + code).value);
+
+  const bagWeight =
+    parseFloat(document.getElementById("bag_" + code).value) || 50;
+
+  return getPricePerKg(pricePerBag, bagWeight);
+});
 
       // Skip if incomplete pricing
       if (prices.some(p => isNaN(p))) return;
 
-      const totalCost = calculateCost(solution, prices);
+    const totalCost = calculateCost(solution, pricesPerKg);
 
       results.push({
         set,
@@ -262,28 +280,58 @@ function displayResults(results, economicMode) {
 
   results.forEach((r, index) => {
 
-    const fertilizersList = r.set.map((code, i) => {
-      return `
-        <div class="result-row">
-          <div class="fert-name">
-            ${fertilizers[code].display}
-          </div>
-          <div class="fert-amount">
-            ${r.solution[i].toFixed(2)} bags/ha
-          </div>
-          <div class="fert-cost">
-            ${
-              economicMode
-                ? "₱ " + (r.totalCost * (r.solution[i] / r.totalMass))
-                    .toFixed(2)
-                    .toLocaleString()
-                : "—"
-            }
-          </div>
-        </div>
-      `;
-    }).join("");
+   const fertilizersList = r.set.map((code, i) => {
 
+  const kgRequired = r.solution[i];
+
+  const bagWeight =
+    parseFloat(document.getElementById("bag_" + code).value) || 50;
+
+  const wholeBags = Math.floor(kgRequired / bagWeight);
+  const remainingKg = kgRequired % bagWeight;
+
+  const amountDisplay = `
+    <div class="bag-main">
+      ${wholeBags} bags + ${remainingKg.toFixed(1)} kg
+    </div>
+    <div class="bag-total">
+      (Total: ${kgRequired.toFixed(2)} kg/ha)
+    </div>
+  `;
+
+  let costDisplay = "—";
+
+  if (economicMode) {
+    const pricePerBag =
+      parseFloat(document.getElementById("price_" + code).value);
+
+    const pricePerKg =
+      pricePerBag / bagWeight;
+
+    const fertilizerCost = kgRequired * pricePerKg;
+
+    costDisplay =
+      "₱ " + fertilizerCost.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+  }
+
+  return `
+    <div class="result-row">
+      <div class="fert-name">
+        ${fertilizers[code].display}
+      </div>
+      <div class="fert-amount">
+        ${amountDisplay}
+      </div>
+      <div class="fert-cost">
+        ${costDisplay}
+      </div>
+    </div>
+  `;
+}).join("");
+    
     const totalCostDisplay = economicMode
       ? `₱ ${r.totalCost.toLocaleString(undefined,{minimumFractionDigits:2})}/ha`
       : "—";
