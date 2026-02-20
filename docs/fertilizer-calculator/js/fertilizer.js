@@ -194,8 +194,6 @@ const Nreq = Math.max(targetN - soilN, 0);
 const Preq = Math.max(targetP - soilP, 0);
 const Kreq = Math.max(targetK - soilK, 0);
 
-const required = [Nreq, Preq, Kreq];
-
   const required = [Nreq, Preq, Kreq];
   const results = [];
 
