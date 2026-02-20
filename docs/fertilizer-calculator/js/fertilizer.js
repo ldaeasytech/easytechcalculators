@@ -95,6 +95,53 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 
   });
 
+  // ==============================
+// Display Results
+// ==============================
+
+function displayResults(results, economicMode) {
+
+  const table = document.getElementById("resultsTable");
+  table.innerHTML = "";
+
+  let header = `
+    <tr>
+      <th>Set</th>
+      <th>F1 (kg)</th>
+      <th>F2 (kg)</th>
+      <th>F3 (kg)</th>
+      <th>Total Mass</th>
+  `;
+
+  if (economicMode) header += `<th>Total Cost</th>`;
+
+  header += `</tr>`;
+
+  table.innerHTML += header;
+
+  results.forEach(r => {
+
+    let row = `
+      <tr>
+        <td>${r.set.join("-")}</td>
+        <td>${r.solution[0].toFixed(2)}</td>
+        <td>${r.solution[1].toFixed(2)}</td>
+        <td>${r.solution[2].toFixed(2)}</td>
+        <td>${r.totalMass.toFixed(2)}</td>
+    `;
+
+    if (economicMode)
+      row += `<td>${r.totalCost.toFixed(2)}</td>`;
+
+    row += `</tr>`;
+
+    table.innerHTML += row;
+  });
+
+  document.getElementById("results").classList.remove("hidden");
+}
+  
+
   // Sort results
   if (anyPriceEntered) {
     results.sort((a,b) => a.totalCost - b.totalCost);
