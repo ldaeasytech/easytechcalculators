@@ -1597,3 +1597,15 @@ select:focus {
 .full-width-card {
   grid-column: 1 / -1;
 }
+
+.fert-main-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.fert-sub-name {
+  font-size: 0.75rem;
+  color: #93c5fd;
+  opacity: 0.8;
+}
