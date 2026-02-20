@@ -63,14 +63,25 @@ cropSelect.addEventListener("change", (e) => {
   }
 
   guidanceBox.innerHTML = `
-    <div><strong>Typical Nutrient Requirement for ${guide.label}</strong></div>
-    <div>Nitrogen (N): ${guide.N[0]} – ${guide.N[1]} kg/ha</div>
-    <div>Phosphorus (P): ${guide.P[0]} – ${guide.P[1]} kg/ha</div>
-    <div>Potassium (K): ${guide.K[0]} – ${guide.K[1]} kg/ha</div>
-    <div class="guidance-note">
-      These are general recommended ranges. Adjust based on soil test and yield goal.
-    </div>
-  `;
+  <div class="guidance-title">
+    Recommended Nutrient Range – ${guide.label}
+  </div>
+
+  <div class="guidance-grid">
+    <div>Nitrogen (N)</div>
+    <div>${guide.N[0]} – ${guide.N[1]} kg/ha</div>
+
+    <div>Phosphorus (P)</div>
+    <div>${guide.P[0]} – ${guide.P[1]} kg/ha</div>
+
+    <div>Potassium (K)</div>
+    <div>${guide.K[0]} – ${guide.K[1]} kg/ha</div>
+  </div>
+
+  <div class="guidance-note">
+    These are general agronomic ranges. Adjust based on soil test and yield goal.
+  </div>
+`;
 
   guidanceBox.classList.remove("hidden");
   useSuggestedBtn.classList.remove("hidden");
@@ -85,9 +96,9 @@ useSuggestedBtn.addEventListener("click", () => {
 
   const midpoint = (range) => (range[0] + range[1]) / 2;
 
-  document.getElementById("targetN").value = midpoint(guide.N);
-  document.getElementById("targetP").value = midpoint(guide.P);
-  document.getElementById("targetK").value = midpoint(guide.K);
+  document.getElementById("targetN").value = midpoint(guide.N).toFixed(0);
+  document.getElementById("targetP").value = midpoint(guide.P).toFixed(0);
+  document.getElementById("targetK").value = midpoint(guide.K).toFixed(0);
 
 });
 
