@@ -1,15 +1,19 @@
+// fertilizer.js
+
 import { fertilizers } from "./fertilizerData.js";
 import { fertilizerSets } from "./fertilizerOptions.js";
 import { solveFertilizerSet } from "./linearSolver.js";
 import { calculateCost } from "./economicRanking.js";
 
-// ==============================
-// Generate Fertilizer Price Inputs
-// ==============================
+
+// =====================================================
+// GENERATE PRICE INPUTS
+// =====================================================
 
 function generatePriceInputs() {
 
   const container = document.getElementById("priceInputs");
+  if (!container) return;
 
   Object.entries(fertilizers).forEach(([code, data]) => {
 
@@ -32,8 +36,12 @@ function generatePriceInputs() {
   });
 }
 
-// Run on page load
 generatePriceInputs();
+
+
+// =====================================================
+// CALCULATE BUTTON
+// =====================================================
 
 document.getElementById("calculateBtn").addEventListener("click", () => {
 
@@ -42,10 +50,9 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
   const Kreq = parseFloat(document.getElementById("targetK").value) || 0;
 
   const required = [Nreq, Preq, Kreq];
-
   const results = [];
 
-  // Check if ANY price was entered
+  // Check if ANY price is entered
   const anyPriceEntered = Object.keys(fertilizers).some(code => {
     const val = document.getElementById("price_" + code).value;
     return val !== "";
@@ -62,15 +69,15 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
     const solution = solveFertilizerSet(matrix, required);
     if (!solution) return;
 
-    const totalMass = solution.reduce((a,b) => a+b, 0);
+    const totalMass = solution.reduce((a,b) => a + b, 0);
 
     if (anyPriceEntered) {
 
-      // Only evaluate if ALL 3 prices exist
       const prices = set.map(code =>
         parseFloat(document.getElementById("price_" + code).value)
       );
 
+      // Skip if incomplete pricing
       if (prices.some(p => isNaN(p))) return;
 
       const totalCost = calculateCost(solution, prices);
@@ -78,13 +85,12 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
       results.push({
         set,
         solution,
-        totalCost,
-        totalMass
+        totalMass,
+        totalCost
       });
 
     } else {
 
-      // Feasibility mode (no price ranking)
       results.push({
         set,
         solution,
@@ -95,22 +101,41 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 
   });
 
-  // ==============================
-// Display Results
-// ==============================
+  if (results.length === 0) {
+    alert("No feasible fertilizer combinations found.");
+    return;
+  }
+
+  if (anyPriceEntered) {
+    results.sort((a,b) => a.totalCost - b.totalCost);
+    displayResults(results.slice(0,10), true);
+  } else {
+    results.sort((a,b) => a.totalMass - b.totalMass);
+    displayResults(results, false);
+  }
+
+});
+
+
+// =====================================================
+// DISPLAY RESULTS
+// =====================================================
 
 function displayResults(results, economicMode) {
 
   const table = document.getElementById("resultsTable");
+  const block = document.getElementById("resultsBlock");
+
   table.innerHTML = "";
 
   let header = `
     <tr>
-      <th>Set</th>
-      <th>F1 (kg)</th>
-      <th>F2 (kg)</th>
-      <th>F3 (kg)</th>
-      <th>Total Mass</th>
+      <th>#</th>
+      <th>Fertilizer Combination</th>
+      <th>Fertilizer 1 (kg)</th>
+      <th>Fertilizer 2 (kg)</th>
+      <th>Fertilizer 3 (kg)</th>
+      <th>Total Mass (kg)</th>
   `;
 
   if (economicMode) header += `<th>Total Cost</th>`;
@@ -119,11 +144,16 @@ function displayResults(results, economicMode) {
 
   table.innerHTML += header;
 
-  results.forEach(r => {
+  results.forEach((r, index) => {
+
+    const setNames = r.set
+      .map(code => fertilizers[code].name)
+      .join(" + ");
 
     let row = `
       <tr>
-        <td>${r.set.join("-")}</td>
+        <td>${index + 1}</td>
+        <td>${setNames}</td>
         <td>${r.solution[0].toFixed(2)}</td>
         <td>${r.solution[1].toFixed(2)}</td>
         <td>${r.solution[2].toFixed(2)}</td>
@@ -138,17 +168,5 @@ function displayResults(results, economicMode) {
     table.innerHTML += row;
   });
 
-  document.getElementById("results").classList.remove("hidden");
+  block.classList.remove("hidden");
 }
-  
-
-  // Sort results
-  if (anyPriceEntered) {
-    results.sort((a,b) => a.totalCost - b.totalCost);
-    displayResults(results.slice(0,10), true);
-  } else {
-    results.sort((a,b) => a.totalMass - b.totalMass);
-    displayResults(results, false);
-  }
-
-});
