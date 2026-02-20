@@ -1462,105 +1462,75 @@ select:focus {
 }
 
 /* ===============================
-   RESULTS UI UPGRADE
-================================ */
-/* ===============================
-   RESULTS UI UPGRADE
+   STRUCTURED RESULT LAYOUT
 ================================ */
 
-.results-subtitle {
-  font-size: 0.85rem;
-  color: #93c5fd;
-  margin-bottom: 20px;
-}
-
-.result-card {
+.structured-card {
   background: #0f172a;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 16px;
-  transition: 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 24px;
+  color: #ffffff;
 }
 
-.result-card:hover {
-  border-color: rgba(63,169,255,0.4);
-}
-
-.best-result {
-  border-left: 4px solid #22c55e;
-  background: rgba(34,197,94,0.05);
-}
-
-.result-header {
+.structured-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
-.rank-badge {
+.rank-label {
   font-weight: 700;
-  font-size: 0.9rem;
-  background: #1f2937;
-  padding: 4px 8px;
-  border-radius: 6px;
+  font-size: 1rem;
+  background: #1e293b;
+  padding: 6px 10px;
+  border-radius: 8px;
 }
 
 .best-badge {
   background: #22c55e;
   color: #0b1220;
-  font-size: 0.7rem;
   font-weight: 600;
-  padding: 4px 8px;
+  font-size: 0.75rem;
+  padding: 4px 10px;
   border-radius: 6px;
 }
 
-.result-combo {
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-.plus-inline {
-  opacity: 0.6;
-  margin: 0 4px;
-}
-
-.plus-sign {
-  text-align: center;
-  opacity: 0.6;
-}
-
-.result-values {
+.structured-table {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 6px 12px;
-  font-size: 0.85rem;
-  margin-bottom: 14px;
+  gap: 8px;
 }
 
-.result-cost {
+.structured-heading {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  font-weight: 600;
+  color: #93c5fd;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 6px 0;
+}
+
+.fert-name {
+  font-weight: 500;
+}
+
+.fert-amount,
+.fert-cost {
+  text-align: right;
+}
+
+.structured-total {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding-top: 8px;
   margin-top: 6px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #38bdf8;
-}
-
-.ranking-bar-wrapper {
-  height: 6px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.ranking-bar-fill {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #22c55e,
-    #3fa9ff
-  );
-  transition: width 0.5s ease;
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
