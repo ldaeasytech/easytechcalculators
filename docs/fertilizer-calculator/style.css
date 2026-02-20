@@ -1298,3 +1298,9 @@ select:focus {
 .secondary:hover {
   background: #334155;
 }
+
+.per-ha-note {
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  color: #93c5fd;
+}
