@@ -37,20 +37,21 @@ generatePriceInputs();
 
 document.getElementById("calculateBtn").addEventListener("click", () => {
 
-  const Nreq = parseFloat(document.getElementById("nitrogen").value);
-  const Preq = parseFloat(document.getElementById("phosphorus").value);
-  const Kreq = parseFloat(document.getElementById("potassium").value);
+  const Nreq = parseFloat(document.getElementById("targetN").value) || 0;
+  const Preq = parseFloat(document.getElementById("targetP").value) || 0;
+  const Kreq = parseFloat(document.getElementById("targetK").value) || 0;
 
   const required = [Nreq, Preq, Kreq];
+
   const results = [];
 
+  // Check if ANY price was entered
+  const anyPriceEntered = Object.keys(fertilizers).some(code => {
+    const val = document.getElementById("price_" + code).value;
+    return val !== "";
+  });
+
   fertilizerSets.forEach(set => {
-
-    const prices = set.map(code =>
-      parseFloat(document.getElementById("price_" + code).value)
-    );
-
-    if (prices.some(p => isNaN(p))) return;
 
     const matrix = [
       [fertilizers[set[0]].N, fertilizers[set[1]].N, fertilizers[set[2]].N],
@@ -61,16 +62,46 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
     const solution = solveFertilizerSet(matrix, required);
     if (!solution) return;
 
-    const totalCost = calculateCost(solution, prices);
+    const totalMass = solution.reduce((a,b) => a+b, 0);
 
-    results.push({
-      set,
-      solution,
-      totalCost
-    });
+    if (anyPriceEntered) {
+
+      // Only evaluate if ALL 3 prices exist
+      const prices = set.map(code =>
+        parseFloat(document.getElementById("price_" + code).value)
+      );
+
+      if (prices.some(p => isNaN(p))) return;
+
+      const totalCost = calculateCost(solution, prices);
+
+      results.push({
+        set,
+        solution,
+        totalCost,
+        totalMass
+      });
+
+    } else {
+
+      // Feasibility mode (no price ranking)
+      results.push({
+        set,
+        solution,
+        totalMass
+      });
+
+    }
+
   });
 
-  results.sort((a,b) => a.totalCost - b.totalCost);
+  // Sort results
+  if (anyPriceEntered) {
+    results.sort((a,b) => a.totalCost - b.totalCost);
+    displayResults(results.slice(0,10), true);
+  } else {
+    results.sort((a,b) => a.totalMass - b.totalMass);
+    displayResults(results, false);
+  }
 
-  displayResults(results.slice(0,10));
 });
