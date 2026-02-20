@@ -282,11 +282,12 @@ function displayResults(results, economicMode) {
   results.forEach((r, index) => {
 
     const value = economicMode ? r.totalCost : r.totalMass;
-    const percentWidth = (value / maxValue) * 100;
+    const bestValue = economicMode ? results[0].totalCost : results[0].totalMass;
+    const percentWidth = (bestValue / value) * 100;
 
     const setNames = r.set
-      .map(code => `<div>${fertilizers[code].display}</div>`)
-      .join('<div class="plus-sign">+</div>');
+  .map(code => `<span class="fert-name">${fertilizers[code].display}</span>`)
+  .join('<span class="plus-inline"> + </span>');
 
     const costDisplay = economicMode
       ? `<div class="result-cost">₱ ${r.totalCost.toLocaleString(undefined, {minimumFractionDigits:2})}</div>`
