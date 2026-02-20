@@ -340,14 +340,15 @@ input,
 select {
   background: linear-gradient(
     135deg,
-    #0f172a,
-    #111827
+    #0f1b2d,
+    #14263f
   );
-  border: 1px solid #2b3a52;
+  border: 1.5px solid rgba(96,165,250,0.35);
   border-radius: 12px;
-  padding: 10px 12px;
-  color: #e6edf5;
-  font-size: 0.9rem;
+  padding: 12px 14px;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 0.95rem;
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -366,7 +367,7 @@ select option {
 
 input:hover,
 select:hover {
-  border-color: rgba(63,169,255,0.4);
+  border-color: rgba(96,165,250,0.7);
 }
 
 input:focus,
@@ -375,7 +376,13 @@ select:focus {
   border-color: #3fa9ff;
   box-shadow:
     0 0 0 3px rgba(63,169,255,0.25),
-    inset 0 1px 2px rgba(0,0,0,0.6);
+    0 0 12px rgba(63,169,255,0.25);
+
+  background: linear-gradient(
+    135deg,
+    #122038,
+    #1a2f4d
+  );
 }
 /* =========================================================
    ATM TOGGLE
