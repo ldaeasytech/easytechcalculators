@@ -92,6 +92,28 @@ useSuggestedBtn.addEventListener("click", () => {
 });
 
 // =====================================================
+// POPULATE CROP DROPDOWN
+// =====================================================
+
+function populateCropDropdown() {
+
+  const cropSelect = document.getElementById("cropType");
+
+  Object.keys(cropGuidance)
+  .sort((a,b) => cropGuidance[a].label.localeCompare(cropGuidance[b].label))
+  .forEach(key => {
+
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = cropGuidance[key].label;
+
+    cropSelect.appendChild(option);
+  });
+}
+
+populateCropDropdown();
+
+// =====================================================
 // GENERATE PRICE INPUTS
 // =====================================================
 
