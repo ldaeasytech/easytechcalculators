@@ -3,6 +3,38 @@ import { fertilizerSets } from "./fertilizerOptions.js";
 import { solveFertilizerSet } from "./linearSolver.js";
 import { calculateCost } from "./economicRanking.js";
 
+// ==============================
+// Generate Fertilizer Price Inputs
+// ==============================
+
+function generatePriceInputs() {
+
+  const container = document.getElementById("priceInputs");
+
+  Object.entries(fertilizers).forEach(([code, data]) => {
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "field";
+
+    wrapper.innerHTML = `
+      <label for="price_${code}">
+        ${code} – ${data.name}
+      </label>
+      <input 
+        type="number"
+        id="price_${code}"
+        step="any"
+        placeholder="Enter price per bag"
+      >
+    `;
+
+    container.appendChild(wrapper);
+  });
+}
+
+// Run on page load
+generatePriceInputs();
+
 document.getElementById("calculateBtn").addEventListener("click", () => {
 
   const Nreq = parseFloat(document.getElementById("nitrogen").value);
