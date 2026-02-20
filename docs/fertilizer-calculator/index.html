@@ -72,20 +72,9 @@
       <div class="input-group">
         <div class="group-title">Field Information</div>
 
-        <div class="field">
-          <label for="landArea">Land Area (ha)</label>
-          <input id="landArea" type="number" step="any" />
-        </div>
-
-        <div class="field">
-          <label for="cropType">Crop Type</label>
-          <select id="cropType">
-            <option value="">Select crop</option>
-            <option value="rice">Rice</option>
-            <option value="corn">Corn</option>
-            <option value="vegetables">Vegetables</option>
-          </select>
-        </div>
+        <select id="cropType">
+          <option value="">Select crop</option>
+        </select>
       </div>
 
       <!-- Soil Analysis -->
@@ -160,6 +149,10 @@
 
 
   <!-- ================= RESULTS ================= -->
+<div class="per-ha-note">
+  All fertilizer recommendations are calculated per hectare.
+</div>
+    
   <div id="resultsBlock" class="results-block hidden">
       <h2 class="results-title">Fertilizer Combinations</h2>
 
