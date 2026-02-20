@@ -1553,7 +1553,7 @@ select:focus {
   border-top: 1px solid rgba(255,255,255,0.15);
 }
 
-.ranking-note {
+.results-subtitle {
   display: inline-block;
   padding: 6px 12px;
   background: rgba(59,130,246,0.15);
