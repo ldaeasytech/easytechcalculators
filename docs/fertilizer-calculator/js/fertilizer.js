@@ -238,7 +238,6 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 // =====================================================
 // DISPLAY RESULTS
 // =====================================================
-
 function displayResults(results, economicMode) {
 
   const block = document.getElementById("resultsBlock");
@@ -268,9 +267,13 @@ function displayResults(results, economicMode) {
   // Determine max value for ranking bars
   // ===============================
 
-  let maxValue = economicMode
-    ? Math.max(...results.map(r => r.totalCost))
-    : Math.max(...results.map(r => r.totalMass));
+  let maxValue;
+
+  if (economicMode) {
+    maxValue = Math.max(...results.map(r => r.totalCost));
+  } else {
+    maxValue = Math.max(...results.map(r => r.totalMass));
+  }
 
   // ===============================
   // Render Results
@@ -321,3 +324,4 @@ function displayResults(results, economicMode) {
 
   block.classList.remove("hidden");
 }
+
