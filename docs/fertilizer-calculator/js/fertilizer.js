@@ -240,60 +240,86 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 // =====================================================
 function displayResults(results, economicMode) {
 
-  const container = document.getElementById("resultsContainer");
   const block = document.getElementById("resultsBlock");
+  const container = document.getElementById("resultsContainer");
+  const resultsTitle = document.getElementById("resultsTitle");
+  const resultsSubtitle = document.getElementById("resultsSubtitle");
 
   container.innerHTML = "";
 
+  // ===============================
+  // Dynamic Title
+  // ===============================
+
+  if (economicMode) {
+    resultsTitle.textContent =
+      "Top 10 Most Economical Fertilizer Combinations (Lowest Cost per Hectare)";
+    resultsSubtitle.textContent =
+      "Ranked from lowest to highest total fertilizer cost.";
+  } else {
+    resultsTitle.textContent =
+      "Feasible Fertilizer Combinations Ranked by Minimum Total Application Rate";
+    resultsSubtitle.textContent =
+      "Ranked from lowest to highest total fertilizer required.";
+  }
+
+  // ===============================
+  // Determine max value for ranking bars
+  // ===============================
+
+  let maxValue;
+
+  if (economicMode) {
+    maxValue = Math.max(...results.map(r => r.totalCost));
+  } else {
+    maxValue = Math.max(...results.map(r => r.totalMass));
+  }
+
+  // ===============================
+  // Render Results
+  // ===============================
+
   results.forEach((r, index) => {
 
-    const setNames = r.set.map(code => fertilizers[code].display);
+    const value = economicMode ? r.totalCost : r.totalMass;
+    const percentWidth = (value / maxValue) * 100;
 
-    const formattedCost = economicMode
-      ? new Intl.NumberFormat().format(r.totalCost.toFixed(2))
-      : null;
+    const setNames = r.set
+      .map(code => `<div>${fertilizers[code].display}</div>`)
+      .join('<div class="plus-sign">+</div>');
 
-    const card = document.createElement("div");
-    card.className = "result-card";
+    const costDisplay = economicMode
+      ? `<div class="result-cost">₱ ${r.totalCost.toLocaleString(undefined, {minimumFractionDigits:2})}</div>`
+      : "";
 
-    card.innerHTML = `
-      <div class="rank-title">#${index + 1}</div>
-
-      <div class="fert-row">
-        <div class="fert-name">${setNames[0]}</div>
-        <div class="fert-amount">${r.solution[0].toFixed(2)} kg/ha</div>
-      </div>
-
-      <div class="fert-row">
-        <div class="fert-name">${setNames[1]}</div>
-        <div class="fert-amount">${r.solution[1].toFixed(2)} kg/ha</div>
-      </div>
-
-      <div class="fert-row">
-        <div class="fert-name">${setNames[2]}</div>
-        <div class="fert-amount">${r.solution[2].toFixed(2)} kg/ha</div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="total-row">
-        <div>Total Mass</div>
-        <div>${r.totalMass.toFixed(2)} kg/ha</div>
-      </div>
-
-      ${
-        economicMode
-          ? `
-        <div class="total-row cost-row">
-          <div>Total Cost</div>
-          <div> ${formattedCost} /ha</div>
+    const resultCard = `
+      <div class="result-card ${index === 0 ? 'best-result' : ''}">
+        
+        <div class="result-header">
+          <div class="rank-badge">#${index + 1}</div>
+          ${index === 0 && economicMode ? '<div class="best-badge">MOST ECONOMICAL</div>' : ''}
         </div>
-      `
-          : ""
-      }
+
+        <div class="result-combo">
+          ${setNames}
+        </div>
+
+        <div class="result-values">
+          <div>F1: ${r.solution[0].toFixed(2)} kg/ha</div>
+          <div>F2: ${r.solution[1].toFixed(2)} kg/ha</div>
+          <div>F3: ${r.solution[2].toFixed(2)} kg/ha</div>
+          <div><strong>Total:</strong> ${r.totalMass.toFixed(2)} kg/ha</div>
+          ${costDisplay}
+        </div>
+
+        <div class="ranking-bar-wrapper">
+          <div class="ranking-bar-fill" style="width:${percentWidth}%"></div>
+        </div>
+
+      </div>
     `;
 
-    container.appendChild(card);
+    container.innerHTML += resultCard;
   });
 
   block.classList.remove("hidden");
