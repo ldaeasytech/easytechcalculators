@@ -1562,3 +1562,20 @@ select:focus {
   color: #93c5fd;
   font-size: 0.85rem;
 }
+
+.price-group {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 10px;
+}
+
+.bag-main {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.bag-total {
+  font-size: 0.8rem;
+  color: #9fb3d9;
+  margin-top: 3px;
+}
