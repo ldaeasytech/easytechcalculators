@@ -136,32 +136,38 @@ function generatePriceInputs() {
   const container = document.getElementById("priceInputs");
   if (!container) return;
 
+  container.innerHTML = "";
+
   Object.entries(fertilizers).forEach(([code, data]) => {
 
     const wrapper = document.createElement("div");
-    wrapper.className = "price-group";
+    wrapper.className = "price-card";
 
     wrapper.innerHTML = `
-      <label for="price_${code}">
-        ${data.display} – Price per bag (₱)
-      </label>
-      <input 
-        type="number"
-        id="price_${code}"
-        step="any"
-        placeholder="Enter price per bag"
-      >
+      <div class="price-title">
+        ${data.display}
+      </div>
 
-      <label for="bag_${code}">
-        Bag weight (kg)
-      </label>
-      <input
-        type="number"
-        id="bag_${code}"
-        value="50"
-        min="1"
-        step="any"
-      >
+      <div class="price-row">
+        <label>Price per bag (₱)</label>
+        <input 
+          type="number"
+          id="price_${code}"
+          step="any"
+          placeholder="Enter price"
+        >
+      </div>
+
+      <div class="price-row">
+        <label>Bag weight (kg)</label>
+        <input
+          type="number"
+          id="bag_${code}"
+          value="50"
+          min="1"
+          step="any"
+        >
+      </div>
     `;
 
     container.appendChild(wrapper);
