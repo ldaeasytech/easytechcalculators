@@ -147,27 +147,31 @@ function displayResults(results, economicMode) {
 
   results.forEach((r, index) => {
 
-    const setNames = r.set
-  .map(code => `<div>${fertilizers[code].name}</div>`)
-  .join('<div class="plus-sign">+</div>');
+  const setNames = r.set
+    .map(code => `<div>${fertilizers[code].name}</div>`)
+    .join('<div class="plus-sign">+</div>');
 
-    let row = `
-      <tr>
-        <td class="rank-cell">${index + 1}</td>
-        <td class="combo-cell">${setNames}</td>
-        <td>${r.solution[0].toFixed(2)}</td>
-        <td>${r.solution[1].toFixed(2)}</td>
-        <td>${r.solution[2].toFixed(2)}</td>
-        <td>${r.totalMass.toFixed(2)}</td>
-    `;
+  let row = `
+    <tr>
+      <td data-label="Rank" class="rank-cell">${index + 1}</td>
+      <td data-label="Combination" class="combo-cell">${setNames}</td>
+      <td data-label="F1 (kg)">${r.solution[0].toFixed(2)}</td>
+      <td data-label="F2 (kg)">${r.solution[1].toFixed(2)}</td>
+      <td data-label="F3 (kg)">${r.solution[2].toFixed(2)}</td>
+      <td data-label="Total Mass (kg)">${r.totalMass.toFixed(2)}</td>
+  `;
 
-    if (economicMode)
-      row += `<td>₱ ${formattedCost}</td>`;
+  if (economicMode) {
+    const formattedCost = new Intl.NumberFormat().format(
+      r.totalCost.toFixed(2)
+    );
+    row += `<td data-label="Total Cost">₱ ${formattedCost}</td>`;
+  }
 
-    row += `</tr>`;
+  row += `</tr>`;
 
-    table.innerHTML += row;
-  });
+  table.innerHTML += row;
+});
 
   block.classList.remove("hidden");
 }
