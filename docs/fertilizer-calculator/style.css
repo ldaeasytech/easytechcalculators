@@ -1145,3 +1145,63 @@ select:focus {
   font-size: 0.85rem;
   color: #93c5fd;
 }
+
+.combo-cell {
+  min-width: 260px;
+  line-height: 1.4;
+}
+
+.combo-cell div {
+  margin: 2px 0;
+}
+
+.plus-sign {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.rank-cell {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #60a5fa;
+}
+
+.results-clean tr {
+  transition: background 0.2s ease;
+}
+
+.results-clean tbody tr:hover {
+  background: rgba(59,130,246,0.08);
+}
+
+@media (max-width: 768px) {
+
+  .results-clean {
+    min-width: unset;
+  }
+
+  .results-clean thead {
+    display: none;
+  }
+
+  .results-clean tr {
+    display: block;
+    margin-bottom: 18px;
+    padding: 12px;
+    background: #101722;
+    border-radius: 10px;
+  }
+
+  .results-clean td {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: none;
+  }
+
+  .results-clean td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #93c5fd;
+  }
+}
