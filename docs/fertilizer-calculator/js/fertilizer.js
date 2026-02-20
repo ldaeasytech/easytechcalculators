@@ -7,6 +7,91 @@ import { calculateCost } from "./economicRanking.js";
 
 
 // =====================================================
+// CROP NUTRIENT GUIDANCE DATABASE
+// =====================================================
+
+const cropGuidance = {
+  rice: {
+    label: "Rice",
+    N: [120, 150],
+    P: [30, 40],
+    K: [100, 120]
+  },
+  corn: {
+    label: "Corn",
+    N: [140, 180],
+    P: [30, 50],
+    K: [100, 140]
+  },
+  wheat: {
+    label: "Wheat",
+    N: [90, 130],
+    P: [20, 40],
+    K: [60, 90]
+  },
+  vegetables: {
+    label: "Vegetables (General)",
+    N: [150, 200],
+    P: [50, 100],
+    K: [150, 200]
+  },
+  potato: {
+    label: "Potato",
+    N: [180, 220],
+    P: [40, 80],
+    K: [200, 240]
+  }
+};
+
+// =====================================================
+// DISPLAY CROP GUIDANCE
+// =====================================================
+
+const cropSelect = document.getElementById("cropType");
+const guidanceBox = document.getElementById("nutrientGuidance");
+const useSuggestedBtn = document.getElementById("useSuggestedBtn");
+
+cropSelect.addEventListener("change", (e) => {
+
+  const crop = e.target.value;
+  const guide = cropGuidance[crop];
+
+  if (!guide) {
+    guidanceBox.classList.add("hidden");
+    useSuggestedBtn.classList.add("hidden");
+    return;
+  }
+
+  guidanceBox.innerHTML = `
+    <div><strong>Typical Nutrient Requirement for ${guide.label}</strong></div>
+    <div>Nitrogen (N): ${guide.N[0]} – ${guide.N[1]} kg/ha</div>
+    <div>Phosphorus (P): ${guide.P[0]} – ${guide.P[1]} kg/ha</div>
+    <div>Potassium (K): ${guide.K[0]} – ${guide.K[1]} kg/ha</div>
+    <div class="guidance-note">
+      These are general recommended ranges. Adjust based on soil test and yield goal.
+    </div>
+  `;
+
+  guidanceBox.classList.remove("hidden");
+  useSuggestedBtn.classList.remove("hidden");
+
+});
+
+useSuggestedBtn.addEventListener("click", () => {
+
+  const crop = cropSelect.value;
+  const guide = cropGuidance[crop];
+  if (!guide) return;
+
+  const midpoint = (range) => (range[0] + range[1]) / 2;
+
+  document.getElementById("targetN").value = midpoint(guide.N);
+  document.getElementById("targetP").value = midpoint(guide.P);
+  document.getElementById("targetK").value = midpoint(guide.K);
+
+});
+
+// =====================================================
 // GENERATE PRICE INPUTS
 // =====================================================
 
