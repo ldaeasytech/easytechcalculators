@@ -1205,3 +1205,60 @@ select:focus {
     color: #93c5fd;
   }
 }
+
+/* ===============================
+   RESULT CARD LAYOUT
+================================ */
+
+.result-card {
+  background: #101722;
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+  transition: all 0.2s ease;
+}
+
+.result-card:hover {
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+}
+
+.rank-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-bottom: 12px;
+}
+
+.fert-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.fert-name {
+  color: #e2e8f0;
+}
+
+.fert-amount {
+  font-family: "JetBrains Mono", monospace;
+  color: #ffffff;
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 12px 0;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.cost-row {
+  color: #facc15;
+}
