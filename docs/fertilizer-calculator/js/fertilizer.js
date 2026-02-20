@@ -182,9 +182,19 @@ generatePriceInputs();
 
 document.getElementById("calculateBtn").addEventListener("click", () => {
 
-  const Nreq = parseFloat(document.getElementById("targetN").value) || 0;
-  const Preq = parseFloat(document.getElementById("targetP").value) || 0;
-  const Kreq = parseFloat(document.getElementById("targetK").value) || 0;
+const targetN = parseFloat(document.getElementById("targetN").value) || 0;
+const targetP = parseFloat(document.getElementById("targetP").value) || 0;
+const targetK = parseFloat(document.getElementById("targetK").value) || 0;
+
+const soilN = parseFloat(document.getElementById("soilN").value) || 0;
+const soilP = parseFloat(document.getElementById("soilP").value) || 0;
+const soilK = parseFloat(document.getElementById("soilK").value) || 0;
+
+const Nreq = Math.max(targetN - soilN, 0);
+const Preq = Math.max(targetP - soilP, 0);
+const Kreq = Math.max(targetK - soilK, 0);
+
+const required = [Nreq, Preq, Kreq];
 
   const required = [Nreq, Preq, Kreq];
   const results = [];
