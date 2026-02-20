@@ -247,10 +247,7 @@ function displayResults(results, economicMode) {
 
   container.innerHTML = "";
 
-  // ===============================
   // Dynamic Title
-  // ===============================
-
   if (economicMode) {
     resultsTitle.textContent =
       "Top 10 Most Economical Fertilizer Combinations (Lowest Cost per Hectare)";
@@ -263,66 +260,69 @@ function displayResults(results, economicMode) {
       "Ranked from lowest to highest total fertilizer required.";
   }
 
-  // ===============================
-  // Determine max value for ranking bars
-  // ===============================
-
-  let maxValue;
-
-  if (economicMode) {
-    maxValue = Math.max(...results.map(r => r.totalCost));
-  } else {
-    maxValue = Math.max(...results.map(r => r.totalMass));
-  }
-
-  // ===============================
-  // Render Results
-  // ===============================
-
   results.forEach((r, index) => {
 
-    const value = economicMode ? r.totalCost : r.totalMass;
-    const bestValue = economicMode ? results[0].totalCost : results[0].totalMass;
-    const percentWidth = (bestValue / value) * 100;
+    const fertilizersList = r.set.map((code, i) => {
+      return `
+        <div class="result-row">
+          <div class="fert-name">
+            ${fertilizers[code].display}
+          </div>
+          <div class="fert-amount">
+            ${r.solution[i].toFixed(2)} kg/ha
+          </div>
+          <div class="fert-cost">
+            ${
+              economicMode
+                ? "₱ " + (r.totalCost * (r.solution[i] / r.totalMass))
+                    .toFixed(2)
+                    .toLocaleString()
+                : "—"
+            }
+          </div>
+        </div>
+      `;
+    }).join("");
 
-    const setNames = r.set
-  .map(code => `<span class="fert-name">${fertilizers[code].display}</span>`)
-  .join('<span class="plus-inline"> + </span>');
+    const totalCostDisplay = economicMode
+      ? `₱ ${r.totalCost.toLocaleString(undefined,{minimumFractionDigits:2})}/ha`
+      : "—";
 
-    const costDisplay = economicMode
-      ? `<div class="result-cost">₱ ${r.totalCost.toLocaleString(undefined, {minimumFractionDigits:2})}</div>`
-      : "";
+    const resultBlock = `
+      <div class="structured-card">
 
-    const resultCard = `
-      <div class="result-card ${index === 0 ? 'best-result' : ''}">
-        
-        <div class="result-header">
-          <div class="rank-badge">#${index + 1}</div>
-          ${index === 0 && economicMode ? '<div class="best-badge">MOST ECONOMICAL</div>' : ''}
+        <div class="structured-header">
+          <div class="rank-label">#${index + 1}</div>
+          ${
+            index === 0 && economicMode
+              ? `<div class="best-badge">MOST ECONOMICAL</div>`
+              : ""
+          }
         </div>
 
-        <div class="result-combo">
-          ${setNames}
-        </div>
+        <div class="structured-table">
 
-        <div class="result-values">
-          <div>F1: ${r.solution[0].toFixed(2)} kg/ha</div>
-          <div>F2: ${r.solution[1].toFixed(2)} kg/ha</div>
-          <div>F3: ${r.solution[2].toFixed(2)} kg/ha</div>
-          <div><strong>Total:</strong> ${r.totalMass.toFixed(2)} kg/ha</div>
-          ${costDisplay}
-        </div>
+          <div class="structured-heading">
+            <div>Fertilizer</div>
+            <div>Amount</div>
+            <div>Total Cost</div>
+          </div>
 
-        <div class="ranking-bar-wrapper">
-          <div class="ranking-bar-fill" style="width:${percentWidth}%"></div>
+          ${fertilizersList}
+
+          <div class="structured-total">
+            <div><strong>Total</strong></div>
+            <div><strong>${r.totalMass.toFixed(2)} kg/ha</strong></div>
+            <div><strong>${totalCostDisplay}</strong></div>
+          </div>
+
         </div>
 
       </div>
     `;
 
-    container.innerHTML += resultCard;
+    container.innerHTML += resultBlock;
   });
 
   block.classList.remove("hidden");
 }
-
