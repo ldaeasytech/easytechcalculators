@@ -81,7 +81,6 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
       if (prices.some(p => isNaN(p))) return;
 
       const totalCost = calculateCost(solution, prices);
-      const formattedCost = new Intl.NumberFormat().format(r.totalCost.toFixed(2));
 
       results.push({
         set,
