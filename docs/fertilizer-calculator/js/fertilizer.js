@@ -168,6 +168,8 @@ function generatePriceInputs() {
   });
 }
 
+generatePriceInputs();
+
 // =====================================================
 // CALCULATE BUTTON
 // =====================================================
@@ -214,7 +216,7 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 });
 
       // Skip if incomplete pricing
-      if (prices.some(p => isNaN(p))) return;
+   if (pricesPerKg.some(p => isNaN(p))) return;
 
     const totalCost = calculateCost(solution, pricesPerKg);
 
@@ -305,8 +307,10 @@ function displayResults(results, economicMode) {
     const pricePerBag =
       parseFloat(document.getElementById("price_" + code).value);
 
-    const pricePerKg =
-      pricePerBag / bagWeight;
+   const pricePerKg =
+  pricePerBag && bagWeight
+    ? pricePerBag / bagWeight
+    : 0;
 
     const fertilizerCost = kgRequired * pricePerKg;
 
