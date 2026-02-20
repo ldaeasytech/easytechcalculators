@@ -1077,3 +1077,14 @@ select:focus {
   font-size: 0.85rem;
   color: #9fb3d9;
 }
+
+#priceInputs {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 800px) {
+  #priceInputs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
