@@ -278,6 +278,42 @@ function displayResults(results, economicMode) {
   // ===============================
   // Render Results
   // ===============================
+function displayResults(results, economicMode) {
+
+  const block = document.getElementById("resultsBlock");
+  const container = document.getElementById("resultsContainer");
+  const resultsTitle = document.getElementById("resultsTitle");
+  const resultsSubtitle = document.getElementById("resultsSubtitle");
+
+  container.innerHTML = "";
+
+  // ===============================
+  // Dynamic Title
+  // ===============================
+
+  if (economicMode) {
+    resultsTitle.textContent =
+      "Top 10 Most Economical Fertilizer Combinations (Lowest Cost per Hectare)";
+    resultsSubtitle.textContent =
+      "Ranked from lowest to highest total fertilizer cost.";
+  } else {
+    resultsTitle.textContent =
+      "Feasible Fertilizer Combinations Ranked by Minimum Total Application Rate";
+    resultsSubtitle.textContent =
+      "Ranked from lowest to highest total fertilizer required.";
+  }
+
+  // ===============================
+  // Determine max value for ranking bars
+  // ===============================
+
+  let maxValue = economicMode
+    ? Math.max(...results.map(r => r.totalCost))
+    : Math.max(...results.map(r => r.totalMass));
+
+  // ===============================
+  // Render Results
+  // ===============================
 
   results.forEach((r, index) => {
 
