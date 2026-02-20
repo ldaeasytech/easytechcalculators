@@ -1285,22 +1285,80 @@ select:focus {
 
 .secondary {
   margin-top: 10px;
-  padding: 8px 14px;
+  padding: 10px 16px;
   font-size: 0.85rem;
-  border-radius: 8px;
-  background: #1e293b;
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #e2e8f0;
+  border-radius: 10px;
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.4);
+  color: #93c5fd;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .secondary:hover {
-  background: #334155;
+  background: rgba(59,130,246,0.25);
+  transform: translateY(-1px);
 }
 
 .per-ha-note {
   margin-bottom: 12px;
   font-size: 0.8rem;
   color: #93c5fd;
+}
+
+/* Light separator inside target section */
+.divider-light {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 16px 0 18px 0;
+}
+
+.guidance-box {
+  margin-top: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(
+    135deg,
+    rgba(59,130,246,0.08),
+    rgba(59,130,246,0.04)
+  );
+  border: 1px solid rgba(59,130,246,0.35);
+  border-radius: 12px;
+}
+
+.guidance-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  color: #60a5fa;
+}
+
+.guidance-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 6px;
+  column-gap: 20px;
+  font-size: 0.85rem;
+}
+
+.guidance-grid div:nth-child(odd) {
+  color: #cbd5f5;
+}
+
+.guidance-grid div:nth-child(even) {
+  font-family: "JetBrains Mono", monospace;
+  color: #ffffff;
+}
+
+.guidance-note {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  color: #93c5fd;
+  opacity: 0.9;
+}
+
+.global-note {
+  margin-top: 6px;
+  font-size: 0.7rem;
+  color: #64748b;
 }
