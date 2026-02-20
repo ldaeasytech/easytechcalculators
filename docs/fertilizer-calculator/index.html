@@ -135,31 +135,33 @@
 </div>
 
       <!-- Fertilizer Prices -->
-      <div class="input-group">
-        <div class="group-title">Fertilizer Prices (per bag)</div>
-
-        <div id="priceInputs"></div>
-
-        <div class="helper-text">
-          Only fertilizer sets with complete prices will be evaluated.
-        </div>
+          <div class="input-group" id="priceSection">
+      <div class="group-title">Fertilizer Prices (per bag)</div>
+    
+      <div id="priceInputs" class="price-grid"></div>
+    
+      <div class="price-note">
+        Only fertilizer sets with complete pricing will be evaluated in economic ranking.
       </div>
+    </div>
 
       <!-- Button -->
-      <div class="form-actions">
+      <div class="calculate-section">
         <button type="button" id="calculateBtn" class="primary">
           Calculate Optimal Fertilizer Mix
         </button>
+
+        <div class="per-ha-note">
+        All fertilizer recommendations are calculated per hectare.
+        </div>
+        
       </div>
 
     </form>
 
 
   <!-- ================= RESULTS ================= -->
-<div class="per-ha-note">
-  All fertilizer recommendations are calculated per hectare.
-</div>
-    
+
   <div id="resultsBlock" class="results-block hidden">
       <h2 class="results-title">Fertilizer Combinations</h2>
 
