@@ -120,58 +120,62 @@ document.getElementById("calculateBtn").addEventListener("click", () => {
 // =====================================================
 // DISPLAY RESULTS
 // =====================================================
-
 function displayResults(results, economicMode) {
 
-  const table = document.getElementById("resultsTable");
+  const container = document.getElementById("resultsContainer");
   const block = document.getElementById("resultsBlock");
 
-  table.innerHTML = "";
+  container.innerHTML = "";
 
-  // Proper Table Header
-  let header = `
-    <tr>
-      <th>#</th>
-      <th>Fertilizer Combination</th>
-      <th>Fertilizer 1 (kg)</th>
-      <th>Fertilizer 2 (kg)</th>
-      <th>Fertilizer 3 (kg)</th>
-      <th>Total Mass (kg)</th>
-  `;
-
-  if (economicMode) header += `<th>Total Cost</th>`;
-
-  header += `</tr>`;
-
-  table.innerHTML += header;
-
-  // Proper Loop
   results.forEach((r, index) => {
 
-    const setNames = r.set
-      .map(code => `<div>${fertilizers[code].name}</div>`)
-      .join('<div class="plus-sign">+</div>');
+    const setNames = r.set.map(code => fertilizers[code].name);
 
-    let row = `
-      <tr>
-        <td class="rank-cell">${index + 1}</td>
-        <td class="combo-cell">${setNames}</td>
-        <td>${r.solution[0].toFixed(2)}</td>
-        <td>${r.solution[1].toFixed(2)}</td>
-        <td>${r.solution[2].toFixed(2)}</td>
-        <td>${r.totalMass.toFixed(2)}</td>
+    const formattedCost = economicMode
+      ? new Intl.NumberFormat().format(r.totalCost.toFixed(2))
+      : null;
+
+    const card = document.createElement("div");
+    card.className = "result-card";
+
+    card.innerHTML = `
+      <div class="rank-title">#${index + 1}</div>
+
+      <div class="fert-row">
+        <div class="fert-name">${setNames[0]}</div>
+        <div class="fert-amount">${r.solution[0].toFixed(2)} kg/ha</div>
+      </div>
+
+      <div class="fert-row">
+        <div class="fert-name">${setNames[1]}</div>
+        <div class="fert-amount">${r.solution[1].toFixed(2)} kg/ha</div>
+      </div>
+
+      <div class="fert-row">
+        <div class="fert-name">${setNames[2]}</div>
+        <div class="fert-amount">${r.solution[2].toFixed(2)} kg/ha</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="total-row">
+        <div>Total Mass</div>
+        <div>${r.totalMass.toFixed(2)} kg/ha</div>
+      </div>
+
+      ${
+        economicMode
+          ? `
+        <div class="total-row cost-row">
+          <div>Total Cost</div>
+          <div>₱ ${formattedCost} /ha</div>
+        </div>
+      `
+          : ""
+      }
     `;
 
-    if (economicMode) {
-      const formattedCost = new Intl.NumberFormat().format(
-        r.totalCost.toFixed(2)
-      );
-      row += `<td>₱ ${formattedCost}</td>`;
-    }
-
-    row += `</tr>`;
-
-    table.innerHTML += row;
+    container.appendChild(card);
   });
 
   block.classList.remove("hidden");
