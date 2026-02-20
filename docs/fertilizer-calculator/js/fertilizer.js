@@ -330,7 +330,12 @@ function displayResults(results, economicMode) {
   return `
     <div class="result-row">
       <div class="fert-name">
-        ${fertilizers[code].display}
+        <div class="fert-main-name">
+          ${fertilizers[code].display.split(" (")[0]}
+        </div>
+        <div class="fert-sub-name">
+          (${fertilizers[code].display.split(" (")[1]}
+        </div>
       </div>
       <div class="fert-amount">
         ${amountDisplay}
