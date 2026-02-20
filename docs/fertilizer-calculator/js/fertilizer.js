@@ -139,16 +139,16 @@ function generatePriceInputs() {
     wrapper.className = "field";
 
     wrapper.innerHTML = `
-      <label for="price_${code}">
-        ${code} – ${data.name}
-      </label>
-      <input 
-        type="number"
-        id="price_${code}"
-        step="any"
-        placeholder="Enter price per bag"
-      >
-    `;
+  <label for="price_${code}" class="price-label">
+    ${data.display}
+  </label>
+  <input 
+    type="number"
+    id="price_${code}"
+    step="any"
+    placeholder="Enter price per bag"
+  >
+  `;
 
     container.appendChild(wrapper);
   });
