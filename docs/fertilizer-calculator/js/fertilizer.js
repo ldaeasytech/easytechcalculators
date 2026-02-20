@@ -269,7 +269,7 @@ function displayResults(results, economicMode) {
             ${fertilizers[code].display}
           </div>
           <div class="fert-amount">
-            ${r.solution[i].toFixed(2)} kg/ha
+            ${r.solution[i].toFixed(2)} bags/ha
           </div>
           <div class="fert-cost">
             ${
