@@ -303,8 +303,22 @@ function displayResults(results, economicMode) {
   const bagWeight =
     parseFloat(document.getElementById("bag_" + code).value) || 50;
 
-  const wholeBags = Math.floor(kgRequired / bagWeight);
-  const remainingKg = kgRequired % bagWeight;
+  const tolerance = 1e-6;
+
+const exactBags = kgRequired / bagWeight;
+const roundedBags = Math.round(exactBags);
+
+let wholeBags;
+let remainingKg;
+
+if (Math.abs(exactBags - roundedBags) < tolerance) {
+  // Exact multiple
+  wholeBags = roundedBags;
+  remainingKg = 0;
+} else {
+  wholeBags = Math.floor(exactBags);
+  remainingKg = kgRequired - wholeBags * bagWeight;
+}
 
   const amountDisplay = `
     <div class="bag-main">
