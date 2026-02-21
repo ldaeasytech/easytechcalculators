@@ -1,38 +1,78 @@
 export const formulas = {
 
-  mass: {
-    formula: "Base SI: kilogram (kg)",
-    note: "All mass units are normalized to kg."
-  },
-
-  length: {
-    formula: "Base SI: meter (m)",
-    note: "All length conversions pass through meters."
+  force: {
+    formula: "F = m·a",
+    note: "1 N = 1 kg·m/s²"
   },
 
   pressure: {
     formula: "P = F / A",
-    note: "1 Pa = 1 N/m². Conversions use Pascal as base."
+    note: "1 Pa = 1 N/m²"
   },
 
-  force: {
-    formula: "F = m·a",
-    note: "1 N = 1 kg·m/s²."
+  energy: {
+    formula: "E = F·d",
+    note: "1 J = 1 N·m"
   },
 
   power: {
-    formula: "P = W / t",
-    note: "1 W = 1 J/s."
+    formula: "P = E / t",
+    note: "1 W = 1 J/s"
   },
 
-  flowRate: {
-    formula: "Q = Volume / Time",
-    note: "Base SI: m³/s."
+  momentum: {
+    formula: "p = m·v",
+    note: "Base SI: kg·m/s"
+  },
+
+  torque: {
+    formula: "τ = F·r",
+    note: "1 N·m"
   },
 
   density: {
     formula: "ρ = m / V",
-    note: "Base SI: kg/m³."
+    note: "Base SI: kg/m³"
+  },
+
+  viscosityDynamic: {
+    formula: "τ = μ (du/dy)",
+    note: "Dynamic viscosity μ in Pa·s"
+  },
+
+  viscosityKinematic: {
+    formula: "ν = μ / ρ",
+    note: "Kinematic viscosity ν in m²/s"
+  },
+
+  flowRateVol: {
+    formula: "Q = V / t",
+    note: "Volumetric flow rate in m³/s"
+  },
+
+  flowRateMass: {
+    formula: "ṁ = ρ Q",
+    note: "Mass flow rate in kg/s"
+  },
+
+  velocity: {
+    formula: "v = d / t",
+    note: "Base SI: m/s"
+  },
+
+  thermalConductivity: {
+    formula: "q = -k ∇T",
+    note: "Fourier’s Law"
+  },
+
+  heatTransferCoeff: {
+    formula: "q = hAΔT",
+    note: "Convective heat transfer"
+  },
+
+  specificHeat: {
+    formula: "Q = m c ΔT",
+    note: "Specific heat capacity c"
   }
 
 };
