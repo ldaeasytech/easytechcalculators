@@ -75,4 +75,20 @@ export const formulas = {
     note: "Specific heat capacity c"
   }
 
+temperature: {
+  formula: "Temperature offset conversion",
+  note: "Conversions use Kelvin as thermodynamic base."
+},
+
+time: {
+  formula: "Base SI: second (s)",
+  note: "All time units normalized to seconds."
+},
+
+area: {
+  formula: "A = L²",
+  note: "Base SI: m²"
+},
+
+  
 };
