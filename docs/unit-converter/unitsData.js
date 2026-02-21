@@ -172,4 +172,35 @@ export const units = {
     }
   }
 
+/* ================= BASIC EXTENSIONS ================= */
+
+temperature: {
+  base: "K",
+  units: {
+    K: { toBase: 1 },
+    C: { toBase: 1 },   // handled separately
+    F: { toBase: 1 }
+  }
+},
+
+time: {
+  base: "s",
+  units: {
+    s: { toBase: 1 },
+    min: { toBase: 60 },
+    hr: { toBase: 3600 }
+  }
+},
+
+area: {
+  base: "m2",
+  units: {
+    "m2": { toBase: 1 },
+    "cm2": { toBase: 0.0001 },
+    "ft2": { toBase: 0.092903 },
+    acre: { toBase: 4046.856422 }
+  }
+},
+
+  
 };
