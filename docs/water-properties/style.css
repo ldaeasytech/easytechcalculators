@@ -851,3 +851,162 @@ select:focus {
   opacity: 0.7;
 }
 
+/* =========================================================
+   MOBILE OPTIMIZATION LAYER
+   Water & Steam Properties Calculator
+   (SAFE – Desktop unaffected)
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* ================= HEADER ================= */
+
+  .header-inner {
+    padding: 1.2rem 1rem;
+  }
+
+  .brand {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    height: 65px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+
+  .capability-line {
+    font-size: 0.85rem;
+    padding-left: 0;
+    border-left: none;
+  }
+
+  /* ================= LAYOUT ================= */
+
+  .container {
+    padding: 0 12px;
+    margin: 18px auto;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  /* ================= MODE TABS ================= */
+
+  .input-tabs {
+    gap: 6px;
+  }
+
+  .tab {
+    font-size: 0.85rem;
+    padding: 9px 0;
+  }
+
+  /* ================= INPUT GROUPS ================= */
+
+  .input-group {
+    padding: 14px;
+  }
+
+  .group-title {
+    font-size: 0.78rem;
+    white-space: normal; /* prevent overflow */
+  }
+
+  /* ================= FORM FIELDS ================= */
+
+  input,
+  select {
+    font-size: 0.95rem;
+    padding: 12px 14px;
+  }
+
+  label {
+    font-size: 0.85rem;
+  }
+
+  .helper-text {
+    font-size: 0.75rem;
+  }
+
+  /* ================= RESULTS ================= */
+
+  .result-highlight {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .result-value {
+    font-size: 2rem;
+  }
+
+  .result-unit {
+    font-size: 0.9rem;
+  }
+
+  .results-clean {
+    font-size: 0.85rem;
+  }
+
+  .results-clean td:nth-child(2) {
+    font-size: 0.9rem;
+  }
+
+  /* ================= RESULT ACTION BUTTONS ================= */
+
+  .result-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .result-actions button {
+    width: 100%;
+    font-size: 0.8rem;
+  }
+
+  /* ================= SCHEMATIC PANEL ================= */
+
+  .schematic-box {
+    height: 200px;
+    font-size: 0.85rem;
+  }
+
+  /* ================= LEARN MORE / EXPLORE CARDS ================= */
+
+  .learn-more-card,
+  .explore-more-card,
+  .learning-hub-card {
+    padding: 20px;
+  }
+
+  .learn-more-card h3,
+  .explore-more-card h3,
+  .learning-hub-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .learn-more-card p,
+  .explore-more-card p,
+  .learning-hub-card p {
+    font-size: 0.9rem;
+  }
+
+  /* ================= FOOTER ================= */
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+}
