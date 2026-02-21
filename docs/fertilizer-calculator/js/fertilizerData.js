@@ -7,11 +7,11 @@ export const fertilizers = {
     N: 0.18, P: 0.46, K: 0
   },
   B: {
-    name: "Monoammonium Phosphate",
+    name: "Ammonium Phosphate",
     short: "MAP",
-    grade: "11-52-0",
-    display: "Monoammonium Phosphate (MAP, 11-52-0)",
-    N: 0.11, P: 0.52, K: 0
+    grade: "16-20-0",
+    display: "Ammonium Phosphate (AP, 16-20-0)",
+    N: 0.16, P: 0.2, K: 0
   },
   C: {
     name: "Muriate of Potash",
