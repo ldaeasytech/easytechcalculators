@@ -18,7 +18,7 @@ body {
 /* =========================================================
    HEADER
 ========================================================= */
-/*.app-header {
+/*.app-header {R
   background: linear-gradient(180deg, #003a75, #001b3a);
   text-align: center;
   padding: 26px 16px;
@@ -263,7 +263,7 @@ select:focus {
     0 12px 30px rgba(0,0,0,0.35);
 }
 
-.card:has(#resultsTable) {
+#resultsTable {
   min-height: 380px;
 }
 
