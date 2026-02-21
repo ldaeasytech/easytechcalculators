@@ -1,6 +1,6 @@
 // fertilizerOptions.js
 
-import { fertilizers } from "./fertilizers.js"; // adjust path if needed
+import { fertilizers } from "./fertilizerData.js"; // adjust path if needed
 
 const keys = Object.keys(fertilizers);
 
