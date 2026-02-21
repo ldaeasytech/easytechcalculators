@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Pump Power Calculator | Theoretical & Actual Power Requirement</title>
+  <title>Pump Power Calculator (kW & HP) | Hydraulic Power, Head Loss & Efficiency</title>
 
 <meta name="description"
-  content="Pump power calculator using the mechanical energy balance equation. Compute hydraulic and actual shaft power including pipe friction, fittings loss, elevation head, flow rate, and pump efficiency." />
-
+content="Free pump power calculator for hydraulic and actual shaft power. Includes Darcy-Weisbach pipe friction, fittings losses, elevation head, pump efficiency, and motor sizing in kW and HP." />
 <link rel="canonical" href="https://easytechcalculators.com/pump-power-calculator/" />
 
 
@@ -88,7 +87,17 @@
     </div>
   </div>
 </header>
+  
+<section class="intro-section">
+<p>
+This Pump Power Calculator determines the theoretical hydraulic power and actual shaft power required to move fluid through a piping system. 
+It applies the mechanical energy balance equation and includes elevation head, pipe friction losses (Darcy–Weisbach), fittings losses, pressure differences, and pump efficiency.
+</p>
 
+<p>
+The calculator supports both mass flow rate and volumetric flow rate inputs and provides results in kilowatts (kW) and horsepower (HP), making it suitable for engineers, students, and industrial professionals.
+</p>
+</section>
 
 <!-- ================= MAIN GRID ================= -->
 <main class="container">
@@ -466,11 +475,13 @@ Pumps are essential in:
 </p>
 
 <ul>
-  <li>Municipal water supply systems</li>
+  <li>Water supply and distribution systems</li>
+  <li>Boiler feed water systems</li>
   <li>Irrigation and agriculture</li>
-  <li>Cooling and HVAC systems</li>
+  <li>Cooling water circulation</li>
+  <li>HVAC chilled water systems</li>
   <li>Chemical and process industries</li>
-  <li>Oil and fuel transport</li>
+  <li>Oil and fuel transfer systems</li>
 </ul>
 
 <h2>What Determines Pump Power Requirement?</h2>
@@ -512,10 +523,10 @@ Since no pump is perfectly efficient, input power is always higher than hydrauli
 Losses occur due to mechanical friction, turbulence, leakage, and internal recirculation.
 </p>
 
-<h2>Understanding Head in Pump Systems</h2>
+<h2>Understanding Total Dynamic Head (THD) in Pump Systems</h2>
 
 <p>
-Head represents energy per unit weight of fluid.
+Total Dynamic Head (TDH) represents the total equivalent head that a pump must overcome. 
 It is independent of fluid density when expressed in meters or feet.
 </p>
 
@@ -530,7 +541,7 @@ Head consists of:
   <li>Friction losses</li>
 </ul>
 
-<h2>Pipe and Fitting Losses</h2>
+<h2>Pipe Friction and Minor Losses</h2>
 
 <p>
 As fluid flows through pipes, energy is dissipated due to wall friction
@@ -667,6 +678,21 @@ Even small inefficiencies can lead to significant energy costs
 over the lifetime of the system.
 </p>
 
+<h2>Step-by-Step Pump Power Calculation Method</h2>
+
+<ol>
+<li>Determine flow rate (mass or volumetric).</li>
+<li>Calculate fluid velocity based on pipe diameter.</li>
+<li>Determine Reynolds number and friction factor.</li>
+<li>Compute pipe friction loss using Darcy–Weisbach equation.</li>
+<li>Add minor losses from fittings and valves.</li>
+<li>Add elevation and pressure head differences.</li>
+<li>Calculate total dynamic head (TDH).</li>
+<li>Compute hydraulic power using ρgQH.</li>
+<li>Divide by pump efficiency to obtain actual shaft power.</li>
+</ol>
+
+   
 </main>
   
 <!-- ================= FOOTER ================= -->
