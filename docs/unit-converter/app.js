@@ -1,6 +1,7 @@
 import { units } from "./unitsData.js";
 import { formulas } from "./formulas.js";
 import { convert } from "./converterEngine.js";
+import { dimensions } from "./dimensions.js";
 
 const quantitySelect = document.getElementById("quantity");
 const fromSelect = document.getElementById("fromUnit");
@@ -12,6 +13,7 @@ const resultUnit = document.getElementById("resultUnit");
 const formulaDisplay = document.getElementById("formulaDisplay");
 const stepsDisplay = document.getElementById("stepsDisplay");
 const notesDisplay = document.getElementById("notesDisplay");
+const dimensionDisplay = document.getElementById("dimensionDisplay");
 
 function populateQuantities() {
   Object.keys(units).forEach(q => {
@@ -57,6 +59,10 @@ document.getElementById("convertBtn").addEventListener("click", () => {
     notesDisplay.textContent = formulas[quantity].note;
   }
 
+  if (dimensions[quantity]) {
+  dimensionDisplay.textContent = dimensions[quantity];
+  }
+  
   if (data.baseUnit) {
     stepsDisplay.textContent =
       `Step 1: Convert to base (${data.baseUnit})
