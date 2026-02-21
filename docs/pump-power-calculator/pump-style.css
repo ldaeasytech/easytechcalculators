@@ -119,6 +119,53 @@ body {
   gap: 28px;
 }
 
+.container-learning {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+
+h1 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      color: #f9fafb;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 40px;
+      color: #d1d5db;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin-top: 24px;
+      color: #cbd5f5;
+    }
+
+p {
+      margin: 12px 0;
+      color: #cbd5f5;
+    }
+
+    ul {
+      margin: 12px 0 12px 20px;
+      color: #cbd5f5;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
 @media (min-width: 1100px) {
   .container {
     grid-template-columns: 1.3fr 0.9fr;
@@ -888,5 +935,156 @@ select:focus {
 
   .related-links a {
     font-size: 0.9rem;
+  }
+}
+
+.learning-section {
+  margin-top: 50px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  line-height: 1.6;
+}
+
+.learning-section h2 {
+  margin-top: 25px;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.learning-section p,
+.learning-section li {
+  font-size: 0.95rem;
+  color: #cccccc;
+}
+
+.learning-section ul {
+  margin-left: 18px;
+}
+
+/* ===============================
+   Global Footer
+================================ */
+
+.site-footer {
+  margin-top: 60px;
+  padding: 30px 20px;
+  background: #121212;
+  border-top: 1px solid #2a2a2a;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+}
+
+.footer-disclaimer {
+  font-size: 0.85rem;
+  color: #aaaaaa;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #b3d4ff;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .footer-links {
+    gap: 12px;
+  }
+
+  .footer-disclaimer {
+    font-size: 0.8rem;
+  }
+}
+
+/* ===============================
+   Related Calculators Upgrade
+================================ */
+
+.related-calculators {
+  margin-top: 40px;
+  padding: 28px;
+  background: #0f1c2f;
+  border: 1px solid #1f2d45;
+  border-radius: 12px;
+}
+
+.related-calculators h2 {
+  margin-bottom: 10px;
+}
+
+.related-subtitle {
+  margin-bottom: 20px;
+  color: #9fb3d9;
+  max-width: 750px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.related-card {
+  display: block;
+  padding: 16px 18px;
+  background: #14263f;
+  border: 1px solid #223a5e;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.related-card:hover {
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+}
+
+.related-card strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.related-card span {
+  font-size: 0.85rem;
+  color: #9fb3d9;
+}
+
+#priceInputs {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 800px) {
+  #priceInputs {
+    grid-template-columns: 1fr 1fr;
   }
 }
