@@ -1,54 +1,22 @@
 // fertilizerOptions.js
 
-export const fertilizerSets = [
-  ["A","B","C"],
-  ["A","F","C"],
-  ["A","J","C"],
-  ["A","B","H"],
-  ["A","F","H"],
-  ["A","J","H"],
-  ["B","A","C"],
-  ["B","F","C"],
-  ["B","J","C"],
-  ["B","A","H"],
-  ["B","F","H"],
-  ["B","J","H"],
-  ["D","A","C"],
-  ["D","B","C"],
-  ["D","F","C"],
-  ["D","J","C"],
-  ["D","A","H"],
-  ["D","B","H"],
-  ["D","F","H"],
-  ["D","J","H"],
-  ["E","A","C"],
-  ["E","B","C"],
-  ["E","F","C"],
-  ["E","J","C"],
-  ["E","A","H"],
-  ["E","B","H"],
-  ["E","F","H"],
-  ["E","J","H"],
-  ["G","A","C"],
-  ["G","B","C"],
-  ["G","F","C"],
-  ["G","J","C"],
-  ["G","A","H"],
-  ["G","B","H"],
-  ["G","F","H"],
-  ["G","J","H"],
-  ["I","A","C"],
-  ["I","B","C"],
-  ["I","F","C"],
-  ["I","J","C"],
-  ["I","A","H"],
-  ["I","B","H"],
-  ["I","F","H"],
-  ["I","J","H"],
-  ["J","A","C"],
-  ["J","B","C"],
-  ["J","F","C"],
-  ["J","A","H"],
-  ["J","B","H"],
-  ["J","F","H"]
-];
+import { fertilizers } from "./fertilizers.js"; // adjust path if needed
+
+const keys = Object.keys(fertilizers);
+
+function generateCombinations(arr, k) {
+  const result = [];
+  const n = arr.length;
+
+  for (let i = 0; i < n - (k - 1); i++) {
+    for (let j = i + 1; j < n - (k - 2); j++) {
+      for (let l = j + 1; l < n; l++) {
+        result.push([arr[i], arr[j], arr[l]]);
+      }
+    }
+  }
+
+  return result;
+}
+
+export const fertilizerSets = generateCombinations(keys, 3);
