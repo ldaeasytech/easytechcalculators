@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Engineering Unit Converter | SI ↔ English Conversion Tool</title>
+<meta name="description"
+content="Professional engineering unit converter. Convert between SI and English units with formula, dimensional basis, and step-by-step conversion." />
+
+<link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
+
+</head>
+
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <img src="../logo.png" class="brand-logo" />
+      <div class="brand-text">
+        <h1>Engineering Unit Converter</h1>
+        <div class="capability-line">
+          SI ↔ English • Formula • Conversion Steps • Engineering Notes
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- INPUT CARD -->
+  <section class="card">
+    <h2>Conversion Input</h2>
+
+    <div class="grid-form">
+
+      <div class="input-group">
+        <div class="group-title">Quantity</div>
+        <div class="field">
+          <label>Select Quantity</label>
+          <select id="quantity"></select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="group-title">Value</div>
+
+        <div class="field">
+          <label>Input Value</label>
+          <input type="number" id="inputValue" />
+        </div>
+
+        <div class="field">
+          <label>From Unit</label>
+          <select id="fromUnit"></select>
+        </div>
+
+        <div class="field">
+          <label>To Unit</label>
+          <select id="toUnit"></select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="primary" id="convertBtn">Convert</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESULT CARD -->
+  <section class="card result-section">
+
+    <div class="result-highlight">
+      <div>
+        <div class="result-label">Converted Value</div>
+        <div>
+          <span class="result-value" id="resultValue">—</span>
+          <span class="result-unit" id="resultUnit"></span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Formula</h3>
+    <p id="formulaDisplay"></p>
+
+    <h3>Conversion Steps</h3>
+    <pre id="stepsDisplay"></pre>
+
+    <h3>Engineering Notes</h3>
+    <p id="notesDisplay"></p>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-copy">
+      © 2026 easytechcalculators.com
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="./app.js"></script>
+
+</body>
+</html>
