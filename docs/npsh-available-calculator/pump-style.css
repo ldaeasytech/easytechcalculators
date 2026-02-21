@@ -1088,3 +1088,151 @@ select:focus {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* =========================================================
+   ================================================
+   MOBILE OPTIMIZATION LAYER (SAFE OVERRIDES ONLY)
+   ================================================
+   Place at VERY END of pump-style.css
+   Does NOT modify desktop layout.
+========================================================= */
+
+@media (max-width: 600px) {
+
+  /* ================= HEADER ================= */
+
+  .header-inner {
+    padding: 1.2rem 1rem;
+  }
+
+  .brand {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    height: 65px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .capability-line {
+    font-size: 0.8rem;
+    padding-left: 0;
+    border-left: none;
+  }
+
+  /* ================= CONTAINER ================= */
+
+  .container {
+    margin: 24px auto;
+    padding: 0 14px;
+  }
+
+  .container-learning {
+    padding: 32px 16px;
+  }
+
+  /* ================= CARDS ================= */
+
+  .card {
+    padding: 16px;
+  }
+
+  .input-group {
+    padding: 14px;
+  }
+
+  /* ================= FLOW SECTION ================= */
+
+  .flow-section {
+    display: grid;
+    gap: 18px;
+  }
+
+  .input-with-unit {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /* ================= FIELDS ================= */
+
+  input,
+  select {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+  }
+
+  /* ================= FITTINGS ================= */
+
+  .fitting-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .fitting-row .primary {
+    width: 100%;
+  }
+
+  /* ================= RESULT CARDS ================= */
+
+  .result-highlight {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .power-display {
+    align-items: flex-start;
+  }
+
+  .power-value {
+    font-size: 2.2rem;
+  }
+
+  .results-title {
+    font-size: 1.4rem;
+  }
+
+  /* ================= SCHEMATIC ================= */
+
+  .schematic-box {
+    height: 200px;
+  }
+
+  /* ================= RELATED CALCULATORS ================= */
+
+  .related-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ================= LEARNING SECTION ================= */
+
+  .learning-section {
+    padding: 18px;
+  }
+
+  .container-learning h1 {
+    font-size: 1.4rem;
+  }
+
+  .container-learning h2 {
+    font-size: 1rem;
+  }
+
+  .container-learning p,
+  .container-learning li {
+    font-size: 0.9rem;
+  }
+
+}
