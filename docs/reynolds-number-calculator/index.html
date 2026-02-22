@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Reynolds Number Calculator | Laminar, Transitional & Turbulent Flow</title>
+
+<meta name="description"
+content="Free Reynolds Number Calculator with full unit support (SI & English). Compute flow regime (laminar, transitional, turbulent), view dimensional analysis, governing equations, and engineering explanations." />
+
+<link rel="canonical" href="https://easytechcalculators.com/reynolds-number-calculator" />
+<link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
+
+
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [{
+   "@type": "Question",
+   "name": "What is Reynolds number?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Reynolds number is a dimensionless quantity used to predict whether flow is laminar, transitional, or turbulent."
+   }
+ },{
+   "@type": "Question",
+   "name": "Why is 2300 important in Reynolds number?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Re < 2300 indicates laminar flow in pipes. It is the experimentally determined threshold where viscous forces dominate."
+   }
+ },{
+   "@type": "Question",
+   "name": "What happens when Reynolds number exceeds 4000?",
+   "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Flow becomes fully turbulent and inertial forces dominate over viscous forces."
+   }
+ }]
+}
+</script>
+
+</head>
+<body>
+
+<div class="calculator-container">
+
+<h1>Reynolds Number Calculator</h1>
+
+<div class="two-column">
+
+<!-- LEFT COLUMN -->
+<div class="input-section">
+
+<h2>Input Parameters</h2>
+
+<label>Calculation Method</label>
+<select id="method">
+  <option value="dynamic">Using Dynamic Viscosity (μ)</option>
+  <option value="kinematic">Using Kinematic Viscosity (ν)</option>
+</select>
+
+<label>Fluid Density (ρ)</label>
+<div class="input-group">
+  <input type="number" id="density" />
+  <select id="densityUnit">
+    <option value="kgm3">kg/m³</option>
+    <option value="lbft3">lb/ft³</option>
+  </select>
+</div>
+
+<label>Velocity (V)</label>
+<div class="input-group">
+  <input type="number" id="velocity" />
+  <select id="velocityUnit">
+    <option value="ms">m/s</option>
+    <option value="fts">ft/s</option>
+  </select>
+</div>
+
+<label>Diameter (D)</label>
+<div class="input-group">
+  <input type="number" id="diameter" />
+  <select id="diameterUnit">
+    <option value="m">m</option>
+    <option value="mm">mm</option>
+    <option value="ft">ft</option>
+    <option value="in">in</option>
+  </select>
+</div>
+
+<div id="dynamicGroup">
+<label>Dynamic Viscosity (μ)</label>
+<div class="input-group">
+  <input type="number" id="mu" />
+  <select id="muUnit">
+    <option value="Pas">Pa·s</option>
+    <option value="cP">cP</option>
+    <option value="lbfts">lb/ft·s</option>
+  </select>
+</div>
+</div>
+
+<div id="kinematicGroup" style="display:none;">
+<label>Kinematic Viscosity (ν)</label>
+<div class="input-group">
+  <input type="number" id="nu" />
+  <select id="nuUnit">
+    <option value="m2s">m²/s</option>
+    <option value="cSt">cSt</option>
+    <option value="ft2s">ft²/s</option>
+  </select>
+</div>
+</div>
+
+<button id="calculateBtn">Calculate Reynolds Number</button>
+
+</div>
+
+<!-- RIGHT COLUMN -->
+<div class="result-section">
+
+<h2>Results</h2>
+
+<div class="result-box">
+  <div id="reOutput">Re = —</div>
+  <div id="regimeOutput"></div>
+</div>
+
+<div id="stepsOutput"></div>
+
+</div>
+</div>
+
+</div>
+
+<!-- LEARNING SECTION -->
+<section class="learning-section">
+<h2>Understanding Reynolds Number</h2>
+
+<h3>What is Reynolds Number?</h3>
+<p>
+Reynolds number is the ratio of inertial forces to viscous forces in a fluid.
+It predicts whether flow will be smooth (laminar) or chaotic (turbulent).
+</p>
+
+<h3>Why is 2300 Important?</h3>
+<p>
+For internal pipe flow:
+• Re &lt; 2300 → Laminar  
+• 2300–4000 → Transitional  
+• &gt; 4000 → Turbulent  
+</p>
+
+<h3>Laminar vs Turbulent Flow</h3>
+<p>
+Laminar flow is orderly and layered.  
+Turbulent flow contains eddies and mixing.
+</p>
+
+<h3>Engineering Applications</h3>
+<ul>
+<li>Pipe friction factor calculations</li>
+<li>Heat exchanger design</li>
+<li>Aerodynamic similarity</li>
+<li>Pump and compressor selection</li>
+</ul>
+
+</section>
+
+<!-- INTERNAL LINKING -->
+<section class="internal-links">
+<h2>Related Engineering Calculators</h2>
+<ul>
+<li><a href="/pump-power-calculator/">Pump Power Calculator</a></li>
+<li><a href="/npsh-calculator/">NPSH Calculator</a></li>
+<li><a href="/optimum-pipe-diameter-calculator/">Optimum Pipe Diameter Calculator</a></li>
+<li><a href="/unit-converter/">Engineering Unit Converter</a></li>
+</ul>
+</section>
+
+<script type="module" src="re.js"></script>
+
+</body>
+</html>
