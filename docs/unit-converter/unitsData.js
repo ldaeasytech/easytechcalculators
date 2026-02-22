@@ -1,206 +1,225 @@
 export const units = {
 
-  /* ================= BASIC ================= */
+/* =========================================================
+   BASIC UNITS
+========================================================= */
 
-  mass: {
-    base: "kg",
-    units: {
-      kg: { toBase: 1 },
-      g: { toBase: 0.001 },
-      lb: { toBase: 0.45359237 }
-    }
-  },
-
-  length: {
-    base: "m",
-    units: {
-      m: { toBase: 1 },
-      cm: { toBase: 0.01 },
-      mm: { toBase: 0.001 },
-      ft: { toBase: 0.3048 },
-      in: { toBase: 0.0254 }
-    }
-  },
-
-  velocity: {
-    base: "m/s",
-    units: {
-      "m/s": { toBase: 1 },
-      "km/h": { toBase: 0.27777778 },
-      "ft/s": { toBase: 0.3048 },
-      mph: { toBase: 0.44704 }
-    }
-  },
-
-  /* ================= MECHANICAL ================= */
-
-  force: {
-    base: "N",
-    units: {
-      N: { toBase: 1 },
-      kN: { toBase: 1000 },
-      lbf: { toBase: 4.448221615 }
-    }
-  },
-
-  pressure: {
-    base: "Pa",
-    units: {
-      Pa: { toBase: 1 },
-      kPa: { toBase: 1000 },
-      MPa: { toBase: 1e6 },
-      bar: { toBase: 100000 },
-      psi: { toBase: 6894.757 }
-    }
-  },
-
-  energy: {
-    base: "J",
-    units: {
-      J: { toBase: 1 },
-      kJ: { toBase: 1000 },
-      MJ: { toBase: 1e6 },
-      Wh: { toBase: 3600 },
-      kWh: { toBase: 3.6e6 },
-      BTU: { toBase: 1055.06 }
-    }
-  },
-
-  power: {
-    base: "W",
-    units: {
-      W: { toBase: 1 },
-      kW: { toBase: 1000 },
-      MW: { toBase: 1e6 },
-      hp: { toBase: 745.699872 },
-      "BTU/hr": { toBase: 0.29307107 }
-    }
-  },
-
-  momentum: {
-    base: "kg·m/s",
-    units: {
-      "kg·m/s": { toBase: 1 },
-      "lb·ft/s": { toBase: 1.35581795 }
-    }
-  },
-
-  torque: {
-    base: "N·m",
-    units: {
-      "N·m": { toBase: 1 },
-      "kN·m": { toBase: 1000 },
-      "lb·ft": { toBase: 1.35581795 }
-    }
-  },
-
-  density: {
-    base: "kg/m3",
-    units: {
-      "kg/m3": { toBase: 1 },
-      "g/cm3": { toBase: 1000 },
-      "lb/ft3": { toBase: 16.018463 }
-    }
-  },
-
-  viscosityDynamic: {
-    base: "Pa·s",
-    units: {
-      "Pa·s": { toBase: 1 },
-      "mPa·s": { toBase: 0.001 },
-      "cP": { toBase: 0.001 },
-      "lb/ft·s": { toBase: 1.488164 }
-    }
-  },
-
-  viscosityKinematic: {
-    base: "m2/s",
-    units: {
-      "m2/s": { toBase: 1 },
-      "St": { toBase: 0.0001 },
-      "cSt": { toBase: 0.000001 },
-      "ft2/s": { toBase: 0.092903 }
-    }
-  },
-
-  flowRateVol: {
-    base: "m3/s",
-    units: {
-      "m3/s": { toBase: 1 },
-      "m3/h": { toBase: 1 / 3600 },
-      "L/s": { toBase: 0.001 },
-      gpm: { toBase: 0.0000630902 }
-    }
-  },
-
-  flowRateMass: {
-    base: "kg/s",
-    units: {
-      "kg/s": { toBase: 1 },
-      "kg/h": { toBase: 1 / 3600 },
-      "lb/s": { toBase: 0.45359237 },
-      "lb/h": { toBase: 0.000125998 }
-    }
-  },
-
-  /* ================= THERMAL ================= */
-
-  thermalConductivity: {
-    base: "W/m·K",
-    units: {
-      "W/m·K": { toBase: 1 },
-      "kW/m·K": { toBase: 1000 },
-      "BTU/hr·ft·°F": { toBase: 1.730735 }
-    }
-  },
-
-  heatTransferCoeff: {
-    base: "W/m2·K",
-    units: {
-      "W/m2·K": { toBase: 1 },
-      "kW/m2·K": { toBase: 1000 },
-      "BTU/hr·ft2·°F": { toBase: 5.678263 }
-    }
-  },
-
-  specificHeat: {
-    base: "J/kg·K",
-    units: {
-      "J/kg·K": { toBase: 1 },
-      "kJ/kg·K": { toBase: 1000 },
-      "BTU/lb·°F": { toBase: 4186.8 }
-    }
-  },
-
-/* ================= BASIC EXTENSIONS ================= */
-
-temperature: {
-  base: "K",
+mass: {
+  base: "kg",
+  dim: { M: 1, L: 0, T: 0, Th: 0 },
   units: {
-    K: { toBase: 1 },
-    C: { toBase: 1 },   // handled separately
-    F: { toBase: 1 }
+    kg: { factor: 1, dim: { M: 1, L: 0, T: 0, Th: 0 } },
+    g: { factor: 0.001, dim: { M: 1, L: 0, T: 0, Th: 0 } },
+    lb: { factor: 0.45359237, dim: { M: 1, L: 0, T: 0, Th: 0 } }
+  }
+},
+
+length: {
+  base: "m",
+  dim: { M: 0, L: 1, T: 0, Th: 0 },
+  units: {
+    m: { factor: 1, dim: { M: 0, L: 1, T: 0, Th: 0 } },
+    cm: { factor: 0.01, dim: { M: 0, L: 1, T: 0, Th: 0 } },
+    mm: { factor: 0.001, dim: { M: 0, L: 1, T: 0, Th: 0 } },
+    ft: { factor: 0.3048, dim: { M: 0, L: 1, T: 0, Th: 0 } },
+    in: { factor: 0.0254, dim: { M: 0, L: 1, T: 0, Th: 0 } }
   }
 },
 
 time: {
   base: "s",
+  dim: { M: 0, L: 0, T: 1, Th: 0 },
   units: {
-    s: { toBase: 1 },
-    min: { toBase: 60 },
-    hr: { toBase: 3600 }
+    s: { factor: 1, dim: { M: 0, L: 0, T: 1, Th: 0 } },
+    min: { factor: 60, dim: { M: 0, L: 0, T: 1, Th: 0 } },
+    hr: { factor: 3600, dim: { M: 0, L: 0, T: 1, Th: 0 } }
+  }
+},
+
+temperature: {
+  base: "K",
+  dim: { M: 0, L: 0, T: 0, Th: 1 },
+  units: {
+    K: { factor: 1, dim: { M: 0, L: 0, T: 0, Th: 1 } },
+    C: { factor: 1, dim: { M: 0, L: 0, T: 0, Th: 1 } },
+    F: { factor: 1, dim: { M: 0, L: 0, T: 0, Th: 1 } }
   }
 },
 
 area: {
   base: "m2",
+  dim: { M: 0, L: 2, T: 0, Th: 0 },
   units: {
-    "m2": { toBase: 1 },
-    "cm2": { toBase: 0.0001 },
-    "ft2": { toBase: 0.092903 },
-    acre: { toBase: 4046.856422 }
+    "m2": { factor: 1, dim: { M: 0, L: 2, T: 0, Th: 0 } },
+    "cm2": { factor: 0.0001, dim: { M: 0, L: 2, T: 0, Th: 0 } },
+    "ft2": { factor: 0.092903, dim: { M: 0, L: 2, T: 0, Th: 0 } },
+    acre: { factor: 4046.856422, dim: { M: 0, L: 2, T: 0, Th: 0 } }
   }
 },
 
-  
+/* =========================================================
+   MECHANICAL
+========================================================= */
+
+velocity: {
+  base: "m/s",
+  dim: { M: 0, L: 1, T: -1, Th: 0 },
+  units: {
+    "m/s": { factor: 1, dim: { M: 0, L: 1, T: -1, Th: 0 } },
+    "km/h": { factor: 0.27777778, dim: { M: 0, L: 1, T: -1, Th: 0 } },
+    "ft/s": { factor: 0.3048, dim: { M: 0, L: 1, T: -1, Th: 0 } },
+    mph: { factor: 0.44704, dim: { M: 0, L: 1, T: -1, Th: 0 } }
+  }
+},
+
+force: {
+  base: "N",
+  dim: { M: 1, L: 1, T: -2, Th: 0 },
+  units: {
+    N: { factor: 1, dim: { M: 1, L: 1, T: -2, Th: 0 } },
+    kN: { factor: 1000, dim: { M: 1, L: 1, T: -2, Th: 0 } },
+    lbf: { factor: 4.448221615, dim: { M: 1, L: 1, T: -2, Th: 0 } }
+  }
+},
+
+pressure: {
+  base: "Pa",
+  dim: { M: 1, L: -1, T: -2, Th: 0 },
+  units: {
+    Pa: { factor: 1, dim: { M: 1, L: -1, T: -2, Th: 0 } },
+    kPa: { factor: 1000, dim: { M: 1, L: -1, T: -2, Th: 0 } },
+    MPa: { factor: 1e6, dim: { M: 1, L: -1, T: -2, Th: 0 } },
+    bar: { factor: 100000, dim: { M: 1, L: -1, T: -2, Th: 0 } },
+    psi: { factor: 6894.757, dim: { M: 1, L: -1, T: -2, Th: 0 } }
+  }
+},
+
+energy: {
+  base: "J",
+  dim: { M: 1, L: 2, T: -2, Th: 0 },
+  units: {
+    J: { factor: 1, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    kJ: { factor: 1000, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    MJ: { factor: 1e6, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    Wh: { factor: 3600, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    kWh: { factor: 3.6e6, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    BTU: { factor: 1055.06, dim: { M: 1, L: 2, T: -2, Th: 0 } }
+  }
+},
+
+power: {
+  base: "W",
+  dim: { M: 1, L: 2, T: -3, Th: 0 },
+  units: {
+    W: { factor: 1, dim: { M: 1, L: 2, T: -3, Th: 0 } },
+    kW: { factor: 1000, dim: { M: 1, L: 2, T: -3, Th: 0 } },
+    MW: { factor: 1e6, dim: { M: 1, L: 2, T: -3, Th: 0 } },
+    hp: { factor: 745.699872, dim: { M: 1, L: 2, T: -3, Th: 0 } },
+    "BTU/hr": { factor: 0.29307107, dim: { M: 1, L: 2, T: -3, Th: 0 } }
+  }
+},
+
+momentum: {
+  base: "kg·m/s",
+  dim: { M: 1, L: 1, T: -1, Th: 0 },
+  units: {
+    "kg·m/s": { factor: 1, dim: { M: 1, L: 1, T: -1, Th: 0 } },
+    "lb·ft/s": { factor: 1.35581795, dim: { M: 1, L: 1, T: -1, Th: 0 } }
+  }
+},
+
+torque: {
+  base: "N·m",
+  dim: { M: 1, L: 2, T: -2, Th: 0 },
+  units: {
+    "N·m": { factor: 1, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    "kN·m": { factor: 1000, dim: { M: 1, L: 2, T: -2, Th: 0 } },
+    "lb·ft": { factor: 1.35581795, dim: { M: 1, L: 2, T: -2, Th: 0 } }
+  }
+},
+
+density: {
+  base: "kg/m3",
+  dim: { M: 1, L: -3, T: 0, Th: 0 },
+  units: {
+    "kg/m3": { factor: 1, dim: { M: 1, L: -3, T: 0, Th: 0 } },
+    "g/cm3": { factor: 1000, dim: { M: 1, L: -3, T: 0, Th: 0 } },
+    "lb/ft3": { factor: 16.018463, dim: { M: 1, L: -3, T: 0, Th: 0 } }
+  }
+},
+
+viscosityDynamic: {
+  base: "Pa·s",
+  dim: { M: 1, L: -1, T: -1, Th: 0 },
+  units: {
+    "Pa·s": { factor: 1, dim: { M: 1, L: -1, T: -1, Th: 0 } },
+    "mPa·s": { factor: 0.001, dim: { M: 1, L: -1, T: -1, Th: 0 } },
+    cP: { factor: 0.001, dim: { M: 1, L: -1, T: -1, Th: 0 } },
+    "lb/ft·s": { factor: 1.488164, dim: { M: 1, L: -1, T: -1, Th: 0 } }
+  }
+},
+
+viscosityKinematic: {
+  base: "m2/s",
+  dim: { M: 0, L: 2, T: -1, Th: 0 },
+  units: {
+    "m2/s": { factor: 1, dim: { M: 0, L: 2, T: -1, Th: 0 } },
+    St: { factor: 0.0001, dim: { M: 0, L: 2, T: -1, Th: 0 } },
+    cSt: { factor: 0.000001, dim: { M: 0, L: 2, T: -1, Th: 0 } },
+    "ft2/s": { factor: 0.092903, dim: { M: 0, L: 2, T: -1, Th: 0 } }
+  }
+},
+
+flowRateVol: {
+  base: "m3/s",
+  dim: { M: 0, L: 3, T: -1, Th: 0 },
+  units: {
+    "m3/s": { factor: 1, dim: { M: 0, L: 3, T: -1, Th: 0 } },
+    "m3/h": { factor: 1/3600, dim: { M: 0, L: 3, T: -1, Th: 0 } },
+    "L/s": { factor: 0.001, dim: { M: 0, L: 3, T: -1, Th: 0 } },
+    gpm: { factor: 0.0000630902, dim: { M: 0, L: 3, T: -1, Th: 0 } }
+  }
+},
+
+flowRateMass: {
+  base: "kg/s",
+  dim: { M: 1, L: 0, T: -1, Th: 0 },
+  units: {
+    "kg/s": { factor: 1, dim: { M: 1, L: 0, T: -1, Th: 0 } },
+    "kg/h": { factor: 1/3600, dim: { M: 1, L: 0, T: -1, Th: 0 } },
+    "lb/s": { factor: 0.45359237, dim: { M: 1, L: 0, T: -1, Th: 0 } },
+    "lb/h": { factor: 0.000125998, dim: { M: 1, L: 0, T: -1, Th: 0 } }
+  }
+},
+
+thermalConductivity: {
+  base: "W/m·K",
+  dim: { M: 1, L: 1, T: -3, Th: -1 },
+  units: {
+    "W/m·K": { factor: 1, dim: { M: 1, L: 1, T: -3, Th: -1 } },
+    "kW/m·K": { factor: 1000, dim: { M: 1, L: 1, T: -3, Th: -1 } },
+    "BTU/hr·ft·°F": { factor: 1.730735, dim: { M: 1, L: 1, T: -3, Th: -1 } }
+  }
+},
+
+heatTransferCoeff: {
+  base: "W/m2·K",
+  dim: { M: 1, L: 0, T: -3, Th: -1 },
+  units: {
+    "W/m2·K": { factor: 1, dim: { M: 1, L: 0, T: -3, Th: -1 } },
+    "kW/m2·K": { factor: 1000, dim: { M: 1, L: 0, T: -3, Th: -1 } },
+    "BTU/hr·ft2·°F": { factor: 5.678263, dim: { M: 1, L: 0, T: -3, Th: -1 } }
+  }
+},
+
+specificHeat: {
+  base: "J/kg·K",
+  dim: { M: 0, L: 2, T: -2, Th: -1 },
+  units: {
+    "J/kg·K": { factor: 1, dim: { M: 0, L: 2, T: -2, Th: -1 } },
+    "kJ/kg·K": { factor: 1000, dim: { M: 0, L: 2, T: -2, Th: -1 } },
+    "BTU/lb·°F": { factor: 4186.8, dim: { M: 0, L: 2, T: -2, Th: -1 } }
+  }
+}
+
 };
