@@ -170,7 +170,7 @@ export const units = {
       "kJ/kg·K": { toBase: 1000 },
       "BTU/lb·°F": { toBase: 4186.8 }
     }
-  }
+  },
 
 /* ================= BASIC EXTENSIONS ================= */
 
