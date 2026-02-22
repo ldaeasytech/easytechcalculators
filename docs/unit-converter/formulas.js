@@ -73,7 +73,7 @@ export const formulas = {
   specificHeat: {
     formula: "Q = m c ΔT",
     note: "Specific heat capacity c"
-  }
+  },
 
 temperature: {
   formula: "Temperature offset conversion",
