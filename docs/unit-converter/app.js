@@ -116,22 +116,22 @@ Example:
 
       const base = value * data.from.factor;
 
-      stepsDisplay.textContent = `
-Dimensional Verification:
+      stepsDisplay.innerHTML = `
+<strong>Dimensional Verification</strong>
 
 ${formatDimension(data.from.dim)} → ${formatDimension(data.to.dim)}
 
-Step 1: Normalize to Base SI
+<strong>Step 1: Normalize to Base SI</strong>
 
 ${value} ${from}
 × ${data.from.factor}
 = ${base} ${units[quantity].base}
 
-Step 2: Convert Base to Target Unit
+<strong>Step 2: Convert Base to Target Unit</strong>
 
 ${base} ${units[quantity].base}
 ÷ ${data.to.factor}
-= ${data.result.toPrecision(8)} ${to}
+= <strong>${data.result.toPrecision(8)} ${to}</strong>
 `;
 
     }
