@@ -1,152 +1,130 @@
 // re.js
-import { normalize } from "./unitsData.js";
 
-const methodSelect = document.getElementById("method");
+import { normalize } from "./unitsData.js";
+import { PIPE_ROUGHNESS } from "../pump-power-calculator/js/data/pipeRoughness.js";
+import { frictionFactor } from "../pump-power-calculator/js/frictionPipe.js";
+
 const calculateBtn = document.getElementById("calculateBtn");
+const materialSelect = document.getElementById("materialSelect");
+
+// ----------------------
+// Populate Material List
+// ----------------------
+
+Object.keys(PIPE_ROUGHNESS).forEach(material => {
+  const option = document.createElement("option");
+  option.value = material;
+  option.textContent = material;
+  materialSelect.appendChild(option);
+});
+
+// Auto-fill roughness
+materialSelect.addEventListener("change", () => {
+  const selected = materialSelect.value;
+  if (selected && PIPE_ROUGHNESS[selected]) {
+    document.getElementById("roughnessInput").value =
+      PIPE_ROUGHNESS[selected];
+    document.getElementById("roughnessUnit").value = "m";
+  }
+});
+
+// ----------------------
+// Calculation
+// ----------------------
 
 calculateBtn.addEventListener("click", () => {
 
-  const method = methodSelect.value;
+  const method = document.getElementById("method").value;
 
-  const rhoInput = parseFloat(document.getElementById("density").value);
-  const VInput   = parseFloat(document.getElementById("velocity").value);
-  const DInput   = parseFloat(document.getElementById("diameter").value);
+  const rho = normalize("density",
+    parseFloat(document.getElementById("density").value),
+    "kgm3");
 
-  if (!VInput || !DInput) {
-    alert("Please enter velocity and diameter.");
-    return;
-  }
+  const V = normalize("velocity",
+    parseFloat(document.getElementById("velocity").value),
+    "ms");
 
-  // --- Normalize Inputs to Base SI Units ---
-  const rho = rhoInput ? normalize("density", rhoInput, "kgm3") : null;
-  const V   = normalize("velocity", VInput, "ms");
-  const D   = normalize("length", DInput, "m");
+  const D = normalize("length",
+    parseFloat(document.getElementById("diameter").value),
+    "m");
+
+  const e = normalize("length",
+    parseFloat(document.getElementById("roughnessInput").value),
+    document.getElementById("roughnessUnit").value);
 
   let Re;
-  let formulaDisplay;
-  let dimensionDisplay;
-  let stepsDisplay;
-  let notesDisplay;
 
   if (method === "dynamic") {
-
-    const muInput = parseFloat(document.getElementById("mu")?.value);
-
-    if (!rhoInput || !muInput) {
-      alert("Density and dynamic viscosity are required.");
-      return;
-    }
-
-    const mu = normalize("dynamicViscosity", muInput, "Pas");
+    const mu = normalize("dynamicViscosity",
+      parseFloat(document.getElementById("mu").value),
+      "Pas");
 
     Re = (rho * V * D) / mu;
-
-    formulaDisplay = `
-Re = (ρ V D) / μ
-    `;
-
-    dimensionDisplay = `
-ρ  → [M L⁻³]
-V  → [L T⁻¹]
-D  → [L]
-μ  → [M L⁻¹ T⁻¹]
-
-Re = [M L⁻³][L T⁻¹][L] / [M L⁻¹ T⁻¹]
-
-= [M L⁻¹ T⁻¹] / [M L⁻¹ T⁻¹]
-
-= Dimensionless
-    `;
-
-    stepsDisplay = `
-1) Normalize to SI base units:
-   ρ = ${rho.toExponential(4)} kg/m³
-   V = ${V.toExponential(4)} m/s
-   D = ${D.toExponential(4)} m
-   μ = ${mu.toExponential(4)} Pa·s
-
-2) Substitute into equation:
-
-   Re = (ρ V D) / μ
-
-   Re = (${rho.toExponential(4)} × ${V.toExponential(4)} × ${D.toExponential(4)}) / ${mu.toExponential(4)}
-
-3) Result:
-
-   Re = ${Re.toFixed(2)}
-    `;
-
-    notesDisplay = `
-Dynamic viscosity form is commonly used when fluid shear resistance (μ) is known.
-This form highlights the ratio of inertial forces (ρVD) to viscous forces (μ).
-    `;
-
   } else {
-
-    const nuInput = parseFloat(document.getElementById("nu")?.value);
-
-    if (!nuInput) {
-      alert("Kinematic viscosity is required.");
-      return;
-    }
-
-    const nu = normalize("kinematicViscosity", nuInput, "m2s");
+    const nu = normalize("kinematicViscosity",
+      parseFloat(document.getElementById("nu").value),
+      "m2s");
 
     Re = (V * D) / nu;
-
-    formulaDisplay = `
-Re = (V D) / ν
-    `;
-
-    dimensionDisplay = `
-V  → [L T⁻¹]
-D  → [L]
-ν  → [L² T⁻¹]
-
-Re = [L T⁻¹][L] / [L² T⁻¹]
-
-= Dimensionless
-    `;
-
-    stepsDisplay = `
-1) Normalize to SI base units:
-   V = ${V.toExponential(4)} m/s
-   D = ${D.toExponential(4)} m
-   ν = ${nu.toExponential(4)} m²/s
-
-2) Substitute into equation:
-
-   Re = (V D) / ν
-
-   Re = (${V.toExponential(4)} × ${D.toExponential(4)}) / ${nu.toExponential(4)}
-
-3) Result:
-
-   Re = ${Re.toFixed(2)}
-    `;
-
-    notesDisplay = `
-Kinematic viscosity form is commonly used in experimental fluid mechanics
-and when ν is provided directly (e.g., from fluid property tables).
-    `;
   }
 
-  // --- Flow Regime Classification ---
+  // ----------------------
+  // Friction Factor
+  // ----------------------
+
+  const f = frictionFactor(Re, e, D);
+
+  // ----------------------
+  // Regime
+  // ----------------------
+
   let regime;
-  if (Re < 2300) {
-    regime = "Laminar Flow (Re < 2300) — Viscous forces dominate. Smooth, orderly motion.";
-  } else if (Re <= 4000) {
-    regime = "Transitional Flow (2300–4000) — Instability region between laminar and turbulent.";
-  } else {
-    regime = "Turbulent Flow (Re > 4000) — Inertial forces dominate. Chaotic mixing occurs.";
-  }
+  if (Re < 2300) regime = "Laminar";
+  else if (Re <= 4000) regime = "Transitional";
+  else regime = "Turbulent";
 
-  // --- Display Results ---
+  // ----------------------
+  // Display Results
+  // ----------------------
+
   document.getElementById("reValue").innerText = Re.toFixed(2);
-  document.getElementById("regimeDisplay").innerText = regime;
-  document.getElementById("formulaDisplay").innerText = formulaDisplay;
-  document.getElementById("dimensionDisplay").innerText = dimensionDisplay;
-  document.getElementById("stepsDisplay").innerText = stepsDisplay;
-  document.getElementById("notesDisplay").innerText = notesDisplay;
+  document.getElementById("regimeDisplay").innerText =
+    `${regime} Flow`;
+
+  document.getElementById("frictionDisplay").innerText =
+    `f = ${f.toFixed(6)}`;
+
+  document.getElementById("formulaDisplay").innerText =
+`Re = (ρVD)/μ  or  (VD)/ν
+
+Darcy–Weisbach:
+ΔP = f (L/D) (ρV²/2)`;
+
+  document.getElementById("dimensionDisplay").innerText =
+`Re → Dimensionless
+f  → Dimensionless`;
+
+  document.getElementById("stepsDisplay").innerText =
+`1) Normalize Inputs:
+   D = ${D.toExponential(4)} m
+   ε = ${e.toExponential(4)} m
+
+2) Compute Reynolds Number:
+   Re = ${Re.toFixed(2)}
+
+3) Relative Roughness:
+   ε/D = ${(e/D).toExponential(4)}
+
+4) Compute Friction Factor (Churchill equation approximation):
+   f = ${f.toFixed(6)}`;
+
+  document.getElementById("notesDisplay").innerText =
+`Laminar: f = 16/Re
+Turbulent: Churchill explicit approximation
+Transitional: Blended solution
+
+Relative roughness (ε/D) determines
+whether pipe behaves hydraulically smooth
+or fully rough at high Reynolds number.`;
 
 });
