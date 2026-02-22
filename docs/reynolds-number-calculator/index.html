@@ -180,6 +180,31 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
           <input type="number" id="diameter" />
         </div>
 
+                <div class="input-group">
+          <div class="group-title">Pipe Roughness</div>
+        
+          <div class="field">
+            <label>Material</label>
+            <select id="materialSelect">
+              <option value="">-- Select Material --</option>
+            </select>
+          </div>
+        
+          <div class="field">
+            <label>Pipe Roughness (ε)</label>
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="roughnessInput" />
+              <select id="roughnessUnit">
+                <option value="m">m</option>
+                <option value="mm">mm</option>
+                <option value="ft">ft</option>
+                <option value="in">in</option>
+              </select>
+            </div>
+          </div>
+
+</div>
+
       </div>
 
       <div class="form-actions">
@@ -213,6 +238,9 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
 
     <h3>Calculation Steps</h3>
     <pre id="stepsDisplay"></pre>
+
+    <h3>Darcy Friction Factor</h3>
+    <p id="frictionDisplay"></p>
 
     <h3>Engineering Notes</h3>
     <p id="notesDisplay"></p>
