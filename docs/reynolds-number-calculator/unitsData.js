@@ -31,6 +31,13 @@ export function normalize(type, value, unit) {
       m2s: 1,
       cSt: 1e-6,
       ft2s: 0.092903
+    },
+
+    length: {
+      m: 1,
+      mm: 0.001,
+      ft: 0.3048,
+      in: 0.0254
     }
 
   };
