@@ -1,188 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Reynolds Number Calculator | Laminar, Transitional & Turbulent Flow</title>
+<title>Reynolds Number Calculator (SI & English) | Flow Regime & Dimensional Analysis</title>
 
 <meta name="description"
-content="Free Reynolds Number Calculator with full unit support (SI & English). Compute flow regime (laminar, transitional, turbulent), view dimensional analysis, governing equations, and engineering explanations." />
+content="Professional Reynolds Number Calculator with SI and English unit support. Determine laminar, transitional, or turbulent flow with governing equations, dimensional verification, and engineering interpretation." />
 
-<link rel="canonical" href="https://easytechcalculators.com/reynolds-number-calculator" />
+<meta name="keywords"
+content="Reynolds number calculator, laminar flow calculator, turbulent flow calculator, pipe flow regime, fluid mechanics calculator, Re = rho V D / mu, kinematic viscosity calculator" />
+
+<link rel="canonical" href="https://easytechcalculators.com/reynolds-number-calculator/" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Reynolds Number Calculator with Dimensional Analysis">
+<meta property="og:description" content="Compute Reynolds number using dynamic or kinematic viscosity. Includes flow classification and engineering explanation.">
+<meta property="og:url" content="https://easytechcalculators.com/reynolds-number-calculator/">
+<meta property="og:type" content="website">
+
 <link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
 
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- SoftwareApplication Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Reynolds Number Calculator",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web",
+  "url": "https://easytechcalculators.com/reynolds-number-calculator/",
+  "description": "Calculate Reynolds number and determine flow regime using SI or English units.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
 
 <!-- FAQ Schema -->
 <script type="application/ld+json">
 {
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [{
-   "@type": "Question",
-   "name": "What is Reynolds number?",
-   "acceptedAnswer": {
-     "@type": "Answer",
-     "text": "Reynolds number is a dimensionless quantity used to predict whether flow is laminar, transitional, or turbulent."
-   }
- },{
-   "@type": "Question",
-   "name": "Why is 2300 important in Reynolds number?",
-   "acceptedAnswer": {
-     "@type": "Answer",
-     "text": "Re < 2300 indicates laminar flow in pipes. It is the experimentally determined threshold where viscous forces dominate."
-   }
- },{
-   "@type": "Question",
-   "name": "What happens when Reynolds number exceeds 4000?",
-   "acceptedAnswer": {
-     "@type": "Answer",
-     "text": "Flow becomes fully turbulent and inertial forces dominate over viscous forces."
-   }
- }]
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+
+    {
+      "@type": "Question",
+      "name": "What does Reynolds number represent?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Reynolds number is the ratio of inertial forces to viscous forces in a fluid and determines whether flow is laminar, transitional, or turbulent."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "Why is 2300 important for pipe flow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In internal pipe flow, Reynolds number below 2300 indicates laminar flow. It represents the threshold where viscous forces dominate."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "What happens when Reynolds number exceeds 4000?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Flow becomes fully turbulent and mixing increases significantly."
+      }
+    }
+
+  ]
 }
 </script>
 
+<!-- Google AdSense -->
+<script async
+src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341457826307951"
+crossorigin="anonymous"></script>
+
 </head>
+
 <body>
 
-<div class="calculator-container">
+<!-- ================= HEADER ================= -->
 
-<h1>Reynolds Number Calculator</h1>
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <picture>
+        <source srcset="/logo-easytechcalculators.webp" type="image/webp">
+        <img
+          src="/logo-easytechcalculators.png"
+          alt="EasyTechCalculators engineering calculator logo"
+          class="brand-logo"
+          width="90"
+          height="90"
+          decoding="async"
+        >
+      </picture>
+      <div class="brand-text">
+        <h1>Reynolds Number Calculator with Flow Regime Classification</h1>
+        <div class="capability-line">
+          Laminar · Transitional · Turbulent · Dimensional Analysis
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
 
-<div class="two-column">
+<!-- ================= INTRO LEARNING BLOCK ================= -->
 
-<!-- LEFT COLUMN -->
-<div class="input-section">
+<section class="container-learning" style="padding-top:30px;">
+<h2>Reynolds Number Calculator (SI & English Units)</h2>
 
-<h2>Input Parameters</h2>
-
-<label>Calculation Method</label>
-<select id="method">
-  <option value="dynamic">Using Dynamic Viscosity (μ)</option>
-  <option value="kinematic">Using Kinematic Viscosity (ν)</option>
-</select>
-
-<label>Fluid Density (ρ)</label>
-<div class="input-group">
-  <input type="number" id="density" />
-  <select id="densityUnit">
-    <option value="kgm3">kg/m³</option>
-    <option value="lbft3">lb/ft³</option>
-  </select>
-</div>
-
-<label>Velocity (V)</label>
-<div class="input-group">
-  <input type="number" id="velocity" />
-  <select id="velocityUnit">
-    <option value="ms">m/s</option>
-    <option value="fts">ft/s</option>
-  </select>
-</div>
-
-<label>Diameter (D)</label>
-<div class="input-group">
-  <input type="number" id="diameter" />
-  <select id="diameterUnit">
-    <option value="m">m</option>
-    <option value="mm">mm</option>
-    <option value="ft">ft</option>
-    <option value="in">in</option>
-  </select>
-</div>
-
-<div id="dynamicGroup">
-<label>Dynamic Viscosity (μ)</label>
-<div class="input-group">
-  <input type="number" id="mu" />
-  <select id="muUnit">
-    <option value="Pas">Pa·s</option>
-    <option value="cP">cP</option>
-    <option value="lbfts">lb/ft·s</option>
-  </select>
-</div>
-</div>
-
-<div id="kinematicGroup" style="display:none;">
-<label>Kinematic Viscosity (ν)</label>
-<div class="input-group">
-  <input type="number" id="nu" />
-  <select id="nuUnit">
-    <option value="m2s">m²/s</option>
-    <option value="cSt">cSt</option>
-    <option value="ft2s">ft²/s</option>
-  </select>
-</div>
-</div>
-
-<button id="calculateBtn">Calculate Reynolds Number</button>
-
-</div>
-
-<!-- RIGHT COLUMN -->
-<div class="result-section">
-
-<h2>Results</h2>
-
-<div class="result-box">
-  <div id="reOutput">Re = —</div>
-  <div id="regimeOutput"></div>
-</div>
-
-<div id="stepsOutput"></div>
-
-</div>
-</div>
-
-</div>
-
-<!-- LEARNING SECTION -->
-<section class="learning-section">
-<h2>Understanding Reynolds Number</h2>
-
-<h3>What is Reynolds Number?</h3>
 <p>
-Reynolds number is the ratio of inertial forces to viscous forces in a fluid.
-It predicts whether flow will be smooth (laminar) or chaotic (turbulent).
+This professional fluid mechanics calculator computes Reynolds number using:
 </p>
 
-<h3>Why is 2300 Important?</h3>
-<p>
-For internal pipe flow:
-• Re &lt; 2300 → Laminar  
-• 2300–4000 → Transitional  
-• &gt; 4000 → Turbulent  
-</p>
-
-<h3>Laminar vs Turbulent Flow</h3>
-<p>
-Laminar flow is orderly and layered.  
-Turbulent flow contains eddies and mixing.
-</p>
-
-<h3>Engineering Applications</h3>
 <ul>
-<li>Pipe friction factor calculations</li>
-<li>Heat exchanger design</li>
-<li>Aerodynamic similarity</li>
-<li>Pump and compressor selection</li>
+<li>✔ Dynamic viscosity form: Re = (ρ V D) / μ</li>
+<li>✔ Kinematic viscosity form: Re = (V D) / ν</li>
+<li>✔ Full unit normalization</li>
+<li>✔ Flow regime classification</li>
+<li>✔ Dimensional verification</li>
 </ul>
+
+<p>
+It is widely used in pipe flow analysis, heat transfer, pump design, and aerodynamic similarity studies.
+</p>
+</section>
+
+<!-- ================= MAIN CALCULATOR ================= -->
+
+<main class="container">
+
+  <!-- INPUT CARD -->
+  <section class="card">
+    <h2>Flow Input Parameters</h2>
+
+    <div class="grid-form">
+
+      <div class="input-group">
+        <div class="group-title">Method Selection</div>
+        <div class="field">
+          <label>Calculation Method</label>
+          <select id="method">
+            <option value="dynamic">Dynamic Viscosity (ρVD/μ)</option>
+            <option value="kinematic">Kinematic Viscosity (VD/ν)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="group-title">Fluid Properties</div>
+
+        <div class="field">
+          <label>Density (ρ)</label>
+          <input type="number" id="density" />
+        </div>
+
+        <div class="field">
+          <label>Velocity (V)</label>
+          <input type="number" id="velocity" />
+        </div>
+
+        <div class="field">
+          <label>Diameter (D)</label>
+          <input type="number" id="diameter" />
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button class="primary" id="calculateBtn">Calculate Reynolds Number</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESULT CARD -->
+  <section class="card result-section">
+
+    <div class="result-highlight">
+      <div>
+        <div class="result-label">Reynolds Number</div>
+        <div>
+          <span class="result-value" id="reValue">—</span>
+        </div>
+        <div class="result-unit">Dimensionless</div>
+      </div>
+    </div>
+
+    <h3>Flow Regime</h3>
+    <p id="regimeDisplay"></p>
+
+    <h3>Governing Equation</h3>
+    <p id="formulaDisplay"></p>
+
+    <h3>Dimensional Verification</h3>
+    <p id="dimensionDisplay"></p>
+
+    <h3>Calculation Steps</h3>
+    <pre id="stepsDisplay"></pre>
+
+    <h3>Engineering Notes</h3>
+    <p id="notesDisplay"></p>
+
+  </section>
+
+</main>
+
+<!-- ================= RELATED CALCULATORS ================= -->
+
+<section class="related-calculators">
+
+  <h2>Related Engineering Calculators</h2>
+
+  <div class="related-grid">
+
+    <a href="../pump-power-calculator/" class="related-card">
+      <strong>Pump Power Calculator</strong>
+      <span>Calculate theoretical and actual pump power.</span>
+    </a>
+
+    <a href="../npsh-available-calculator/" class="related-card">
+      <strong>NPSH Available Calculator</strong>
+      <span>Evaluate cavitation safety margin.</span>
+    </a>
+
+    <a href="../optimum-pipe-diameter-calculator/" class="related-card">
+      <strong>Optimum Pipe Diameter</strong>
+      <span>Minimize total annual piping cost.</span>
+    </a>
+
+    <a href="../unit-converter/" class="related-card">
+      <strong>Engineering Unit Converter</strong>
+      <span>Convert SI and English units with dimensional verification.</span>
+    </a>
+
+  </div>
 
 </section>
 
-<!-- INTERNAL LINKING -->
-<section class="internal-links">
-<h2>Related Engineering Calculators</h2>
-<ul>
-<li><a href="/pump-power-calculator/">Pump Power Calculator</a></li>
-<li><a href="/npsh-calculator/">NPSH Calculator</a></li>
-<li><a href="/optimum-pipe-diameter-calculator/">Optimum Pipe Diameter Calculator</a></li>
-<li><a href="/unit-converter/">Engineering Unit Converter</a></li>
-</ul>
-</section>
+<!-- ================= FOOTER ================= -->
 
-<script type="module" src="re.js"></script>
+<footer class="site-footer">
+
+  <div class="footer-inner">
+
+    <div class="footer-disclaimer">
+      Results should be independently verified for professional use.
+      EasyTechCalculators provides engineering tools for educational and
+      preliminary design purposes only.
+    </div>
+
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../policy.html">Privacy Policy</a>
+      <a href="../terms-of-service.html">Terms of Use</a>
+      <a href="../disclaimer.html">Disclaimer</a>
+    </div>
+
+    <div class="footer-copy">
+      © <span id="year"></span> EasyTechCalculators. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>
+
+<script type="module" src="./re.js"></script>
 
 </body>
 </html>
