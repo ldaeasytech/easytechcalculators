@@ -1,7 +1,7 @@
 import { units } from "./unitsData.js";
 import { formulas } from "./formulas.js";
 import { convert } from "./converterEngine.js";
-import { dimensions } from "./dimensions.js";
+import { formatDimension } from "./dimensionEngine.js";
 
 const quantitySelect = document.getElementById("quantity");
 const fromSelect = document.getElementById("fromUnit");
@@ -10,12 +10,20 @@ const inputValue = document.getElementById("inputValue");
 
 const resultValue = document.getElementById("resultValue");
 const resultUnit = document.getElementById("resultUnit");
+
+const formulaTitle = document.getElementById("formulaTitle");
 const formulaDisplay = document.getElementById("formulaDisplay");
+const dimensionDisplay = document.getElementById("dimensionDisplay");
 const stepsDisplay = document.getElementById("stepsDisplay");
 const notesDisplay = document.getElementById("notesDisplay");
-const dimensionDisplay = document.getElementById("dimensionDisplay");
+
+/* ===============================
+   Populate Quantity Dropdown
+================================ */
 
 function populateQuantities() {
+  quantitySelect.innerHTML = "";
+
   Object.keys(units).forEach(q => {
     const opt = document.createElement("option");
     opt.value = q;
@@ -24,21 +32,27 @@ function populateQuantities() {
   });
 }
 
+/* ===============================
+   Populate Units
+================================ */
+
 function populateUnits(quantity) {
   fromSelect.innerHTML = "";
   toSelect.innerHTML = "";
 
   Object.keys(units[quantity].units).forEach(u => {
-    const opt1 = new Option(u, u);
-    const opt2 = new Option(u, u);
-    fromSelect.add(opt1);
-    toSelect.add(opt2);
+    fromSelect.add(new Option(u, u));
+    toSelect.add(new Option(u, u));
   });
 }
 
 quantitySelect.addEventListener("change", e => {
   populateUnits(e.target.value);
 });
+
+/* ===============================
+   Conversion Logic
+================================ */
 
 document.getElementById("convertBtn").addEventListener("click", () => {
 
@@ -47,34 +61,90 @@ document.getElementById("convertBtn").addEventListener("click", () => {
   const from = fromSelect.value;
   const to = toSelect.value;
 
-  if (!value && value !== 0) return;
+  if (isNaN(value)) return;
 
-  const data = convert(quantity, value, from, to);
+  try {
 
-  resultValue.textContent = data.result.toPrecision(8);
-  resultUnit.textContent = to;
+    const data = convert(quantity, value, from, to);
 
-  if (formulas[quantity]) {
-    formulaDisplay.textContent = formulas[quantity].formula;
-    notesDisplay.textContent = formulas[quantity].note;
-  }
+    /* ===============================
+       Result
+    ================================ */
 
-  if (dimensions[quantity]) {
-  dimensionDisplay.textContent = dimensions[quantity];
-  }
-  
-  if (data.baseUnit) {
-    stepsDisplay.textContent =
-      `Step 1: Convert to base (${data.baseUnit})
-Base = ${value} × ${data.fromFactor}
+    resultValue.textContent = data.result.toPrecision(8);
+    resultUnit.textContent = to;
 
-Step 2: Convert to ${to}
-Result = Base ÷ ${data.toFactor}`;
-  } else {
-    stepsDisplay.textContent = "Direct temperature conversion applied.";
+    /* ===============================
+       Formula + Notes
+    ================================ */
+
+    if (formulas[quantity]) {
+      formulaTitle.textContent = formulas[quantity].title || "Governing Engineering Relation";
+      formulaDisplay.textContent = formulas[quantity].formula;
+      notesDisplay.textContent = formulas[quantity].note;
+    } else {
+      formulaTitle.textContent = "";
+      formulaDisplay.textContent = "";
+      notesDisplay.textContent = "";
+    }
+
+    /* ===============================
+       Dimensional Display
+    ================================ */
+
+    if (data.from?.dim) {
+      dimensionDisplay.textContent =
+        "[" + formatDimension(data.from.dim) + "]";
+    } else {
+      dimensionDisplay.textContent = "";
+    }
+
+    /* ===============================
+       Engineering Conversion Steps
+    ================================ */
+
+    if (quantity === "temperature") {
+
+      stepsDisplay.textContent = `
+Temperature conversion uses offset normalization through Kelvin.
+
+Example:
+°C → K → °F
+`;
+
+    } else {
+
+      const base = value * data.from.factor;
+
+      stepsDisplay.textContent = `
+Dimensional Verification:
+
+${formatDimension(data.from.dim)} → ${formatDimension(data.to.dim)}
+
+Step 1: Normalize to Base SI
+
+${value} ${from}
+× ${data.from.factor}
+= ${base} ${units[quantity].base}
+
+Step 2: Convert Base to Target Unit
+
+${base} ${units[quantity].base}
+÷ ${data.to.factor}
+= ${data.result.toPrecision(8)} ${to}
+`;
+
+    }
+
+  } catch (err) {
+    stepsDisplay.textContent = "Error: " + err.message;
   }
 
 });
 
+/* ===============================
+   Initialize
+================================ */
+
 populateQuantities();
-populateUnits("mass");
+populateUnits(Object.keys(units)[0]);
