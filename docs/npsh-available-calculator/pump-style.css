@@ -1251,3 +1251,11 @@ select:focus {
   font-family: "JetBrains Mono", monospace;
   color: #9ecbff;
 }
+
+.steps-box strong {
+  color: #60a5fa;
+}
+
+.steps-box {
+  font-size: 0.95rem;
+}
