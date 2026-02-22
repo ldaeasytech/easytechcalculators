@@ -114,26 +114,33 @@ Example:
 
     } else {
 
-      const base = value * data.from.factor;
+const baseFactor = data.from.factor;
+const targetFactor = data.to.factor;
 
-      stepsDisplay.innerHTML = `
-<strong>Dimensional Verification</strong>
+// Build symbolic fraction
+let fraction;
 
-${formatDimension(data.from.dim)} → ${formatDimension(data.to.dim)}
+// If converting from base → target
+if (baseFactor === 1) {
+  fraction = `1 ${to} / ${targetFactor} ${from}`;
+} else {
+  fraction = `${targetFactor} ${to} / ${baseFactor} ${from}`;
+}
 
-<strong>Step 1: Normalize to Base SI</strong>
-
-${value} ${from}
-× ${data.from.factor}
-= ${base} ${units[quantity].base}
-
-<strong>Step 2: Convert Base to Target Unit</strong>
-
-${base} ${units[quantity].base}
-÷ ${data.to.factor}
-= <strong>${data.result.toPrecision(8)} ${to}</strong>
+// Better universal expression:
+const expression = `
+${value} ${from} × (${baseFactor} ${units[quantity].base} / 1 ${from})
+× (1 ${to} / ${targetFactor} ${units[quantity].base})
 `;
 
+stepsDisplay.innerHTML = `
+<strong>Unit Conversion</strong>
+
+${value} ${from}
+× (${baseFactor} ${units[quantity].base} / 1 ${from})
+× (1 ${to} / ${targetFactor} ${units[quantity].base})
+= <strong>${data.result.toPrecision(8)} ${to}</strong>
+`;
     }
 
   } catch (err) {
