@@ -10,3 +10,16 @@ export function formatDimension(dim) {
     .map(([k, v]) => v === 1 ? k : `${k}${v}`)
     .join(" ");
 }
+
+export function symbolicBreakdown(value, fromUnit, toUnit, fromFactor, toFactor) {
+
+  return `
+${value} ${fromUnit}
+
+× (1 base / ${fromUnit})
+× (${toUnit} / 1 base)
+
+= ${value} × ${fromFactor} ÷ ${toFactor}
+
+`;
+}
