@@ -78,10 +78,11 @@ export async function solve(inputs) {
     const P = inputs.pressure;
     const Ps = Psat(T);
 
-    if (Math.abs(P - Ps) < SAT_EPS) {
+   /* if (Math.abs(P - Ps) < SAT_EPS) {
       return formatOutput(satVaporState(T, Ps), mode);
     }
 
+   */
     return formatOutput(await singlePhaseIF97(T, P), mode);
   }
 
@@ -92,7 +93,7 @@ export async function solve(inputs) {
 
     const rgn = regionSelector({ P, h, mode: "Ph" });
 
-    if (rgn === 4) {
+   /* if (rgn === 4) {
       const T = Tsat(P);
       const hf = h_f_sat(T);
       const hg = h_g_sat(T);
@@ -102,10 +103,11 @@ export async function solve(inputs) {
       if (1 - x <= X_EPS) return formatOutput(satVaporState(T, P), mode);
       return formatOutput(mixStates(T, P, x), mode);
     }
+   */
 
     const T = await solveTfromH(P, h, rgn);
     return formatOutput(await singlePhaseIF97(T, P), mode);
-  }
+   }
 
   /* ======================= P–s ======================= */
   if (mode === "Ps") {
@@ -114,7 +116,7 @@ export async function solve(inputs) {
 
     const rgn = regionSelector({ P, s, mode: "Ps" });
 
-    if (rgn === 4) {
+   /* if (rgn === 4) {
       const T = Tsat(P);
       const sf = s_f_sat(T);
       const sg = s_g_sat(T);
@@ -123,7 +125,7 @@ export async function solve(inputs) {
       if (x <= X_EPS) return formatOutput(satLiquidState(T, P), mode);
       if (1 - x <= X_EPS) return formatOutput(satVaporState(T, P), mode);
       return formatOutput(mixStates(T, P, x), mode);
-    }
+    }*/
 
     const T = await solveTfromS(P, s, rgn);
     return formatOutput(await singlePhaseIF97(T, P), mode);
