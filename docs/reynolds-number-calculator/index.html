@@ -109,6 +109,75 @@ crossorigin="anonymous"></script>
 
 <body>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Reynolds Number, Friction Factor, Pressure Drop and Moody Diagram Explained",
+  "description": "Comprehensive guide explaining Reynolds number, laminar and turbulent flow regimes, Darcy and Fanning friction factors, pipe pressure drop calculation, and interpretation of the Moody diagram.",
+  "author": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "url": "https://easytechcalculators.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://easytechcalculators.com/logo-easytechcalculators.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://easytechcalculators.com/reynolds-number-calculator/"
+  },
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Reynolds Number"
+    },
+    {
+      "@type": "Thing",
+      "name": "Darcy Friction Factor"
+    },
+    {
+      "@type": "Thing",
+      "name": "Fanning Friction Factor"
+    },
+    {
+      "@type": "Thing",
+      "name": "Moody Diagram"
+    },
+    {
+      "@type": "Thing",
+      "name": "Pipe Pressure Drop"
+    },
+    {
+      "@type": "Thing",
+      "name": "Darcy-Weisbach Equation"
+    }
+  ],
+  "articleSection": [
+    "Fluid Mechanics",
+    "Internal Flow",
+    "Friction Factor",
+    "Pressure Drop",
+    "Moody Diagram"
+  ],
+  "keywords": [
+    "Reynolds number",
+    "Darcy friction factor",
+    "Fanning friction factor",
+    "Moody diagram",
+    "Pipe pressure drop",
+    "Laminar flow",
+    "Turbulent flow",
+    "Darcy-Weisbach equation"
+  ]
+}
+</script>
+  
 <!-- ================= HEADER ================= -->
 
 <header class="app-header">
@@ -388,6 +457,227 @@ Moody diagrams use the Darcy formulation.
 
 </section>
 
+<section class="container-learning learning-section">
+
+<h2 id="what-is-reynolds-number">1. What is Reynolds Number?</h2>
+
+<p>
+The <strong>Reynolds number (Re)</strong> is a dimensionless quantity that compares inertial forces to viscous forces in a fluid flow. It is defined as:
+</p>
+
+<p>
+<strong>Re = (ρ V D) / μ</strong>  &nbsp; or &nbsp;
+<strong>Re = (V D) / ν</strong>
+</p>
+
+<ul>
+<li>ρ = fluid density</li>
+<li>V = flow velocity</li>
+<li>D = characteristic length (pipe diameter in internal flow)</li>
+<li>μ = dynamic viscosity</li>
+<li>ν = kinematic viscosity</li>
+</ul>
+
+<p>
+Reynolds number determines whether a flow is laminar, transitional, or turbulent.
+</p>
+
+
+<h2 id="importance-of-dimensionless-numbers">2. Why Use Reynolds Number? (Importance of Dimensionless Numbers)</h2>
+
+<p>
+Reynolds number is a <strong>dimensionless number</strong>, meaning it has no units. 
+Dimensionless numbers are powerful in engineering because they allow comparison between systems of different scales.
+</p>
+
+<p>
+Two flows with the same Reynolds number behave similarly, even if:
+</p>
+
+<ul>
+<li>The pipe diameters are different</li>
+<li>The fluid properties are different</li>
+<li>The velocity scales are different</li>
+</ul>
+
+<p>
+This principle enables <strong>dynamic similarity</strong>, which is fundamental in fluid mechanics, wind tunnel testing, pump scaling, and process design.
+</p>
+
+
+<h2 id="applications-of-reynolds-number">3. Common Applications of Reynolds Number</h2>
+
+<ul>
+<li>Pipe flow design and pressure drop calculations</li>
+<li>Pump and compressor sizing</li>
+<li>Heat exchanger design</li>
+<li>HVAC duct flow analysis</li>
+<li>Aircraft and aerodynamic similarity studies</li>
+<li>Chemical reactor flow analysis</li>
+</ul>
+
+<p>
+Reynolds number determines whether analytical laminar solutions apply or empirical turbulent correlations are required.
+</p>
+
+
+<h2 id="flow-regimes">4. Flow Regimes and Corresponding Reynolds Numbers</h2>
+
+<p>For internal pipe flow:</p>
+
+<ul>
+<li><strong>Laminar Flow (Re &lt; 2300)</strong><br>
+Fluid flows in smooth layers. Velocity profile is parabolic. Mixing is minimal. Friction depends strongly on viscosity.</li>
+
+<li><strong>Transitional Flow (2300 ≤ Re ≤ 4000)</strong><br>
+Flow becomes unstable. Small disturbances grow. Behavior is unpredictable.</li>
+
+<li><strong>Turbulent Flow (Re &gt; 4000)</strong><br>
+Flow contains eddies and strong mixing. Friction depends on surface roughness and inertia.</li>
+</ul>
+
+<p>
+In turbulent flow, pressure losses increase significantly due to chaotic motion.
+</p>
+
+
+<h2 id="why-pressure-drop">5. Why Do Pipes Have Pressure Drop?</h2>
+
+<p>
+Pressure drop occurs because energy is lost due to friction between the fluid and the pipe wall.
+</p>
+
+<p>
+As fluid moves:
+</p>
+
+<ul>
+<li>Viscous shear stresses develop at the wall</li>
+<li>Energy converts into heat</li>
+<li>Mechanical energy decreases along the pipe</li>
+</ul>
+
+<p>
+This energy loss appears as a reduction in pressure.
+</p>
+
+
+<h2 id="pressure-drop-calculation">6. How Do We Calculate Pressure Drop in a Pipeline?</h2>
+
+<p>
+Pressure drop in straight pipe sections is calculated using the <strong>Darcy–Weisbach equation</strong>:
+</p>
+
+<p>
+<strong>ΔP = f<sub>D</sub> (L/D) (ρ V² / 2)</strong>
+</p>
+
+<ul>
+<li>f<sub>D</sub> = Darcy friction factor</li>
+<li>L = pipe length</li>
+<li>D = pipe diameter</li>
+<li>ρ = fluid density</li>
+<li>V = velocity</li>
+</ul>
+
+<p>
+This equation applies to both laminar and turbulent flow when the correct friction factor is used.
+</p>
+
+
+<h2 id="darcy-vs-fanning">7. Fanning and Darcy Friction Coefficients</h2>
+
+<p>
+Two friction factor definitions are commonly used:
+</p>
+
+<ul>
+<li><strong>Fanning friction factor (f<sub>F</sub>)</strong> – common in chemical engineering</li>
+<li><strong>Darcy friction factor (f<sub>D</sub>)</strong> – common in mechanical and civil engineering</li>
+</ul>
+
+<p>
+They are related by:
+</p>
+
+<p><strong>f<sub>D</sub> = 4 f<sub>F</sub></strong></p>
+
+<p>
+The Moody diagram uses the Darcy friction factor.
+</p>
+
+
+<h2 id="friction-factor-calculation">8. How Do We Calculate the Friction Coefficient?</h2>
+
+<p>
+In laminar flow:
+</p>
+
+<p><strong>f<sub>D</sub> = 64 / Re</strong></p>
+
+<p>
+In turbulent flow, friction factor depends on:
+</p>
+
+<ul>
+<li>Reynolds number</li>
+<li>Relative roughness (ε/D)</li>
+</ul>
+
+<p>
+Empirical correlations such as the Colebrook equation or explicit approximations (e.g., Churchill equation) are used.
+</p>
+
+
+<h2 id="effect-of-re-and-roughness">9. Effect of Reynolds Number and Roughness on Friction Factor</h2>
+
+<p>
+Friction factor behavior follows key patterns:
+</p>
+
+<ul>
+<li>In laminar flow, friction factor decreases as Reynolds number increases.</li>
+<li>In turbulent flow, friction factor decreases initially with Reynolds number.</li>
+<li>At high Reynolds numbers, roughness dominates and friction factor becomes nearly independent of Reynolds number.</li>
+<li>Larger diameter reduces relative roughness (ε/D), lowering friction factor.</li>
+<li>Rougher materials increase friction factor significantly in turbulent flow.</li>
+</ul>
+
+<p>
+This explains why smooth pipes are preferred in high-flow systems.
+</p>
+
+
+<h2 id="moody-diagram-explained">10. The Moody Diagram</h2>
+
+<p>
+The <strong>Moody diagram</strong> is a graphical representation of:
+</p>
+
+<ul>
+<li>Darcy friction factor (vertical axis)</li>
+<li>Reynolds number (horizontal axis, log scale)</li>
+<li>Relative roughness curves (ε/D)</li>
+</ul>
+
+<p>
+Key patterns observed:
+</p>
+
+<ul>
+<li>Laminar region follows f = 64/Re (straight line in log scale)</li>
+<li>Turbulent smooth pipe curves slope downward</li>
+<li>Fully rough region becomes horizontal (independent of Re)</li>
+<li>Increasing velocity increases Reynolds number and may increase pressure drop</li>
+</ul>
+
+<p>
+The Moody diagram visually connects flow regime, material roughness, and pressure loss behavior.
+</p>
+
+</section>
+
+  
 <!-- ================= FOOTER ================= -->
 
 <footer class="site-footer">
