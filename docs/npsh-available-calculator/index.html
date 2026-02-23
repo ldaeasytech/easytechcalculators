@@ -7,12 +7,30 @@
   <title>NPSH Available Calculator | Prevent Pump Cavitation</title>
 
 <meta name="description"
-  content="Free NPSH Available Calculator to prevent pump cavitation. Learn the difference between NPSH available and NPSH required, why NPSH is critical in pump design, and how to ensure NPSHa > NPSHr." />
+content="Available NPSH (NPSHa) Calculator for pump suction analysis. Compute suction head, vapor pressure head, friction loss, Reynolds number, and cavitation margin using full energy balance modeling." />
+
+<meta name="keywords"
+content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head calculator, cavitation calculator, pump suction analysis, vapor pressure head, suction line friction loss, pump cavitation prevention" />
+
+<meta name="author" content="EasyTechCalculators" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0b1220" />
 
 <link rel="canonical" href="https://easytechcalculators.com/npsh-available-calculator/" />
 
+<!-- Open Graph -->
+<meta property="og:title" content="Available NPSH Calculator (NPSHa) | Pump Suction & Cavitation Analysis">
+<meta property="og:description" content="Calculate available NPSH, suction line friction loss, vapor pressure head, and cavitation margin for pump systems.">
+<meta property="og:url" content="https://easytechcalculators.com/npsh-available-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EasyTechCalculators">
 
-  <link rel="stylesheet" href="pump-style.css" />
+<link rel="stylesheet" href="pump-style.css" />
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
   <!-- Favicons -->
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -27,28 +45,49 @@
   "url": "https://easytechcalculators.com",
   "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
 }
-</script>
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": [{
-    "@type": "Question",
-    "name": "What is NPSH Available?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "NPSH Available is the total suction head at the pump inlet that prevents cavitation."
+  "mainEntity": [
+
+    {
+      "@type": "Question",
+      "name": "What is NPSHa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Available Net Positive Suction Head (NPSHa) is the total suction head available at the pump inlet after accounting for static elevation, absolute pressure, vapor pressure, and friction losses."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "Why is NPSH important in pump systems?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If available NPSH is lower than the pump's required NPSH, cavitation occurs. Cavitation can damage impellers and reduce pump efficiency."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "What causes low NPSHa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Low suction pressure, high vapor pressure, long suction lines, excessive fittings, and high flow velocity can reduce NPSHa."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "How do you increase NPSHa?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can increase NPSHa by raising the liquid level, reducing suction line friction losses, increasing pipe diameter, lowering fluid temperature, or increasing suction pressure."
+      }
     }
-  },
-  {
-    "@type": "Question",
-    "name": "What is the difference between NPSH Available and NPSH Required?",
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "NPSH Available is the system suction head, while NPSH Required is the minimum suction head specified by the pump manufacturer."
-    }
-  }]
+
+  ]
 }
 </script>
 
@@ -68,9 +107,73 @@
 
 
 <body>
+  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Available Net Positive Suction Head (NPSHa) Explained",
+  "description": "Complete guide explaining NPSHa formula, cavitation, suction head, vapor pressure effects, and friction losses in pump systems.",
+  "author": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "url": "https://easytechcalculators.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://easytechcalculators.com/logo-easytechcalculators.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://easytechcalculators.com/npsh-calculator/"
+  },
+  "about": [
+    { "@type": "Thing", "name": "Net Positive Suction Head" },
+    { "@type": "Thing", "name": "Pump Cavitation" },
+    { "@type": "Thing", "name": "Suction Head" },
+    { "@type": "Thing", "name": "Vapor Pressure" },
+    { "@type": "Thing", "name": "Darcy-Weisbach Equation" }
+  ],
+  "articleSection": [
+    "Fluid Mechanics",
+    "Pump Systems",
+    "Cavitation Analysis",
+    "Hydraulic Engineering"
+  ],
+  "keywords": [
+    "NPSHa",
+    "available NPSH",
+    "pump cavitation",
+    "suction head",
+    "vapor pressure head",
+    "suction friction loss"
+  ]
+}
+</script>
 
+  
 <!-- ================= HEADER ================= -->
 <header class="app-header">
+
+<section class="container-learning intro-compact">
+
+<h2>Available NPSH (NPSHa) Calculator</h2>
+
+<p>
+Calculate Available Net Positive Suction Head (NPSHa) at the pump suction
+using the complete energy balance equation. This tool accounts for
+absolute pressure head, static suction head, suction line friction losses,
+vapor pressure head, Reynolds number, and flow regime to evaluate cavitation risk.
+</p>
+
+</section>
+
+
+  
   <div class="header-inner">
     <div class="brand">
       <picture>
