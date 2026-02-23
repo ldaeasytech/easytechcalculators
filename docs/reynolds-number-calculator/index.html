@@ -233,7 +233,18 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
               <option value="">-- Select Material --</option>
             </select>
           </div>
-        
+          
+          <div class="field">
+            <label>Pipe Length (L)</label>
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="length" />
+              <select id="lengthUnit">
+                <option value="m">m</option>
+                <option value="ft">ft</option>
+              </select>
+            </div>
+          </div>
+                  
           <div class="field">
             <label>Pipe Roughness (ε)</label>
             <div style="display:flex; gap:8px;">
@@ -259,37 +270,36 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
   </section>
 
   <!-- RESULT CARD -->
-  <section class="card result-section">
+ <section class="card result-section">
 
-    <div class="result-highlight">
+  <div class="result-highlight">
+    <div>
+      <div class="result-label">Pressure Drop</div>
       <div>
-        <div class="result-label">Reynolds Number</div>
-        <div>
-          <span class="result-value" id="reValue">—</span>
-        </div>
-        <div class="result-unit">Dimensionless</div>
+        <span class="result-value" id="pressureValue">—</span>
+        <span class="result-unit" id="pressureUnit"></span>
       </div>
     </div>
+  </div>
 
-    <h3>Flow Regime</h3>
-    <p id="regimeDisplay"></p>
+  <div class="result-highlight" style="margin-top:15px;">
+    <div>
+      <div class="result-label">Darcy Friction Factor</div>
+      <div class="result-value" id="frictionValue">—</div>
+    </div>
+  </div>
 
-    <h3>Governing Equation</h3>
-    <p id="formulaDisplay"></p>
+  <div class="result-highlight" style="margin-top:15px;">
+    <div>
+      <div class="result-label">Reynolds Number</div>
+      <div class="result-value">
+        <span id="reValue">—</span>
+        <span id="regimeText"></span>
+      </div>
+    </div>
+  </div>
 
-    <h3>Dimensional Verification</h3>
-    <p id="dimensionDisplay"></p>
-
-    <h3>Calculation Steps</h3>
-    <pre id="stepsDisplay"></pre>
-
-    <h3>Darcy Friction Factor</h3>
-    <p id="frictionDisplay"></p>
-
-    <h3>Engineering Notes</h3>
-    <p id="notesDisplay"></p>
-
-  </section>
+</section>
 
 </main>
 
