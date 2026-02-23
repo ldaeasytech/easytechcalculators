@@ -159,6 +159,21 @@ function drawTurbulentCurves() {
   });
 }
 
+function drawOperatingPoint(Re, f) {
+
+  const x = xScale(Re);
+  const y = yScale(f);
+
+  ctx.beginPath();
+  ctx.arc(x, y, 7, 0, 2*Math.PI);
+  ctx.fillStyle = "#ff4d6d";
+  ctx.fill();
+
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "#ffffff";
+  ctx.stroke();
+}
+
 export function renderMoody(Re, f) {
 
   ctx.clearRect(0, 0, width, height);
