@@ -89,10 +89,10 @@ export async function solve(inputs) {
 if (mode === "TP") {
   const T = inputs.temperature;
   const P = inputs.pressure;
-  const Ps = Psat(T);
+  const Ts = Tsat(P);
 
   // Saturation detected
-  if (Math.abs(P - Ps) < SAT_EPS) {
+  if (Math.abs(T - Ts) < SAT_EPS) {
     return formatOutput(
       {
         phase: "saturation_notice",
