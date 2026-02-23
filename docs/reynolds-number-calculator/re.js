@@ -1,5 +1,5 @@
 // re.js
-// Reynolds Number + Darcy Friction Factor Calculator
+// Reynolds + Darcy Friction Factor + Pressure Drop
 
 import { normalize } from "./unitsData.js";
 import { PIPE_ROUGHNESS } from "../pump-power-calculator/js/data/pipeRoughness.js";
@@ -10,12 +10,11 @@ const methodSelect = document.getElementById("method");
 
 const dynamicGroup = document.getElementById("dynamicGroup");
 const kinematicGroup = document.getElementById("kinematicGroup");
-
 const materialSelect = document.getElementById("materialSelect");
 
-// --------------------------------------------------
-// Populate Material Dropdown
-// --------------------------------------------------
+// ----------------------------
+// Populate Materials
+// ----------------------------
 
 Object.keys(PIPE_ROUGHNESS).forEach(material => {
   const option = document.createElement("option");
@@ -24,7 +23,6 @@ Object.keys(PIPE_ROUGHNESS).forEach(material => {
   materialSelect.appendChild(option);
 });
 
-// Auto-fill roughness when material selected
 materialSelect.addEventListener("change", () => {
   const selected = materialSelect.value;
   if (selected && PIPE_ROUGHNESS[selected]) {
@@ -34,9 +32,9 @@ materialSelect.addEventListener("change", () => {
   }
 });
 
-// --------------------------------------------------
-// Toggle Viscosity Inputs
-// --------------------------------------------------
+// ----------------------------
+// Toggle viscosity inputs
+// ----------------------------
 
 methodSelect.addEventListener("change", () => {
   if (methodSelect.value === "dynamic") {
@@ -48,164 +46,107 @@ methodSelect.addEventListener("change", () => {
   }
 });
 
-// --------------------------------------------------
+// ----------------------------
 // Main Calculation
-// --------------------------------------------------
+// ----------------------------
 
 calculateBtn.addEventListener("click", () => {
 
-  try {
+  // Normalize base inputs
+  const rho = normalize(
+    "density",
+    parseFloat(document.getElementById("density").value),
+    document.getElementById("densityUnit").value
+  );
 
-    // ----------------------------
-    // Normalize Inputs to SI Units
-    // ----------------------------
+  const V = normalize(
+    "velocity",
+    parseFloat(document.getElementById("velocity").value),
+    document.getElementById("velocityUnit").value
+  );
 
-    const rho = normalize(
-      "density",
-      parseFloat(document.getElementById("density").value),
-      document.getElementById("densityUnit").value
+  const D = normalize(
+    "length",
+    parseFloat(document.getElementById("diameter").value),
+    document.getElementById("diameterUnit").value
+  );
+
+  const L = normalize(
+    "length",
+    parseFloat(document.getElementById("length").value),
+    document.getElementById("lengthUnit").value
+  );
+
+  const e = normalize(
+    "length",
+    parseFloat(document.getElementById("roughnessInput").value),
+    document.getElementById("roughnessUnit").value
+  );
+
+  let Re;
+
+  if (methodSelect.value === "dynamic") {
+
+    const mu = normalize(
+      "dynamicViscosity",
+      parseFloat(document.getElementById("mu").value),
+      document.getElementById("muUnit").value
     );
 
-    const V = normalize(
-      "velocity",
-      parseFloat(document.getElementById("velocity").value),
-      document.getElementById("velocityUnit").value
+    Re = (rho * V * D) / mu;
+
+  } else {
+
+    const nu = normalize(
+      "kinematicViscosity",
+      parseFloat(document.getElementById("nu").value),
+      document.getElementById("nuUnit").value
     );
 
-    const D = normalize(
-      "length",
-      parseFloat(document.getElementById("diameter").value),
-      document.getElementById("diameterUnit").value
-    );
-
-    const e = normalize(
-      "length",
-      parseFloat(document.getElementById("roughnessInput").value),
-      document.getElementById("roughnessUnit").value
-    );
-
-    if (!V || !D) {
-      alert("Velocity and Diameter are required.");
-      return;
-    }
-
-    let Re;
-    let viscosityText = "";
-
-    // ----------------------------
-    // Reynolds Number
-    // ----------------------------
-
-    if (methodSelect.value === "dynamic") {
-
-      const mu = normalize(
-        "dynamicViscosity",
-        parseFloat(document.getElementById("mu").value),
-        document.getElementById("muUnit").value
-      );
-
-      if (!rho || !mu) {
-        alert("Density and Dynamic Viscosity are required.");
-        return;
-      }
-
-      Re = (rho * V * D) / mu;
-
-      viscosityText = `μ = ${mu.toExponential(4)} Pa·s`;
-
-    } else {
-
-      const nu = normalize(
-        "kinematicViscosity",
-        parseFloat(document.getElementById("nu").value),
-        document.getElementById("nuUnit").value
-      );
-
-      if (!nu) {
-        alert("Kinematic Viscosity is required.");
-        return;
-      }
-
-      Re = (V * D) / nu;
-
-      viscosityText = `ν = ${nu.toExponential(4)} m²/s`;
-    }
-
-    // ----------------------------
-    // Flow Regime
-    // ----------------------------
-
-    let regimeText;
-
-    if (Re < 2300) {
-      regimeText = "Laminar Flow (Re < 2300)";
-    } else if (Re <= 4000) {
-      regimeText = "Transitional Flow (2300 – 4000)";
-    } else {
-      regimeText = "Turbulent Flow (Re > 4000)";
-    }
-
-    // ----------------------------
-    // Darcy Friction Factor
-    // ----------------------------
-
-    const f = frictionFactor(Re, e, D);
-
-    // ----------------------------
-    // Display Results
-    // ----------------------------
-
-    document.getElementById("reValue").innerText = Re.toFixed(2);
-    document.getElementById("regimeDisplay").innerText = regimeText;
-    document.getElementById("frictionDisplay").innerText =
-      `f = ${f.toFixed(6)}`;
-
-    document.getElementById("formulaDisplay").innerText =
-`Re = (ρ V D) / μ   or   Re = (V D) / ν
-
-Darcy–Weisbach:
-ΔP = f (L/D) (ρV²/2)`;
-
-    document.getElementById("dimensionDisplay").innerText =
-`Re → Dimensionless
-f  → Dimensionless`;
-
-    document.getElementById("stepsDisplay").innerText =
-`1) Input Values:
-   ρ = ${document.getElementById("density").value} ${document.getElementById("densityUnit").selectedOptions[0].text}
-   V = ${document.getElementById("velocity").value} ${document.getElementById("velocityUnit").selectedOptions[0].text}
-   D = ${document.getElementById("diameter").value} ${document.getElementById("diameterUnit").selectedOptions[0].text}
-   ε = ${document.getElementById("roughnessInput").value} ${document.getElementById("roughnessUnit").selectedOptions[0].text}
-
-2) Normalized to SI:
-   ρ = ${rho.toExponential(4)} kg/m³
-   V = ${V.toExponential(4)} m/s
-   D = ${D.toExponential(4)} m
-   ε = ${e.toExponential(4)} m
-   ${viscosityText}
-
-3) Reynolds Number:
-   Re = ${Re.toFixed(2)}
-
-4) Relative Roughness:
-   ε/D = ${(e / D).toExponential(4)}
-
-5) Darcy Friction Factor:
-   f = ${f.toFixed(6)}`;
-
-    document.getElementById("notesDisplay").innerText =
-`Laminar region:
-  f = 64 / Re  (Darcy formulation)
-
-Turbulent region:
-  Explicit Colebrook–White (Churchill correlation)
-
-Relative roughness (ε/D) governs
-hydraulically smooth vs fully rough behavior.`;
-
-  } catch (err) {
-    console.error(err);
-    alert("Please ensure all required fields are entered correctly.");
+    Re = (V * D) / nu;
   }
+
+  // Flow regime
+  let regime;
+  if (Re < 2300) regime = "(Laminar)";
+  else if (Re <= 4000) regime = "(Transitional)";
+  else regime = "(Turbulent)";
+
+  // Darcy friction factor
+  const f = frictionFactor(Re, e, D);
+
+  // Darcy–Weisbach Pressure Drop
+  // ΔP = f (L/D) (ρV²/2)
+
+  const deltaP = f * (L / D) * (rho * V * V / 2);
+
+  // Convert to user-friendly output (Pa, kPa, MPa, psi)
+
+  let pressureValue = deltaP;
+  let pressureUnit = "Pa";
+
+  if (deltaP > 1e6) {
+    pressureValue = deltaP / 1e6;
+    pressureUnit = "MPa";
+  } else if (deltaP > 1e3) {
+    pressureValue = deltaP / 1e3;
+    pressureUnit = "kPa";
+  }
+
+  // Display results
+  document.getElementById("pressureValue").innerText =
+    pressureValue.toFixed(4);
+
+  document.getElementById("pressureUnit").innerText =
+    pressureUnit;
+
+  document.getElementById("frictionValue").innerText =
+    f.toFixed(6);
+
+  document.getElementById("reValue").innerText =
+    Re.toFixed(2);
+
+  document.getElementById("regimeText").innerText =
+    regime;
 
 });
