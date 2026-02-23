@@ -36,9 +36,32 @@ function yScale(f) {
     (height - 2 * padding);
 }
 
-function drawAxes() {
-  ctx.strokeStyle = "#ffffff44";
+function drawGrid() {
+  ctx.strokeStyle = "rgba(255,255,255,0.06)";
   ctx.lineWidth = 1;
+
+  const xMajor = [1e3,1e4,1e5,1e6,1e7,1e8];
+  const yMajor = [0.01,0.02,0.03,0.04,0.06,0.08];
+
+  xMajor.forEach(val => {
+    ctx.beginPath();
+    ctx.moveTo(xScale(val), padding);
+    ctx.lineTo(xScale(val), height - padding);
+    ctx.stroke();
+  });
+
+  yMajor.forEach(val => {
+    ctx.beginPath();
+    ctx.moveTo(padding, yScale(val));
+    ctx.lineTo(width - padding, yScale(val));
+    ctx.stroke();
+  });
+}
+
+
+function drawAxes() {
+  ctx.strokeStyle = "rgba(255,255,255,0.35)";
+  ctx.lineWidth = 1.2;
 
   ctx.beginPath();
   ctx.moveTo(padding, padding);
@@ -46,15 +69,21 @@ function drawAxes() {
   ctx.lineTo(width - padding, height - padding);
   ctx.stroke();
 
-  ctx.fillStyle = "#ccc";
-  ctx.font = "14px Arial";
+  ctx.fillStyle = "#ddd";
+  ctx.font = "14px Segoe UI";
 
-  ctx.fillText("Reynolds Number (Re)", width/2 - 70, height - 20);
+  ctx.fillText("Reynolds Number (Re)", width/2 - 80, height - 20);
+
   ctx.save();
-  ctx.translate(20, height/2 + 50);
+  ctx.translate(22, height/2 + 50);
   ctx.rotate(-Math.PI/2);
   ctx.fillText("Darcy Friction Factor (f)", 0, 0);
   ctx.restore();
+
+  /* Secondary Axis Title */
+  ctx.fillStyle = "rgba(255,255,255,0.7)";
+  ctx.font = "13px Segoe UI";
+  ctx.fillText("Relative Roughness (ε/D)", width - padding + 10, padding - 20);
 }
 
 function drawLaminar() {
@@ -85,40 +114,56 @@ function drawTurbulentCurves() {
     0.02
   ];
 
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 1.4;
 
   roughnessValues.forEach(rr => {
 
-    ctx.strokeStyle = rr === 0 ? "#ffd166" : "#ffffff55";
-
+    ctx.strokeStyle = rr === 0 ? "#ffd166" : "rgba(255,255,255,0.35)";
     ctx.beginPath();
+
+    let lastX = null;
+    let lastY = null;
 
     for (let Re = 3000; Re <= ReMax; Re *= 1.08) {
 
-      const D = 1; // relative scaling
+      const D = 1;
       const e = rr * D;
 
-      const f = 4*frictionFactor(Re, e, D);
+      const fDarcy = 4 * frictionFactor(Re, e, D);
 
-      ctx.lineTo(xScale(Re), yScale(f));
+      const x = xScale(Re);
+      const y = yScale(fDarcy);
+
+      ctx.lineTo(x, y);
+
+      lastX = x;
+      lastY = y;
     }
 
     ctx.stroke();
+
+    /* ===== Secondary Axis Label (ε/D) ===== */
+
+    if (rr !== 0 && lastY > padding && lastY < height - padding) {
+
+      ctx.fillStyle = "rgba(255,255,255,0.65)";
+      ctx.font = "11px Segoe UI";
+
+      ctx.fillText(
+        `ε/D = ${rr}`,
+        width - padding + 10,
+        lastY
+      );
+    }
+
   });
-}
-
-function drawOperatingPoint(Re, f) {
-  ctx.fillStyle = "#ff4d6d";
-
-  ctx.beginPath();
-  ctx.arc(xScale(Re), yScale(f), 6, 0, 2*Math.PI);
-  ctx.fill();
 }
 
 export function renderMoody(Re, f) {
 
   ctx.clearRect(0, 0, width, height);
 
+  drawGrid();
   drawAxes();
   drawLaminar();
   drawTurbulentCurves();
