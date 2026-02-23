@@ -22,7 +22,7 @@ export function regionSelector({ T, P, h, s, mode }) {
      ================================================== */
   if (mode === "Ph") {
 
-    //if (P > P_CRIT) return 1; // compressed liquid only
+    if (P > P_CRIT) return 1; // compressed liquid only
 
     const Ts = Tsat(P);
     const hf = h_f_sat(Ts);
@@ -42,7 +42,7 @@ export function regionSelector({ T, P, h, s, mode }) {
      ================================================== */
   if (mode === "Ps") {
 
-   // if (P > P_CRIT) return 1;
+   if (P > P_CRIT) return 1;
 
     const Ts = Tsat(P);
     const sf = s_f_sat(Ts);
@@ -60,7 +60,7 @@ export function regionSelector({ T, P, h, s, mode }) {
   /* ==================================================
      T–P MODE (TP, Tx, Px)
      ================================================== */
-
+ if (mode === "TP" || mode === "Tx" || mode === "Px") {
   if (T > T_CRIT) {
     if (P <= 10) return 2;
     return 1;
@@ -71,4 +71,5 @@ export function regionSelector({ T, P, h, s, mode }) {
   if (Math.abs(P - Ps) < 1e-6) return 4;
   if (P > Ps) return 1;
   return 2;
+}
 }
