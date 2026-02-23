@@ -6,7 +6,7 @@
    Imports
    ============================================================ */
 
-import {
+/*import {
   Psat,
   Tsat,
 
@@ -76,6 +76,7 @@ export async function solve(inputs) {
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
+   const { Psat } = await import("./if97/region4.js");
     const Ps = Psat(T);
 
     if (Math.abs(P - Ps) < SAT_EPS) {
@@ -158,7 +159,7 @@ export async function solve(inputs) {
    IF97 single-phase wrapper
    ============================================================ */
 
-async function singlePhaseIF97(T, P) {
+/*async function singlePhaseIF97(T, P) {
   const rgn = regionSelector({ T, P, mode: "TP" });
 
   let props;
@@ -174,12 +175,44 @@ async function singlePhaseIF97(T, P) {
     pressure: P,
     ...props
   };
+}*/
+
+
+async function singlePhaseIF97(T, P) {
+  const { regionSelector } = await import("./if97/regionSelector.js");
+  const rgn = regionSelector({ T, P, mode: "TP" });
+
+  let props;
+
+  if (rgn === 1) {
+    const { region1 } = await import("./if97/region1.js");
+    props = await region1(T, P);
+  }
+  else if (rgn === 2) {
+    const mod = await import("./if97/region2.js");
+    props = await mod.default(T, P);
+  }
+  else if (rgn === 3) {
+    const { region3 } = await import("./if97/region3.js");
+    props = region3(T, P);
+  }
+  else {
+    throw new Error(`Invalid IF97 region: ${rgn}`);
+  }
+
+  return {
+    phase: "single_phase",
+    phaseLabel: SINGLE_PHASE_LABEL[rgn],
+    temperature: T,
+    pressure: P,
+    ...props
+  };
 }
 
 /* ============================================================
    Saturated & mixture helpers
    ============================================================ */
-
+const r4 = await import("./if97/region4.js");
 function satLiquidState(T, P) {
   return {
     phase: "saturated_liquid",
@@ -187,14 +220,14 @@ function satLiquidState(T, P) {
     temperature: T,
     pressure: P,
 
-    rho: rho_f_sat(T),
-    v: v_f_sat(T),
-    h: h_f_sat(T),
-    s: s_f_sat(T),
-    cp: cp_f_sat(T),
-    cv: cv_f_sat(T),
-    k: k_f_sat(T),
-    mu: mu_f_sat(T)
+    rho: r4.rho_f_sat(T),
+    v: r4.v_f_sat(T),
+    h: r4.h_f_sat(T),
+    s: r4.s_f_sat(T),
+    cp: r4.cp_f_sat(T),
+    cv: r4.cv_f_sat(T),
+    k: r4.k_f_sat(T),
+    mu: r4.mu_f_sat(T)
   };
 }
 
@@ -205,37 +238,37 @@ function satVaporState(T, P) {
     temperature: T,
     pressure: P,
 
-    rho: rho_g_sat(T),
-    v: v_g_sat(T),
-    h: h_g_sat(T),
-    s: s_g_sat(T),
-    cp: cp_g_sat(T),
-    cv: cv_g_sat(T),
-    k: k_g_sat(T),
-    mu: mu_g_sat(T)
+    rho: r4.rho_g_sat(T),
+    v: r4.v_g_sat(T),
+    h: r4.h_g_sat(T),
+    s: r4.s_g_sat(T),
+    cp: r4.cp_g_sat(T),
+    cv: r4.cv_g_sat(T),
+    k: r4.k_g_sat(T),
+    mu: r4.mu_g_sat(T)
   };
 }
 
 function mixStates(T, P, x) {
   // Saturated liquid properties
-  const rho_f = rho_f_sat(T);
-  const v_f   = v_f_sat(T);
-  const h_f   = h_f_sat(T);
-  const s_f   = s_f_sat(T);
-  const cp_f  = cp_f_sat(T);
-  const cv_f  = cv_f_sat(T);
-  const k_f   = k_f_sat(T);
-  const mu_f  = mu_f_sat(T);
+  const rho_f = r4.rho_f_sat(T);
+  const v_f   = r4.v_f_sat(T);
+  const h_f   = r4.h_f_sat(T);
+  const s_f   = r4.s_f_sat(T);
+  const cp_f  = r4.cp_f_sat(T);
+  const cv_f  = r4.cv_f_sat(T);
+  const k_f   = r4.k_f_sat(T);
+  const mu_f  = r4.mu_f_sat(T);
 
   // Saturated vapor properties
-  const rho_g = rho_g_sat(T);
-  const v_g   = v_g_sat(T);
-  const h_g   = h_g_sat(T);
-  const s_g   = s_g_sat(T);
-  const cp_g  = cp_g_sat(T);
-  const cv_g  = cv_g_sat(T);
-  const k_g   = k_g_sat(T);
-  const mu_g  = mu_g_sat(T);
+  const rho_g = r4.rho_g_sat(T);
+  const v_g   = r4.v_g_sat(T);
+  const h_g   = r4.h_g_sat(T);
+  const s_g   = r4.s_g_sat(T);
+  const cp_g  = r4.cp_g_sat(T);
+  const cv_g  = r4.cv_g_sat(T);
+  const k_g   = r4.k_g_sat(T);
+  const mu_g  = r4.mu_g_sat(T);
 
   return {
     phase: "two_phase",
