@@ -5,11 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Fertilizer Calculator | NPK Optimization & Cost Ranking</title>
-
 <meta name="description"
-  content="Free Fertilizer Calculator to determine optimal 3-fertilizer combinations to meet crop NPK requirements at lowest cost. Solve nutrient equations and rank top 10 most economical fertilizer sets." />
+content="Advanced Fertilizer Calculator to compute NPK fertilizer combinations, application rate per hectare (bags + kg), and total cost comparison. Supports rice, corn, wheat, vegetables, and custom nutrient targets." />
 
+<meta name="keywords"
+content="fertilizer calculator, NPK calculator, fertilizer mix calculator, fertilizer cost calculator, fertilizer per hectare calculator, NPK recommendation calculator, crop nutrient calculator, bags per hectare fertilizer" />
+
+<meta name="author" content="EasyTechCalculators" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0b1220" />
+  
 <link rel="canonical" href="https://easytechcalculators.com/fertilizer-calculator/" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Fertilizer Calculator | NPK Mix & Cost per Hectare">
+<meta property="og:description" content="Calculate fertilizer combinations to meet NPK targets and compare total cost per hectare. Displays results in bags + kg format for practical farm use.">
+<meta property="og:url" content="https://easytechcalculators.com/fertilizer-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EasyTechCalculators">
 
  <link rel="stylesheet" href="style.css" />
 
@@ -28,6 +41,67 @@
 }
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Fertilizer Calculator",
+  "applicationCategory": "AgriculturalApplication",
+  "operatingSystem": "Web",
+  "url": "https://easytechcalculators.com/fertilizer-calculator/",
+  "description": "Online fertilizer calculator for NPK nutrient balancing, fertilizer mix optimization, and cost comparison per hectare.",
+  "featureList": [
+    "NPK nutrient balancing",
+    "Crop-based nutrient guidance",
+    "Multiple fertilizer combination solver",
+    "Economic ranking by lowest total cost",
+    "Application rate in bags + kg per hectare"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+
+    {
+      "@type": "Question",
+      "name": "How is fertilizer requirement calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fertilizer requirement is calculated by solving nutrient balance equations to match target nitrogen (N), phosphorus (P), and potassium (K) requirements per hectare."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "What is an NPK fertilizer calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An NPK fertilizer calculator determines the correct combination of fertilizers needed to meet specific crop nutrient requirements."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "How do you compare fertilizer cost per hectare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total fertilizer cost per hectare is calculated by multiplying required mass by price per kilogram and ranking combinations from lowest to highest cost."
+      }
+    }
+
+  ]
+}
+</script>
+
 <!-- Web App Manifest -->
 <link rel="manifest" href="/site.webmanifest">
 
@@ -39,6 +113,45 @@
 </head>
 
 <body>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Fertilizer Mix Calculation and NPK Balancing Explained",
+  "description": "Comprehensive guide explaining NPK balancing, fertilizer mix optimization, cost comparison, and nutrient management for crop production.",
+  "author": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "url": "https://easytechcalculators.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://easytechcalculators.com/logo-easytechcalculators.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://easytechcalculators.com/fertilizer-calculator/"
+  },
+  "articleSection": [
+    "Agriculture",
+    "Crop Nutrition",
+    "Soil Fertility",
+    "NPK Fertilization"
+  ],
+  "keywords": [
+    "fertilizer calculation",
+    "NPK balance",
+    "fertilizer mix",
+    "fertilizer cost",
+    "crop nutrient requirement"
+  ]
+}
+</script>
 
 <!-- ================= HEADER ================= -->
 <header class="app-header">
@@ -58,13 +171,27 @@
       <div class="brand-text">
         <h1>Fertilizer Optimization Calculator – NPK & Economic Ranking</h1>
         <div class="capability-line">
-          Crop Nutrient Planning · Soil Analysis · Cost Optimization
+          Nutrient Balancing · Fertilizer Mix Optimization · Cost Optimization
         </div>
       </div>
     </div>
   </div>
 </header>
 
+<section class="container-learning intro-compact">
+
+<h2>NPK Fertilizer Calculator for Crop Nutrient Management</h2>
+
+<p>
+This <strong>Fertilizer Calculator</strong> computes optimal fertilizer combinations to meet target nitrogen (N), phosphorus (P), and potassium (K) requirements per hectare. The tool balances nutrient equations and ranks combinations by minimum total cost.
+</p>
+
+<p>
+Results are displayed in practical farm units (bags per hectare), making it suitable for rice, corn, wheat, vegetables, and other crops.
+</p>
+
+</section>
+  
 <!-- ================= MAIN ================= -->
 <main class="container">
 
