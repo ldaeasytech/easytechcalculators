@@ -31,10 +31,11 @@ export function regionSelector({ T, P, h, s, mode }) {
    // if (Math.abs(h - hf) < H_TOL) return 4;
    // if (Math.abs(h - hg) < H_TOL) return 4;
 
-    if (h < hf) return 1;
+    //if (h < hf) return 1;
     if (h > hg) return 2;
 
    // return 4; // two-phase
+    return 1;
   }
 
   /* ==================================================
@@ -51,8 +52,10 @@ export function regionSelector({ T, P, h, s, mode }) {
    // if (Math.abs(s - sf) < S_TOL) return 4;
    // if (Math.abs(s - sg) < S_TOL) return 4;
 
-    if (s < sf) return 1;
+    //if (s < sf) return 1;
     if (s > sg) return 2;
+
+    return 1;
 
    // return 4;
   }
