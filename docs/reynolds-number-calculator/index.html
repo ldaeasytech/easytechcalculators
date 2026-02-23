@@ -166,19 +166,63 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
         <div class="group-title">Fluid Properties</div>
 
         <div class="field">
-          <label>Density (ρ)</label>
-          <input type="number" id="density" />
-        </div>
+    <label>Density (ρ)</label>
+    <div style="display:flex; gap:8px;">
+      <input type="number" id="density" />
+      <select id="densityUnit">
+        <option value="kgm3">kg/m³</option>
+        <option value="lbft3">lb/ft³</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Diameter (D)</label>
+    <div style="display:flex; gap:8px;">
+      <input type="number" id="diameter" />
+      <select id="diameterUnit">
+        <option value="m">m</option>
+        <option value="mm">mm</option>
+        <option value="ft">ft</option>
+        <option value="in">in</option>
+      </select>
+    </div>
+     </div>
 
         <div class="field">
-          <label>Velocity (V)</label>
-          <input type="number" id="velocity" />
-        </div>
+    <label>Velocity (V)</label>
+    <div style="display:flex; gap:8px;">
+      <input type="number" id="velocity" />
+      <select id="velocityUnit">
+        <option value="ms">m/s</option>
+        <option value="fts">ft/s</option>
+      </select>
+    </div>
+    </div>
 
-        <div class="field">
-          <label>Diameter (D)</label>
-          <input type="number" id="diameter" />
-        </div>
+    <div id="dynamicGroup">
+    <label>Dynamic Viscosity (μ)</label>
+    <div class="input-group">
+      <input type="number" id="mu" />
+      <select id="muUnit">
+        <option value="Pas">Pa·s</option>
+        <option value="cP">cP</option>
+        <option value="lbfts">lb/ft·s</option>
+      </select>
+    </div>
+    </div>
+
+    <div id="kinematicGroup" style="display:none;">
+    <label>Kinematic Viscosity (ν)</label>
+    <div class="input-group">
+      <input type="number" id="nu" />
+      <select id="nuUnit">
+        <option value="m2s">m²/s</option>
+        <option value="cSt">cSt</option>
+        <option value="ft2s">ft²/s</option>
+      </select>
+    </div>
+    </div>
 
                 <div class="input-group">
           <div class="group-title">Pipe Roughness</div>
