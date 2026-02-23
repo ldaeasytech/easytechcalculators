@@ -54,8 +54,6 @@ async function buildGrid() {
   const raw = await loadTable();
   const rows = raw.map(normalizeRow);
 
-  console.log("Normalized row:", normalizeRow(TABLE[2]));
-
 
 
   // Group by pressure
