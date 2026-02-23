@@ -114,14 +114,17 @@ calculateBtn.addEventListener("click", () => {
   else regime = "(Turbulent)";
 
   // Darcy friction factor
-  const f = frictionFactor(Re, e, D);
-  renderMoody(Re, f);
-
+  const fFanning = frictionFactor(Re, e, D);
+  const fDarcy = 4*fFanning; 
+  
   // Darcy–Weisbach Pressure Drop
   // ΔP = f (L/D) (ρV²/2)
 
-  const deltaP = f * (L / D) * (rho * V * V / 2);
+  const deltaP = fDarcy * (L / D) * (rho * V * V / 2);
 
+  renderMoody(Re, f);
+
+  
   // Convert to user-friendly output (Pa, kPa, MPa, psi)
 
   let pressureValue = deltaP;
