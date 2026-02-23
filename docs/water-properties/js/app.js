@@ -3,7 +3,7 @@
 
 import "./main.js";
 
-import { solve } from "./solver.js";
+//import { solve } from "./solver.js";
 import { validateState } from "./validator.js";
 import { fromSI } from "./unitConverter.js";
 import { unitSets } from "./unitConfig.js";
@@ -130,8 +130,13 @@ document.getElementById("calcForm").addEventListener("submit", async e => {
     if (!validation.valid) return;
 
     // ---- SOLVER (SI ONLY) ----
-    const stateSolved = await solve({ mode, ...rawInputs });
+    //const stateSolved = await solve({ mode, ...rawInputs });
+  
+     // Lazy load solver only when needed
+const { solve } = await import("./solver.js");
+const stateSolved = await solve({ mode, ...rawInputs });
 
+     
     // map solver → UI
     const mapped = mapSolverToUI(stateSolved);
 
