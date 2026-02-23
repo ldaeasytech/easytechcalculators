@@ -1,4 +1,5 @@
 import { solvePsychrometrics } from "./solver.js";
+import { renderPsychChart } from "./psychrometric-chart.js";
 
 /* =========================================================
    DOM ELEMENTS
@@ -149,6 +150,7 @@ function renderResults(r) {
       <tr><td>Degree of Saturation</td><td>${format(r.degree_of_saturation)}</td></tr>
     </table>
   `;
+   renderPsychChart(r);
 }
 
 function format(value, decimals = 3) {
