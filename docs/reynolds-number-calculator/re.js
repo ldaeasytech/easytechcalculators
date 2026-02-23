@@ -3,7 +3,7 @@
 
 import { normalize } from "./unitsData.js";
 import { PIPE_ROUGHNESS } from "../pump-power-calculator/js/data/pipeRoughness.js";
-import { frictionFactor } from "./frictionPipe.js";
+import { frictionFactor } from "../pump-power-calculator/js/frictionPipe.js";
 import { renderMoody } from "./moody.js";
 
 const calculateBtn = document.getElementById("calculateBtn");
