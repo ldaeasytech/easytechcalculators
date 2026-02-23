@@ -1355,10 +1355,6 @@ select:focus {
     grid-template-columns: 1fr;
   }
 
-  .result-section {
-    order: -1; /* Results appear above Moody on mobile */
-  }
-
   #moodyCanvas {
     height: 380px;
   }
