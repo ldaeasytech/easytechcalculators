@@ -3,7 +3,8 @@
 
 import { normalize } from "./unitsData.js";
 import { PIPE_ROUGHNESS } from "../pump-power-calculator/js/data/pipeRoughness.js";
-import { frictionFactor } from "../pump-power-calculator/js/frictionPipe.js";
+import { frictionFactor } from "./frictionPipe.js";
+import { renderMoody } from "./moody.js";
 
 const calculateBtn = document.getElementById("calculateBtn");
 const methodSelect = document.getElementById("method");
@@ -114,6 +115,7 @@ calculateBtn.addEventListener("click", () => {
 
   // Darcy friction factor
   const f = frictionFactor(Re, e, D);
+  renderMoody(Re, f);
 
   // Darcy–Weisbach Pressure Drop
   // ΔP = f (L/D) (ρV²/2)
