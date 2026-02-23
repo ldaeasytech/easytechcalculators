@@ -21,7 +21,7 @@ content="Reynolds number calculator, laminar flow calculator, turbulent flow cal
 <meta property="og:url" content="https://easytechcalculators.com/reynolds-number-calculator/">
 <meta property="og:type" content="website">
 
-<link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
+<link rel="stylesheet" href="style.css" />
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
@@ -151,16 +151,17 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
 
     <div class="grid-form">
 
-      <div class="input-group">
-        <div class="group-title">Method Selection</div>
-        <div class="field">
-          <label>Calculation Method</label>
-          <select id="method">
-            <option value="dynamic">Dynamic Viscosity (ρVD/μ)</option>
-            <option value="kinematic">Kinematic Viscosity (VD/ν)</option>
-          </select>
-        </div>
+     <!-- Method Selection FIRST -->
+    <div class="input-group">
+      <div class="group-title">Calculation Method</div>
+      <div class="field">
+        <label>Select Method</label>
+        <select id="method">
+          <option value="dynamic">Dynamic Viscosity (ρVD/μ)</option>
+          <option value="kinematic">Kinematic Viscosity (VD/ν)</option>
+        </select>
       </div>
+    </div>
 
       <div class="input-group">
         <div class="group-title">Fluid Properties</div>
@@ -263,7 +264,7 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
       </div>
 
       <div class="form-actions">
-        <button class="primary" id="calculateBtn">Calculate Reynolds Number</button>
+        <button class="primary" id="calculateBtn">Calculate</button>
       </div>
 
     </div>
@@ -272,6 +273,7 @@ It is widely used in pipe flow analysis, heat transfer, pump design, and aerodyn
   <!-- RESULT CARD -->
  <section class="card result-section">
 
+   <h2 style="margin-bottom:20px;">Calculation Results</h2>
   <div class="result-highlight">
     <div>
       <div class="result-label">Pressure Drop</div>
