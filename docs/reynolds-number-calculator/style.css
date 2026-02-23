@@ -488,7 +488,7 @@ select:focus {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  padding: 18px;
+  padding: 20px 24px;
   margin-bottom: 22px;
 
   background: linear-gradient(
@@ -1291,7 +1291,7 @@ select:focus {
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 420px;
-  gap: 28px;
+  gap: 32px;
   align-items: start;
 }
 
@@ -1363,4 +1363,18 @@ select:focus {
     height: 380px;
   }
 
+}
+
+.moody-section {
+  margin-top: 48px;
+}
+
+.moody-section h2 {
+  margin-bottom: 18px;
+}
+
+#moodyCanvas {
+  width: 100%;
+  height: 520px;
+  display: block;
 }
