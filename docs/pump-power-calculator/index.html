@@ -7,9 +7,23 @@
   <title>Pump Power Calculator (kW & HP) | Hydraulic Power, Head Loss & Efficiency</title>
 
 <meta name="description"
-content="Free pump power calculator for hydraulic and actual shaft power. Includes Darcy-Weisbach pipe friction, fittings losses, elevation head, pump efficiency, and motor sizing in kW and HP." />
-<link rel="canonical" href="https://easytechcalculators.com/pump-power-calculator/" />
+content="Advanced Pump Power Calculator to compute hydraulic power, shaft power, and motor power using flow rate, head, efficiency, and pipe friction losses. Supports SI and English units for accurate pump sizing and energy analysis." />
 
+<meta name="keywords"
+content="pump power calculator, hydraulic power calculator, shaft power calculator, motor power calculator, pump efficiency calculation, pump energy consumption, Darcy-Weisbach pump power, pump sizing calculator" />
+
+<meta name="author" content="EasyTechCalculators" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0b1220" />
+  
+  <link rel="canonical" href="https://easytechcalculators.com/pump-power-calculator/" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Pump Power Calculator | Hydraulic, Shaft & Motor Power">
+<meta property="og:description" content="Calculate pump hydraulic power, shaft power, motor power, and friction losses. Ideal for pump sizing, system design, and energy evaluation.">
+<meta property="og:url" content="https://easytechcalculators.com/pump-power-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EasyTechCalculators">
 
   <link rel="stylesheet" href="../npsh-available-calculator/pump-style.css" />
 
@@ -29,26 +43,66 @@ content="Free pump power calculator for hydraulic and actual shaft power. Includ
 }
 </script>
 
-  <script type="application/ld+json">
+<script type="application/ld+json">
 {
- "@context": "https://schema.org",
- "@type": "FAQPage",
- "mainEntity": [{
-   "@type": "Question",
-   "name": "What is pump power?",
-   "acceptedAnswer": {
-     "@type": "Answer",
-     "text": "Pump power is the energy required to move fluid through a system including elevation and friction losses."
-   }
- },
- {
-   "@type": "Question",
-   "name": "Why is actual pump power higher than theoretical power?",
-   "acceptedAnswer": {
-     "@type": "Answer",
-     "text": "Actual pump power accounts for efficiency losses, making it higher than the theoretical hydraulic power."
-   }
- }]
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Pump Power Calculator",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web",
+  "url": "https://easytechcalculators.com/pump-power-calculator/",
+  "description": "Online engineering calculator for hydraulic power, shaft power, motor power, and pump efficiency including pipe friction losses.",
+  "featureList": [
+    "Hydraulic power calculation",
+    "Shaft power calculation",
+    "Motor power estimation",
+    "Pump efficiency evaluation",
+    "Pipe friction loss integration",
+    "SI and English unit support"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+
+    {
+      "@type": "Question",
+      "name": "How is pump power calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pump hydraulic power is calculated as P = ρ g Q H, where ρ is density, g is gravity, Q is flow rate, and H is total head. Shaft power accounts for pump efficiency."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "What is the difference between hydraulic power and shaft power?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hydraulic power is the energy delivered to the fluid, while shaft power is the mechanical power required at the pump shaft, which is higher due to efficiency losses."
+      }
+    },
+
+    {
+      "@type": "Question",
+      "name": "Why is pump efficiency important?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pump efficiency determines how much input mechanical power is converted into useful hydraulic energy. Lower efficiency increases energy consumption and operating cost."
+      }
+    }
+
+  ]
 }
 </script>
 
@@ -68,6 +122,46 @@ content="Free pump power calculator for hydraulic and actual shaft power. Includ
 
 
 <body>
+
+ <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Pump Power Calculation Explained – Hydraulic, Shaft and Motor Power",
+  "description": "Comprehensive guide explaining pump hydraulic power, shaft power, motor sizing, efficiency losses, and friction head calculation in piping systems.",
+  "author": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "url": "https://easytechcalculators.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://easytechcalculators.com/logo-easytechcalculators.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://easytechcalculators.com/pump-power-calculator/"
+  },
+  "articleSection": [
+    "Fluid Mechanics",
+    "Pump Engineering",
+    "Energy Analysis",
+    "Hydraulic Systems"
+  ],
+  "keywords": [
+    "pump power",
+    "hydraulic power",
+    "shaft power",
+    "motor power",
+    "pump efficiency",
+    "Darcy-Weisbach equation"
+  ]
+}
+</script> 
 
 <!-- ================= HEADER ================= -->
 <header class="app-header">
@@ -94,15 +188,18 @@ content="Free pump power calculator for hydraulic and actual shaft power. Includ
   </div>
 </header>
   
-<section class="intro-section">
+<section class="container-learning intro-compact">
+
+<h2>Pump Power Calculator – Hydraulic, Shaft & Motor Power Analysis</h2>
+
 <p>
-This Pump Power Calculator determines the theoretical hydraulic power and actual shaft power required to move fluid through a piping system. 
-It applies the mechanical energy balance equation and includes elevation head, pipe friction losses (Darcy–Weisbach), fittings losses, pressure differences, and pump efficiency.
+This <strong>Pump Power Calculator</strong> computes hydraulic power, shaft power, and motor power based on flow rate, total head, fluid properties, and pump efficiency. It incorporates static head and friction losses to provide realistic power requirements for pump sizing and energy analysis.
 </p>
 
 <p>
-The calculator supports both mass flow rate and volumetric flow rate inputs and provides results in kilowatts (kW) and horsepower (HP), making it suitable for engineers, students, and industrial professionals.
+Use this tool to evaluate energy consumption, optimize pump efficiency, and ensure proper motor selection in piping systems.
 </p>
+
 </section>
 
 <!-- ================= MAIN GRID ================= -->
