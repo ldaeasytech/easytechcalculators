@@ -1015,3 +1015,19 @@ select:focus {
   }
 
 }
+
+.seo-intro-section {
+  padding: 28px 0 10px 0;
+}
+
+.seo-intro-section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.seo-intro-section p {
+  max-width: 850px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+  opacity: 0.95;
+}
