@@ -98,7 +98,7 @@ function drawTurbulentCurves() {
       const D = 1; // relative scaling
       const e = rr * D;
 
-      const f = frictionFactor(Re, e, D);
+      const f = 4*frictionFactor(Re, e, D);
 
       ctx.lineTo(xScale(Re), yScale(f));
     }
