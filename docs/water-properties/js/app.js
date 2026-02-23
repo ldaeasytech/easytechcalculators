@@ -24,7 +24,10 @@ function mapSolverToUI(stateSolved) {
     cp: stateSolved.cp,
     cv: stateSolved.cv,
     thermalConductivity: stateSolved.k,
-    viscosity: stateSolved.mu
+    viscosity: stateSolved.mu,
+
+      // 🔹 Preserve special notice messages
+    message: stateSolved.message
   };
 }
 
