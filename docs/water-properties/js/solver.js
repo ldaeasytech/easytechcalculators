@@ -72,7 +72,7 @@ function formatOutput(state, mode) {
 export async function solve(inputs) {
   const { mode } = inputs;
 
-  /* ======================= T–P ======================= */
+  /* ======================= T–P ======================= 
   if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
@@ -83,7 +83,31 @@ export async function solve(inputs) {
     }
 
     return formatOutput(await singlePhaseIF97(T, P), mode);
+  }*/
+
+/* ======================= T–P ======================= */
+if (mode === "TP") {
+  const T = inputs.temperature;
+  const P = inputs.pressure;
+  const Ps = Psat(T);
+
+  // Saturation detected
+  if (Math.abs(P - Ps) < SAT_EPS) {
+    return formatOutput(
+      {
+        phase: "saturation_notice",
+        phaseLabel: "Saturated State",
+        temperature: T,
+        pressure: P,
+        message:
+          "Saturated state detected. Please use Tx or Px mode using x = 1 for saturated vapor and x = 0 for saturated liquid to return properties."
+      },
+      mode
+    );
   }
+
+  return formatOutput(await singlePhaseIF97(T, P), mode);
+}
 
   /* ======================= P–h ======================= */
   if (mode === "Ph") {
