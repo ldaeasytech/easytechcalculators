@@ -1,4 +1,4 @@
-// solver.js — Fully lazy-loaded IF97 solver
+// solver.js — Fully lazy + safe IF97 solver
 
 const SAT_EPS = 1e-6;
 const X_EPS = 1e-10;
@@ -23,33 +23,26 @@ function formatOutput(state, mode) {
   return out;
 }
 
-/* ============================================================
-   MAIN SOLVER
-   ============================================================ */
-
 export async function solve(inputs) {
   const { mode } = inputs;
 
-  /* ======================= T–P ======================= */
-  if (mode === "TP") {
-    const { Psat } = await import("./if97/region4.js");
+  // Import once per solve
+  const r4 = await import("./if97/region4.js");
+  const { regionSelector } = await import("./if97/regionSelector.js");
 
+  if (mode === "TP") {
     const T = inputs.temperature;
     const P = inputs.pressure;
-    const Ps = Psat(T);
+    const Ps = r4.Psat(T);
 
     if (Math.abs(P - Ps) < SAT_EPS) {
-      return formatOutput(await satVaporState(T, Ps), mode);
+      return formatOutput(await satVaporState(T, Ps, r4), mode);
     }
 
-    return formatOutput(await singlePhaseIF97(T, P), mode);
+    return formatOutput(await singlePhaseIF97(T, P, regionSelector), mode);
   }
 
-  /* ======================= P–h ======================= */
   if (mode === "Ph") {
-    const { regionSelector } = await import("./if97/regionSelector.js");
-    const r4 = await import("./if97/region4.js");
-
     const P = inputs.pressure;
     const h = inputs.enthalpy;
 
@@ -61,20 +54,16 @@ export async function solve(inputs) {
       const hg = r4.h_g_sat(T);
       const x = clamp01((h - hf) / (hg - hf));
 
-      if (x <= X_EPS) return formatOutput(await satLiquidState(T, P), mode);
-      if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P), mode);
-      return formatOutput(await mixStates(T, P, x), mode);
+      if (x <= X_EPS) return formatOutput(await satLiquidState(T, P, r4), mode);
+      if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P, r4), mode);
+      return formatOutput(await mixStates(T, P, x, r4), mode);
     }
 
     const T = await solveTfromH(P, h, rgn);
-    return formatOutput(await singlePhaseIF97(T, P), mode);
+    return formatOutput(await singlePhaseIF97(T, P, regionSelector), mode);
   }
 
-  /* ======================= P–s ======================= */
   if (mode === "Ps") {
-    const { regionSelector } = await import("./if97/regionSelector.js");
-    const r4 = await import("./if97/region4.js");
-
     const P = inputs.pressure;
     const s = inputs.entropy;
 
@@ -86,83 +75,63 @@ export async function solve(inputs) {
       const sg = r4.s_g_sat(T);
       const x = clamp01((s - sf) / (sg - sf));
 
-      if (x <= X_EPS) return formatOutput(await satLiquidState(T, P), mode);
-      if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P), mode);
-      return formatOutput(await mixStates(T, P, x), mode);
+      if (x <= X_EPS) return formatOutput(await satLiquidState(T, P, r4), mode);
+      if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P, r4), mode);
+      return formatOutput(await mixStates(T, P, x, r4), mode);
     }
 
     const T = await solveTfromS(P, s, rgn);
-    return formatOutput(await singlePhaseIF97(T, P), mode);
+    return formatOutput(await singlePhaseIF97(T, P, regionSelector), mode);
   }
 
-  /* ======================= T–x ======================= */
   if (mode === "Tx") {
-    const { Psat } = await import("./if97/region4.js");
-
     const T = inputs.temperature;
     const x = inputs.quality;
-    const P = Psat(T);
+    const P = r4.Psat(T);
 
-    if (x <= X_EPS) return formatOutput(await satLiquidState(T, P), mode);
-    if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P), mode);
-    return formatOutput(await mixStates(T, P, x), mode);
+    if (x <= X_EPS) return formatOutput(await satLiquidState(T, P, r4), mode);
+    if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P, r4), mode);
+    return formatOutput(await mixStates(T, P, x, r4), mode);
   }
 
-  /* ======================= P–x ======================= */
   if (mode === "Px") {
-    const { Tsat } = await import("./if97/region4.js");
-
     const P = inputs.pressure;
     const x = inputs.quality;
-    const T = Tsat(P);
+    const T = r4.Tsat(P);
 
-    if (x <= X_EPS) return formatOutput(await satLiquidState(T, P), mode);
-    if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P), mode);
-    return formatOutput(await mixStates(T, P, x), mode);
+    if (x <= X_EPS) return formatOutput(await satLiquidState(T, P, r4), mode);
+    if (1 - x <= X_EPS) return formatOutput(await satVaporState(T, P, r4), mode);
+    return formatOutput(await mixStates(T, P, x, r4), mode);
   }
 
-  throw new Error(`Unsupported solver mode: ${mode}`);
+  throw new Error(`Unsupported mode: ${mode}`);
 }
 
-/* ============================================================
-   SINGLE PHASE
-   ============================================================ */
-
-async function singlePhaseIF97(T, P) {
-  const { regionSelector } = await import("./if97/regionSelector.js");
+async function singlePhaseIF97(T, P, regionSelector) {
   const rgn = regionSelector({ T, P, mode: "TP" });
-
-  let props;
 
   if (rgn === 1) {
     const { region1 } = await import("./if97/region1.js");
-    props = await region1(T, P);
-  } else if (rgn === 2) {
-    const mod = await import("./if97/region2.js");
-    props = await mod.default(T, P);
-  } else if (rgn === 3) {
-    const { region3 } = await import("./if97/region3.js");
-    props = region3(T, P);
-  } else {
-    throw new Error(`Invalid IF97 region: ${rgn}`);
+    const props = await region1(T, P);
+    return { phase: "single_phase", phaseLabel: SINGLE_PHASE_LABEL[rgn], temperature: T, pressure: P, ...props };
   }
 
-  return {
-    phase: "single_phase",
-    phaseLabel: SINGLE_PHASE_LABEL[rgn],
-    temperature: T,
-    pressure: P,
-    ...props
-  };
+  if (rgn === 2) {
+    const mod = await import("./if97/region2.js");
+    const props = await mod.default(T, P);
+    return { phase: "single_phase", phaseLabel: SINGLE_PHASE_LABEL[rgn], temperature: T, pressure: P, ...props };
+  }
+
+  if (rgn === 3) {
+    const { region3 } = await import("./if97/region3.js");
+    const props = region3(T, P);
+    return { phase: "single_phase", phaseLabel: SINGLE_PHASE_LABEL[rgn], temperature: T, pressure: P, ...props };
+  }
+
+  throw new Error(`Invalid region: ${rgn}`);
 }
 
-/* ============================================================
-   SATURATION HELPERS
-   ============================================================ */
-
-async function satLiquidState(T, P) {
-  const r4 = await import("./if97/region4.js");
-
+async function satLiquidState(T, P, r4) {
   return {
     phase: "saturated_liquid",
     phaseLabel: "Saturated liquid",
@@ -179,9 +148,7 @@ async function satLiquidState(T, P) {
   };
 }
 
-async function satVaporState(T, P) {
-  const r4 = await import("./if97/region4.js");
-
+async function satVaporState(T, P, r4) {
   return {
     phase: "saturated_vapor",
     phaseLabel: "Saturated vapor",
@@ -198,9 +165,7 @@ async function satVaporState(T, P) {
   };
 }
 
-async function mixStates(T, P, x) {
-  const r4 = await import("./if97/region4.js");
-
+async function mixStates(T, P, x, r4) {
   const v_f = r4.v_f_sat(T);
   const v_g = r4.v_g_sat(T);
 
@@ -221,50 +186,6 @@ async function mixStates(T, P, x) {
   };
 }
 
-/* ============================================================
-   ROOT SOLVERS
-   ============================================================ */
-
 function clamp01(x) {
   return Math.max(0, Math.min(1, x));
-}
-
-async function solveTfromH(P, h, region) {
-  let lo = 273.15, hi = 1200;
-
-  for (let i = 0; i < 200; i++) {
-    const mid = 0.5 * (lo + hi);
-
-    if (region === 1) {
-      const { region1 } = await import("./if97/region1.js");
-      const val = await region1(mid, P);
-      val.h > h ? (hi = mid) : (lo = mid);
-    } else {
-      const mod = await import("./if97/region2.js");
-      const val = await mod.default(mid, P);
-      val.h > h ? (hi = mid) : (lo = mid);
-    }
-  }
-
-  return 0.5 * (lo + hi);
-}
-
-async function solveTfromS(P, s, region) {
-  let lo = 273.15, hi = 1200;
-
-  for (let i = 0; i < 200; i++) {
-    const mid = 0.5 * (lo + hi);
-
-    if (region === 1) {
-      const { region1 } = await import("./if97/region1.js");
-      const val = await region1(mid, P);
-      val.s > s ? (hi = mid) : (lo = mid);
-    } else {
-      const mod = await import("./if97/region2.js");
-      const val = await mod.default(mid, P);
-      val.s > s ? (hi = mid) : (lo = mid);
-    }
-  }
-
-  return 0.5 * (lo + hi);
 }
