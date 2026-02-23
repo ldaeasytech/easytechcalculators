@@ -2,8 +2,6 @@
 // Exact-match → interpolate → out-of-range error
 // OUTPUT KEYS MATCH region2.js EXACTLY
 
-console.log("REGION 1 MODULE LOADED");
-
 let TABLE = null;
 let GRID = null;
 
@@ -20,9 +18,6 @@ async function loadTable() {
   }
 
   TABLE = await res.json();
-
-  console.log("R1 table rows:", TABLE.length);
-  console.log("R1 sample row:", TABLE[0]);
 
   return TABLE;
 }
@@ -175,7 +170,6 @@ export async function region1(T, P) {
   T = Number(T);
   P = Number(P);
 
-  console.log("REGION 1 CALLED", T, P);
 
   const G = await buildGrid();
 
