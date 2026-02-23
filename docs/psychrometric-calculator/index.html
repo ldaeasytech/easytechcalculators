@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Psychrometric Chart Calculator (RH, WB, DP, W, h Modes) | HVAC Air Properties</title>
+
+<meta name="description"
+content="Advanced Psychrometric Chart Calculator supporting Dry-bulb + RH, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy input pairs. Compute humidity ratio, enthalpy, wet-bulb, dew point, specific volume, vapor pressure and degree of saturation." />
+
+<meta name="keywords"
+content="psychrometric calculator, psychrometric chart calculator, HVAC air properties calculator, humidity ratio calculator, wet bulb calculator, dew point calculator, enthalpy moist air, specific volume air, ASHRAE psychrometrics" />
+
+<meta name="author" content="EasyTechCalculators" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0b1220" />
+
+<link rel="canonical" href="https://easytechcalculators.com/psychrometric-chart-calculator/" />
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<!-- Software Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Psychrometric Chart Calculator",
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web",
+  "url": "https://easytechcalculators.com/psychrometric-chart-calculator/",
+  "description": "Online HVAC psychrometric calculator for complete moist air property analysis using multiple input pairs.",
+  "featureList": [
+    "Dry-bulb + Relative Humidity",
+    "Dry-bulb + Wet-bulb",
+    "Dry-bulb + Dew Point",
+    "Dry-bulb + Humidity Ratio",
+    "Enthalpy + RH (Advanced)",
+    "Humidity ratio",
+    "Wet-bulb temperature",
+    "Dew point temperature",
+    "Specific volume",
+    "Degree of saturation"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What input pairs are supported?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The calculator supports Dry-bulb with Relative Humidity, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy with RH."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are two independent properties required?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "According to thermodynamic state principles, moist air requires two independent properties to fully define its condition."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Are the calculations based on ASHRAE equations?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. Standard psychrometric relations based on ASHRAE formulations are used for engineering accuracy."
+   }
+  }
+ ]
+}
+</script>
+
+<link rel="preload" href="style.css" as="style" onload="this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="style.css"></noscript>
+
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <picture>
+        <source srcset="/logo-easytechcalculators.webp" type="image/webp">
+        <img src="/logo-easytechcalculators.png"
+             alt="EasyTechCalculators engineering calculator logo"
+             class="brand-logo"
+             width="90"
+             height="90"
+             decoding="async">
+      </picture>
+
+      <div class="brand-text">
+        <h1>Psychrometric Chart Calculator – Complete HVAC Air Properties</h1>
+        <div class="capability-line">
+          Multiple Input Pairs · ASHRAE-Based Moist Air Properties
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<section class="seo-intro-section">
+  <div class="container-learning intro-compact">
+
+    <h2>HVAC Psychrometric Calculator for Moist Air Analysis</h2>
+
+    <p>
+      This psychrometric chart calculator determines complete moist air
+      properties using multiple independent input pairs including dry-bulb
+      temperature with relative humidity, wet-bulb temperature, dew point,
+      humidity ratio, or enthalpy.
+    </p>
+
+    <p>
+      Instantly compute humidity ratio, wet-bulb temperature, dew point,
+      enthalpy, specific volume, vapor pressure, and degree of saturation
+      for HVAC engineering applications.
+    </p>
+
+  </div>
+</section>
+
+<section class="card">
+<h2>Inputs</h2>
+
+<div class="input-group">
+<div class="group-title">Primary Input Modes</div>
+
+<div class="input-tabs">
+<button class="tab active" data-mode="T_RH">Tdb – RH</button>
+<button class="tab" data-mode="T_Twb">Tdb – Twb</button>
+<button class="tab" data-mode="T_Tdp">Tdb – Tdp</button>
+<button class="tab" data-mode="T_w">Tdb – w</button>
+<button class="tab" data-mode="H_RH">h – RH</button>
+</div>
+</div>
+
+<form id="calcForm" class="grid-form" novalidate>
+
+<div class="field">
+<label>Dry Bulb Temperature (°C)</label>
+<input id="Tdb" type="number" step="any" />
+</div>
+
+<div class="field">
+<label>Relative Humidity (%)</label>
+<input id="RH" type="number" step="any" />
+</div>
+
+<div class="field">
+<label>Wet Bulb Temperature (°C)</label>
+<input id="Twb" type="number" step="any" />
+</div>
+
+<div class="field">
+<label>Dew Point Temperature (°C)</label>
+<input id="Tdp" type="number" step="any" />
+</div>
+
+<div class="field">
+<label>Humidity Ratio (kg/kg dry air)</label>
+<input id="w" type="number" step="any" />
+</div>
+
+<div class="field">
+<label>Enthalpy (kJ/kg dry air)</label>
+<input id="h" type="number" step="any" />
+</div>
+
+<div class="field full">
+<label>Atmospheric Pressure (kPa)</label>
+<input id="pressure" type="number" value="101.325" step="any" />
+<div class="helper-text">
+Optional — adjust for altitude (e.g., Baguio ≈ 90 kPa)
+</div>
+</div>
+
+<button type="submit" class="primary">
+Calculate Properties
+</button>
+
+</form>
+</section>
+
+<section class="card">
+<h2>Results</h2>
+<div id="resultsTable" class="results-table"></div>
+<div class="messages">
+<div id="errors" class="errors"></div>
+</div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+
+  <div class="footer-inner">
+
+    <div class="footer-disclaimer">
+      Results should be independently verified for professional use.
+      EasyTechCalculators provides engineering tools for educational and
+      preliminary design purposes only.
+    </div>
+
+    <div class="footer-links">
+      <a href="../about.html">About</a>
+      <a href="../policy.html">Privacy Policy</a>
+      <a href="../terms-of-service.html">Terms of Use</a>
+      <a href="../disclaimer.html">Disclaimer</a>
+    </div>
+
+    <div class="footer-copy">
+      © <span id="year"></span> EasyTechCalculators. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+  
+
+<script type="module" src="./js/solver.js"></script>
+<script type="module" src="./js/ui.js"></script>
+</body>
+</html>
