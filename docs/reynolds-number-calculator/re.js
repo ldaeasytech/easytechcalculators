@@ -122,7 +122,7 @@ calculateBtn.addEventListener("click", () => {
 
   const deltaP = fDarcy * (L / D) * (rho * V * V / 2);
 
-  renderMoody(Re, f);
+  renderMoody(Re, fDarcy);
 
   
   // Convert to user-friendly output (Pa, kPa, MPa, psi)
@@ -145,8 +145,11 @@ calculateBtn.addEventListener("click", () => {
   document.getElementById("pressureUnit").innerText =
     pressureUnit;
 
-  document.getElementById("frictionValue").innerText =
-    f.toFixed(6);
+  document.getElementById("darcyValue").innerText =
+  fDarcy.toFixed(6);
+
+  document.getElementById("fanningValue").innerText =
+  fFanning.toFixed(6);
 
   document.getElementById("reValue").innerText =
     Re.toFixed(2);
