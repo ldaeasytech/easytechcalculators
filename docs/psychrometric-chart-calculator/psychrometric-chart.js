@@ -50,14 +50,80 @@ function scaleY(w) {
 
 function drawAxes(context) {
 
-  context.strokeStyle = "#444";
+  const left = 60;
+  const bottom = canvas.height - 50;
+  const right = canvas.width - 40;
+  const top = 20;
+
+  context.strokeStyle = "#555";
   context.lineWidth = 1;
 
+  // Axis lines
   context.beginPath();
-  context.moveTo(60, 20);
-  context.lineTo(60, canvas.height - 50);
-  context.lineTo(canvas.width - 40, canvas.height - 50);
+  context.moveTo(left, top);
+  context.lineTo(left, bottom);
+  context.lineTo(right, bottom);
   context.stroke();
+
+  context.fillStyle = "#aaa";
+  context.font = "12px sans-serif";
+
+  /* =========================
+     X AXIS (Temperature °C)
+  ========================= */
+
+  for (let T = T_MIN; T <= T_MAX; T += 5) {
+
+    const x = scaleX(T);
+
+    // Tick
+    context.beginPath();
+    context.moveTo(x, bottom);
+    context.lineTo(x, bottom + 6);
+    context.stroke();
+
+    // Label
+    context.fillText(
+      T.toString(),
+      x - 10,
+      bottom + 20
+    );
+  }
+
+  context.fillText(
+    "Dry Bulb Temperature (°C)",
+    canvas.width / 2 - 90,
+    canvas.height - 10
+  );
+
+  /* =========================
+     Y AXIS (Humidity Ratio)
+  ========================= */
+
+  for (let w = 0; w <= W_MAX; w += 0.005) {
+
+    const y = scaleY(w);
+
+    // Tick
+    context.beginPath();
+    context.moveTo(left - 6, y);
+    context.lineTo(left, y);
+    context.stroke();
+
+    // Label
+    context.fillText(
+      w.toFixed(3),
+      5,
+      y + 4
+    );
+  }
+
+  // Vertical axis label
+  context.save();
+  context.translate(15, canvas.height / 2 + 60);
+  context.rotate(-Math.PI / 2);
+  context.fillText("Humidity Ratio (kg/kg dry air)", 0, 0);
+  context.restore();
 }
 
 /* =========================================================
