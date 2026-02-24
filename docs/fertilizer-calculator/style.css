@@ -1581,10 +1581,10 @@ select:focus {
 .results-subtitle {
   display: inline-block;
   padding: 6px 12px;
-  background: rgba(59,130,246,0.15);
+  background: var(--bg-inner);
+  color: var(--text-primary);
   border: 1px solid rgba(59,130,246,0.25);
   border-radius: 8px;
-  color: #93c5fd;
   font-size: 0.85rem;
 }
 
