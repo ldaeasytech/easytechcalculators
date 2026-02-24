@@ -218,15 +218,7 @@ select:focus {
   height: 0;
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
-.app-footer {
-  text-align: center;
-  padding: 18px 10px;
-  font-size: 12px;
-  color: #9fb0c9;
-}
+
 
 /* =========================================================
    RESPONSIVE BREAKPOINTS
@@ -448,39 +440,6 @@ select:focus {
   font-size: 0.8rem;        /* was ~0.85rem */
   line-height: 1.2;
   white-space: nowrap;     /* keep on one line */
-}
-
-.site-footer {
-  padding: 16px;
-  text-align: center;
-  border-top: 1px solid #1f2937;
-  color: #9ca3af;
-  font-size: 0.85rem;
-}
-
-.footer-brand {
-  font-weight: 500;
-  color: #d1d5db;
-}
-
-.footer-tagline {
-  margin-top: 4px;
-  font-size: 0.75rem;
-  color: #9ca3af;
-}
-
-.footer-links {
-  margin-top: 8px;
-  font-size: 0.75rem;
-}
-
-.footer-links a {
-  color: #60a5fa;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
 }
 
 .separator {
@@ -1080,5 +1039,84 @@ select:focus {
 
 .results-clean td:nth-child(3) {
   text-align: right;
+  opacity: 0.6;
+}
+
+
+/* ===============================
+   PREMIUM ENGINEERING FOOTER
+================================ */
+
+.site-footer {
+  margin-top: 60px;
+  background: linear-gradient(
+    180deg,
+    #0f172a 0%,
+    #0b1220 100%
+  );
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 40px 20px 28px 20px;
+  color: #9ca3af;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-top {
+  margin-bottom: 20px;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #f9fafb;
+  letter-spacing: 0.4px;
+}
+
+.footer-description {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #9fb0c9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.footer-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin: 22px auto;
+  width: 80%;
+}
+
+.footer-disclaimer {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  max-width: 700px;
+  margin: 0 auto 14px auto;
+  line-height: 1.5;
+}
+
+.footer-links {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #60a5fa;
+  text-decoration: none;
+  margin: 0 6px;
+}
+
+.footer-links a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.footer-copy {
+  font-size: 0.75rem;
   opacity: 0.6;
 }
