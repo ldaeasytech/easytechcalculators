@@ -313,7 +313,7 @@ function updateResultUnitColumn() {
   document.getElementById("vUnit").textContent = vUnit;
   document.getElementById("pvUnit").textContent = pUnit;
   document.getElementById("humidityUnit").textContent = wUnit;
-  };
+  
 
   Object.keys(unitMap).forEach(id => {
     const el = document.getElementById(id);
