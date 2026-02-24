@@ -60,7 +60,10 @@ tabs.forEach(tab => {
 
 unitSelect.addEventListener("change", () => {
 
+  const oldSystem = unitSystem; 
   unitSystem = unitSelect.value;
+
+   autoConvertInputs(oldSystem, unitSystem);
 
   updateUnitLabels();
   updateResultUnitColumn();
@@ -70,6 +73,7 @@ unitSelect.addEventListener("change", () => {
     renderResults(converted);
     renderPsychChart(converted, unitSystem);
   }
+   
 });
 
 /* =========================================================
@@ -191,6 +195,59 @@ function collectInputs() {
   return data;
 }
 
+function autoConvertInputs(from, to) {
+
+  if (from === to) return;
+
+  Object.keys(inputsMap).forEach(key => {
+
+    const input = inputsMap[key];
+    const value = parseFloat(input.value);
+
+    if (isNaN(value)) return;
+
+    // Temperature fields
+    if (["Tdb","Twb","Tdp"].includes(key)) {
+
+      if (from === "SI" && to === "IP")
+        input.value = (value * 9/5 + 32).toFixed(2);
+
+      else if (from === "IP" && to === "SI")
+        input.value = ((value - 32) * 5/9).toFixed(2);
+    }
+
+    // Enthalpy
+    if (key === "h") {
+
+      if (from === "SI" && to === "IP")
+        input.value = (value * 0.429922614).toFixed(3);
+
+      else if (from === "IP" && to === "SI")
+        input.value = (value / 0.429922614).toFixed(3);
+    }
+
+    // Pressure
+    if (key === "pressure") {
+
+      if (from === "SI" && to === "IP")
+        input.value = (value / 6.89476).toFixed(3);
+
+      else if (from === "IP" && to === "SI")
+        input.value = (value * 6.89476).toFixed(3);
+    }
+
+    // Elevation
+    if (key === "elevation") {
+
+      if (from === "SI" && to === "IP")
+        input.value = (value / 0.3048).toFixed(2);
+
+      else if (from === "IP" && to === "SI")
+        input.value = (value * 0.3048).toFixed(2);
+    }
+  });
+}
+
 /* =========================================================
    UNIT CONVERSION
 ========================================================= */
@@ -244,20 +301,18 @@ function convertFromSI(result) {
 function updateResultUnitColumn() {
 
   const tempUnit = unitSystem === "IP" ? "°F" : "°C";
-  const hUnit = unitSystem === "IP" ? "Btu/lb" : "kJ/kg";
+  const hUnit = unitSystem === "IP" ? "Btu/lb dry air" : "kJ/kg dry air";
   const vUnit = unitSystem === "IP" ? "ft³/lb" : "m³/kg";
   const pUnit = unitSystem === "IP" ? "psi" : "kPa";
+  const wUnit = unitSystem === "IP" ? "lb/lb dry air" : "kg/kg dry air";
 
-  const unitMap = {
-    dryBulbUnit: tempUnit,
-    rhUnit: "%",
-    humidityUnit: unitSystem === "IP" ? "lb/lb dry air" : "kg/kg dry air",
-    dpUnit: tempUnit,
-    wbUnit: tempUnit,
-    hUnit: hUnit,
-    vUnit: vUnit,
-    pvUnit: pUnit,
-    muUnit: "—"
+  document.getElementById("dryBulbUnit").textContent = tempUnit;
+  document.getElementById("dpUnit").textContent = tempUnit;
+  document.getElementById("wbUnit").textContent = tempUnit;
+  document.getElementById("hUnit").textContent = hUnit;
+  document.getElementById("vUnit").textContent = vUnit;
+  document.getElementById("pvUnit").textContent = pUnit;
+  document.getElementById("humidityUnit").textContent = wUnit;
   };
 
   Object.keys(unitMap).forEach(id => {
@@ -305,26 +360,29 @@ function updateUnitLabels() {
 
   const tempUnit = unitSystem === "IP" ? "°F" : "°C";
   const hUnit = unitSystem === "IP" ? "Btu/lb dry air" : "kJ/kg dry air";
-  const vUnit = unitSystem === "IP" ? "ft³/lb" : "m³/kg";
+  const wUnit = unitSystem === "IP" ? "lb/lb dry air" : "kg/kg dry air";
   const pUnit = unitSystem === "IP" ? "psi" : "kPa";
   const elevUnit = unitSystem === "IP" ? "ft" : "m";
 
-  document.querySelector("label[for='Tdb']").innerText =
+  document.getElementById("label-Tdb").innerText =
     `Dry Bulb Temperature (${tempUnit})`;
 
-  document.querySelector("label[for='Twb']").innerText =
+  document.getElementById("label-Twb").innerText =
     `Wet Bulb Temperature (${tempUnit})`;
 
-  document.querySelector("label[for='Tdp']").innerText =
+  document.getElementById("label-Tdp").innerText =
     `Dew Point Temperature (${tempUnit})`;
 
-  document.querySelector("label[for='h']").innerText =
+  document.getElementById("label-h").innerText =
     `Enthalpy (${hUnit})`;
 
-  document.querySelector("label[for='pressure']").innerText =
+  document.getElementById("label-w").innerText =
+    `Humidity Ratio (${wUnit})`;
+
+  document.getElementById("label-pressure").innerText =
     `Atmospheric Pressure (${pUnit})`;
 
-  document.querySelector("label[for='elevation']").innerText =
+  document.getElementById("label-elevation").innerText =
     `Elevation (${elevUnit})`;
 }
 /* =========================================================
@@ -332,6 +390,7 @@ function updateUnitLabels() {
 ========================================================= */
 
 updateFieldState();
+updateResultUnitColumn();
 renderPsychChart(null, unitSystem);
 
 
