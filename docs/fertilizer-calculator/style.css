@@ -3,7 +3,7 @@
 ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #1f2937;
+  background: #0b1220;
   color: #e6e9ef;
   min-height: 100vh;
   line-height: 1.4;
@@ -106,7 +106,7 @@ body {
 
 .container {
   max-width: 1350px;
-  margin: 10px auto;
+  margin: 40px auto;
   padding: 0 24px;
   display: grid;
   gap: 28px;
@@ -170,7 +170,7 @@ p {
 ========================================================= */
 
 .card {
-  background: #111827; /* match other calculator */
+  background: #141a24; /* match other calculator */
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
@@ -259,7 +259,7 @@ p {
 ========================================================= */
 
 .input-group {
-  background: #1b2a3f;
+  background: #0f1520;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 16px;
@@ -591,6 +591,13 @@ select:focus {
   text-align: center;
   font-size: 0.75rem;
   color: var(--text-secondary);
+}
+
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 14px;
 }
 
 .group-title {
@@ -1023,7 +1030,7 @@ select:focus {
   margin-top: 40px;
   padding: 28px;
   background: #0f1c2f;
-  border: 1px solid rgba(96,165,250,0.2);
+  border: 1px solid #1f2d45;
   border-radius: 12px;
 }
 
@@ -1047,7 +1054,7 @@ select:focus {
   display: block;
   padding: 16px 18px;
   background: #14263f;
-  border: 1px solid rgba(96,165,250,0.2);
+  border: 1px solid #223a5e;
   border-radius: 10px;
   text-decoration: none;
   color: #e5e7eb;
@@ -1055,7 +1062,7 @@ select:focus {
 }
 
 .related-card:hover {
-  border-color: rgba(96,165,250,0.2);
+  border-color: #60a5fa;
   transform: translateY(-2px);
 }
 
@@ -1595,44 +1602,3 @@ select:focus {
   color: #93c5fd;
   opacity: 0.8;
 }
-
-/* ===============================
-   HEADER WITH HOME TAB
-================================ */
-
-.header-with-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-nav {
-  margin-left: 20px;
-}
-
-.home-tab {
-  display: inline-block;
-  padding: 8px 14px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #60a5fa;
-  text-decoration: none;
-  border: 1px solid #1f2937;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-}
-
-.home-tab:hover {
-  border-color: #60a5fa;
-  background: rgba(96,165,250,0.12);
-}
-
-/* Mobile responsiveness */
-@media (max-width: 640px) {
-  .header-with-nav {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-}
-
