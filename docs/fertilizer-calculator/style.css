@@ -170,7 +170,7 @@ p {
 ========================================================= */
 
 .card {
-  background: #141a24; /* match other calculator */
+  background: #112B4A; /* match other calculator */
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
@@ -184,7 +184,7 @@ p {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 22px;
-  color: #cbd5f5;
+  color: #E6EDF3;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -259,7 +259,7 @@ p {
 ========================================================= */
 
 .input-group {
-  background: #0f1520;
+  background: #162B4D;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 16px;
