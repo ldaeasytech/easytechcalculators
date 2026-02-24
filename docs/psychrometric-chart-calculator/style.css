@@ -70,18 +70,29 @@ body {
 ========================================================= */
 .container {
   max-width: 1200px;
-  margin: 24px auto;
-  padding: 0 14px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+/* Main two-column layout */
+.main-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 24px;
+}
+
+/* Desktop layout */
+@media (min-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: start;
+  }
 }
 
 .card {
   background: #141a24;
   border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+  padding: 22px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
 }
 
 .card h2 {
@@ -768,6 +779,7 @@ select:focus {
   gap: 12px;
   padding: 18px;
   margin-bottom: 22px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 
   background: linear-gradient(
     135deg,
@@ -809,6 +821,10 @@ select:focus {
   }
 }
 
+.result-highlight:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
 /* ===============================
    MODE BAR LAYOUT FIX
 =============================== */
@@ -1017,17 +1033,30 @@ select:focus {
 }
 
 .seo-intro-section {
-  padding: 28px 0 10px 0;
+  padding: 36px 0 18px 0;
+}
+
+.seo-intro-section .container-learning {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 .seo-intro-section h2 {
-  font-size: 1.4rem;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
 }
 
 .seo-intro-section p {
   max-width: 850px;
-  margin-bottom: 10px;
-  line-height: 1.6;
+  line-height: 1.65;
   opacity: 0.95;
+}
+
+.moody-section {
+  margin-top: 28px;
+}
+
+.mode-group {
+  grid-column: 1 / -1;
 }
