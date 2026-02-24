@@ -43,7 +43,7 @@ export function Psat(T_C) {
       - 0.49382577 * Math.log(T);
   }
 
-  return Math.exp(ln_ps); // Pa
+  return Math.exp(ln_ps)/1000; // Pa
 }
 
 
@@ -66,9 +66,47 @@ function specificVolume(T, w, P = P_ATM) {
   return 0.287 * (T + 273.15) * (1 + 1.607 * w) / P;
 }
 
+
+
+/*
 function dewPoint(Pv) {
   const ln = Math.log(Pv / 0.61078);
   return (237.3 * ln) / (17.2694 - ln);
+}*/
+
+/* =========================================================
+   Dew Point from Vapor Pressure
+   Sonntag-consistent Newton iteration
+   Input: Pv (kPa)
+   Output: Tdp (°C)
+========================================================= */
+
+function dewPoint(Pv_kPa) {
+
+  if (Pv_kPa <= 0) return -50; // safety
+
+  const Pv = Pv_kPa; // already in kPa
+
+  // Initial guess using Magnus (good starting point)
+  let T = 10; 
+
+  for (let i = 0; i < 200; i++) {
+
+    const Ps = Psat(T);          // kPa
+    const f = Ps - Pv;
+
+    if (Math.abs(f) < 1e-6)
+      break;
+
+    // Numerical derivative dPs/dT
+    const dT = 0.01;
+    const dPs =
+      (Psat(T + dT) - Psat(T - dT)) / (2 * dT);
+
+    T = T - f / dPs;
+  }
+
+  return T;
 }
 
 /* =========================================================
