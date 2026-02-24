@@ -1299,7 +1299,7 @@ select:focus {
 }
 
 .cost-row {
-  color: #facc15;
+  color: --warning;
 }
 
 /* ===============================
