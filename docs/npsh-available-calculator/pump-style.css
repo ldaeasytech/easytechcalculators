@@ -3,8 +3,8 @@
 ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0b1220;
-  color: #e6e9ef;
+  background: #0B1E3A;
+  color: #E6EDF3;
   min-height: 100vh;
   line-height: 1.4;
 }
@@ -20,12 +20,6 @@ body {
   padding: 0;
 }
 
-body {
-  background: #0b1220;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  color: var(--text-primary);
-  line-height: 1.55;
-}
 
 .power-main {
   display: flex;
@@ -982,7 +976,7 @@ select:focus {
 
 .footer-disclaimer {
   font-size: 0.85rem;
-  color: #aaaaaa;
+  color: #ffffff;
   margin-bottom: 18px;
   line-height: 1.6;
 }
@@ -1008,7 +1002,7 @@ select:focus {
 
 .footer-copy {
   font-size: 0.8rem;
-  color: #777;
+  color: #ffffff;
 }
 
 /* Mobile */
