@@ -3,7 +3,7 @@
 ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #111827;
+  background: #0f172a;
   color: #e6e9ef;
   min-height: 100vh;
   line-height: 1.4;
@@ -170,7 +170,7 @@ p {
 ========================================================= */
 
 .card {
-  background: #141a24; /* match other calculator */
+  background: #162133; /* match other calculator */
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
@@ -259,7 +259,7 @@ p {
 ========================================================= */
 
 .input-group {
-  background: #0f1520;
+  background: #1b2a3f;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 16px;
