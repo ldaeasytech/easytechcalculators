@@ -314,11 +314,6 @@ function updateResultUnitColumn() {
   document.getElementById("pvUnit").textContent = pUnit;
   document.getElementById("humidityUnit").textContent = wUnit;
   
-
-  Object.keys(unitMap).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = unitMap[id];
-  });
 }
 
 
