@@ -1,32 +1,14 @@
 /* =========================================================
-   EASYTECH PUMP DESIGN SYSTEM (GLOBAL FOR 5 CALCULATORS)
+   PREMIUM ENGINEERING SAAS THEME
 ========================================================= */
-
-:root {
-
-  /* Background Hierarchy */
-  --bg-main: #0B1E3A;
-  --bg-card: #112B4A;
-  --bg-inner: #162F55;
-  --bg-deep: #0F2747;
-
-  /* Text */
-  --text-primary: #E6EDF3;
-  --text-secondary: #B8C7D9;
-  --text-muted: #8FA6C1;
-
-  /* Accent */
-  --accent: #3B82F6;
-  --accent-light: #60A5FA;
-
-  /* Status */
-  --success: #22C55E;
-  --warning: #FACC15;
-  --danger: #F87171;
-
-  --border-soft: rgba(255,255,255,0.08);
-  --radius: 14px;
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: #0b1220;
+  color: #e6e9ef;
+  min-height: 100vh;
+  line-height: 1.4;
 }
+
 
 /* =========================================================
    BASE
@@ -39,25 +21,57 @@
 }
 
 body {
+  background: #0b1220;
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bg-main);
   color: var(--text-primary);
   line-height: 1.55;
-  min-height: 100vh;
 }
+
+.power-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.power-value {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.power-unit {
+  font-size: 1.2rem;
+  opacity: 0.85;
+}
+
+.power-secondary {
+  margin-top: 6px;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.power-unit-secondary {
+  margin-left: 4px;
+}
+
 
 /* =========================================================
    HEADER
 ========================================================= */
 
 .app-header {
-  background: linear-gradient(180deg, #0b3a66, #093357);
+  background: linear-gradient(
+    180deg,
+    #0b3a66 0%,
+    #093357 100%
+  );
+  color: #ffffff;
 }
 
 .header-inner {
   max-width: 1200px;
-  margin: auto;
-  padding: 2rem 2.5rem;
+  margin: 0 auto;
+  padding: 2rem 2.75rem;
 }
 
 .brand {
@@ -68,17 +82,27 @@ body {
 
 .brand-logo {
   height: 90px;
+  width: auto;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
 }
 
 .brand-text h1 {
-  font-size: 2.3rem;
+  margin: 0;
+  font-size: 2.55rem;
   font-weight: 700;
+  letter-spacing: 0.3px;
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.35);
 }
 
 .capability-line {
   margin-top: 0.6rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #c7d6ea;
+
   padding-left: 1rem;
   border-left: 3px solid rgba(255,255,255,0.35);
 }
@@ -96,10 +120,51 @@ body {
 }
 
 .container-learning {
-  max-width: 900px;
-  margin: auto;
-  padding: 48px 20px;
-}
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+
+h1 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      color: #f9fafb;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 40px;
+      color: #d1d5db;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      margin-top: 24px;
+      color: #cbd5f5;
+    }
+
+p {
+      margin: 12px 0;
+      color: #cbd5f5;
+    }
+
+    ul {
+      margin: 12px 0 12px 20px;
+      color: #cbd5f5;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
 
 @media (min-width: 1100px) {
   .container {
@@ -108,38 +173,79 @@ body {
 }
 
 /* =========================================================
-   TYPOGRAPHY
-========================================================= */
-
-h1, h2, h3 {
-  margin-bottom: 14px;
-}
-
-h2 { font-size: 1.3rem; }
-h3 { font-size: 1.05rem; }
-
-p, li { color: var(--text-secondary); }
-
-a {
-  color: var(--accent-light);
-  text-decoration: none;
-}
-
-a:hover { text-decoration: underline; }
-
-/* =========================================================
-   CARD
+   CARD DESIGN
 ========================================================= */
 
 .card {
-  background: var(--bg-card);
-  border-radius: var(--radius);
+  background: #141a24; /* match other calculator */
+  border-radius: 14px;
   padding: 20px;
-  border: 1px solid var(--border-soft);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+}
+
+.card:hover {
+  border-color: rgba(255,255,255,0.12);
+}
+
+.card h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+  color: #cbd5f5;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 /* =========================================================
-   FORM
+   MODE SELECTOR (SEGMENTED CONTROL STYLE)
+========================================================= */
+
+.mode-wrapper {
+  max-width: 1350px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  background: #141a24;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+.tab {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 10px;
+  border: 1px solid #2b3445;
+  background: #1e2533;
+  color: #cfd8e3;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: #243041;
+  transform: translateY(-1px);
+}
+
+.tab.active {
+  background: linear-gradient(
+    180deg,
+    #0d8cff,
+    #006fd6
+  );
+  border: none;
+  color: #ffffff;
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+}
+/* =========================================================
+   FORM STRUCTURE (CLEANED)
 ========================================================= */
 
 .grid-form {
@@ -147,70 +253,231 @@ a:hover { text-decoration: underline; }
   gap: 20px;
 }
 
+/* Do NOT split the entire form into 2 columns.
+   We split inside groups instead */
+@media (min-width: 600px) {
+  .grid-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   INPUT GROUPS (Proper Internal Grid)
+========================================================= */
+
 .input-group {
-  background: var(--bg-inner);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius);
+  background: #0f1520;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
   padding: 16px;
+}
+
+/* Two-column layout inside group on desktop */
+@media (min-width: 800px) {
+  .input-group {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .input-group .group-title {
+    grid-column: 1 / -1;
+  }
+
+  .input-group .helper-text {
+    grid-column: 1 / -1;
+  }
+
+  .input-group .fitting-row {
+    grid-column: 1 / -1;
+  }
 }
 
 .group-title {
   font-size: 0.85rem;
   font-weight: 600;
+  margin-bottom: 4px;
   color: var(--text-secondary);
-  margin-bottom: 8px;
+  letter-spacing: 0.02em;
 }
+
+/* Fluid properties helper link */
+.helper-text a {
+  color: #60a5fa;              /* bright blue */
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(96,165,250,0.4);
+  transition: all 0.2s ease;
+}
+
+.helper-text a:hover {
+  color: #93c5fd;
+  border-bottom: 1px solid #93c5fd;
+}
+
+.helper-text {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #cbd5f5;              /* lighter text */
+}
+
+
+/* =========================================================
+   FIELD
+========================================================= */
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 label {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #aeb9cc;
 }
 
 input,
 select {
-  background: var(--bg-deep);
-  border: 1px solid var(--border-soft);
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #111827
+  );
+  border: 1px solid #2b3a52;
   border-radius: 12px;
   padding: 10px 12px;
-  color: var(--text-primary);
+  color: #e6edf5;
   font-size: 0.9rem;
-  transition: 0.2s ease;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: #3fa9ff;
+  box-shadow: 0 0 0 3px rgba(63,169,255,0.25);
+}
+
+select option {
+  background-color: #111827;
+  color: #e6edf5;
+}
+  transition: all 0.2s ease;
+}
+
+input:hover,
+select:hover {
+  border-color: rgba(63,169,255,0.4);
 }
 
 input:focus,
 select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+  border-color: #3fa9ff;
+  box-shadow:
+    0 0 0 3px rgba(63,169,255,0.25),
+    inset 0 1px 2px rgba(0,0,0,0.6);
+}
+/* =========================================================
+   ATM TOGGLE
+========================================================= */
+
+.inline-toggle {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* =========================================================
-   BUTTONS
+   FITTING ROW (Compact Action Layout)
 ========================================================= */
 
-.primary {
-  padding: 12px 18px;
-  border-radius: 12px;
-  background: linear-gradient(180deg, #1f6fd1, #0e4fa3);
-  border: 1px solid rgba(63,169,255,0.35);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
+.fitting-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+  align-items: end;
 }
 
-.primary:hover { transform: translateY(-2px); }
+.fitting-row .primary {
+  height: 40px;
+  font-size: 0.85rem;
+}
+
+
+/* =========================================================
+   ATM TOGGLE
+========================================================= */
+
+.inline-toggle {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: #9fb3c8;
+  gap: 6px;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
 
 .form-actions {
+  grid-column: 1 / -1;
   display: flex;
   justify-content: center;
   margin-top: 24px;
+}
+
+/* =========================================
+   PREMIUM ACTION BUTTON (Mode-style)
+========================================= */
+
+.primary {
+  position: relative;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 12px;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  color: #ffffff;
+  border: 1px solid rgba(63,169,255,0.35);
+
+  background: linear-gradient(
+    180deg,
+    #1f6fd1,
+    #0e4fa3
+  );
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 28px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.primary:active {
+  transform: translateY(0);
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+#calculateBtn {
+  max-width: 320px;
+  font-size: 1rem;
 }
 
 /* =========================================================
@@ -219,58 +486,94 @@ select:focus {
 
 .result-highlight {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+  gap: 12px;
   padding: 18px;
   margin-bottom: 22px;
+
   background: linear-gradient(
     135deg,
     rgba(14,165,233,0.18),
     rgba(59,130,246,0.22)
   );
-  border-radius: var(--radius);
+
+  border-radius: 14px;
   border: 1px solid rgba(59,130,246,0.35);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
 }
 
-.power-value {
+.result-value {
   font-size: 2.4rem;
+  color: #ffffff;
   font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
-.power-unit { opacity: 0.85; }
+.result-label {
+  color: #cbd5f5;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.result-unit {
+  margin-left: 6px;
+  color: #ffffff;
+}
+
+.result-section h3 {
+  color: #cbd5f5;
+  font-weight: 600;
+}
 
 /* =========================================================
    TABLES
 ========================================================= */
 
 .results-clean {
+  color: #ffffff;
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
 }
 
-.results-clean th,
-.results-clean td {
-  padding: 8px 0;
-}
-
 .results-clean th {
-  color: var(--text-secondary);
+  text-align: left;
+  padding: 8px 0;
+  font-weight: 600;
+  color: #ffffff;
   border-bottom: 1px solid var(--border-soft);
 }
 
 .results-clean td {
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.results-clean td:nth-child(2) {
+  text-align: right;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.results-clean td:nth-child(3) {
+  text-align: right;
+  opacity: 0.6;
 }
 
 /* =========================================================
-   SCHEMATIC
+   SCHEMATIC PANEL
 ========================================================= */
+
+#schematicCard {
+  max-width: 1350px;
+  margin: 40px auto;
+  padding: 0 24px;
+  margin-bottom: 30px;
+}
 
 .schematic-box {
   height: 260px;
-  border-radius: var(--radius);
-  background: var(--bg-inner);
+  border-radius: 16px;
+  background: var(--bg-card);
   border: 1px dashed var(--border-soft);
   display: flex;
   align-items: center;
@@ -279,87 +582,680 @@ select:focus {
 }
 
 /* =========================================================
-   FITTINGS
-========================================================= */
-
-.fitting-item {
-  background: var(--bg-deep);
-  border: 1px solid rgba(59,130,246,0.25);
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: var(--text-primary);
-}
-
-/* =========================================================
-   RELATED CALCULATORS
-========================================================= */
-
-.related-calculators {
-  margin-top: 40px;
-  padding: 28px;
-  background: var(--bg-card);
-  border-radius: var(--radius);
-}
-
-.related-grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-}
-
-.related-card {
-  background: var(--bg-inner);
-  border: 1px solid var(--border-soft);
-  border-radius: 10px;
-  padding: 16px;
-  transition: 0.2s ease;
-}
-
-.related-card:hover {
-  border-color: var(--accent-light);
-  transform: translateY(-2px);
-}
-
-/* =========================================================
    FOOTER
 ========================================================= */
 
 .site-footer {
   margin-top: 60px;
-  padding: 30px 20px;
-  background: var(--bg-deep);
-  border-top: 1px solid var(--border-soft);
+  padding: 30px;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
 }
 
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.group-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #9fb3c8;
+}
+
+.fitting-row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 10px;
+  align-items: end;
+}
+
+@media (min-width: 600px) {
+  .grid-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fitting-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+  align-items: end;
+}
+
+.fitting-row .primary {
+  height: 42px;
+}
+
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.group-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #9fb3c8;
+  letter-spacing: 0.03em;
+}
+
+.fitting-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 10px;
+  align-items: end;
+}
+
+/* Force Flow group to stay vertical */
+.flow-group {
+  grid-template-columns: 1fr !important;
+}
+
+/* Force Elevation group to be single column */
+.elevation-group {
+  grid-template-columns: 1fr !important;
+}
+
+/* ===============================
+   ADDED FITTINGS LIST – UPGRADE
+================================ */
+
+#fittingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fitting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #0f172a,
+    #111827
+  );
+
+  border: 1px solid rgba(59,130,246,0.25);
+
+  color: #e2e8f0;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+
+  transition: all 0.2s ease;
+}
+
+.fitting-item:hover {
+  border-color: rgba(59,130,246,0.6);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.fitting-text {
+  font-family: "JetBrains Mono", monospace;
+  color: #cbd5f5;
+}
+
+.fitting-remove {
+  cursor: pointer;
+  color: #f87171;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.fitting-remove:hover {
+  transform: scale(1.2);
+  color: #ef4444;
+}
+
+/* ===============================
+   ADDED FITTINGS HEADER
+================================ */
+
+.fittings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 14px;
+  margin-bottom: 12px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(14,165,233,0.15),
+    rgba(59,130,246,0.12)
+  );
+
+  border: 1px solid rgba(59,130,246,0.25);
+  border-radius: 10px;
+}
+
+.fittings-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #e2e8f0;
+}
+
+.fittings-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  background: rgba(59,130,246,0.25);
+  border: 1px solid rgba(59,130,246,0.4);
+  color: #93c5fd;
+}
+
+.fittings-empty {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+
+.power-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.power-primary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.power-value {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.power-unit {
+  font-size: 1.1rem;
+  opacity: 0.85;
+}
+
+.power-secondary {
+  margin-top: 6px;
+  font-size: 1rem;
+  opacity: 0.75;
+  display: flex;
+  gap: 4px;
+}
+
+.result-highlight {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-highlight {
+  color: #ffffff;
+}
+
+.result-highlight .power-value,
+.result-highlight .power-unit,
+.result-highlight .power-secondary {
+  color: #ffffff;
+}
+
+.collapsed {
+  display: none;
+}
+.collapse-toggle {
+  cursor: pointer;
+}
+
+.optimum-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.optimum-power {
+  color: #9ecbff;
+  font-size: 0.95rem;
+}
+
+.optimum-container {
+  margin-top: 8px;
+}
+
+.optimum-label {
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  color: #9ecbff;
+  opacity: 0.8;
+}
+
+.optimum-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffcc00;
+  text-shadow: 0 0 8px rgba(255, 204, 0, 0.35);
+}
+
+.optimum-power {
+  font-size: 0.95rem;
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+.results-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+#optimumBlock {
+  padding: 10px 15px;
+}
+
+#optimumBlock h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+#optimumDiameter {
+  font-size: 1rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.active-link {
+  color: #777;
+  cursor: default;
+}
+
+/* ===============================
+   Related Pump Calculators Block
+================================ */
+
+.related-calculators {
+  margin-top: 40px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #1f1f1f;
+  border: 1px solid #2e2e2e;
+}
+
+.related-calculators h3 {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.related-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.related-links a {
+  text-decoration: none;
+  color: #b3d4ff;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.related-links a:hover {
+  color: #ffffff;
+  padding-left: 6px;
+}
+
+/* Mobile spacing */
+@media (max-width: 600px) {
+  .related-calculators {
+    padding: 16px;
+  }
+
+  .related-links a {
+    font-size: 0.9rem;
+  }
+}
+
+.learning-section {
+  margin-top: 50px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  line-height: 1.6;
+}
+
+.learning-section h2 {
+  margin-top: 25px;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.learning-section p,
+.learning-section li {
+  font-size: 0.95rem;
+  color: #cccccc;
+}
+
+.learning-section ul {
+  margin-left: 18px;
+}
+
+/* ===============================
+   Global Footer
+================================ */
+
+.site-footer {
+  margin-top: 60px;
+  padding: 30px 20px;
+  background: #121212;
+  border-top: 1px solid #2a2a2a;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+}
+
+.footer-disclaimer {
+  font-size: 0.85rem;
+  color: #aaaaaa;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #b3d4ff;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .footer-links {
+    gap: 12px;
+  }
+
+  .footer-disclaimer {
+    font-size: 0.8rem;
+  }
+}
+
+/* ===============================
+   Related Calculators Upgrade
+================================ */
+
+.related-calculators {
+  margin-top: 40px;
+  padding: 28px;
+  background: #0f1c2f;
+  border: 1px solid #1f2d45;
+  border-radius: 12px;
+}
+
+.related-calculators h2 {
+  margin-bottom: 10px;
+}
+
+.related-subtitle {
+  margin-bottom: 20px;
+  color: #9fb3d9;
+  max-width: 750px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.related-card {
+  display: block;
+  padding: 16px 18px;
+  background: #14263f;
+  border: 1px solid #223a5e;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.related-card:hover {
+  border-color: #60a5fa;
+  transform: translateY(-2px);
+}
+
+.related-card strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.related-card span {
+  font-size: 0.85rem;
+  color: #9fb3d9;
+}
+
+#priceInputs {
+  display: grid;
+  gap: 14px;
+}
+
+@media (min-width: 800px) {
+  #priceInputs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 /* =========================================================
-   MOBILE SAFE OVERRIDES
+   ================================================
+   MOBILE OPTIMIZATION LAYER (SAFE OVERRIDES ONLY)
+   ================================================
+   Place at VERY END of pump-style.css
+   Does NOT modify desktop layout.
 ========================================================= */
 
 @media (max-width: 600px) {
 
-  .header-inner { padding: 1.2rem 1rem; }
+  /* ================= HEADER ================= */
+
+  .header-inner {
+    padding: 1.2rem 1rem;
+  }
 
   .brand {
     flex-direction: column;
+    align-items: center;
     text-align: center;
+    gap: 12px;
   }
+
+  .brand-logo {
+    height: 65px;
+  }
+
+  .brand-text h1 {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .capability-line {
+    font-size: 0.8rem;
+    padding-left: 0;
+    border-left: none;
+  }
+
+  /* ================= CONTAINER ================= */
 
   .container {
-    padding: 0 14px;
     margin: 24px auto;
+    padding: 0 14px;
   }
 
-  .card { padding: 16px; }
+  .container-learning {
+    padding: 32px 16px;
+  }
+
+  /* ================= CARDS ================= */
+
+  .card {
+    padding: 16px;
+  }
+
+  .input-group {
+    padding: 14px;
+  }
+
+  /* ================= FLOW SECTION ================= */
+
+  .flow-section {
+    display: grid;
+    gap: 18px;
+  }
+
+  .input-with-unit {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /* ================= FIELDS ================= */
+
+  input,
+  select {
+    padding: 12px 14px;
+    font-size: 0.95rem;
+  }
+
+  label {
+    font-size: 0.85rem;
+  }
+
+  /* ================= FITTINGS ================= */
+
+  .fitting-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .fitting-row .primary {
+    width: 100%;
+  }
+
+  /* ================= RESULT CARDS ================= */
 
   .result-highlight {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
   }
 
-  .power-value { font-size: 2rem; }
+  .power-display {
+    align-items: flex-start;
+  }
 
-  .related-grid { grid-template-columns: 1fr; }
+  .power-value {
+    font-size: 2.2rem;
+  }
+
+  .results-title {
+    font-size: 1.4rem;
+  }
+
+  /* ================= SCHEMATIC ================= */
+
+  .schematic-box {
+    height: 200px;
+  }
+
+  /* ================= RELATED CALCULATORS ================= */
+
+  .related-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* ================= LEARNING SECTION ================= */
+
+  .learning-section {
+    padding: 18px;
+  }
+
+  .container-learning h1 {
+    font-size: 1.4rem;
+  }
+
+  .container-learning h2 {
+    font-size: 1rem;
+  }
+
+  .container-learning p,
+  .container-learning li {
+    font-size: 0.9rem;
+  }
+
+}
+
+#stepsDisplay {
+  background: linear-gradient(
+    135deg,
+    rgba(14,165,233,0.12),
+    rgba(59,130,246,0.12)
+  );
+  color: #ffffff;
+  border: 1px solid rgba(59,130,246,0.35);
+}
+
+#dimensionDisplay {
+  font-family: "JetBrains Mono", monospace;
+  color: #9ecbff;
+}
+
+.steps-box strong {
+  color: #60a5fa;
+}
+
+.steps-box {
+  font-size: 0.95rem;
 }
