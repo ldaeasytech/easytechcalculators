@@ -974,13 +974,7 @@ select:focus {
     font-size: 0.9rem;
   }
 
-  .results-clean {
-    font-size: 0.85rem;
-  }
-
-  .results-clean td:nth-child(2) {
-    font-size: 0.9rem;
-  }
+   
 
   /* ================= RESULT ACTION BUTTONS ================= */
 
@@ -1059,4 +1053,32 @@ select:focus {
 
 .mode-group {
   grid-column: 1 / -1;
+}
+
+.results-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.results-clean thead th {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 2px solid #3b82f6;
+  opacity: 0.85;
+}
+
+.results-clean td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.results-clean td:nth-child(2) {
+  text-align: right;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.results-clean td:nth-child(3) {
+  text-align: right;
+  opacity: 0.6;
 }
