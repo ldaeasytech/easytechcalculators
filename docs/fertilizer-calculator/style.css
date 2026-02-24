@@ -594,7 +594,7 @@ select:focus {
 }
 
 .input-group {
-  background: #101722;
+  background: #162F55;
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 12px;
   padding: 14px;
@@ -632,7 +632,7 @@ select:focus {
 }
 
 .input-group {
-  background: #101722;
+  background: #162F55;
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 14px;
   padding: 16px;
@@ -1131,7 +1131,7 @@ select:focus {
 }
 
 .results-clean td {
-  background: #101722;
+  background: #162F55;
   border-top: 1px solid rgba(255,255,255,0.04);
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
@@ -1206,7 +1206,7 @@ select:focus {
     display: block;
     margin-bottom: 18px;
     padding: 12px;
-    background: #101722;
+    background: #162F55;
     border-radius: 10px;
   }
 
