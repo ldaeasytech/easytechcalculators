@@ -128,7 +128,7 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
   ]
 }
 </script>
-
+  
 <header class="app-header">
   <div class="header-inner">
     <div class="brand">
@@ -152,11 +152,32 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
   </div>
 </header>
 
- <main class="container">
+  <section class="seo-intro-section">
+  <div class="container-learning intro-compact">
+
+    <h2>HVAC Psychrometric Calculator for Moist Air Analysis</h2>
+
+    <p>
+      This psychrometric chart calculator determines complete moist air
+      properties using multiple independent input pairs including dry-bulb
+      temperature with relative humidity, wet-bulb temperature, dew point,
+      humidity ratio, or enthalpy.
+    </p>
+
+    <p>
+      Instantly compute humidity ratio, wet-bulb temperature, dew point,
+      enthalpy, specific volume, vapor pressure, and degree of saturation
+      for HVAC engineering applications.
+    </p>
+
+  </div>
+</section>
+
+ <!-- ================= MAIN CALCULATOR ================= -->
+<main class="container">
 
   <div class="main-grid">
-
-    <!-- ================= INPUT CARD ================= -->
+    
     <section class="card">
       <h2>Moist Air Input Parameters</h2>
 
@@ -285,9 +306,8 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
       </div>
 
     </section>
-
   </div>
-
+  
   <!-- ================= PSYCHROMETRIC CHART ================= -->
 
   <section class="card moody-section">
@@ -306,37 +326,7 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
 
 </main>
 
-<section class="related-calculators">
-
-<h2>Related HVAC & Engineering Calculators</h2>
-
-<div class="related-grid">
-
-<a href="../reynolds-number-calculator/" class="related-card">
-<strong>Reynolds Number Calculator</strong>
-<span>Flow regime and friction factor analysis.</span>
-</a>
-
-<a href="../pump-power-calculator/" class="related-card">
-<strong>Pump Power Calculator</strong>
-<span>Hydraulic power and efficiency.</span>
-</a>
-
-<a href="../water-properties/" class="related-card">
-<strong>Water & Steam Properties</strong>
-<span>Thermodynamic property evaluation.</span>
-</a>
-
-<a href="../unit-converter/" class="related-card">
-<strong>Engineering Unit Converter</strong>
-<span>Convert SI and English units.</span>
-</a>
-
-</div>
-
-</section>
-
-
+  <!-- ================= Learning Section ================= -->
 <section class="learning-hub-card">
 
 <h2>Psychrometry Learning Section – Moist Air Fundamentals & Applications</h2>
@@ -479,38 +469,6 @@ efficiency in modern engineering systems.
 
 </section>
 
-</footer>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-  
-
-
-<!-- ================= FOOTER ================= -->
-<footer class="site-footer">
-
-  <div class="footer-inner">
-
-    <div class="footer-disclaimer">
-      Results should be independently verified for professional use.
-      EasyTechCalculators provides engineering tools for educational and
-      preliminary design purposes only.
-    </div>
-
-    <div class="footer-links">
-      <a href="../about.html">About</a>
-      <a href="../policy.html">Privacy Policy</a>
-      <a href="../terms-of-service.html">Terms of Use</a>
-      <a href="../disclaimer.html">Disclaimer</a>
-    </div>
-
-    <div class="footer-copy">
-      © <span id="year"></span> EasyTechCalculators. All rights reserved.
-    </div>
-
-  </div>
-  
 <script type="module" src="./solver.js"></script>
 <script type="module" src="./ui.js"></script>
 </body>
