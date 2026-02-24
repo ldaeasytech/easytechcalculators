@@ -286,7 +286,6 @@ function convertFromSI(result) {
     result.dew_point = result.dew_point * 9/5 + 32;
     result.wet_bulb = result.wet_bulb * 9/5 + 32;
 
-    result.enthalpy *= 0.429922614;
     result.specific_volume *= 16.018463;
     result.vapor_pressure /= 6.89476;
 
