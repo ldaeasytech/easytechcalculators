@@ -3,7 +3,7 @@
 ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0b1220;
+  background: #0B1E3A;
   color: #e6e9ef;
   min-height: 100vh;
   line-height: 1.4;
@@ -18,13 +18,6 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-body {
-  background: #0b1220;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  color: var(--text-primary);
-  line-height: 1.55;
 }
 
 .power-main {
