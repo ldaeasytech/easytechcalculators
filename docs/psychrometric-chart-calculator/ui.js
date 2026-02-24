@@ -92,11 +92,25 @@ function pressureFromElevation_m(h_m) {
     Math.pow(1 - (0.0065 * h_m) / 288.15, 5.2559);
 }
 
+/* =========================================================
+   ELEVATION ↔ PRESSURE (SMART SYNC)
+========================================================= */
+
+let autoPressureFromElevation = true;
+
+// Standard Atmosphere (kPa)
+function pressureFromElevation_m(h_m) {
+  return 101.325 *
+    Math.pow(1 - (0.0065 * h_m) / 288.15, 5.2559);
+}
+
+/* ---- Elevation Input ---- */
 inputsMap.elevation.addEventListener("input", () => {
 
-  let h = parseFloat(inputsMap.elevation.value);
+  const raw = inputsMap.elevation.value;
+  let h = parseFloat(raw);
 
-  if (!isNaN(h)) {
+  if (!isNaN(h) && autoPressureFromElevation) {
 
     if (unitSystem === "IP")
       h = h * 0.3048;
@@ -108,20 +122,20 @@ inputsMap.elevation.addEventListener("input", () => {
         ? (P_kPa / 6.89476).toFixed(3)
         : P_kPa.toFixed(3);
 
-    inputsMap.pressure.disabled = true;
-
-  } else {
-    inputsMap.pressure.disabled = false;
   }
 });
 
+/* ---- Pressure Input ---- */
 inputsMap.pressure.addEventListener("input", () => {
 
-  if (inputsMap.pressure.value !== "") {
-    inputsMap.elevation.value = "";
-    inputsMap.elevation.disabled = true;
+  const raw = inputsMap.pressure.value;
+
+  if (raw === "") {
+    // If pressure cleared → allow auto-sync again
+    autoPressureFromElevation = true;
   } else {
-    inputsMap.elevation.disabled = false;
+    // User manually edited pressure → stop auto-sync
+    autoPressureFromElevation = false;
   }
 });
 
