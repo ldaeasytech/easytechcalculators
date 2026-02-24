@@ -21,7 +21,8 @@ const inputsMap = {
   Tdp: document.getElementById("Tdp"),
   w: document.getElementById("w"),
   h: document.getElementById("h"),
-  pressure: document.getElementById("pressure")
+  pressure: document.getElementById("pressure"),
+  elevation: document.getElementById("elevation")
 };
 
 /* =========================================================
@@ -60,40 +61,75 @@ function updateFieldState() {
 
   Object.keys(inputsMap).forEach(key => {
 
-    if (key === "pressure") return; // always enabled
+    if (key === "pressure" || key === "elevation") return;
 
     const input = inputsMap[key];
 
     if (requiredFields.includes(key)) {
       input.disabled = false;
     } else {
-      input.value = "";          // 🔥 auto clear unused
+      input.value = "";
       input.disabled = true;
     }
   });
 }
 
 /* =========================================================
+   ELEVATION ↔ PRESSURE LOGIC
+========================================================= */
+
+// Standard Atmosphere (kPa)
+function pressureFromElevation(h) {
+  return 101.325 *
+    Math.pow(1 - (0.0065 * h) / 288.15, 5.2559);
+}
+
+// If elevation entered → compute pressure
+inputsMap.elevation.addEventListener("input", () => {
+
+  const h = parseFloat(inputsMap.elevation.value);
+
+  if (!isNaN(h)) {
+    const P = pressureFromElevation(h);
+    inputsMap.pressure.value = P.toFixed(3);
+    inputsMap.pressure.disabled = true;
+  } else {
+    inputsMap.pressure.disabled = false;
+  }
+});
+
+// If pressure entered manually → disable elevation
+inputsMap.pressure.addEventListener("input", () => {
+
+  const P = parseFloat(inputsMap.pressure.value);
+
+  if (!isNaN(P)) {
+    inputsMap.elevation.value = "";
+    inputsMap.elevation.disabled = true;
+  } else {
+    inputsMap.elevation.disabled = false;
+  }
+});
+
+/* =========================================================
    CALCULATE
 ========================================================= */
 
-if (calculateBtn) {
-  calculateBtn.addEventListener("click", () => {
+calculateBtn.addEventListener("click", () => {
 
-    try {
+  try {
 
-      const data = collectInputs();
-      const result = solvePsychrometrics(activeMode, data);
+    const data = collectInputs();
+    const result = solvePsychrometrics(activeMode, data);
 
-      renderResults(result);
-      renderPsychChart(result);
+    renderResults(result);
+    renderPsychChart(result);
 
-    } catch (err) {
-      alert(err.message);
-    }
+  } catch (err) {
+    alert(err.message);
+  }
 
-  });
-}
+});
 
 /* =========================================================
    COLLECT INPUTS
@@ -102,7 +138,6 @@ if (calculateBtn) {
 function collectInputs() {
 
   const data = {};
-
   const required = modeFields[activeMode];
 
   required.forEach(field => {
@@ -123,7 +158,7 @@ function collectInputs() {
 }
 
 /* =========================================================
-   RENDER RESULTS (TABLE)
+   RENDER RESULTS
 ========================================================= */
 
 function renderResults(r) {
