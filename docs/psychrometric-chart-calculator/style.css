@@ -9,8 +9,8 @@
 
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0b1220;
-  color: #e6e9ef;
+  background: #0B1E3A;
+  color: #E6EDF3;
   min-height: 100vh;
   line-height: 1.4;
 }
@@ -1098,6 +1098,7 @@ select:focus {
   max-width: 700px;
   margin: 0 auto 14px auto;
   line-height: 1.5;
+  color: #ffffff;
 }
 
 .footer-links {
@@ -1119,4 +1120,5 @@ select:focus {
 .footer-copy {
   font-size: 0.75rem;
   opacity: 0.6;
+  color: #ffffff;
 }
