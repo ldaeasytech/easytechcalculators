@@ -289,6 +289,15 @@ function convertFromSI(result) {
     result.enthalpy *= 0.429922614;
     result.specific_volume *= 16.018463;
     result.vapor_pressure /= 6.89476;
+
+     if (unitSystem === "IP") {
+
+     result.enthalpy *= 0.429922614;
+
+     // Reference shift (0°C → 0°F)
+     result.enthalpy += 7.68;
+   }
+      
   }
 
   return result;
