@@ -3,8 +3,8 @@
 ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0B1E3A;   /* Deep Navy */
-  color: #E6EDF3;        /* Soft ChatGPT white */
+  background: #0b1220;
+  color: #e6e9ef;
   min-height: 100vh;
   line-height: 1.4;
 }
@@ -18,6 +18,13 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+body {
+  background: #0b1220;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--text-primary);
+  line-height: 1.55;
 }
 
 .power-main {
@@ -121,29 +128,29 @@ body {
 h1 {
       font-size: 1.8rem;
       margin-bottom: 16px;
-      color: #E6EDF3;
+      color: #f9fafb;
     }
 
     h2 {
       font-size: 1.3rem;
       margin-top: 40px;
-      color: #D4E0F0;
+      color: #d1d5db;
     }
 
     h3 {
       font-size: 1.05rem;
       margin-top: 24px;
-      color: #C3D2E6;
+      color: #cbd5f5;
     }
 
 p {
       margin: 12px 0;
-      color: #B8C7D9;
+      color: #cbd5f5;
     }
 
     ul {
       margin: 12px 0 12px 20px;
-      color: #B8C7D9;
+      color: #cbd5f5;
     }
 
     li {
@@ -151,7 +158,7 @@ p {
     }
 
     a {
-      color: #B8C7D9;
+      color: #60a5fa;
       text-decoration: none;
     }
 
@@ -170,7 +177,7 @@ p {
 ========================================================= */
 
 .card {
-  background: #112B4A; /* match other calculator */
+  background: #141a24; /* match other calculator */
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
@@ -259,11 +266,10 @@ p {
 ========================================================= */
 
 .input-group {
-  background: #162F55;
-  border: 1px solid rgba(255,255,255,0.06);
+  background: #0f1520;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 16px;
-  margin-bottom: 18px;
 }
 
 /* Two-column layout inside group on desktop */
@@ -332,7 +338,11 @@ label {
 
 input,
 select {
-  background: #1B3B6B;
+  background: linear-gradient(
+    135deg,
+    #0f1b2d,
+    #14263f
+  );
   border: 1.5px solid rgba(96,165,250,0.35);
   border-radius: 12px;
   padding: 12px 14px;
@@ -344,7 +354,7 @@ select {
 
 select:focus {
   outline: none;
-  background: #214A85;
+  border-color: #3fa9ff;
   box-shadow: 0 0 0 3px rgba(63,169,255,0.25);
 }
 
@@ -590,7 +600,12 @@ select:focus {
   color: var(--text-secondary);
 }
 
-
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 14px;
+}
 
 .group-title {
   font-size: 0.8rem;
@@ -623,7 +638,13 @@ select:focus {
   height: 42px;
 }
 
-
+.input-group {
+  background: #101722;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
 
 .group-title {
   font-size: 0.85rem;
@@ -884,7 +905,7 @@ select:focus {
   margin-top: 40px;
   padding: 20px;
   border-radius: 12px;
-  background: #112B4A;
+  background: #1f1f1f;
   border: 1px solid #2e2e2e;
 }
 
@@ -956,7 +977,7 @@ select:focus {
 .site-footer {
   margin-top: 60px;
   padding: 30px 20px;
-  background: #0F2747;
+  background: #121212;
   border-top: 1px solid #2a2a2a;
 }
 
@@ -968,7 +989,7 @@ select:focus {
 
 .footer-disclaimer {
   font-size: 0.85rem;
-  color: #ffffff;
+  color: #aaaaaa;
   margin-bottom: 18px;
   line-height: 1.6;
 }
@@ -994,7 +1015,7 @@ select:focus {
 
 .footer-copy {
   font-size: 0.8rem;
-  color: #ffffff;
+  color: #777;
 }
 
 /* Mobile */
@@ -1015,7 +1036,7 @@ select:focus {
 .related-calculators {
   margin-top: 40px;
   padding: 28px;
-  background: #112B4A;
+  background: #0f1c2f;
   border: 1px solid #1f2d45;
   border-radius: 12px;
 }
@@ -1117,7 +1138,7 @@ select:focus {
 }
 
 .results-clean td {
-  background: #162F55;
+  background: #101722;
   border-top: 1px solid rgba(255,255,255,0.04);
   border-bottom: 1px solid rgba(255,255,255,0.04);
 }
@@ -1215,10 +1236,10 @@ select:focus {
 ================================ */
 
 .result-card {
-   background: linear-gradient(
+  background: linear-gradient(
     135deg,
-    #162F55,
-    #1B3B6B
+    #0f1c2f,
+    #13233b
   );
   border: 1px solid rgba(96,165,250,0.15);
   border-radius: 16px;
@@ -1383,7 +1404,7 @@ select:focus {
 }
 
 .price-card {
-  background: #162F55;
+  background: #0f172a;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
   padding: 16px;
@@ -1477,7 +1498,7 @@ select:focus {
 ================================ */
 
 .structured-card {
-  background: #162F55;
+  background: #0f172a;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   padding: 22px;
