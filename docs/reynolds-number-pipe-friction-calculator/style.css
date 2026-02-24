@@ -3,8 +3,8 @@
 ========================================================= */
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: #0b1220;
-  color: #e6e9ef;
+  background: #0B1E3A;
+  color: #E6EDF3;
   min-height: 100vh;
   line-height: 1.4;
 }
@@ -1367,3 +1367,63 @@ select:focus {
   height: 520px;
   display: block;
 }
+
+/* ===============================
+   Global Footer
+================================ */
+
+.site-footer {
+  margin-top: 60px;
+  padding: 30px 20px;
+  background: #121212;
+  border-top: 1px solid #2a2a2a;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: auto;
+  text-align: center;
+}
+
+.footer-disclaimer {
+  font-size: 0.85rem;
+  color: #ffffff;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: #b3d4ff;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  color: #ffffff;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .footer-links {
+    gap: 12px;
+  }
+
+  .footer-disclaimer {
+    font-size: 0.8rem;
+  }
+}
+
