@@ -8,6 +8,8 @@ import { renderPsychChart } from "./psychrometric-chart.js";
 let activeMode = "T_RH";
 let unitSystem = "SI";
 
+let lastResultSI = null;
+
 /* =========================================================
    DOM REFERENCES
 ========================================================= */
@@ -57,8 +59,17 @@ tabs.forEach(tab => {
 ========================================================= */
 
 unitSelect.addEventListener("change", () => {
+
   unitSystem = unitSelect.value;
+
   updateUnitLabels();
+  updateResultUnitColumn();
+
+  if (lastResultSI) {
+    const converted = convertFromSI({ ...lastResultSI });
+    renderResults(converted);
+    renderPsychChart(converted, unitSystem);
+  }
 });
 
 /* =========================================================
@@ -141,11 +152,14 @@ calculateBtn.addEventListener("click", () => {
     let data = collectInputs();
     data = convertToSI(data);
 
-    let result = solvePsychrometrics(activeMode, data);
-    result = convertFromSI(result);
+    let resultSI = solvePsychrometrics(activeMode, data);
 
-    renderResults(result);
-    renderPsychChart(result, unitSystem);
+    lastResultSI = resultSI;   // store SI result
+
+    let resultDisplay = convertFromSI({ ...resultSI });
+
+    renderResults(resultDisplay);
+    renderPsychChart(resultDisplay, unitSystem);
 
   } catch (err) {
     alert(err.message);
@@ -224,6 +238,36 @@ function convertFromSI(result) {
 }
 
 /* =========================================================
+   Update unit in table dynamically
+========================================================= */
+
+function updateResultUnitColumn() {
+
+  const tempUnit = unitSystem === "IP" ? "°F" : "°C";
+  const hUnit = unitSystem === "IP" ? "Btu/lb" : "kJ/kg";
+  const vUnit = unitSystem === "IP" ? "ft³/lb" : "m³/kg";
+  const pUnit = unitSystem === "IP" ? "psi" : "kPa";
+
+  const unitMap = {
+    dryBulbUnit: tempUnit,
+    rhUnit: "%",
+    humidityUnit: unitSystem === "IP" ? "lb/lb dry air" : "kg/kg dry air",
+    dpUnit: tempUnit,
+    wbUnit: tempUnit,
+    hUnit: hUnit,
+    vUnit: vUnit,
+    pvUnit: pUnit,
+    muUnit: "—"
+  };
+
+  Object.keys(unitMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = unitMap[id];
+  });
+}
+
+
+/* =========================================================
    RENDER RESULTS
 ========================================================= */
 
@@ -258,13 +302,37 @@ function setValue(id, value, decimals) {
 ========================================================= */
 
 function updateUnitLabels() {
-  // If you want dynamic label switching beside inputs,
-  // update label innerText here.
-}
 
+  const tempUnit = unitSystem === "IP" ? "°F" : "°C";
+  const hUnit = unitSystem === "IP" ? "Btu/lb dry air" : "kJ/kg dry air";
+  const vUnit = unitSystem === "IP" ? "ft³/lb" : "m³/kg";
+  const pUnit = unitSystem === "IP" ? "psi" : "kPa";
+  const elevUnit = unitSystem === "IP" ? "ft" : "m";
+
+  document.querySelector("label[for='Tdb']").innerText =
+    `Dry Bulb Temperature (${tempUnit})`;
+
+  document.querySelector("label[for='Twb']").innerText =
+    `Wet Bulb Temperature (${tempUnit})`;
+
+  document.querySelector("label[for='Tdp']").innerText =
+    `Dew Point Temperature (${tempUnit})`;
+
+  document.querySelector("label[for='h']").innerText =
+    `Enthalpy (${hUnit})`;
+
+  document.querySelector("label[for='pressure']").innerText =
+    `Atmospheric Pressure (${pUnit})`;
+
+  document.querySelector("label[for='elevation']").innerText =
+    `Elevation (${elevUnit})`;
+}
 /* =========================================================
    INIT
 ========================================================= */
 
 updateFieldState();
 renderPsychChart(null, unitSystem);
+
+
+
