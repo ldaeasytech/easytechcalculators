@@ -1025,7 +1025,7 @@ select:focus {
 
 .footer-copy {
   font-size: 0.8rem;
-  color: #777;
+  color: #ffffff;
 }
 
 /* Mobile */
@@ -1036,6 +1036,7 @@ select:focus {
 
   .footer-disclaimer {
     font-size: 0.8rem;
+    color: #ffffff;
   }
 }
 
