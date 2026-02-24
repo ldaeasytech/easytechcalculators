@@ -6,6 +6,7 @@ import { renderPsychChart } from "./psychrometric-chart.js";
 ========================================================= */
 
 let activeMode = "T_RH";
+let unitSystem = "SI";
 
 /* =========================================================
    DOM REFERENCES
@@ -13,6 +14,7 @@ let activeMode = "T_RH";
 
 const tabs = document.querySelectorAll(".tab");
 const calculateBtn = document.querySelector(".primary");
+const unitSelect = document.getElementById("unitSystem");
 
 const inputsMap = {
   Tdb: document.getElementById("Tdb"),
@@ -45,10 +47,18 @@ tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     tabs.forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
-
     activeMode = tab.dataset.mode;
     updateFieldState();
   });
+});
+
+/* =========================================================
+   UNIT SWITCHING
+========================================================= */
+
+unitSelect.addEventListener("change", () => {
+  unitSystem = unitSelect.value;
+  updateUnitLabels();
 });
 
 /* =========================================================
@@ -56,8 +66,7 @@ tabs.forEach(tab => {
 ========================================================= */
 
 function updateFieldState() {
-
-  const requiredFields = modeFields[activeMode];
+  const required = modeFields[activeMode];
 
   Object.keys(inputsMap).forEach(key => {
 
@@ -65,7 +74,7 @@ function updateFieldState() {
 
     const input = inputsMap[key];
 
-    if (requiredFields.includes(key)) {
+    if (required.includes(key)) {
       input.disabled = false;
     } else {
       input.value = "";
@@ -75,35 +84,40 @@ function updateFieldState() {
 }
 
 /* =========================================================
-   ELEVATION ↔ PRESSURE LOGIC
+   ELEVATION ↔ PRESSURE
 ========================================================= */
 
-// Standard Atmosphere (kPa)
-function pressureFromElevation(h) {
+function pressureFromElevation_m(h_m) {
   return 101.325 *
-    Math.pow(1 - (0.0065 * h) / 288.15, 5.2559);
+    Math.pow(1 - (0.0065 * h_m) / 288.15, 5.2559);
 }
 
-// If elevation entered → compute pressure
 inputsMap.elevation.addEventListener("input", () => {
 
-  const h = parseFloat(inputsMap.elevation.value);
+  let h = parseFloat(inputsMap.elevation.value);
 
   if (!isNaN(h)) {
-    const P = pressureFromElevation(h);
-    inputsMap.pressure.value = P.toFixed(3);
+
+    if (unitSystem === "IP")
+      h = h * 0.3048;
+
+    const P_kPa = pressureFromElevation_m(h);
+
+    inputsMap.pressure.value =
+      unitSystem === "IP"
+        ? (P_kPa / 6.89476).toFixed(3)
+        : P_kPa.toFixed(3);
+
     inputsMap.pressure.disabled = true;
+
   } else {
     inputsMap.pressure.disabled = false;
   }
 });
 
-// If pressure entered manually → disable elevation
 inputsMap.pressure.addEventListener("input", () => {
 
-  const P = parseFloat(inputsMap.pressure.value);
-
-  if (!isNaN(P)) {
+  if (inputsMap.pressure.value !== "") {
     inputsMap.elevation.value = "";
     inputsMap.elevation.disabled = true;
   } else {
@@ -119,11 +133,14 @@ calculateBtn.addEventListener("click", () => {
 
   try {
 
-    const data = collectInputs();
-    const result = solvePsychrometrics(activeMode, data);
+    let data = collectInputs();
+    data = convertToSI(data);
+
+    let result = solvePsychrometrics(activeMode, data);
+    result = convertFromSI(result);
 
     renderResults(result);
-    renderPsychChart(result);
+    renderPsychChart(result, unitSystem);
 
   } catch (err) {
     alert(err.message);
@@ -142,13 +159,11 @@ function collectInputs() {
 
   required.forEach(field => {
 
-    const value = parseFloat(inputsMap[field].value);
-
-    if (isNaN(value)) {
+    const val = parseFloat(inputsMap[field].value);
+    if (isNaN(val))
       throw new Error(`Please enter valid value for ${field}.`);
-    }
 
-    data[field] = value;
+    data[field] = val;
   });
 
   data.pressure =
@@ -158,10 +173,61 @@ function collectInputs() {
 }
 
 /* =========================================================
+   UNIT CONVERSION
+========================================================= */
+
+function convertToSI(data) {
+
+  if (unitSystem === "IP") {
+
+    if (data.Tdb !== undefined)
+      data.Tdb = (data.Tdb - 32) * 5/9;
+
+    if (data.Twb !== undefined)
+      data.Twb = (data.Twb - 32) * 5/9;
+
+    if (data.Tdp !== undefined)
+      data.Tdp = (data.Tdp - 32) * 5/9;
+
+    if (data.h !== undefined)
+      data.h *= 2.326;
+
+    if (data.pressure !== undefined)
+      data.pressure *= 6.89476;
+
+    if (data.elevation !== undefined)
+      data.elevation *= 0.3048;
+  }
+
+  return data;
+}
+
+function convertFromSI(result) {
+
+  if (unitSystem === "IP") {
+
+    result.dry_bulb = result.dry_bulb * 9/5 + 32;
+    result.dew_point = result.dew_point * 9/5 + 32;
+    result.wet_bulb = result.wet_bulb * 9/5 + 32;
+
+    result.enthalpy *= 0.429922614;
+    result.specific_volume *= 16.018463;
+    result.vapor_pressure /= 6.89476;
+  }
+
+  return result;
+}
+
+/* =========================================================
    RENDER RESULTS
 ========================================================= */
 
 function renderResults(r) {
+
+  const tempUnit = unitSystem === "IP" ? "°F" : "°C";
+  const hUnit = unitSystem === "IP" ? "Btu/lb" : "kJ/kg";
+  const vUnit = unitSystem === "IP" ? "ft³/lb" : "m³/kg";
+  const pUnit = unitSystem === "IP" ? "psia" : "kPa";
 
   setValue("dryBulbValue", r.dry_bulb, 2);
   setValue("rhValue", r.relative_humidity, 2);
@@ -172,18 +238,28 @@ function renderResults(r) {
   setValue("vValue", r.specific_volume, 4);
   setValue("pvValue", r.vapor_pressure, 3);
   setValue("muValue", r.degree_of_saturation, 3);
+
+  // Optional: dynamically update unit labels in table if needed
 }
 
 function setValue(id, value, decimals) {
   const el = document.getElementById(id);
-  if (el) {
+  if (el)
     el.textContent = Number(value).toFixed(decimals);
-  }
 }
 
 /* =========================================================
-   INITIALIZE
+   UNIT LABEL UPDATE (OPTIONAL)
+========================================================= */
+
+function updateUnitLabels() {
+  // If you want dynamic label switching beside inputs,
+  // update label innerText here.
+}
+
+/* =========================================================
+   INIT
 ========================================================= */
 
 updateFieldState();
-renderPsychChart(null);
+renderPsychChart(null, unitSystem);
