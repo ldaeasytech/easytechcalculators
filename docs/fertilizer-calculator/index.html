@@ -192,8 +192,14 @@ content="fertilizer calculator, NPK calculator, fertilizer mix calculator, ferti
     display: flex;
       gap: 12px;
       flex-wrap: wrap;
+  margin-bottom: 12px;
 }
 
+.top-cta + section h2,
+.top-cta + h2 {
+  margin-top: 0;         /* remove large heading gap */
+}      
+           
 .explore-button {
   display: inline-block;
   padding: 8px 16px;
