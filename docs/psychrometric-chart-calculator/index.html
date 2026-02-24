@@ -231,6 +231,15 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
           <input type="number" id="h">
         </div>
 
+      <!-- Elevation -->
+        <div class="field">
+          <label>Elevation (m)</label>
+          <input type="number" id="elevation">
+          <div class="helper-text">
+            If elevation is entered, pressure will be calculated automatically.
+          </div>
+        </div>
+        
         <!-- Pressure -->
         <div class="field">
           <label>Atmospheric Pressure (kPa)</label>
@@ -245,67 +254,72 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
     </section>
 
     <!-- ================= RESULT CARD ================= -->
-    <section class="card result-section">
+<section class="card result-section">
 
-      <h2 style="margin-bottom:20px;">Calculation Results</h2>
+  <h2 style="margin-bottom:20px;">Calculation Results</h2>
 
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Humidity Ratio</div>
-          <div class="result-value" id="humidityValue">—</div>
-        </div>
-      </div>
+  <table class="results-clean">
+    <thead>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>Unit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dry Bulb Temperature</td>
+        <td id="dryBulbValue">—</td>
+        <td>°C</td>
+      </tr>
+      <tr>
+        <td>Relative Humidity</td>
+        <td id="rhValue">—</td>
+        <td>%</td>
+      </tr>
+      <tr>
+        <td>Humidity Ratio</td>
+        <td id="humidityValue">—</td>
+        <td>kg/kg dry air</td>
+      </tr>
+      <tr>
+        <td>Dew Point</td>
+        <td id="dpValue">—</td>
+        <td>°C</td>
+      </tr>
+      <tr>
+        <td>Wet Bulb</td>
+        <td id="wbValue">—</td>
+        <td>°C</td>
+      </tr>
+      <tr>
+        <td>Enthalpy</td>
+        <td id="hValue">—</td>
+        <td>kJ/kg dry air</td>
+      </tr>
+      <tr>
+        <td>Specific Volume</td>
+        <td id="vValue">—</td>
+        <td>m³/kg</td>
+      </tr>
+      <tr>
+        <td>Vapor Pressure</td>
+        <td id="pvValue">—</td>
+        <td>kPa</td>
+      </tr>
+      <tr>
+        <td>Degree of Saturation</td>
+        <td id="muValue">—</td>
+        <td>—</td>
+      </tr>
+    </tbody>
+  </table>
 
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Relative Humidity</div>
-          <div class="result-value" id="rhValue">—</div>
-        </div>
-      </div>
+</section>
 
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Dew Point</div>
-          <div class="result-value" id="dpValue">—</div>
-        </div>
-      </div>
 
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Wet Bulb</div>
-          <div class="result-value" id="wbValue">—</div>
-        </div>
-      </div>
 
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Enthalpy</div>
-          <div class="result-value" id="hValue">—</div>
-        </div>
-      </div>
-
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Specific Volume</div>
-          <div class="result-value" id="vValue">—</div>
-        </div>
-      </div>
-
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Vapor Pressure</div>
-          <div class="result-value" id="pvValue">—</div>
-        </div>
-      </div>
-
-      <div class="result-highlight">
-        <div>
-          <div class="result-label">Degree of Saturation</div>
-          <div class="result-value" id="muValue">—</div>
-        </div>
-      </div>
-
-    </section>
+    
   </div>
   
   <!-- ================= PSYCHROMETRIC CHART ================= -->
