@@ -4,9 +4,9 @@
 body {
   font-family: "Segoe UI", Roboto, Arial, sans-serif;
   background: #f2f6fa;
-  color: #e6e9ef;
+  color: #1f2d3a;   /* professional dark text */
   min-height: 100vh;
-  line-height: 1.4;
+  line-height: 1.55;
 }
 
 
@@ -18,13 +18,6 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-body {
-  background: #0b1220;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  color: var(--text-primary);
-  line-height: 1.55;
 }
 
 .power-main {
@@ -1648,4 +1641,39 @@ select:focus {
     align-items: flex-start;
     gap: 12px;
   }
+}
+
+/* ===== LIGHT ENGINEERING OVERRIDE ===== */
+
+body {
+  background: #f2f6fa;
+  color: #1f2d3a;
+}
+
+.card,
+.input-group,
+.related-calculators,
+.result-card,
+.price-card,
+.structured-card {
+  background: #ffffff;
+  border: 1px solid #d8e2ec;
+  box-shadow: 0 4px 12px rgba(15,58,95,0.06);
+}
+
+input,
+select {
+  background: #ffffff;
+  color: #1f2d3a;
+  border: 1px solid #c7d3df;
+}
+
+.results-clean td {
+  background: #ffffff;
+}
+
+.site-footer {
+  background: #ffffff;
+  border-top: 1px solid #e1e8ef;
+  color: #6c7a89;
 }
