@@ -1083,11 +1083,12 @@ select:focus {
   gap: 14px;
 }
 
-@media (min-width: 800px) {
-  #priceInputs {
-    grid-template-columns: 1fr 1fr;
-  }
+#priceInputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
 }
+
 
 .table-wrapper table {
   width: 100%;
