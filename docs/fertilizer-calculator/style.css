@@ -1602,3 +1602,25 @@ select:focus {
   color: #93c5fd;
   opacity: 0.8;
 }
+
+.unit-toggle {
+  display: inline-flex;
+  border: 1px solid #2e3a55;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.unit-toggle button {
+  padding: 6px 14px;
+  background: #1b2438;
+  color: #e6e9ef;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.unit-toggle button.active {
+  background: #3b82f6;
+  color: white;
+}
