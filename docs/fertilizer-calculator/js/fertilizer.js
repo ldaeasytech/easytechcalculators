@@ -10,6 +10,16 @@ function getPricePerKg(pricePerBag, bagWeight) {
   return pricePerBag / weight;
 }
 
+
+// =====================================================
+// UNIT SYSTEM
+// =====================================================
+
+let currentUnit = "ha";
+
+const HA_TO_ACRE = 2.47105;
+const ACRE_TO_HA = 1 / HA_TO_ACRE;
+
 // =====================================================
 // CROP NUTRIENT GUIDANCE DATABASE
 // =====================================================
@@ -160,13 +170,24 @@ generatePriceInputs();
 
 document.getElementById("calculateBtn").addEventListener("click", () => {
 
-const targetN = parseFloat(document.getElementById("targetN").value) || 0;
-const targetP = parseFloat(document.getElementById("targetP").value) || 0;
-const targetK = parseFloat(document.getElementById("targetK").value) || 0;
+let targetN = parseFloat(document.getElementById("targetN").value) || 0;
+let targetP = parseFloat(document.getElementById("targetP").value) || 0;
+let targetK = parseFloat(document.getElementById("targetK").value) || 0;
 
-const soilN = parseFloat(document.getElementById("soilN").value) || 0;
-const soilP = parseFloat(document.getElementById("soilP").value) || 0;
-const soilK = parseFloat(document.getElementById("soilK").value) || 0;
+let soilN = parseFloat(document.getElementById("soilN").value) || 0;
+let soilP = parseFloat(document.getElementById("soilP").value) || 0;
+let soilK = parseFloat(document.getElementById("soilK").value) || 0;
+
+// If user selected acre → convert to per hectare internally
+if (currentUnit === "acre") {
+  targetN *= HA_TO_ACRE;
+  targetP *= HA_TO_ACRE;
+  targetK *= HA_TO_ACRE;
+
+  soilN *= HA_TO_ACRE;
+  soilP *= HA_TO_ACRE;
+  soilK *= HA_TO_ACRE;
+}
 
 const Nreq = Math.max(targetN - soilN, 0);
 const Preq = Math.max(targetP - soilP, 0);
@@ -276,14 +297,19 @@ function displayResults(results, economicMode) {
 
    const fertilizersList = r.set.map((code, i) => {
 
-  const kgRequired = r.solution[i];
+  let kgRequired = r.solution[i];
+  
+  const displayFactor = currentUnit === "ha" ? 1 : ACRE_TO_HA;
+  const displayUnit = currentUnit === "ha" ? "kg/ha" : "kg/acre";
+  
+  const kgDisplay = kgRequired * displayFactor;
 
   const bagWeight =
     parseFloat(document.getElementById("bag_" + code).value) || 50;
 
   const tolerance = 1e-6;
 
-const exactBags = kgRequired / bagWeight;
+const exactBags = kgDisplay / bagWeight;
 const roundedBags = Math.round(exactBags);
 
 let wholeBags;
@@ -295,7 +321,7 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
   remainingKg = 0;
 } else {
   wholeBags = Math.floor(exactBags);
-  remainingKg = kgRequired - wholeBags * bagWeight;
+  remainingKg = kgDisplay - wholeBags * bagWeight;
 }
 
   const amountDisplay = `
@@ -303,7 +329,7 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
       ${wholeBags} bags + ${remainingKg.toFixed(1)} kg
     </div>
     <div class="bag-total">
-      (Total: ${kgRequired.toFixed(2)} kg/ha)
+      (Total: ${kgDisplay.toFixed(2)} ${displayUnit})
     </div>
   `;
 
@@ -348,7 +374,7 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
 }).join("");
     
     const totalCostDisplay = economicMode
-      ? `₱ ${r.totalCost.toLocaleString(undefined,{minimumFractionDigits:2})}/ha`
+      ? `₱ ${(r.totalCost * displayFactor).toLocaleString(undefined,{minimumFractionDigits:2})}/${currentUnit}`
       : "—";
 
     const resultBlock = `
@@ -375,7 +401,7 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
 
           <div class="structured-total">
             <div><strong>Total</strong></div>
-            <div><strong>${r.totalMass.toFixed(2)} kg/ha</strong></div>
+            <strong>${(r.totalMass * displayFactor).toFixed(2)} ${displayUnit}</strong>
             <div><strong>${totalCostDisplay}</strong></div>
           </div>
 
@@ -389,3 +415,13 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
 
   block.classList.remove("hidden");
 }
+
+document.getElementById("unitHa").addEventListener("click", () => {
+  currentUnit = "ha";
+  document.getElementById("calculateBtn").click();
+});
+
+document.getElementById("unitAc").addEventListener("click", () => {
+  currentUnit = "acre";
+  document.getElementById("calculateBtn").click();
+});
