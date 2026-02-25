@@ -240,6 +240,21 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
    NPSH MARGIN EVALUATION
 =============================== */
+const npshInputEl = document.getElementById("npshRequired");
+
+let npshRequired = null;
+
+if (npshInputEl) {
+  const rawValue = npshInputEl.value.trim();
+
+  if (rawValue !== "") {
+    const parsed = parseFloat(rawValue);
+    if (!isNaN(parsed) && parsed > 0) {
+      npshRequired = parsed;
+    }
+  }
+}
+      
 const messageDiv =
   document.getElementById("npshMessage");
 
@@ -360,4 +375,5 @@ else {
   });
 
 });
+
 
