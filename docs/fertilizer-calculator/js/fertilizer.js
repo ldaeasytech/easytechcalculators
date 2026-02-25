@@ -15,36 +15,14 @@ function getPricePerKg(pricePerBag, bagWeight) {
 // =====================================================
 
 const cropGuidance = {
-  rice: {
-    label: "Rice",
-    N: [120, 150],
-    P: [30, 40],
-    K: [100, 120]
-  },
-  corn: {
-    label: "Corn",
-    N: [140, 180],
-    P: [30, 50],
-    K: [100, 140]
-  },
-  wheat: {
-    label: "Wheat",
-    N: [90, 130],
-    P: [20, 40],
-    K: [60, 90]
-  },
-  vegetables: {
-    label: "Vegetables (General)",
-    N: [150, 200],
-    P: [50, 100],
-    K: [150, 200]
-  },
-  potato: {
-    label: "Potato",
-    N: [180, 220],
-    P: [40, 80],
-    K: [200, 240]
-  }
+ rice: { label: "Rice", N: [100,120], P: [50,60], K: [50,60] },
+corn: { label: "Maize (Corn)", N: [150,180], P: [60,120], K: [60,135] },
+wheat: { label: "Wheat", N: [110,140], P: [50,80], K: [40,100] },
+sugarcane: { label: "Sugarcane", N: [210,250], P: [130,160], K: [100,130] },
+potato: { label: "Potato", N: [150,250], P: [40,100], K: [200,300] },
+vegetables: { label: "Vegetables", N: [150,200], P: [50,100], K: [150,200] },
+sorghum: { label: "Sorghum", N: [60,80], P: [30,40], K: [30,40] },
+cowpea: { label: "Cowpea (legume)", N: [20,60], P: [30,60], K: [40,100] }
 };
 
 // =====================================================
