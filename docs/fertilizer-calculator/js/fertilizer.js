@@ -278,6 +278,9 @@ function displayResults(results, economicMode) {
   const resultsTitle = document.getElementById("resultsTitle");
   const resultsSubtitle = document.getElementById("resultsSubtitle");
 
+  const displayFactor = currentUnit === "ha" ? 1 : ACRE_TO_HA;
+  const displayUnit = currentUnit === "ha" ? "kg/ha" : "kg/acre";
+
   container.innerHTML = "";
 
   // Dynamic Title
