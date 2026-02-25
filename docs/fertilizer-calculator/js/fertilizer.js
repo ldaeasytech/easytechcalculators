@@ -297,41 +297,26 @@ function displayResults(results, economicMode) {
 
    const fertilizersList = r.set.map((code, i) => {
 
-  let kgRequired = r.solution[i];
-  
-  const displayFactor = currentUnit === "ha" ? 1 : ACRE_TO_HA;
-  const displayUnit = currentUnit === "ha" ? "kg/ha" : "kg/acre";
-  
-  const kgDisplay = kgRequired * displayFactor;
+let kgRequired = r.solution[i];
 
-  const bagWeight =
-    parseFloat(document.getElementById("bag_" + code).value) || 50;
+const displayFactor = currentUnit === "ha" ? 1 : ACRE_TO_HA;
+const displayUnit = currentUnit === "ha" ? "kg/ha" : "kg/acre";
 
-  const tolerance = 1e-6;
+const kgDisplay = kgRequired * displayFactor;
+
+const bagWeight =
+  parseFloat(document.getElementById("bag_" + code).value) || 50;
 
 const exactBags = kgDisplay / bagWeight;
-const roundedBags = Math.round(exactBags);
 
-let wholeBags;
-let remainingKg;
-
-if (Math.abs(exactBags - roundedBags) < tolerance) {
-  // Exact multiple
-  wholeBags = roundedBags;
-  remainingKg = 0;
-} else {
-  wholeBags = Math.floor(exactBags);
-  remainingKg = kgDisplay - wholeBags * bagWeight;
-}
-
-  const amountDisplay = `
-    <div class="bag-main">
-      ${wholeBags} bags + ${remainingKg.toFixed(1)} kg
-    </div>
-    <div class="bag-total">
-      (Total: ${kgDisplay.toFixed(2)} ${displayUnit})
-    </div>
-  `;
+const amountDisplay = `
+  <div class="bag-main">
+    ${exactBags.toFixed(2)} bags
+  </div>
+  <div class="bag-total">
+    (${kgDisplay.toFixed(1)} ${displayUnit})
+  </div>
+`;
 
   let costDisplay = "—";
 
