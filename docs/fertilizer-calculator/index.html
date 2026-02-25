@@ -299,9 +299,16 @@ based on your selected bag weight.
 
     <form class="grid-form" novalidate>
 
+      <div class="unit-toggle">
+        <button id="unitHa" class="active">Hectares</button>
+        <button id="unitAc">Acres</button>
+      </div>
+
       <!-- Soil Analysis -->
       <div class="input-group">
-        <div class="group-title">Soil Test Result (kg/ha available)</div>
+        <div class="group-title" id="soilTitle">
+          Soil Test Result (kg/ha available)
+        </div>
 
         <div class="field">
           <label for="soilN">Available Nitrogen</label>
@@ -322,8 +329,8 @@ based on your selected bag weight.
       <!-- Target Requirement -->
   <div class="input-group" id="targetSection">
 
-  <div class="group-title">
-    Crop Selection & Nutrient Requirement (kg/ha)
+  <div class="group-title" id="cropTitle">
+  Crop Selection & Nutrient Requirement (kg/ha)
   </div>
 
   <!-- Crop Selector -->
@@ -405,7 +412,7 @@ based on your selected bag weight.
           </button>
       
           <div class="per-ha-note">
-            All fertilizer recommendations are calculated per hectare.
+            All fertilizer recommendations are calculated per hectare or per acre.
           </div>
         </div>
       </section>
