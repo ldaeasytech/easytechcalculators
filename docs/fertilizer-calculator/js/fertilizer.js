@@ -325,7 +325,7 @@ function displayResults(results, economicMode) {
   const resultsTitle = document.getElementById("resultsTitle");
   const resultsSubtitle = document.getElementById("resultsSubtitle");
  const areaValue = parseFloat(document.getElementById("areaValue").value) || 1;
-const areaUnit = document.getElementById("areaUnit").value;
+const areaUnit = document.getElementById("areaUnit")?.value || "ha";
 
 // If area = 1 → show per unit
 // If area > 1 → show total for selected area
@@ -336,6 +336,10 @@ const massLabel = areaValue === 1
 const costLabel = areaValue === 1
   ? `/${areaUnit}`
   : ` for ${areaValue} ${areaUnit}`;
+
+  const perUnitLabel = areaValue === 1
+  ? `/${areaUnit}`
+  : ` (total for ${areaValue} ${areaUnit})`;
 
   container.innerHTML = "";
 
@@ -487,3 +491,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
