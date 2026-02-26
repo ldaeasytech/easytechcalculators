@@ -47,6 +47,21 @@ const cropGuidance = {
   }
 };
 
+function detectCurrencyFromLocale() {
+  const locale = navigator.language || "en-US";
+
+  try {
+    const currency = new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: "USD"
+    }).resolvedOptions().currency;
+
+    return currency;
+  } catch {
+    return "USD";
+  }
+}
+
 // =====================================================
 // DISPLAY CROP GUIDANCE
 // =====================================================
@@ -357,7 +372,7 @@ const amountDisplay = `
     const fertilizerCost = kgRequired * pricePerKg;
 
     costDisplay =
-      "₱ " + fertilizerCost.toLocaleString(undefined, {
+      formatCurrency(fertilizerCost).toLocaleString(undefined, {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       });
@@ -384,7 +399,7 @@ const amountDisplay = `
 }).join("");
     
     const totalCostDisplay = economicMode
-      ? `₱ ${r.totalCost.toLocaleString(undefined,{minimumFractionDigits:2})}/ha`
+      ? `${formatCurrency(r.totalCost).toLocaleString(undefined,{minimumFractionDigits:2})}/ha`
       : "—";
 
     const resultBlock = `
@@ -416,7 +431,7 @@ const amountDisplay = `
         <strong>
           ${
         economicMode
-          ? `₱ ${r.totalCost.toLocaleString(undefined,{minimumFractionDigits:2})}${costLabel}`
+          ? `${formatCurrency(r.totalCost)}${costLabel}`
           : "—"
       }
     </strong>
@@ -434,3 +449,16 @@ const amountDisplay = `
   block.classList.remove("hidden");
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+
+  const select = document.getElementById("currencySelect");
+  const detected = detectCurrencyFromLocale();
+
+  // If dropdown contains detected currency → use it
+  if ([...select.options].some(o => o.value === detected)) {
+    select.value = detected;
+  } else {
+    select.value = "USD"; // fallback
+  }
+
+});
