@@ -48,18 +48,28 @@ const cropGuidance = {
 };
 
 function detectCurrencyFromLocale() {
-  const locale = navigator.language || "en-US";
 
-  try {
-    const currency = new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: "USD"
-    }).resolvedOptions().currency;
+  const timeZone =
+    Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    return currency;
-  } catch {
-    return "USD";
-  }
+  if (!timeZone) return "USD";
+
+  const tzMap = {
+    "Asia/Manila": "PHP",
+    "Asia/Jakarta": "IDR",
+    "Asia/Kuala_Lumpur": "MYR",
+    "Asia/Singapore": "SGD",
+    "Asia/Kolkata": "INR",
+    "Europe/Berlin": "EUR",
+    "Europe/Paris": "EUR",
+    "Europe/Rome": "EUR",
+    "America/New_York": "USD",
+    "America/Los_Angeles": "USD",
+    "Australia/Sydney": "AUD",
+    "America/Toronto": "CAD"
+  };
+
+  return tzMap[timeZone] || "USD";
 }
 
 function getCurrentCurrency() {
@@ -520,6 +530,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
