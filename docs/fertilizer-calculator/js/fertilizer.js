@@ -491,7 +491,7 @@ const amountDisplay = `
       ${economicMode ? formatCurrency(r.totalCost) : "—"}
     </strong>
   </div>
-</div>
+</div>;
 
     container.innerHTML += resultBlock;
   });
@@ -521,6 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
