@@ -1,5 +1,32 @@
-export const units = {
+export const quantityLabels = {
+  mass: "Mass",
+  length: "Length",
+  time: "Time",
+  temperature: "Temperature",
+  area: "Area",
 
+  velocity: "Velocity",
+  force: "Force",
+  pressure: "Pressure",
+  energy: "Energy",
+  power: "Power",
+  momentum: "Momentum",
+  torque: "Torque",
+  density: "Density",
+
+  viscosityDynamic: "Dynamic Viscosity (μ)",
+  viscosityKinematic: "Kinematic Viscosity (ν)",
+
+  flowRateVol: "Volumetric Flow Rate (Q)",
+  flowRateMass: "Mass Flow Rate (ṁ)",
+
+  thermalConductivity: "Thermal Conductivity (k)",
+  heatTransferCoeff: "Heat Transfer Coefficient (h)",
+  specificHeat: "Specific Heat Capacity (cₚ)"
+};
+
+
+export const units = {
 /* =========================================================
    BASIC UNITS
 ========================================================= */
