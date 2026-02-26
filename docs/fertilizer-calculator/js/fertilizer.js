@@ -231,8 +231,37 @@ function generatePriceInputs() {
   });
 }
 
-generatePriceInputs();
-updateCurrencySymbols();
+document.addEventListener("DOMContentLoaded", () => {
+
+  const select = document.getElementById("currencySelect");
+
+  if (select) {
+
+    const saved = localStorage.getItem("preferredCurrency");
+
+    if (saved) {
+      select.value = saved;
+    } else {
+      const detected = detectCurrencyFromLocale();
+
+      if ([...select.options].some(o => o.value === detected)) {
+        select.value = detected;
+      } else {
+        select.value = "USD";
+      }
+    }
+
+    select.addEventListener("change", () => {
+      updateCurrencySymbols();
+      localStorage.setItem("preferredCurrency", select.value);
+    });
+  }
+
+  // 🔥 Now generate price inputs AFTER currency is set
+  generatePriceInputs();
+  updateCurrencySymbols();
+
+});
 
 // =====================================================
 // CALCULATE BUTTON
@@ -492,30 +521,8 @@ const amountDisplay = `
   block.classList.remove("hidden");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
 
-  const select = document.getElementById("currencySelect");
 
-  // STOP if dropdown not present
-  if (!select) return;
-
-  const saved = localStorage.getItem("preferredCurrency");
-  if (saved) {
-    select.value = saved;
-    return;
-  }
-
-  const detected = detectCurrencyFromLocale();
-
-  if ([...select.options].some(o => o.value === detected)) {
-    select.value = detected;
-  } else {
-    select.value = "USD";
-  }
-
-  updateCurrencySymbols();
-
-});
 
 
 
