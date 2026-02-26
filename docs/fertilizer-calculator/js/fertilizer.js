@@ -478,23 +478,20 @@ const amountDisplay = `
           ${fertilizersList}
 
           <div class="structured-total">
-      <div><strong>Total</strong></div>
-      <div><strong>${r.totalMass.toFixed(2)} ${massLabel}</strong></div>
-      <div>
-        <strong>
-          ${
-        economicMode
-          ? `${formatCurrency(r.totalCost)}${costLabel}`
-          : "—"
-      }
+  <div>
+    <strong>Total (${areaValue} ${areaUnit})</strong>
+  </div>
+
+  <div>
+    <strong>${r.totalMass.toFixed(2)} kg</strong>
+  </div>
+
+  <div>
+    <strong>
+      ${economicMode ? formatCurrency(r.totalCost) : "—"}
     </strong>
   </div>
 </div>
-
-        </div>
-
-      </div>
-    `;
 
     container.innerHTML += resultBlock;
   });
@@ -524,6 +521,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
