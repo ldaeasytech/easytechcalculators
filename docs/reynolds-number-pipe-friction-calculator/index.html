@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <title>
-Reynolds Number & Friction Factor Calculator (Darcy & Fanning) | Moody Diagram & Pressure Drop
+Reynolds Number & Friction Factor Calculator | Darcy & Fanning Friction Factor, Moody Diagram & Pipe Pressure Drop
 </title>
 
 <meta name="description"
@@ -89,6 +89,23 @@ content="Reynolds number calculator, Darcy friction factor calculator, Fanning f
         "text": "Reynolds number is the ratio of inertial forces to viscous forces in a fluid and determines whether flow is laminar, transitional, or turbulent."
       }
     },
+
+  {
+  "@type": "Question",
+  "name": "What is the difference between Darcy and Fanning friction factor?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The Darcy friction factor is four times the Fanning friction factor. The Moody diagram uses the Darcy formulation."
+  }
+},
+{
+  "@type": "Question",
+  "name": "How does pipe roughness affect friction factor?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In turbulent flow, increasing pipe roughness increases friction factor and pressure drop. At high Reynolds numbers, friction factor becomes primarily dependent on relative roughness."
+  }
+},
 
     {
       "@type": "Question",
@@ -207,9 +224,10 @@ crossorigin="anonymous"></script>
         >
       </picture>
       <div class="brand-text">
-        <h1>
-          Reynolds Number & Friction Factor Calculator
-        </h1>
+    
+          <h1>
+          Reynolds Number Calculator with Darcy & Fanning Friction Factor and Moody Diagram
+          </h1>
         
         <div class="capability-line">
         Darcy & Fanning Friction Factors · Pipe Pressure Drop · Moody Diagram · SI & English Units
@@ -272,6 +290,28 @@ crossorigin="anonymous"></script>
 Calculate Reynolds number, Darcy and Fanning friction factors,
 pipe pressure drop, and visualize results on a Moody diagram.
 Supports SI and English units.
+</p>
+
+
+<h2>Easy-to-Use Reynolds Number & Pipe Friction Calculator</h2>
+
+<p>
+This calculator determines Reynolds number, Darcy friction factor,
+Fanning friction factor, and pipe pressure drop using the
+Darcy–Weisbach equation.
+</p>
+
+<ul>
+<li>Automatic pipe roughness selection by material</li>
+<li>Manual roughness override capability</li>
+<li>Laminar, transitional, and turbulent regime detection</li>
+<li>Interactive Moody diagram with live operating point</li>
+<li>SI and English unit support</li>
+</ul>
+
+<p>
+Ideal for fluid mechanics students, engineers,
+and pipeline design analysis.
 </p>
 
 </section>
@@ -470,6 +510,25 @@ Moody diagrams use the Darcy formulation.
 </section>
 
 </main>
+
+
+<section class="container-learning">
+
+<h2>Common Reynolds Number & Friction Factor Questions</h2>
+
+<ul>
+<li>How do you calculate Reynolds number?</li>
+<li>What is the formula for Darcy friction factor?</li>
+<li>What is the difference between Darcy and Fanning friction factor?</li>
+<li>How do you read a Moody diagram?</li>
+<li>How does pipe roughness affect pressure drop?</li>
+</ul>
+
+<p><strong>Re = (ρ V D) / μ</strong></p>
+<p><strong>f<sub>D</sub> = 64 / Re (laminar flow)</strong></p>
+
+</section>
+  
 
 <!-- ================= RELATED CALCULATORS ================= -->
 
@@ -696,6 +755,8 @@ This explains why smooth pipes are preferred in high-flow systems.
 
 <h2 id="moody-diagram-explained">10. The Moody Diagram</h2>
 
+
+
 <p>
 The <strong>Moody diagram</strong> is a graphical representation of:
 </p>
@@ -719,6 +780,12 @@ Key patterns observed:
 
 <p>
 The Moody diagram visually connects flow regime, material roughness, and pressure loss behavior.
+</p>
+
+<p>
+This calculator plots the current operating point directly
+on the Moody chart, helping visualize whether the flow
+is laminar, transitional, or turbulent.
 </p>
 
 </main>
