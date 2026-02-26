@@ -2,6 +2,7 @@ import { units } from "./unitsData.js";
 import { formulas } from "./formulas.js";
 import { convert } from "./converterEngine.js";
 import { formatDimension } from "./dimensionEngine.js";
+import { quantityLabels } from "./unitsData.js";
 
 const quantitySelect = document.getElementById("quantity");
 const fromSelect = document.getElementById("fromUnit");
@@ -27,7 +28,7 @@ function populateQuantities() {
   Object.keys(units).forEach(q => {
     const opt = document.createElement("option");
     opt.value = q;
-    opt.textContent = q;
+    opt.textContent = quantityLabels[q] || q;
     quantitySelect.appendChild(opt);
   });
 }
