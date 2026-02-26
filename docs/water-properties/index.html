@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Water & Steam Properties Calculator (TP, Ph, Ps, Tx, Px) | Thermodynamic & Transport Properties</title>
+<title>Water & Steam Properties Calculator | Enthalpy, Entropy, Density & Steam Tables (TP, Ph, Ps, Tx, Px)</title>
 
 <meta name="description"
 content="Advanced Water & Steam Properties Calculator supporting TP, Ph, Ps, Tx, and Px input pairs. Compute density, specific gravity, enthalpy, entropy, Cp, Cv, viscosity, and thermal conductivity for subcooled, saturated, and superheated states." />
@@ -74,6 +74,31 @@ content="water properties calculator, steam properties calculator, thermodynamic
         "text": "Water exists in subcooled (compressed liquid), saturated, and superheated vapor states depending on temperature and pressure conditions."
       }
     },
+
+  {
+  "@type": "Question",
+  "name": "What is the difference between saturated and superheated steam?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Saturated steam exists at the boiling temperature for a given pressure, while superheated steam has a temperature above the saturation temperature at that pressure."
+  }
+},
+{
+  "@type": "Question",
+  "name": "How do you calculate steam enthalpy?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Steam enthalpy depends on its thermodynamic state. It can be determined from temperature and pressure, pressure and entropy, or pressure and quality in saturated conditions."
+  }
+},
+{
+  "@type": "Question",
+  "name": "What is steam quality?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Steam quality (x) is the mass fraction of vapor in a saturated mixture, where x = 0 is saturated liquid and x = 1 is saturated vapor."
+  }
+},
     {
       "@type": "Question",
       "name": "Why are two inputs required for single-phase water?",
@@ -160,7 +185,7 @@ content="water properties calculator, steam properties calculator, thermodynamic
           >
         </picture>
       <div class="brand-text">
-        <h1>Water &amp; Steam Properties Calculator – TP, Ph, Ps, Tx, Px</h1>
+        <h1>Water & Steam Properties Calculator – Steam Tables (TP, Ph, Ps, Tx, Px)</h1>
 
         <div class="capability-line">
           Multiple Input Pairs · Full Thermodynamic &amp; Transport Properties
@@ -232,6 +257,29 @@ content="water properties calculator, steam properties calculator, thermodynamic
       entropy, specific heat (Cp, Cv), dynamic viscosity,
       and thermal conductivity for subcooled (compressed liquid),
       saturated, and superheated steam regions.
+    </p>
+
+    <h2>Online Steam Tables & Water Property Calculator</h2>
+
+    <p>
+    This calculator functions as an online steam tables tool,
+    allowing rapid lookup of thermodynamic and transport
+    properties of water and steam across subcooled,
+    saturated, and superheated regions.
+    </p>
+    
+    <ul>
+    <li>Temperature–Pressure (T–P)</li>
+    <li>Pressure–Enthalpy (P–h)</li>
+    <li>Pressure–Entropy (P–s)</li>
+    <li>Temperature–Quality (T–x)</li>
+    <li>Pressure–Quality (P–x)</li>
+    </ul>
+    
+    <p>
+    Outputs include density, specific volume, enthalpy,
+    entropy, Cp, Cv, viscosity, thermal conductivity,
+    and phase identification.
     </p>
 
   </div>
@@ -361,7 +409,9 @@ content="water properties calculator, steam properties calculator, thermodynamic
         This calculator functions as a water and steam density calculator,
         specific gravity calculator, enthalpy calculator, entropy calculator,
         viscosity calculator, and thermal conductivity calculator across
-        subcooled, saturated, and superheated regions.
+        subcooled, saturated, and superheated regions. It automatically determines the thermodynamic phase:
+        compressed liquid (subcooled), saturated mixture,
+        or superheated vapor.
       </p>
     </section>
 
@@ -438,7 +488,28 @@ content="water properties calculator, steam properties calculator, thermodynamic
     In saturated conditions, only one property is independent because
     temperature and pressure are interdependent.
   </p>
+  
+  <h2>What Are Steam Tables?</h2>
 
+  <p>
+  Steam tables list thermodynamic properties of water and steam
+  at different temperatures and pressures. They are widely used in:
+  </p>
+  
+  <ul>
+  <li>Power plant cycle analysis</li>
+  <li>Rankine cycle calculations</li>
+  <li>Boiler and turbine design</li>
+  <li>Heat exchanger design</li>
+  <li>Thermodynamics education</li>
+  </ul>
+  
+  <p>
+  This calculator replaces manual steam table lookup by
+  providing instant interpolation across single-phase
+  and saturated regions.
+  </p>
+    
   <a href="water-steam-basics.html" class="learn-more-button">
     Read the Full Water & Steam Basics Guide →
   </a>
