@@ -174,12 +174,6 @@ populateCropDropdown();
 function formatCurrency(amount) {
 
   const select = document.getElementById("currencySelect");
-
-  if (select) {
-  select.addEventListener("change", () => {
-    updateCurrencySymbols();
-  });
-  
   const currencyCode = select ? select.value : "USD";
 
   return new Intl.NumberFormat(undefined, {
@@ -425,10 +419,7 @@ const amountDisplay = `
     const fertilizerCost = kgRequired * pricePerKg;
 
     costDisplay =
-      formatCurrency(fertilizerCost).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      formatCurrency(fertilizerCost);
   }
 
   return `
@@ -452,7 +443,7 @@ const amountDisplay = `
 }).join("");
     
     const totalCostDisplay = economicMode
-      ? `${formatCurrency(r.totalCost).toLocaleString(undefined,{minimumFractionDigits:2})}/ha`
+      ? `${formatCurrency(r.totalCost)}/ha`
       : "—";
 
     const resultBlock = `
@@ -521,6 +512,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
 
