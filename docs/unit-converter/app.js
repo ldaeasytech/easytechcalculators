@@ -82,7 +82,7 @@ document.getElementById("convertBtn").addEventListener("click", () => {
     if (formulas[quantity]) {
       formulaTitle.textContent = formulas[quantity].title || "Governing Engineering Relation";
       formulaDisplay.textContent = formulas[quantity].formula;
-      notesDisplay.textContent = formulas[quantity].note;
+      notesDisplay.innerHTML = formulas[quantity].note;
     } else {
       formulaTitle.textContent = "";
       formulaDisplay.textContent = "";
