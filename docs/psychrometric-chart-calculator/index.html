@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Psychrometric Chart Calculator (RH, WB, DP, W, h Modes) | HVAC Air Properties</title>
+<title>Psychrometric Chart Calculator (RH, WB, DP, W, h Modes) | HVAC Air Properties (Wet Bulb, Dew Point, Humidity Ratio & Enthalpy)</title>
 
 <meta name="description"
 content="Advanced Psychrometric Chart Calculator supporting Dry-bulb + RH, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy input pairs. Compute humidity ratio, enthalpy, wet-bulb, dew point, specific volume, vapor pressure and degree of saturation." />
@@ -67,6 +67,31 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
     "text": "The calculator supports Dry-bulb with Relative Humidity, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy with RH."
    }
   },
+
+  {
+  "@type": "Question",
+  "name": "How do you calculate wet bulb temperature?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Wet bulb temperature is calculated from dry bulb temperature and humidity using psychrometric relations based on energy balance between sensible and latent heat."
+  }
+},
+{
+  "@type": "Question",
+  "name": "What is humidity ratio?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Humidity ratio is the mass of water vapor per mass of dry air, typically expressed as kg water per kg dry air."
+  }
+},
+{
+  "@type": "Question",
+  "name": "Why are two independent properties required?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Moist air is a thermodynamic mixture, and two independent properties are required to fully define its state according to thermodynamic principles."
+  }
+},
   {
    "@type": "Question",
    "name": "Why are two independent properties required?",
@@ -142,7 +167,7 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
       </picture>
 
       <div class="brand-text">
-        <h1>Psychrometric Chart Calculator – Complete HVAC Air Properties</h1>
+        <h1>Psychrometric Chart Calculator – Complete Moist Air Properties & HVAC Chart</h1>
         <div class="capability-line">
           Multiple Input Pairs · ASHRAE-Based Moist Air Properties
         </div>
@@ -210,6 +235,31 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
       enthalpy, specific volume, vapor pressure, and degree of saturation
       for HVAC engineering applications.
     </p>
+
+    <h2>Complete Psychrometric Calculator for HVAC Engineering</h2>
+
+<p>
+This online psychrometric calculator computes all moist air properties
+from any two independent inputs.
+</p>
+
+<ul>
+<li>Dry-bulb + Relative Humidity</li>
+<li>Dry-bulb + Wet-bulb</li>
+<li>Dry-bulb + Dew Point</li>
+<li>Dry-bulb + Humidity Ratio</li>
+<li>Enthalpy + Relative Humidity</li>
+</ul>
+
+<p>
+Outputs include humidity ratio, dew point, wet-bulb temperature,
+enthalpy, specific volume, vapor pressure, and degree of saturation.
+</p>
+
+<p>
+The interactive psychrometric chart displays the current air state
+directly on the saturation curve.
+</p>
 
   </div>
 </section>
@@ -374,8 +424,8 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
   <!-- ================= PSYCHROMETRIC CHART ================= -->
 
   <section class="card moody-section">
-    <h2>Psychrometric Chart</h2>
-
+    <h2>Interactive Psychrometric Chart (ASHRAE Based)</h2>
+    
     <canvas id="psychChart" width="900" height="500"
       style="width:100%; max-width:100%; background:#0f1c2e; border-radius:12px;">
     </canvas>
@@ -388,6 +438,23 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
   </section>
 
 </main>
+
+<section class="container-learning">
+
+<h2>Common Psychrometric Questions</h2>
+
+<ul>
+<li>How do you calculate wet bulb temperature?</li>
+<li>How do you calculate dew point from temperature and humidity?</li>
+<li>What is humidity ratio formula?</li>
+<li>What is enthalpy of moist air?</li>
+<li>How do you read a psychrometric chart?</li>
+</ul>
+
+<p><strong>Humidity Ratio (w) = 0.622 Pv / (P - Pv)</strong></p>
+<p><strong>Enthalpy ≈ 1.005 T + w(2500 + 1.88 T)</strong></p>
+
+</section>
 
   <!-- ================= Learning Section ================= -->
 <main class="container-learning">
