@@ -72,21 +72,24 @@ function detectCurrencyFromLocale() {
   return tzMap[timeZone] || "USD";
 }
 
-function getCurrentCurrency() {
-  const select = document.getElementById("currencySelect");
-  return select ? select.value : "USD";
-}
+const CURRENCY = detectCurrencyFromLocale();
 
 function getCurrencySymbol() {
-  const currency = getCurrentCurrency();
-
   const formatter = new Intl.NumberFormat(undefined, {
     style: "currency",
-    currency
+    currency: CURRENCY
   });
 
   return formatter.formatToParts(1)
     .find(part => part.type === "currency").value;
+}
+
+function formatCurrency(amount) {
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: CURRENCY,
+    minimumFractionDigits: 2
+  }).format(amount);
 }
 
 function updateCurrencySymbols() {
@@ -95,20 +98,6 @@ function updateCurrencySymbols() {
   document.querySelectorAll(".currency-symbol").forEach(el => {
     el.textContent = symbol;
   });
-}
-
-
-function formatCurrency(amount) {
-
-  const select = document.getElementById("currencySelect");
-  const currencyCode = select ? select.value : "USD";
-
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: currencyCode,
-    minimumFractionDigits: 2
-  }).format(amount);
-
 }
 
 // =====================================================
@@ -533,6 +522,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
