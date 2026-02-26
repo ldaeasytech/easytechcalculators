@@ -271,6 +271,9 @@ document.addEventListener("DOMContentLoaded", () => {
   generatePriceInputs();
   updateCurrencySymbols();
 
+console.log("Timezone:", Intl.DateTimeFormat().resolvedOptions().timeZone);
+console.log("Detected currency:", detectCurrencyFromLocale());
+  
 });
 
 // =====================================================
@@ -530,6 +533,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
