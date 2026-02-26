@@ -245,6 +245,19 @@ Results are displayed in practical farm units (bags per hectare), making it suit
 
     <form class="grid-form" novalidate>
 
+      <div class="field">
+        <label>Area</label>
+        <input id="areaValue" type="number" step="any" value="1" min="0.01">
+      </div>
+      
+      <div class="field">
+        <label>Unit</label>
+        <select id="areaUnit">
+          <option value="ha" selected>Hectares (ha)</option>
+          <option value="acre">Acres</option>
+        </select>
+      </div>
+      
       <!-- Soil Analysis -->
       <div class="input-group">
         <div class="group-title">Soil Test Result (kg/ha available)</div>
@@ -663,3 +676,4 @@ document.getElementById("year").textContent = new Date().getFullYear();
 
 </body>
 </html>
+
