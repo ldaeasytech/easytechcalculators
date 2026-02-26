@@ -366,16 +366,13 @@ const areaUnit = document.getElementById("areaUnit")?.value || "ha";
 // If area = 1 → show per unit
 // If area > 1 → show total for selected area
 const massLabel = areaValue === 1
-  ? `kg/${areaUnit}`
-  : `kg (total for ${areaValue} ${areaUnit})`;
+  ? `kg/${areaUnit}`;
 
 const costLabel = areaValue === 1
-  ? `/${areaUnit}`
-  : ` for ${areaValue} ${areaUnit}`;
+  ? `/${areaUnit}`;
 
   const perUnitLabel = areaValue === 1
-  ? `/${areaUnit}`
-  : ` (total for ${areaValue} ${areaUnit})`;
+  ? `/${areaUnit}`;
 
   container.innerHTML = "";
 
@@ -527,5 +524,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
 
