@@ -143,6 +143,20 @@ function populateCropDropdown() {
 
 populateCropDropdown();
 
+
+function formatCurrency(amount) {
+
+  const select = document.getElementById("currencySelect");
+  const currencyCode = select ? select.value : "USD";
+
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: currencyCode,
+    minimumFractionDigits: 2
+  }).format(amount);
+
+}
+
 // =====================================================
 // GENERATE PRICE INPUTS
 // =====================================================
@@ -299,6 +313,8 @@ const areaInHa = areaUnit === "acre"
 });
 
 
+
+
 // =====================================================
 // DISPLAY RESULTS
 // =====================================================
@@ -452,13 +468,22 @@ const amountDisplay = `
 document.addEventListener("DOMContentLoaded", () => {
 
   const select = document.getElementById("currencySelect");
+
+  // STOP if dropdown not present
+  if (!select) return;
+
+  const saved = localStorage.getItem("preferredCurrency");
+  if (saved) {
+    select.value = saved;
+    return;
+  }
+
   const detected = detectCurrencyFromLocale();
 
-  // If dropdown contains detected currency → use it
   if ([...select.options].some(o => o.value === detected)) {
     select.value = detected;
   } else {
-    select.value = "USD"; // fallback
+    select.value = "USD";
   }
 
 });
