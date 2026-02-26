@@ -7,7 +7,7 @@
   <title>Pump Power Calculator (kW & HP) | Hydraulic Power, Head Loss & Efficiency</title>
 
 <meta name="description"
-content="Advanced Pump Power Calculator to compute hydraulic power, shaft power, and motor power using flow rate, head, efficiency, and pipe friction losses. Supports SI and English units for accurate pump sizing and energy analysis." />
+content="Advanced Pump Power Calculator to compute hydraulic power, shaft power, and motor power using flow rate, total dynamic head (TDH), efficiency, and pipe friction losses. Includes pump types selectiion and efficiency guidance. Supports SI and English units for accurate pump sizing and energy analysis." />
 
 <meta name="keywords"
 content="pump power calculator, hydraulic power calculator, shaft power calculator, motor power calculator, pump efficiency calculation, pump energy consumption, Darcy-Weisbach pump power, pump sizing calculator" />
@@ -92,6 +92,23 @@ content="pump power calculator, hydraulic power calculator, shaft power calculat
         "text": "Hydraulic power is the energy delivered to the fluid, while shaft power is the mechanical power required at the pump shaft, which is higher due to efficiency losses."
       }
     },
+
+  {
+  "@type": "Question",
+  "name": "What is total dynamic head (TDH)?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Total Dynamic Head (TDH) is the total equivalent head a pump must overcome, including static head, pressure head, velocity head, and friction losses."
+  }
+},
+{
+  "@type": "Question",
+  "name": "How do you size a motor for a pump?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Motor size is selected based on calculated shaft power divided by efficiency, including a safety margin to account for service factor and operating conditions."
+  }
+},
 
     {
       "@type": "Question",
@@ -242,6 +259,29 @@ This <strong>Pump Power Calculator</strong> computes hydraulic power, shaft powe
 Use this tool to evaluate energy consumption, optimize pump efficiency, and ensure proper motor selection in piping systems.
 </p>
 
+
+<h2>Easy-to-Use Pump Power & Motor Sizing Calculator</h2>
+
+<p>
+This pump power calculator simplifies motor selection and energy analysis.
+Users can select pump type, view typical efficiency ranges,
+and input projected efficiency for accurate shaft and motor power estimation.
+</p>
+
+<ul>
+<li>Automatic total dynamic head (TDH) calculation</li>
+<li>Pipe and fitting friction loss integration</li>
+<li>Commercial steel pipe schedule lookup</li>
+<li>Pump type selection with efficiency guidance</li>
+<li>Theoretical vs actual power comparison</li>
+<li>Results in kW and horsepower (HP)</li>
+</ul>
+
+<p>
+The calculator helps engineers size pumps and motors correctly
+while minimizing energy consumption.
+</p>
+  
 </section>
 
 <!-- ================= MAIN GRID ================= -->
@@ -569,6 +609,29 @@ Use this tool to evaluate energy consumption, optimize pump efficiency, and ensu
 
 </main>
 
+
+<section class="container-learning">
+
+<h2>Common Pump Power Calculation Searches</h2>
+
+<ul>
+<li>How to calculate pump power?</li>
+<li>How to size a motor for a pump?</li>
+<li>Hydraulic power vs shaft power difference?</li>
+<li>Total dynamic head calculator</li>
+<li>Pump efficiency calculation example</li>
+</ul>
+
+<p>
+This tool calculates:
+</p>
+
+<p><strong>Hydraulic Power = ρ g Q H</strong></p>
+<p><strong>Shaft Power = Hydraulic Power / Efficiency</strong></p>
+
+</section>
+  
+
 <section class="related-calculators">
 
   <h2>Related Pump Calculators</h2>
@@ -837,6 +900,24 @@ over the lifetime of the system.
 <li>Divide by pump efficiency to obtain actual shaft power.</li>
 </ul>
 
+
+<h2>How to Select the Correct Motor Power for a Pump</h2>
+
+<p>
+Motor power must exceed the calculated shaft power to account for:
+</p>
+
+<ul>
+<li>Service factor</li>
+<li>Starting torque requirements</li>
+<li>Voltage variation</li>
+<li>Mechanical losses</li>
+</ul>
+
+<p>
+A common engineering practice is to select a motor
+10–15% higher than the calculated shaft power.
+</p>  
    
 </main>
   
