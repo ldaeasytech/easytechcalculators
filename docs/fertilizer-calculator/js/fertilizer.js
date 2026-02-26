@@ -62,6 +62,33 @@ function detectCurrencyFromLocale() {
   }
 }
 
+function getCurrentCurrency() {
+  const select = document.getElementById("currencySelect");
+  return select ? select.value : "USD";
+}
+
+function getCurrencySymbol() {
+  const currency = getCurrentCurrency();
+
+  const formatter = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency
+  });
+
+  return formatter.formatToParts(1)
+    .find(part => part.type === "currency").value;
+}
+
+function updateCurrencySymbols() {
+  const symbol = getCurrencySymbol();
+
+  document.querySelectorAll(".currency-symbol").forEach(el => {
+    el.textContent = symbol;
+  });
+}
+
+updateCurrencySymbols();
+
 // =====================================================
 // DISPLAY CROP GUIDANCE
 // =====================================================
@@ -147,6 +174,12 @@ populateCropDropdown();
 function formatCurrency(amount) {
 
   const select = document.getElementById("currencySelect");
+
+  if (select) {
+  select.addEventListener("change", () => {
+    updateCurrencySymbols();
+  });
+  
   const currencyCode = select ? select.value : "USD";
 
   return new Intl.NumberFormat(undefined, {
@@ -156,6 +189,7 @@ function formatCurrency(amount) {
   }).format(amount);
 
 }
+
 
 // =====================================================
 // GENERATE PRICE INPUTS
@@ -178,7 +212,9 @@ function generatePriceInputs() {
       </div>
 
       <div class="price-row">
-        <label>Price per bag (₱)</label>
+        <label>
+          Price per bag (<span class="currency-symbol"></span>)
+        </label>
         <input 
           type="number"
           id="price_${code}"
@@ -491,4 +527,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 });
+
 
