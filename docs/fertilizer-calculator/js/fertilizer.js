@@ -194,7 +194,22 @@ const Nreq = Math.max(targetN - soilN, 0);
 const Preq = Math.max(targetP - soilP, 0);
 const Kreq = Math.max(targetK - soilK, 0);
 
-  const required = [Nreq, Preq, Kreq];
+// ================================
+// AREA CONVERSION
+// ================================
+const areaValue = parseFloat(document.getElementById("areaValue").value) || 1;
+const areaUnit = document.getElementById("areaUnit").value;
+
+// 1 acre = 0.404686 ha
+const areaInHa = areaUnit === "acre"
+  ? areaValue * 0.404686
+  : areaValue;
+
+  const required = [
+  Nreq * areaInHa,
+  Preq * areaInHa,
+  Kreq * areaInHa
+];
   const results = [];
 
   // Check if ANY price is entered
@@ -278,6 +293,18 @@ function displayResults(results, economicMode) {
   const container = document.getElementById("resultsContainer");
   const resultsTitle = document.getElementById("resultsTitle");
   const resultsSubtitle = document.getElementById("resultsSubtitle");
+ const areaValue = parseFloat(document.getElementById("areaValue").value) || 1;
+const areaUnit = document.getElementById("areaUnit").value;
+
+// If area = 1 → show per unit
+// If area > 1 → show total for selected area
+const massLabel = areaValue === 1
+  ? `kg/${areaUnit}`
+  : `kg (total for ${areaValue} ${areaUnit})`;
+
+const costLabel = areaValue === 1
+  ? `/${areaUnit}`
+  : ` for ${areaValue} ${areaUnit}`;
 
   container.innerHTML = "";
 
@@ -306,28 +333,15 @@ function displayResults(results, economicMode) {
   const tolerance = 1e-6;
 
 const exactBags = kgRequired / bagWeight;
-const roundedBags = Math.round(exactBags);
 
-let wholeBags;
-let remainingKg;
-
-if (Math.abs(exactBags - roundedBags) < tolerance) {
-  // Exact multiple
-  wholeBags = roundedBags;
-  remainingKg = 0;
-} else {
-  wholeBags = Math.floor(exactBags);
-  remainingKg = kgRequired - wholeBags * bagWeight;
-}
-
-  const amountDisplay = `
-    <div class="bag-main">
-      ${wholeBags} bags + ${remainingKg.toFixed(1)} kg
-    </div>
-    <div class="bag-total">
-      (Total: ${kgRequired.toFixed(2)} kg/ha)
-    </div>
-  `;
+const amountDisplay = `
+  <div class="bag-main">
+    ${exactBags.toFixed(2)} bags${perUnitLabel}
+  </div>
+  <div class="bag-total">
+    (${kgRequired.toFixed(0)} kg${perUnitLabel})
+  </div>
+`;
 
   let costDisplay = "—";
 
@@ -396,10 +410,18 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
           ${fertilizersList}
 
           <div class="structured-total">
-            <div><strong>Total</strong></div>
-            <div><strong>${r.totalMass.toFixed(2)} kg/ha</strong></div>
-            <div><strong>${totalCostDisplay}</strong></div>
-          </div>
+      <div><strong>Total</strong></div>
+      <div><strong>${r.totalMass.toFixed(2)} ${massLabel}</strong></div>
+      <div>
+        <strong>
+          ${
+        economicMode
+          ? `₱ ${r.totalCost.toLocaleString(undefined,{minimumFractionDigits:2})}${costLabel}`
+          : "—"
+      }
+    </strong>
+  </div>
+</div>
 
         </div>
 
@@ -411,3 +433,4 @@ if (Math.abs(exactBags - roundedBags) < tolerance) {
 
   block.classList.remove("hidden");
 }
+
