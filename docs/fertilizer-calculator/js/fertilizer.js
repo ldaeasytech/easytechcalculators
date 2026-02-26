@@ -87,7 +87,19 @@ function updateCurrencySymbols() {
   });
 }
 
-updateCurrencySymbols();
+
+function formatCurrency(amount) {
+
+  const select = document.getElementById("currencySelect");
+  const currencyCode = select ? select.value : "USD";
+
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: currencyCode,
+    minimumFractionDigits: 2
+  }).format(amount);
+
+}
 
 // =====================================================
 // DISPLAY CROP GUIDANCE
@@ -171,20 +183,6 @@ function populateCropDropdown() {
 populateCropDropdown();
 
 
-function formatCurrency(amount) {
-
-  const select = document.getElementById("currencySelect");
-  const currencyCode = select ? select.value : "USD";
-
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: currencyCode,
-    minimumFractionDigits: 2
-  }).format(amount);
-
-}
-
-
 // =====================================================
 // GENERATE PRICE INPUTS
 // =====================================================
@@ -234,6 +232,7 @@ function generatePriceInputs() {
 }
 
 generatePriceInputs();
+updateCurrencySymbols();
 
 // =====================================================
 // CALCULATE BUTTON
@@ -514,7 +513,10 @@ document.addEventListener("DOMContentLoaded", () => {
     select.value = "USD";
   }
 
+  updateCurrencySymbols();
+
 });
+
 
 
 
