@@ -495,158 +495,279 @@ content="water properties calculator, steam properties calculator, thermodynamic
 
   <h2>Worked Examples – Water & Steam Properties Calculations</h2>
   <p>
-    Below are solved engineering examples using the Water & Steam Properties Calculator.
-    These examples demonstrate how to determine phase, thermodynamic properties,
-    heat transfer, and turbine power using common input pairs such as T-P, P-s, and T-x.
+    The following solved problems demonstrate how to use the Water & Steam
+    Properties Calculator for phase determination, thermodynamic evaluation,
+    heat transfer, and turbine performance analysis.
   </p>
 
-  <h3>1. Water Phase Determination (T–P Input Pair)</h3>
-  <p><strong>Problem:</strong> Determine the phase of water at 400 K and 1 MPa.</p>
+  <!-- ===================================================== -->
+  <!-- 1. WATER PHASE DETERMINATION -->
+  <!-- ===================================================== -->
 
-  <p><strong>Solution:</strong></p>
-  <p>
-    First determine the saturation temperature at 1 MPa using the <strong>P-x</strong> mode
-    (x = 0 or x = 1). The saturation temperature is:
-  </p>
+  <article class="example-block">
+    <h3>1. Water Phase Determination (T–P Input Pair)</h3>
 
-  <p><strong>Tsat = 452.99 K</strong></p>
+    <h4>Problem</h4>
+    <p>Determine the phase of water at 400 K and 1 MPa.</p>
 
-  <ul>
-    <li>If Tsat &gt; T → Compressed (Subcooled) Liquid</li>
-    <li>If Tsat = T → Saturated State</li>
-    <li>If Tsat &lt; T → Superheated Vapor</li>
-  </ul>
+    <h4>Given</h4>
+    <ul>
+      <li>Temperature, T = 400 K</li>
+      <li>Pressure, P = 1 MPa</li>
+    </ul>
 
-  <p>
-    Since 400 K &lt; 452.99 K, the state is:
-    <strong>Compressed (Subcooled) Liquid</strong>.
-  </p>
+    <h4>Method</h4>
+    <p>
+      Compare the given temperature with the saturation temperature at 1 MPa.
+      Use the P–x input pair (x = 0 or x = 1) to determine the saturation temperature.
+    </p>
 
-  <h3>2. Superheated Steam Properties (Power Generation Example)</h3>
-  <p>
-    <strong>Problem:</strong> Water is heated to 450 °C and 50 bar.
-    Determine its thermodynamic properties.
-  </p>
+    <h4>Calculation</h4>
+    <p>From P–x at 1 MPa:</p>
+    <p><strong>Tsat = 452.99 K</strong></p>
+    <p>Since 400 K &lt; 452.99 K:</p>
 
-  <p>
-    Convert units first using our
-    <a href="https://easytechcalculators.com/unit-converter/" target="_blank">
-      Engineering Unit Converter
-    </a>.
-  </p>
+    <h4>Result</h4>
+    <p><strong>State: Compressed (Subcooled) Liquid</strong></p>
 
-  <ul>
-    <li>450 °C = 723.15 K</li>
-    <li>50 bar = 5 MPa</li>
-  </ul>
+    <h4>Engineering Interpretation</h4>
+    <p>
+      Because the fluid temperature is below the saturation temperature at the given pressure,
+      no vaporization occurs and the water remains entirely in the liquid phase.
+    </p>
 
-  <p>Using the <strong>T-P</strong> input pair:</p>
-
-  <ul>
-    <li>State: <strong>Superheated Vapor</strong></li>
-    <li>Density = 15.805 kg/m³</li>
-    <li>Specific Volume = 0.06335 m³/kg</li>
-    <li>Enthalpy = 3319.49 kJ/kg</li>
-    <li>Entropy = 6.8253 kJ/(kg·K)</li>
-    <li>Cp = 2.3800 kJ/(kg·K)</li>
-    <li>Cv = 1.7563 kJ/(kg·K)</li>
-    <li>Viscosity = 0.00002655 Pa·s</li>
-    <li>Thermal Conductivity = 0.06516 W/(m·K)</li>
-  </ul>
+    <h4>Application Context</h4>
+    <p>
+      This condition is typical in high-pressure feedwater lines prior to entering
+      the boiler economizer in steam power plants.
+    </p>
+  </article>
 
 
-  <h3>3. Boiler Feedwater Enthalpy & Heat Requirement</h3>
-  <p>
-    <strong>Problem:</strong> Feedwater consists of 85% condensate at 90 °C and
-    15% makeup water at 20 °C. Determine heat required to produce
-    superheated steam at 400 °C and 40 bar.
-  </p>
+  <!-- ===================================================== -->
+  <!-- 2. SUPERHEATED STEAM PROPERTIES -->
+  <!-- ===================================================== -->
 
-  <p><strong>Step 1 – Inlet Enthalpy</strong></p>
+  <article class="example-block">
+    <h3>2. Superheated Steam Properties (Power Generation Example)</h3>
 
-  <ul>
-    <li>h<sub>condensate</sub> (T-x, 90 °C, x=0) = 377.33 kJ/kg</li>
-    <li>h<sub>makeup</sub> (T-P, 20 °C, 0.1 MPa) = 112.75 kJ/kg</li>
-  </ul>
+    <h4>Problem</h4>
+    <p>
+      Water is heated to 450 °C and 50 bar. Determine its thermodynamic
+      and transport properties.
+    </p>
 
-  <p>
-    h<sub>in</sub> = (0.85 × 377.33) + (0.15 × 112.75)
-    = <strong>337.64 kJ/kg</strong>
-  </p>
+    <h4>Given</h4>
+    <ul>
+      <li>T = 450 °C = 723.15 K</li>
+      <li>P = 50 bar = 5 MPa</li>
+    </ul>
 
-  <p><strong>Step 2 – Outlet Enthalpy</strong></p>
+    <h4>Method</h4>
+    <p>
+      Convert units to SI and use the T–P input pair to evaluate
+      the state and properties.
+    </p>
 
-  <p>
-    At 400 °C and 4 MPa (T-P):
-    h<sub>out</sub> = <strong>3216.48 kJ/kg</strong>
-  </p>
+    <h4>Calculation</h4>
+    <ul>
+      <li>State: Superheated Vapor</li>
+      <li>Density = 15.805 kg/m³</li>
+      <li>Specific Volume = 0.06335 m³/kg</li>
+      <li>Enthalpy = 3319.49 kJ/kg</li>
+      <li>Entropy = 6.8253 kJ/(kg·K)</li>
+      <li>Cp = 2.3800 kJ/(kg·K)</li>
+      <li>Cv = 1.7563 kJ/(kg·K)</li>
+      <li>Viscosity = 0.00002655 Pa·s</li>
+      <li>Thermal Conductivity = 0.06516 W/(m·K)</li>
+    </ul>
 
-  <p><strong>Step 3 – Heat Required</strong></p>
+    <h4>Result</h4>
+    <p><strong>Water exists in the superheated vapor region.</strong></p>
 
-  <p>
-    Q = h<sub>out</sub> − h<sub>in</sub>
-    = 3216.48 − 337.64
-    = <strong>2878.83 kJ/kg</strong>
-  </p>
+    <h4>Engineering Interpretation</h4>
+    <p>
+      Superheating increases the energy content of steam and reduces moisture formation
+      during turbine expansion, improving turbine efficiency and preventing blade erosion.
+    </p>
 
-  <p>
-    Therefore, 2878.83 kJ of heat is required per kg of steam.
-  </p>
-
-
-  <h3>4. Steam Latent Heat Calculation</h3>
-  <p>
-    <strong>Problem:</strong> Saturated steam at 350 °C flows at 2150 kg/h.
-    Determine the heat transferred.
-  </p>
-
-  <ul>
-    <li>h<sub>g</sub> = 2565.24 kJ/kg</li>
-    <li>h<sub>f</sub> = 1672.76 kJ/kg</li>
-  </ul>
-
-  <p>
-    Q = ṁ(h<sub>f</sub> − h<sub>g</sub>)
-  </p>
-
-  <p>
-    Q = (2150 / 3600) × (1672.76 − 2565.24)
-    = <strong>−533.01 kW</strong>
-  </p>
-
-  <p>
-    Heat released by steam = <strong>533.01 kW</strong>.
-  </p>
+    <h4>Application Context</h4>
+    <p>
+      This condition is commonly found at the outlet of superheater sections
+      in industrial boilers used for power generation.
+    </p>
+  </article>
 
 
-  <h3>5. Steam Turbine Analysis (P-h and P-s Method)</h3>
-  <p>
-    <strong>Problem:</strong> Steam enters turbine at 6 MPa, h = 3600 kJ/kg.
-    Exit at 200 kPa, s = 6.8 kJ/kg·K.
-    Mass flow rate = 10 kg/s.
-  </p>
+  <!-- ===================================================== -->
+  <!-- 3. BOILER FEEDWATER ENTHALPY -->
+  <!-- ===================================================== -->
 
-  <p><strong>(a) Exit Enthalpy</strong></p>
-  <p>Using P-s input:</p>
-  <p><strong>h₂ = 2576.92 kJ/kg</strong></p>
+  <article class="example-block">
+    <h3>3. Boiler Feedwater Enthalpy & Heat Requirement</h3>
 
-  <p><strong>(b) Steam Quality</strong></p>
-  <p>x = 0.9403 (94.03%) → Two-Phase Region</p>
+    <h4>Problem</h4>
+    <p>
+      Feedwater consists of 85% condensate at 90 °C and 15% make-up water at 20 °C.
+      Determine the heat required to produce superheated steam at 400 °C and 40 bar.
+    </p>
 
-  <p><strong>(c) Turbine Power</strong></p>
+    <h4>Given</h4>
+    <ul>
+      <li>Mass fraction condensate = 0.85</li>
+      <li>Mass fraction make-up water = 0.15</li>
+      <li>Final condition: 400 °C (673.15 K), 40 bar (4 MPa)</li>
+    </ul>
 
-  <p>
-    P = ṁ(h₁ − h₂)
-  </p>
+    <h4>Method</h4>
+    <p>
+      Compute inlet enthalpy using mass-weighted average.
+      Determine outlet enthalpy at final superheated condition.
+      Apply Q = h<sub>out</sub> − h<sub>in</sub>.
+    </p>
 
-  <p>
-    P = 10(3600 − 2576.92)
-    = <strong>10,230.8 kW = 10.23 MW</strong>
-  </p>
+    <h4>Calculation</h4>
+    <p>h<sub>cond</sub> = 377.33 kJ/kg</p>
+    <p>h<sub>makeup</sub> = 112.75 kJ/kg</p>
 
-  <p>
-    Note: Actual turbine output will be lower due to mechanical and heat losses.
-  </p>
+    <p>
+      h<sub>in</sub> = (0.85 × 377.33) + (0.15 × 112.75)
+      = 337.64 kJ/kg
+    </p>
+
+    <p>h<sub>out</sub> = 3216.48 kJ/kg</p>
+
+    <p>
+      Q = 3216.48 − 337.64
+      = <strong>2878.83 kJ/kg</strong>
+    </p>
+
+    <h4>Result</h4>
+    <p><strong>Heat required = 2878.83 kJ per kg of steam</strong></p>
+
+    <h4>Engineering Interpretation</h4>
+    <p>
+      Under constant pressure, heat transfer equals the enthalpy rise.
+      The large increase reflects both vaporization and superheating energy requirements.
+    </p>
+
+    <h4>Application Context</h4>
+    <p>
+      This calculation is essential in boiler fuel estimation,
+      energy balance analysis, and steam plant design.
+    </p>
+  </article>
+
+
+  <!-- ===================================================== -->
+  <!-- 4. STEAM LATENT HEAT -->
+  <!-- ===================================================== -->
+
+  <article class="example-block">
+    <h3>4. Steam Latent Heat Calculation</h3>
+
+    <h4>Problem</h4>
+    <p>
+      Saturated steam at 350 °C flows at 2150 kg/h.
+      Determine the heat transferred during condensation.
+    </p>
+
+    <h4>Given</h4>
+    <ul>
+      <li>T = 350 °C (623.15 K)</li>
+      <li>ṁ = 2150 kg/h = 0.5972 kg/s</li>
+    </ul>
+
+    <h4>Method</h4>
+    <p>
+      Use saturated properties and apply
+      Q = ṁ(h<sub>f</sub> − h<sub>g</sub>).
+    </p>
+
+    <h4>Calculation</h4>
+    <p>h<sub>g</sub> = 2565.24 kJ/kg</p>
+    <p>h<sub>f</sub> = 1672.76 kJ/kg</p>
+
+    <p>
+      Q = 0.5972 × (1672.76 − 2565.24)
+      = <strong>−533.01 kW</strong>
+    </p>
+
+    <h4>Result</h4>
+    <p><strong>Heat released = 533.01 kW</strong></p>
+
+    <h4>Engineering Interpretation</h4>
+    <p>
+      The heat released equals the latent heat of condensation multiplied by
+      mass flow rate. Energy transfer occurs at constant temperature.
+    </p>
+
+    <h4>Application Context</h4>
+    <p>
+      This principle is fundamental in evaporators,
+      distillation columns, and industrial heat exchangers.
+    </p>
+  </article>
+
+
+  <!-- ===================================================== -->
+  <!-- 5. STEAM TURBINE -->
+  <!-- ===================================================== -->
+
+  <article class="example-block">
+    <h3>5. Steam Turbine Analysis (P–h and P–s Method)</h3>
+
+    <h4>Problem</h4>
+    <p>
+      Steam enters a turbine at 6 MPa with h₁ = 3600 kJ/kg.
+      Exit pressure is 200 kPa with entropy 6.8 kJ/kg·K.
+      Mass flow rate = 10 kg/s.
+    </p>
+
+    <h4>Given</h4>
+    <ul>
+      <li>P₁ = 6 MPa, h₁ = 3600 kJ/kg</li>
+      <li>P₂ = 0.2 MPa, s₂ = 6.8 kJ/kg·K</li>
+      <li>ṁ = 10 kg/s</li>
+    </ul>
+
+    <h4>Method</h4>
+    <p>
+      Use P–s input to determine exit enthalpy.
+      Compute turbine power using
+      P = ṁ(h₁ − h₂).
+    </p>
+
+    <h4>Calculation</h4>
+    <p>h₂ = 2576.92 kJ/kg</p>
+    <p>Quality, x = 0.9403 (94.03%)</p>
+
+    <p>
+      P = 10(3600 − 2576.92)
+      = <strong>10.23 MW</strong>
+    </p>
+
+    <h4>Result</h4>
+    <ul>
+      <li>Exit enthalpy = 2576.92 kJ/kg</li>
+      <li>Steam quality = 94.03%</li>
+      <li>Turbine power = 10.23 MW</li>
+    </ul>
+
+    <h4>Engineering Interpretation</h4>
+    <p>
+      The enthalpy drop represents conversion of thermal energy into mechanical work.
+      Partial condensation (quality &lt; 1) indicates moisture formation,
+      which may impact turbine blade life.
+    </p>
+
+    <h4>Application Context</h4>
+    <p>
+      This analysis is central to Rankine cycle design,
+      turbine efficiency evaluation, and power plant performance studies.
+    </p>
+  </article>
+
 
 </main>
   
