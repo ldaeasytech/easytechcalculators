@@ -609,7 +609,8 @@ content="water properties calculator, steam properties calculator, thermodynamic
     <h4>Problem</h4>
     <p>
       Feedwater consists of 85% condensate at 90 °C and 15% make-up water at 20 °C.
-      Determine the heat required to produce superheated steam at 400 °C and 40 bar.
+      Condensate remains at saturated condition. Atmospheric pressure is at 100 kPa.
+      Determine the heat required to produce superheated steam at 400 °C and 40 bar. 
     </p>
 
     <h4>Given</h4>
@@ -621,7 +622,9 @@ content="water properties calculator, steam properties calculator, thermodynamic
 
     <h4>Method</h4>
     <p>
-      Compute inlet enthalpy using mass-weighted average.
+      Compute inlet enthalpy using mass-weighted average. 
+      Evaluate enthalpy of make-up water using T–P input pair.
+      Enthalpy of condensate is evaluated using T–x input pair. 
       Determine outlet enthalpy at final superheated condition.
       Apply Q = h<sub>out</sub> − h<sub>in</sub>.
     </p>
