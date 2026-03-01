@@ -27,7 +27,8 @@ function mapSolverToUI(stateSolved) {
     viscosity: stateSolved.mu,
 
       // 🔹 Preserve special notice messages
-    message: stateSolved.message
+    message: stateSolved.message,
+    quality: stateSolved.quality 
   };
 }
 
@@ -212,13 +213,18 @@ const LABELS = {
   cp: "Cp",
   cv: "Cv",
   viscosity: "Viscosity",
-  thermalConductivity: "Thermal Conductivity"
+  thermalConductivity: "Thermal Conductivity",
+  quality: "Quality (x)"
 };
 
 function renderResults(state, unitSystem) {
   const container = document.getElementById("resultsTable");
   const fields = [...BASE_FIELDS];
 
+   // Show quality only for two-phase
+if (state.phase === "two_phase") {
+  fields.unshift("quality");
+}
   if (state.inputMode === "Tx") fields.unshift("pressure");
   if (["Ph", "Ps", "Px"].includes(state.inputMode)) fields.unshift("temperature");
 
