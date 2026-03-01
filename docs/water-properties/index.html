@@ -602,184 +602,255 @@ content="water properties calculator, steam properties calculator, thermodynamic
   <!-- ===================================================== -->
   <!-- 3. BOILER FEEDWATER ENTHALPY -->
   <!-- ===================================================== -->
+<article class="example-block">
 
-  <article class="example-block">
-    <h3>3. Boiler Feedwater Enthalpy & Heat Requirement</h3>
+  <h3>3. Boiler Feedwater Enthalpy & Heat Requirement</h3>
 
-    <h4>Problem</h4>
-    <p>
-    Feed water entering a boiler in a sugar mill consists of 85% by weight 
-      condensate from evaporators and 15% by weight make-up water. The condensate
-      from the multi-effect evaporator is at 90°C, while the make-up water is at 20°C.   
-    </p>
+  <h4>Problem</h4>
+  <p>
+    Feedwater entering a boiler in a sugar mill consists of 85% condensate
+    from evaporators and 15% make-up water. The condensate is at 90 °C,
+    while the make-up water is at 20 °C.
+  </p>
+  <p>
+    Determine the amount of heat required to produce superheated steam
+    at 400 °C and 40 bar.
+  </p>
 
-    <p>
-    Calculate the amount of heat required to heat the feed water to superheated steam at 400°C and 40 bar.  
-    </p>
+  <h4>Given</h4>
+  <ul>
+    <li>Mass fraction condensate = 0.85</li>
+    <li>Mass fraction make-up water = 0.15</li>
+    <li>Condensate temperature = 90 °C (363.15 K)</li>
+    <li>Make-up water temperature = 20 °C (293.15 K)</li>
+    <li>Final condition: 400 °C (673.15 K), 40 bar (4 MPa)</li>
+    <li>Atmospheric pressure = 100 kPa (0.1 MPa)</li>
+  </ul>
 
-     <p>Assume:</p>
-    <p>Atmospheric pressure = 100 kPa</p>
-    <p>Piping system is fully insulated</p>
-    <p>Condensate remains at saturated condition</p>
-    <p>Boiler operates at constant pressure</p>
+  <h4>Assumptions</h4>
+  <ul>
+    <li>Boiler operates at constant pressure.</li>
+    <li>Piping system is fully insulated (no heat loss).</li>
+    <li>Condensate remains at saturated liquid condition.</li>
+  </ul>
 
-    <h4>Given</h4>
-    <ul>
-      <li>Mass fraction condensate = 0.85</li>
-      <li>Mass fraction make-up water = 0.15</li>
-      <li>Final condition: 400 °C (673.15 K), 40 bar (4 MPa)</li>
-    </ul>
+  <h4>Method</h4>
+  <ol>
+    <li>Determine inlet enthalpy using mass-weighted average.</li>
+    <li>Determine outlet enthalpy at superheated condition.</li>
+    <li>Apply energy balance at constant pressure:
+      <br><strong>Q = h<sub>out</sub> − h<sub>in</sub></strong>
+    </li>
+  </ol>
 
-    <h4>Method</h4>
-    <p>
-      Compute inlet enthalpy using mass-weighted average. 
-      Evaluate enthalpy of make-up water using T–P input pair.
-      Enthalpy of condensate is evaluated using T–x input pair. 
-      Determine outlet enthalpy at final superheated condition.
-      Apply Q = h<sub>out</sub> − h<sub>in</sub>.
-    </p>
+  <h4>Step 1 – Condensate Enthalpy</h4>
+  <p>
+    Since condensate is saturated liquid at 90 °C,
+    use <strong>T–x mode</strong> with:
+  </p>
+  <ul>
+    <li>T = 363.15 K</li>
+    <li>x = 0 (saturated liquid)</li>
+  </ul>
+  <p><strong>h<sub>cond</sub> = 377.33 kJ/kg</strong></p>
 
-    <h4>Calculation</h4>
-    <p>h<sub>cond</sub> = 377.33 kJ/kg</p>
-    <p>h<sub>makeup</sub> = 112.75 kJ/kg</p>
+  <h4>Step 2 – Make-up Water Enthalpy</h4>
+  <p>
+    Make-up water is at atmospheric pressure.
+    Use <strong>T–P mode</strong> with:
+  </p>
+  <ul>
+    <li>T = 293.15 K</li>
+    <li>P = 0.1 MPa</li>
+  </ul>
+  <p><strong>h<sub>makeup</sub> = 112.75 kJ/kg</strong></p>
 
-    <p>
-      h<sub>in</sub> = (0.85 × 377.33) + (0.15 × 112.75)
-      = 337.64 kJ/kg
-    </p>
+  <h4>Step 3 – Inlet Enthalpy</h4>
+  <p>
+    h<sub>in</sub> = (0.85 × 377.33) + (0.15 × 112.75)
+  </p>
+  <p><strong>h<sub>in</sub> = 337.64 kJ/kg</strong></p>
 
-    <p>h<sub>out</sub> = 3216.48 kJ/kg</p>
+  <h4>Step 4 – Outlet Enthalpy</h4>
+  <p>
+    For superheated steam at 400 °C and 40 bar,
+    use <strong>T–P mode</strong> with:
+  </p>
+  <ul>
+    <li>T = 673.15 K</li>
+    <li>P = 4 MPa</li>
+  </ul>
+  <p><strong>h<sub>out</sub> = 3216.48 kJ/kg</strong></p>
 
-    <p>
-      Q = 3216.48 − 337.64
-      = <strong>2878.83 kJ/kg</strong>
-    </p>
+  <h4>Step 5 – Heat Required</h4>
+  <p>
+    Q = 3216.48 − 337.64
+  </p>
+  <p><strong>Q = 2878.83 kJ/kg</strong></p>
 
-    <h4>Result</h4>
-    <p><strong>Heat required = 2878.83 kJ per kg of steam</strong></p>
+  <h4>Result</h4>
+  <p><strong>Heat required = 2878.83 kJ per kg of steam</strong></p>
 
-    <h4>Engineering Interpretation</h4>
-    <p>
-      Under constant pressure, heat transfer equals the enthalpy rise.
-      The large increase reflects both vaporization and superheating energy requirements.
-    </p>
+  <h4>Engineering Interpretation</h4>
+  <p>
+    Because the boiler operates at constant pressure, the required heat
+    equals the change in specific enthalpy. The large enthalpy increase
+    accounts for sensible heating, phase change, and superheating.
+  </p>
 
-    <h4>Application Context</h4>
-    <p>
-      This calculation is essential in boiler fuel estimation,
-      energy balance analysis, and steam plant design.
-    </p>
-  </article>
+  <h4>Application Context</h4>
+  <p>
+    This calculation is fundamental in boiler sizing, fuel consumption
+    estimation, and overall steam plant energy balance analysis.
+  </p>
 
-
-  <!-- ===================================================== -->
-  <!-- 4. STEAM LATENT HEAT -->
-  <!-- ===================================================== -->
-
-  <article class="example-block">
-    <h3>4. Steam Latent Heat Calculation</h3>
-
-    <h4>Problem</h4>
-    <p>
-      Saturated steam at 350 °C flows at 2150 kg/h.
-      Determine the heat transferred during condensation.
-    </p>
-
-    <h4>Given</h4>
-    <ul>
-      <li>T = 350 °C (623.15 K)</li>
-      <li>ṁ = 2150 kg/h = 0.5972 kg/s</li>
-    </ul>
-
-    <h4>Method</h4>
-    <p>
-      Use saturated properties and apply
-      Q = ṁ(h<sub>f</sub> − h<sub>g</sub>).
-    </p>
-
-    <h4>Calculation</h4>
-    <p>h<sub>g</sub> = 2565.24 kJ/kg</p>
-    <p>h<sub>f</sub> = 1672.76 kJ/kg</p>
-
-    <p>
-      Q = 0.5972 × (1672.76 − 2565.24)
-      = <strong>−533.01 kW</strong>
-    </p>
-
-    <h4>Result</h4>
-    <p><strong>Heat released = 533.01 kW</strong></p>
-
-    <h4>Engineering Interpretation</h4>
-    <p>
-      The heat released equals the latent heat of condensation multiplied by
-      mass flow rate. Energy transfer occurs at constant temperature.
-    </p>
-
-    <h4>Application Context</h4>
-    <p>
-      This principle is fundamental in evaporators,
-      distillation columns, and industrial heat exchangers.
-    </p>
-  </article>
+</article>
 
 
-  <!-- ===================================================== -->
-  <!-- 5. STEAM TURBINE -->
-  <!-- ===================================================== -->
 
-  <article class="example-block">
-    <h3>5. Steam Turbine Analysis (P–h and P–s Method)</h3>
+<!-- ===================================================== -->
+<!-- STEAM LATENT HEAT -->
+<!-- ===================================================== -->
 
-    <h4>Problem</h4>
-    <p>
-      Steam enters a turbine at 6 MPa with h₁ = 3600 kJ/kg.
-      Exit pressure is 200 kPa with entropy 6.8 kJ/kg·K.
-      Mass flow rate = 10 kg/s.
-    </p>
+<article class="example-block">
 
-    <h4>Given</h4>
-    <ul>
-      <li>P₁ = 6 MPa, h₁ = 3600 kJ/kg</li>
-      <li>P₂ = 0.2 MPa, s₂ = 6.8 kJ/kg·K</li>
-      <li>ṁ = 10 kg/s</li>
-    </ul>
+  <h3>4. Steam Latent Heat Transfer</h3>
 
-    <h4>Method</h4>
-    <p>
-      Use P–s input to determine exit enthalpy.
-      Compute turbine power using
-      P = ṁ(h₁ − h₂).
-    </p>
+  <h4>Problem</h4>
+  <p>
+    Saturated steam at 350 °C flows at 2150 kg/h.
+    Determine the rate of heat transferred during condensation.
+  </p>
 
-    <h4>Calculation</h4>
-    <p>h₂ = 2576.92 kJ/kg</p>
-    <p>Quality, x = 0.9403 (94.03%)</p>
+  <h4>Given</h4>
+  <ul>
+    <li>T = 350 °C (623.15 K)</li>
+    <li>Mass flow rate = 2150 kg/h</li>
+    <li>Condensate exits at saturated liquid condition</li>
+  </ul>
 
-    <p>
-      P = 10(3600 − 2576.92)
-      = <strong>10.23 MW</strong>
-    </p>
+  <h4>Method</h4>
+  <ol>
+    <li>Determine saturated liquid and vapor enthalpies using <strong>T–x mode</strong>.</li>
+    <li>Convert mass flow rate to kg/s.</li>
+    <li>Apply latent heat equation:
+      <br><strong>Q = ṁ (h<sub>f</sub> − h<sub>g</sub>)</strong>
+    </li>
+  </ol>
 
-    <h4>Result</h4>
-    <ul>
-      <li>Exit enthalpy = 2576.92 kJ/kg</li>
-      <li>Steam quality = 94.03%</li>
-      <li>Turbine power = 10.23 MW</li>
-    </ul>
+  <h4>Step 1 – Saturated Properties</h4>
+  <p>Use <strong>T–x mode</strong> with T = 623.15 K:</p>
+  <ul>
+    <li>x = 1 → h<sub>g</sub> = 2565.24 kJ/kg</li>
+    <li>x = 0 → h<sub>f</sub> = 1672.76 kJ/kg</li>
+  </ul>
 
-    <h4>Engineering Interpretation</h4>
-    <p>
-      The enthalpy drop represents conversion of thermal energy into mechanical work.
-      Partial condensation (quality &lt; 1) indicates moisture formation,
-      which may impact turbine blade life.
-    </p>
+  <h4>Step 2 – Mass Flow Rate Conversion</h4>
+  <p>
+    ṁ = 2150 / 3600 = 0.5972 kg/s
+  </p>
 
-    <h4>Application Context</h4>
-    <p>
-      This analysis is central to Rankine cycle design,
-      turbine efficiency evaluation, and power plant performance studies.
-    </p>
-  </article>
+  <h4>Step 3 – Heat Transfer</h4>
+  <p>
+    Q = 0.5972 × (1672.76 − 2565.24)
+  </p>
+  <p><strong>Q = −533.01 kW</strong></p>
+
+  <h4>Result</h4>
+  <p><strong>Heat released = 533.01 kW</strong></p>
+
+  <h4>Engineering Interpretation</h4>
+  <p>
+    During condensation, energy is released at constant temperature.
+    The negative sign indicates heat transfer from steam to the evaporator.
+  </p>
+
+  <h4>Application Context</h4>
+  <p>
+    This principle is essential in evaporators, distillation columns,
+    and industrial heat exchanger design.
+  </p>
+
+</article>
+
+
+
+<!-- ===================================================== -->
+<!-- STEAM TURBINE ANALYSIS -->
+<!-- ===================================================== -->
+
+<article class="example-block">
+
+  <h3>5. Steam Turbine Analysis (P–h and P–s Method)</h3>
+
+  <h4>Problem</h4>
+  <p>
+    Steam enters a turbine at 6 MPa with h₁ = 3600 kJ/kg.
+    It exits at 200 kPa with entropy 6.8 kJ/kg·K.
+    Mass flow rate = 10 kg/s.
+  </p>
+
+  <h4>Given</h4>
+  <ul>
+    <li>P₁ = 6 MPa</li>
+    <li>h₁ = 3600 kJ/kg</li>
+    <li>P₂ = 0.2 MPa</li>
+    <li>s₂ = 6.8 kJ/kg·K</li>
+    <li>ṁ = 10 kg/s</li>
+  </ul>
+
+  <h4>Method</h4>
+  <ol>
+    <li>Use <strong>P–s mode</strong> to determine exit enthalpy.</li>
+    <li>Obtain quality from the calculator output.</li>
+    <li>Compute turbine power using:
+      <br><strong>P = ṁ (h₁ − h₂)</strong>
+    </li>
+  </ol>
+
+  <h4>Step 1 – Exit Enthalpy</h4>
+  <p>
+    Use <strong>P–s mode</strong> with:
+  </p>
+  <ul>
+    <li>P = 0.2 MPa</li>
+    <li>s = 6.8 kJ/kg·K</li>
+  </ul>
+  <p><strong>h₂ = 2576.92 kJ/kg</strong></p>
+
+  <h4>Step 2 – Steam Quality</h4>
+  <p>
+    From the calculator output:
+  </p>
+  <p><strong>x = 0.9403 (94.03%)</strong></p>
+
+  <h4>Step 3 – Turbine Power</h4>
+  <p>
+    P = 10 (3600 − 2576.92)
+  </p>
+  <p><strong>P = 10.23 MW</strong></p>
+
+  <h4>Result</h4>
+  <ul>
+    <li>Exit enthalpy = 2576.92 kJ/kg</li>
+    <li>Steam quality = 94.03%</li>
+    <li>Turbine power = 10.23 MW</li>
+  </ul>
+
+  <h4>Engineering Interpretation</h4>
+  <p>
+    The enthalpy drop represents conversion of thermal energy into mechanical work.
+    Because the quality is less than 1, partial condensation occurs during expansion.
+    Excess moisture may reduce turbine blade life.
+  </p>
+
+  <h4>Application Context</h4>
+  <p>
+    This analysis is central to Rankine cycle design,
+    turbine efficiency evaluation, and power plant performance studies.
+  </p>
+
+</article>
 
 
 </main>
