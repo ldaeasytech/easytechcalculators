@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Water & Steam Properties Calculator | Enthalpy, Entropy, Density & Steam Tables (TP, Ph, Ps, Tx, Px)</title>
+<title>Water Properties Calculator (IAPWS Steam Tables – NIST Based) – TP, Ph, Ps, Px, Tx</title>
 
 <meta name="description"
-content="Advanced Water & Steam Properties Calculator supporting TP, Ph, Ps, Tx, and Px input pairs. Compute density, specific gravity, enthalpy, entropy, Cp, Cv, viscosity, and thermal conductivity for subcooled, saturated, and superheated states." />
+content="Engineering-grade Steam Tables calculator based on NIST REFPROP and IAPWS formulations. Compute water and steam properties (enthalpy, entropy, density, Cv, Cp, thermal conductivity, viscosity) using TP, Ph, Ps, Tx, and Px input pairs." />
 
 <meta name="keywords"
 content="water properties calculator, steam properties calculator, thermodynamic properties of water, saturated steam calculator, superheated steam calculator, compressed liquid properties, water enthalpy calculator, steam entropy calculator, Cp Cv water, water viscosity calculator, thermal conductivity water, TP Ph Ps Tx Px calculator" />
@@ -59,7 +59,7 @@ content="water properties calculator, steam properties calculator, thermodynamic
   "applicationCategory": "EngineeringApplication",
   "operatingSystem": "Web",
   "url": "https://easytechcalculators.com/water-properties/",
-  "description": "Online engineering calculator for thermodynamic and transport properties of water and steam including density, enthalpy, entropy, Cp, Cv, viscosity, and thermal conductivity.",
+  "description": "Engineering calculator based on NIST REFPROP data and IAPWS formulations for thermodynamic and transport properties of water and steam.",
   "featureList": [
     "Multiple input pairs (TP, Ph, Ps, Tx, Px)",
     "Subcooled, saturated and superheated regions",
@@ -270,49 +270,74 @@ content="water properties calculator, steam properties calculator, thermodynamic
 <section class="seo-intro-section">
   <div class="container-learning intro-compact">
 
-    <h2>Water & Steam Thermodynamic & Transport Properties Calculator</h2>
+    <h2>Water & Steam Properties Calculator (Online Steam Tables)</h2>
 
     <p>
-      This Water & Steam Properties Calculator computes thermodynamic and
-      transport properties using multiple input pairs including
-      temperature–pressure (T–P), pressure–enthalpy (P–h),
-      pressure–entropy (P–s), temperature–quality (T–x),
-      and pressure–quality (P–x).
+      This Water & Steam Properties Calculator functions as a complete
+      online steam tables tool for determining thermodynamic and
+      transport properties of water across compressed (subcooled),
+      saturated, and superheated regions.
     </p>
 
     <p>
-      Instantly determine density, specific gravity, enthalpy,
-      entropy, specific heat (Cp, Cv), dynamic viscosity,
-      and thermal conductivity for subcooled (compressed liquid),
-      saturated, and superheated steam regions.
+      Using flexible input pairs such as Temperature–Pressure (T–P),
+      Pressure–Enthalpy (P–h), Pressure–Entropy (P–s),
+      Temperature–Quality (T–x), and Pressure–Quality (P–x),
+      engineers and students can instantly evaluate fluid state
+      and property behavior without manually consulting steam tables.
     </p>
 
-    <h2>Online Steam Tables & Water Property Calculator</h2>
+    <h3>Properties Calculated</h3>
 
-    <p>
-    This calculator functions as an online steam tables tool,
-    allowing rapid lookup of thermodynamic and transport
-    properties of water and steam across subcooled,
-    saturated, and superheated regions.
-    </p>
-    
     <ul>
-    <li>Temperature–Pressure (T–P)</li>
-    <li>Pressure–Enthalpy (P–h)</li>
-    <li>Pressure–Entropy (P–s)</li>
-    <li>Temperature–Quality (T–x)</li>
-    <li>Pressure–Quality (P–x)</li>
+      <li>Phase Identification (Compressed, Saturated, Superheated)</li>
+      <li>Density & Specific Volume</li>
+      <li>Enthalpy & Entropy</li>
+      <li>Specific Heat (Cp, Cv)</li>
+      <li>Dynamic Viscosity</li>
+      <li>Thermal Conductivity</li>
     </ul>
-    
+
     <p>
-    Outputs include density, specific volume, enthalpy,
-    entropy, Cp, Cv, viscosity, thermal conductivity,
-    and phase identification.
+      The calculator is suitable for power plant analysis,
+      boiler design, turbine performance evaluation,
+      heat exchanger calculations, and academic thermodynamics problems.
     </p>
 
   </div>
 </section>
 
+<section class="data-source-section">
+  <h2>Scientific Basis of Calculations</h2>
+
+  <p>
+    Thermodynamic properties are based on internationally accepted
+    formulations published by the International Association for the
+    Properties of Water and Steam (IAPWS).
+  </p>
+
+  <p>
+    The primary reference is the IAPWS-95 formulation
+    (Wagner & Pruss, 2002) for the thermodynamic properties
+    of ordinary water substance.
+  </p>
+
+  <p>
+    Transport properties (viscosity and thermal conductivity)
+    follow official IAPWS releases.
+  </p>
+
+  <p>
+    Saturated properties are obtained using numerical correlations
+    derived from published reference data, while single-phase
+    regions are evaluated using double interpolation.
+  </p>
+</section>
+  
+  <p>
+Need unit conversion? Try our
+<a href="/unit-converter/">Engineering Unit Converter</a>.
+</p>
 
   <!-- PAGE LAYOUT (CONTENT + SIDEBAR AD) -->
   <div class="page-layout">
@@ -444,6 +469,8 @@ content="water properties calculator, steam properties calculator, thermodynamic
     </section>
 
 
+
+      
       <!-- BELOW RESULTS AD
       <div class="ad-below-results">
         <div class="ad-label">Sponsored</div>
@@ -463,6 +490,172 @@ content="water properties calculator, steam properties calculator, thermodynamic
     </main>
 
   </div>
+
+<section id="worked-examples" class="seo-section">
+  <h2>Worked Examples – Water & Steam Properties Calculations</h2>
+  <p>
+    Below are solved engineering examples using the Water & Steam Properties Calculator.
+    These examples demonstrate how to determine phase, thermodynamic properties,
+    heat transfer, and turbine power using common input pairs such as T-P, P-s, and T-x.
+  </p>
+
+  <hr>
+
+  <h3>1. Water Phase Determination (T–P Input Pair)</h3>
+  <p><strong>Problem:</strong> Determine the phase of water at 400 K and 1 MPa.</p>
+
+  <p><strong>Solution:</strong></p>
+  <p>
+    First determine the saturation temperature at 1 MPa using the <strong>P-x</strong> mode
+    (x = 0 or x = 1). The saturation temperature is:
+  </p>
+
+  <p><strong>Tsat = 452.99 K</strong></p>
+
+  <ul>
+    <li>If Tsat &gt; T → Compressed (Subcooled) Liquid</li>
+    <li>If Tsat = T → Saturated State</li>
+    <li>If Tsat &lt; T → Superheated Vapor</li>
+  </ul>
+
+  <p>
+    Since 400 K &lt; 452.99 K, the state is:
+    <strong>Compressed (Subcooled) Liquid</strong>.
+  </p>
+
+  <hr>
+
+  <h3>2. Superheated Steam Properties (Power Generation Example)</h3>
+  <p>
+    <strong>Problem:</strong> Water is heated to 450 °C and 50 bar.
+    Determine its thermodynamic properties.
+  </p>
+
+  <p>
+    Convert units first using our
+    <a href="https://easytechcalculators.com/unit-converter/" target="_blank">
+      Engineering Unit Converter
+    </a>.
+  </p>
+
+  <ul>
+    <li>450 °C = 723.15 K</li>
+    <li>50 bar = 5 MPa</li>
+  </ul>
+
+  <p>Using the <strong>T-P</strong> input pair:</p>
+
+  <ul>
+    <li>State: <strong>Superheated Vapor</strong></li>
+    <li>Density = 15.805 kg/m³</li>
+    <li>Specific Volume = 0.06335 m³/kg</li>
+    <li>Enthalpy = 3319.49 kJ/kg</li>
+    <li>Entropy = 6.8253 kJ/(kg·K)</li>
+    <li>Cp = 2.3800 kJ/(kg·K)</li>
+    <li>Cv = 1.7563 kJ/(kg·K)</li>
+    <li>Viscosity = 0.00002655 Pa·s</li>
+    <li>Thermal Conductivity = 0.06516 W/(m·K)</li>
+  </ul>
+
+  <hr>
+
+  <h3>3. Boiler Feedwater Enthalpy & Heat Requirement</h3>
+  <p>
+    <strong>Problem:</strong> Feedwater consists of 85% condensate at 90 °C and
+    15% makeup water at 20 °C. Determine heat required to produce
+    superheated steam at 400 °C and 40 bar.
+  </p>
+
+  <p><strong>Step 1 – Inlet Enthalpy</strong></p>
+
+  <ul>
+    <li>h<sub>condensate</sub> (T-x, 90 °C, x=0) = 377.33 kJ/kg</li>
+    <li>h<sub>makeup</sub> (T-P, 20 °C, 0.1 MPa) = 112.75 kJ/kg</li>
+  </ul>
+
+  <p>
+    h<sub>in</sub> = (0.85 × 377.33) + (0.15 × 112.75)
+    = <strong>337.64 kJ/kg</strong>
+  </p>
+
+  <p><strong>Step 2 – Outlet Enthalpy</strong></p>
+
+  <p>
+    At 400 °C and 4 MPa (T-P):
+    h<sub>out</sub> = <strong>3216.48 kJ/kg</strong>
+  </p>
+
+  <p><strong>Step 3 – Heat Required</strong></p>
+
+  <p>
+    Q = h<sub>out</sub> − h<sub>in</sub>
+    = 3216.48 − 337.64
+    = <strong>2878.83 kJ/kg</strong>
+  </p>
+
+  <p>
+    Therefore, 2878.83 kJ of heat is required per kg of steam.
+  </p>
+
+  <hr>
+
+  <h3>4. Steam Latent Heat Calculation</h3>
+  <p>
+    <strong>Problem:</strong> Saturated steam at 350 °C flows at 2150 kg/h.
+    Determine the heat transferred.
+  </p>
+
+  <ul>
+    <li>h<sub>g</sub> = 2565.24 kJ/kg</li>
+    <li>h<sub>f</sub> = 1672.76 kJ/kg</li>
+  </ul>
+
+  <p>
+    Q = ṁ(h<sub>f</sub> − h<sub>g</sub>)
+  </p>
+
+  <p>
+    Q = (2150 / 3600) × (1672.76 − 2565.24)
+    = <strong>−533.01 kW</strong>
+  </p>
+
+  <p>
+    Heat released by steam = <strong>533.01 kW</strong>.
+  </p>
+
+  <hr>
+
+  <h3>5. Steam Turbine Analysis (P-h and P-s Method)</h3>
+  <p>
+    <strong>Problem:</strong> Steam enters turbine at 6 MPa, h = 3600 kJ/kg.
+    Exit at 200 kPa, s = 6.8 kJ/kg·K.
+    Mass flow rate = 10 kg/s.
+  </p>
+
+  <p><strong>(a) Exit Enthalpy</strong></p>
+  <p>Using P-s input:</p>
+  <p><strong>h₂ = 2576.92 kJ/kg</strong></p>
+
+  <p><strong>(b) Steam Quality</strong></p>
+  <p>x = 0.9403 (94.03%) → Two-Phase Region</p>
+
+  <p><strong>(c) Turbine Power</strong></p>
+
+  <p>
+    P = ṁ(h₁ − h₂)
+  </p>
+
+  <p>
+    P = 10(3600 − 2576.92)
+    = <strong>10,230.8 kW = 10.23 MW</strong>
+  </p>
+
+  <p>
+    Note: Actual turbine output will be lower due to mechanical and heat losses.
+  </p>
+
+</section>
+  
 
 <section class="learning-hub-card">
   <h3>Learning Hub: Water &amp; Steam Properties</h3>
@@ -537,6 +730,13 @@ content="water properties calculator, steam properties calculator, thermodynamic
   providing instant interpolation across single-phase
   and saturated regions.
   </p>
+
+  <h2>Steam Tables vs Online Calculator</h2>
+<p>
+Traditional steam tables require manual lookup and interpolation.
+This online calculator performs automatic interpolation across
+subcooled, saturated, and superheated regions for faster and more accurate results.
+</p>
     
   <a href="water-steam-basics.html" class="learn-more-button">
     Read the Full Water & Steam Basics Guide →
