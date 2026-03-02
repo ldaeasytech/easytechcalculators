@@ -1,5 +1,7 @@
 // fertilizer.js
 
+let priceCache = {};
+
 import { fertilizers } from "./fertilizerData.js";
 import { solveFertilizerSet } from "./linearSolver.js";
 import { calculateCost } from "./economicRanking.js";
@@ -235,20 +237,35 @@ function generateFertilizerCombinations(selected){
 
 
 // =====================================================
-// GENERATE PRICE INPUTS (ONLY SELECTED FERTILIZERS)
+// GENERATE PRICE INPUTS (PRESERVE VALUES)
 // =====================================================
 function generatePriceInputs() {
 
   const container = document.getElementById("priceInputs");
   if (!container) return;
 
-  //container.innerHTML = "";
-
   const selected = getSelectedFertilizers();
+
+  // 🔥 Save existing values before clearing
+  selected.forEach(code => {
+
+    const priceInput = document.getElementById("price_" + code);
+    const bagInput = document.getElementById("bag_" + code);
+
+    if (priceInput || bagInput) {
+      priceCache[code] = {
+        price: priceInput ? priceInput.value : "",
+        bag: bagInput ? bagInput.value : "50"
+      };
+    }
+  });
+
+  container.innerHTML = "";
 
   selected.forEach(code => {
 
     const data = fertilizers[code];
+    const cached = priceCache[code] || { price: "", bag: "50" };
 
     const wrapper = document.createElement("div");
     wrapper.className = "price-card";
@@ -266,6 +283,7 @@ function generatePriceInputs() {
           type="number"
           id="price_${code}"
           step="any"
+          value="${cached.price}"
           placeholder="Enter price"
         >
       </div>
@@ -275,7 +293,7 @@ function generatePriceInputs() {
         <input
           type="number"
           id="bag_${code}"
-          value="50"
+          value="${cached.bag}"
           min="1"
           step="any"
         >
@@ -538,6 +556,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
