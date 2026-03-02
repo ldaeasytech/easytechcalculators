@@ -32,6 +32,10 @@ const cropGuidance = {
     P: [20, 40],
     K: [60, 90]
   },
+  sugarcane: { label: "Sugarcane", N: [150,200], P: [60,100], K: [80,120] },
+  cotton: { label: "Cotton", N: [100,140], P: [30,60], K: [60,100] },
+  soybean: { label: "Soybean", N: [50, 90], P: [30, 60], K: [70,110] },
+  tomato: { label: "Tomato", N: [120,180], P: [60,100], K: [120,180] },
   vegetables: {
     label: "Vegetables (General)",
     N: [150, 200],
@@ -538,6 +542,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
