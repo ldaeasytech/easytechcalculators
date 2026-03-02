@@ -454,7 +454,7 @@ const amountDisplay = `
     ${exactBags.toFixed(2)} bags${perUnitLabel}
   </div>
   <div class="bag-total">
-    (${kgRequired.toFixed(0)} kg${perUnitLabel})
+    (${kgRequired.toFixed(2)} kg${perUnitLabel})
   </div>
 `;
 
@@ -542,6 +542,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
