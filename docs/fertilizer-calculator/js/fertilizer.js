@@ -1,7 +1,5 @@
 // fertilizer.js
 
-let priceCache = {};
-
 import { fertilizers } from "./fertilizerData.js";
 import { solveFertilizerSet } from "./linearSolver.js";
 import { calculateCost } from "./economicRanking.js";
@@ -540,6 +538,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
