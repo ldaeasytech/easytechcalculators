@@ -235,72 +235,77 @@ function generateFertilizerCombinations(selected){
 
 
 // =====================================================
-// PRICE INPUTS
+// GENERATE PRICE INPUTS (ONLY SELECTED FERTILIZERS)
 // =====================================================
+function generatePriceInputs() {
 
-function generatePriceInputs(){
-  const container=document.getElementById("priceInputs");
-  if(!container) return;
-  container.innerHTML="";
+  const container = document.getElementById("priceInputs");
+  if (!container) return;
 
-  Object.entries(fertilizers).forEach(([code,data])=>{
-    const wrapper=document.createElement("div");
-    wrapper.className="price-card";
-    wrapper.innerHTML=`
-      <div class="price-title">${data.display}</div>
-      <div class="price-row">
-        <label>Price per bag (<span class="currency-symbol"></span>)</label>
-        <input type="number" id="price_${code}" step="any">
+  container.innerHTML = "";
+
+  const selected = getSelectedFertilizers();
+
+  selected.forEach(code => {
+
+    const data = fertilizers[code];
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "price-card";
+
+    wrapper.innerHTML = `
+      <div class="price-title">
+        ${data.display}
       </div>
+
+      <div class="price-row">
+        <label>
+          Price per bag (<span class="currency-symbol"></span>)
+        </label>
+        <input 
+          type="number"
+          id="price_${code}"
+          step="any"
+          placeholder="Enter price"
+        >
+      </div>
+
       <div class="price-row">
         <label>Bag weight (kg)</label>
-        <input type="number" id="bag_${code}" value="50" min="1">
+        <input
+          type="number"
+          id="bag_${code}"
+          value="50"
+          min="1"
+          step="any"
+        >
       </div>
     `;
+
     container.appendChild(wrapper);
   });
-}
 
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  const select = document.getElementById("currencySelect");
-
-  if (select) {
-
-    const saved = localStorage.getItem("preferredCurrency");
-
-    if (saved) {
-      select.value = saved;
-    } else {
-      const detected = detectCurrencyFromLocale();
-
-      if ([...select.options].some(o => o.value === detected)) {
-        select.value = detected;
-      } else {
-        select.value = "USD";
-      }
-    }
-
-    select.addEventListener("change", () => {
-      updateCurrencySymbols();
-      localStorage.setItem("preferredCurrency", select.value);
-    });
-  }
-
-  // 🔥 Now generate price inputs AFTER currency is set
-  generatePriceInputs();
   updateCurrencySymbols();
-
-});
-
+}
 // =====================================================
 // DOM READY
 // =====================================================
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Generate fertilizer selection checkboxes
   generateFertilizerCheckboxes();
+
+  // Generate initial price inputs (based on default checked)
   generatePriceInputs();
+
+  // Regenerate price inputs whenever selection changes
+  document.addEventListener("change", (e) => {
+    if (e.target.classList.contains("fert-checkbox")) {
+      generatePriceInputs();
+    }
+  });
+
   updateCurrencySymbols();
 });
 
@@ -533,6 +538,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
