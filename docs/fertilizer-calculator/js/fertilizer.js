@@ -237,35 +237,20 @@ function generateFertilizerCombinations(selected){
 
 
 // =====================================================
-// GENERATE PRICE INPUTS (PRESERVE VALUES)
+// GENERATE PRICE INPUTS (ONLY SELECTED FERTILIZERS)
 // =====================================================
 function generatePriceInputs() {
 
   const container = document.getElementById("priceInputs");
   if (!container) return;
 
-  const selected = getSelectedFertilizers();
-
-  // 🔥 Save existing values before clearing
-  selected.forEach(code => {
-
-    const priceInput = document.getElementById("price_" + code);
-    const bagInput = document.getElementById("bag_" + code);
-
-    if (priceInput || bagInput) {
-      priceCache[code] = {
-        price: priceInput ? priceInput.value : "",
-        bag: bagInput ? bagInput.value : "50"
-      };
-    }
-  });
-
   container.innerHTML = "";
+
+  const selected = getSelectedFertilizers();
 
   selected.forEach(code => {
 
     const data = fertilizers[code];
-    const cached = priceCache[code] || { price: "", bag: "50" };
 
     const wrapper = document.createElement("div");
     wrapper.className = "price-card";
@@ -283,7 +268,6 @@ function generatePriceInputs() {
           type="number"
           id="price_${code}"
           step="any"
-          value="${cached.price}"
           placeholder="Enter price"
         >
       </div>
@@ -293,7 +277,7 @@ function generatePriceInputs() {
         <input
           type="number"
           id="bag_${code}"
-          value="${cached.bag}"
+          value="50"
           min="1"
           step="any"
         >
@@ -556,6 +540,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
