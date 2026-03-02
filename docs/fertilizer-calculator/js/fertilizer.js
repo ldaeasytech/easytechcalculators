@@ -1,7 +1,6 @@
 // fertilizer.js
 
 import { fertilizers } from "./fertilizerData.js";
-import { fertilizerSets } from "./fertilizerOptions.js";
 import { solveFertilizerSet } from "./linearSolver.js";
 import { calculateCost } from "./economicRanking.js";
 
@@ -183,52 +182,85 @@ populateCropDropdown();
 
 
 // =====================================================
-// GENERATE PRICE INPUTS
+// GENERATE FERTILIZER CHECKBOXES
 // =====================================================
-function generatePriceInputs() {
 
-  const container = document.getElementById("priceInputs");
-  if (!container) return;
+function generateFertilizerCheckboxes(){
+  const container=document.getElementById("fertilizerCheckboxGrid");
+  if(!container) return;
 
-  container.innerHTML = "";
+  container.innerHTML="";
 
-  Object.entries(fertilizers).forEach(([code, data]) => {
+  Object.entries(fertilizers).forEach(([code,data],index)=>{
+    const label=document.createElement("label");
+    label.className="fert-checkbox-item";
 
-    const wrapper = document.createElement("div");
-    wrapper.className = "price-card";
+    label.innerHTML=`
+      <input type="checkbox"
+        class="fert-checkbox"
+        value="${code}"
+        ${index<4?"checked":""}>
+      ${data.display}
+    `;
+    container.appendChild(label);
+  });
+}
 
-    wrapper.innerHTML = `
-      <div class="price-title">
-        ${data.display}
-      </div>
+// =====================================================
+// GET SELECTED FERTILIZERS
+// =====================================================
 
+function getSelectedFertilizers(){
+  return Array.from(
+    document.querySelectorAll(".fert-checkbox:checked")
+  ).map(cb=>cb.value);
+}
+
+// =====================================================
+// DYNAMIC COMBINATIONS (nC3)
+// =====================================================
+
+function generateFertilizerCombinations(selected){
+  const combos=[];
+  for(let i=0;i<selected.length-2;i++){
+    for(let j=i+1;j<selected.length-1;j++){
+      for(let k=j+1;k<selected.length;k++){
+        combos.push([selected[i],selected[j],selected[k]]);
+      }
+    }
+  }
+  return combos;
+}
+
+
+
+// =====================================================
+// PRICE INPUTS
+// =====================================================
+
+function generatePriceInputs(){
+  const container=document.getElementById("priceInputs");
+  if(!container) return;
+  container.innerHTML="";
+
+  Object.entries(fertilizers).forEach(([code,data])=>{
+    const wrapper=document.createElement("div");
+    wrapper.className="price-card";
+    wrapper.innerHTML=`
+      <div class="price-title">${data.display}</div>
       <div class="price-row">
-        <label>
-          Price per bag (<span class="currency-symbol"></span>)
-        </label>
-        <input 
-          type="number"
-          id="price_${code}"
-          step="any"
-          placeholder="Enter price"
-        >
+        <label>Price per bag (<span class="currency-symbol"></span>)</label>
+        <input type="number" id="price_${code}" step="any">
       </div>
-
       <div class="price-row">
         <label>Bag weight (kg)</label>
-        <input
-          type="number"
-          id="bag_${code}"
-          value="50"
-          min="1"
-          step="any"
-        >
+        <input type="number" id="bag_${code}" value="50" min="1">
       </div>
     `;
-
     container.appendChild(wrapper);
   });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -260,120 +292,99 @@ document.addEventListener("DOMContentLoaded", () => {
   generatePriceInputs();
   updateCurrencySymbols();
 
-console.log("Timezone:", Intl.DateTimeFormat().resolvedOptions().timeZone);
-console.log("Detected currency:", detectCurrencyFromLocale());
-  
+});
+
+// =====================================================
+// DOM READY
+// =====================================================
+
+document.addEventListener("DOMContentLoaded",()=>{
+  generateFertilizerCheckboxes();
+  generatePriceInputs();
+  updateCurrencySymbols();
 });
 
 // =====================================================
 // CALCULATE BUTTON
 // =====================================================
 
-document.getElementById("calculateBtn").addEventListener("click", () => {
+document.getElementById("calculateBtn")
+.addEventListener("click",()=>{
 
-const targetN = parseFloat(document.getElementById("targetN").value) || 0;
-const targetP = parseFloat(document.getElementById("targetP").value) || 0;
-const targetK = parseFloat(document.getElementById("targetK").value) || 0;
+  const targetN=parseFloat(document.getElementById("targetN").value)||0;
+  const targetP=parseFloat(document.getElementById("targetP").value)||0;
+  const targetK=parseFloat(document.getElementById("targetK").value)||0;
 
-const soilN = parseFloat(document.getElementById("soilN").value) || 0;
-const soilP = parseFloat(document.getElementById("soilP").value) || 0;
-const soilK = parseFloat(document.getElementById("soilK").value) || 0;
+  const soilN=parseFloat(document.getElementById("soilN").value)||0;
+  const soilP=parseFloat(document.getElementById("soilP").value)||0;
+  const soilK=parseFloat(document.getElementById("soilK").value)||0;
 
-const Nreq = Math.max(targetN - soilN, 0);
-const Preq = Math.max(targetP - soilP, 0);
-const Kreq = Math.max(targetK - soilK, 0);
+  const Nreq=Math.max(targetN-soilN,0);
+  const Preq=Math.max(targetP-soilP,0);
+  const Kreq=Math.max(targetK-soilK,0);
 
-// ================================
-// AREA CONVERSION
-// ================================
-const areaValue = parseFloat(document.getElementById("areaValue").value) || 1;
-const areaUnit = document.getElementById("areaUnit").value;
+  const areaValue=parseFloat(document.getElementById("areaValue").value)||1;
+  const areaUnit=document.getElementById("areaUnit").value;
+  const areaInHa=areaUnit==="acre"?areaValue*0.404686:areaValue;
 
-// 1 acre = 0.404686 ha
-const areaInHa = areaUnit === "acre"
-  ? areaValue * 0.404686
-  : areaValue;
+  const required=[Nreq*areaInHa,Preq*areaInHa,Kreq*areaInHa];
 
-  const required = [
-  Nreq * areaInHa,
-  Preq * areaInHa,
-  Kreq * areaInHa
-];
-  const results = [];
+  const selected=getSelectedFertilizers();
+  if(selected.length<3){
+    alert("Select at least 3 fertilizers.");
+    return;
+  }
 
-  // Check if ANY price is entered
-  const anyPriceEntered = Object.keys(fertilizers).some(code => {
-    const val = document.getElementById("price_" + code).value;
-    return val !== "";
+  const fertilizerSets=generateFertilizerCombinations(selected);
+  const results=[];
+
+  const anyPriceEntered=selected.some(code=>{
+    const val=document.getElementById("price_"+code)?.value;
+    return val!=="";
   });
 
-  fertilizerSets.forEach(set => {
-
-    const matrix = [
-      [fertilizers[set[0]].N, fertilizers[set[1]].N, fertilizers[set[2]].N],
-      [fertilizers[set[0]].P, fertilizers[set[1]].P, fertilizers[set[2]].P],
-      [fertilizers[set[0]].K, fertilizers[set[1]].K, fertilizers[set[2]].K]
+  fertilizerSets.forEach(set=>{
+    const matrix=[
+      [fertilizers[set[0]].N,fertilizers[set[1]].N,fertilizers[set[2]].N],
+      [fertilizers[set[0]].P,fertilizers[set[1]].P,fertilizers[set[2]].P],
+      [fertilizers[set[0]].K,fertilizers[set[1]].K,fertilizers[set[2]].K]
     ];
 
-    const solution = solveFertilizerSet(matrix, required);
-    if (!solution) return;
+    const solution=solveFertilizerSet(matrix,required);
+    if(!solution) return;
 
-    const totalMass = solution.reduce((a,b) => a + b, 0);
+    const totalMass=solution.reduce((a,b)=>a+b,0);
 
-    if (anyPriceEntered) {
-
-     const pricesPerKg = set.map(code => {
-
-  const pricePerBag =
-    parseFloat(document.getElementById("price_" + code).value);
-
-  const bagWeight =
-    parseFloat(document.getElementById("bag_" + code).value) || 50;
-
-  return getPricePerKg(pricePerBag, bagWeight);
-});
-
-      // Skip if incomplete pricing
-   if (pricesPerKg.some(p => isNaN(p))) return;
-
-    const totalCost = calculateCost(solution, pricesPerKg);
-
-      results.push({
-        set,
-        solution,
-        totalMass,
-        totalCost
+    if(anyPriceEntered){
+      const pricesPerKg=set.map(code=>{
+        const pricePerBag=parseFloat(document.getElementById("price_"+code).value);
+        const bagWeight=parseFloat(document.getElementById("bag_"+code).value)||50;
+        return getPricePerKg(pricePerBag,bagWeight);
       });
+      if(pricesPerKg.some(p=>isNaN(p))) return;
 
+      const totalCost=calculateCost(solution,pricesPerKg);
+
+      results.push({set,solution,totalMass,totalCost});
     } else {
-
-      results.push({
-        set,
-        solution,
-        totalMass
-      });
-
+      results.push({set,solution,totalMass});
     }
-
   });
 
-  if (results.length === 0) {
+  if(results.length===0){
     alert("No feasible fertilizer combinations found.");
     return;
   }
 
-  if (anyPriceEntered) {
-    results.sort((a,b) => a.totalCost - b.totalCost);
-    displayResults(results.slice(0,10), true);
+  if(anyPriceEntered){
+    results.sort((a,b)=>a.totalCost-b.totalCost);
+    displayResults(results.slice(0,10),true);
   } else {
-    results.sort((a,b) => a.totalMass - b.totalMass);
-    displayResults(results, false);
+    results.sort((a,b)=>a.totalMass-b.totalMass);
+    displayResults(results,false);
   }
 
 });
-
-
-
 
 // =====================================================
 // DISPLAY RESULTS
@@ -522,6 +533,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
