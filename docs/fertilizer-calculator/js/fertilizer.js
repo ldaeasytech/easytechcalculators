@@ -242,7 +242,7 @@ function generatePriceInputs() {
   const container = document.getElementById("priceInputs");
   if (!container) return;
 
-  container.innerHTML = "";
+  //container.innerHTML = "";
 
   const selected = getSelectedFertilizers();
 
@@ -538,6 +538,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
