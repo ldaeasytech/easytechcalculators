@@ -298,7 +298,7 @@ export function solveHeatingCoolingProcess({
 
     const Pv2 = vaporPressureFromW(w2, P);
 
-    s2 = {
+    /*s2 = {
       dry_bulb: T2,
       relative_humidity: (Pv2 / Psat(T2)) * 100,
       humidity_ratio: w2,
@@ -308,7 +308,13 @@ export function solveHeatingCoolingProcess({
       specific_volume: specificVolume(T2, w2, P),
       vapor_pressure: Pv2,
       degree_of_saturation: degreeOfSaturation(w2, T2, P)
-    };
+    };*/
+
+     s2 = solvePsychrometrics("T_w", {
+  Tdb: T2,
+  w: w2,
+  pressure: P
+});
 
   }
 
