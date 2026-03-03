@@ -270,6 +270,53 @@ function drawWetBulb(context) {
   }
 }
 
+if (processLine) {
+
+  const { x1, y1, x2, y2 } = processLine;
+
+  /* ========= Draw Line ========= */
+  ctx.strokeStyle = "#ff4d6d";
+  ctx.lineWidth = 3;
+
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+
+  /* ========= Arrow Head ========= */
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const arrowLength = 12;
+
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(
+    x2 - arrowLength * Math.cos(angle - Math.PI / 6),
+    y2 - arrowLength * Math.sin(angle - Math.PI / 6)
+  );
+  ctx.lineTo(
+    x2 - arrowLength * Math.cos(angle + Math.PI / 6),
+    y2 - arrowLength * Math.sin(angle + Math.PI / 6)
+  );
+  ctx.closePath();
+  ctx.fill();
+
+  /* ========= Initial Marker ========= */
+  ctx.fillStyle = "#00d4ff";
+  ctx.beginPath();
+  ctx.arc(x1, y1, 6, 0, 2 * Math.PI);
+  ctx.fill();
+
+  /* ========= Final Marker ========= */
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath();
+  ctx.arc(x2, y2, 6, 0, 2 * Math.PI);
+  ctx.fill();
+
+  /* ========= Legend ========= */
+  drawLegend();
+}
+   
 /* =========================================================
    Pre-render Background
 ========================================================= */
@@ -307,6 +354,8 @@ export function setProcessLine(state1, state2) {
   };
 }
 
+
+   
 export function renderPsychChart(state) {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -316,28 +365,50 @@ export function renderPsychChart(state) {
   // Draw process line if exists
 if (processLine) {
 
-  // Draw process line
+  const { x1, y1, x2, y2 } = processLine;
+
+  /* ========= Draw Line ========= */
   ctx.strokeStyle = "#ff4d6d";
   ctx.lineWidth = 3;
 
   ctx.beginPath();
-  ctx.moveTo(processLine.x1, processLine.y1);
-  ctx.lineTo(processLine.x2, processLine.y2);
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
   ctx.stroke();
 
-  // Initial state marker (cyan)
-  ctx.fillStyle = "#00d4ff";
-  ctx.beginPath();
-  ctx.arc(processLine.x1, processLine.y1, 6, 0, 2 * Math.PI);
-  ctx.fill();
+  /* ========= Arrow Head ========= */
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const arrowLength = 12;
 
-  // Final state marker (red)
   ctx.fillStyle = "#ff4d6d";
   ctx.beginPath();
-  ctx.arc(processLine.x2, processLine.y2, 6, 0, 2 * Math.PI);
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(
+    x2 - arrowLength * Math.cos(angle - Math.PI / 6),
+    y2 - arrowLength * Math.sin(angle - Math.PI / 6)
+  );
+  ctx.lineTo(
+    x2 - arrowLength * Math.cos(angle + Math.PI / 6),
+    y2 - arrowLength * Math.sin(angle + Math.PI / 6)
+  );
+  ctx.closePath();
   ctx.fill();
-}
 
+  /* ========= Initial Marker ========= */
+  ctx.fillStyle = "#00d4ff";
+  ctx.beginPath();
+  ctx.arc(x1, y1, 6, 0, 2 * Math.PI);
+  ctx.fill();
+
+  /* ========= Final Marker ========= */
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath();
+  ctx.arc(x2, y2, 6, 0, 2 * Math.PI);
+  ctx.fill();
+
+  /* ========= Legend ========= */
+  drawLegend();
+}
   // Draw single-state marker (fallback mode)
   else if (state) {
 
