@@ -35,10 +35,10 @@ initialModeSelect.addEventListener("change", updateUnitLabels);
 
 finalModeSelect.addEventListener("change", updateUnitLabels);
 
-unitSelect.addEventListener("change", () => {
+/*unitSelect.addEventListener("change", () => {
   unitSystem = unitSelect.value;
   updateUnitLabels();
-});
+});*/
 
 const inputs = {
   init1: document.getElementById("init1"),
