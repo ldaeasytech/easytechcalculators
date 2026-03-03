@@ -3,7 +3,7 @@ import {
   solveHeatingCoolingProcess
 } from "./solver.js";
 
-import { renderPsychChart } from "./psychrometric-chart.js";
+import { renderPsychChart, setProcessLine } from "./psychrometric-chart.js";
 
 /* =========================================================
    STATE
@@ -123,8 +123,8 @@ calculateBtn.addEventListener("click", () => {
     const resultDisplay = convertFromSIProcess({ ...resultSI });
 
     renderProcessResults(resultDisplay);
-    renderPsychChart(resultDisplay.state1, unitSystem);
-    plotProcess(resultDisplay.state1, resultDisplay.state2);
+    setProcessLine(resultDisplay.state1, resultDisplay.state2);
+    renderPsychChart();
 
   } catch (err) {
     alert(err.message);
