@@ -252,7 +252,8 @@ function convertFromSIProcess(r) {
 
       s.dry_bulb = s.dry_bulb * 9/5 + 32;
       s.dew_point = s.dew_point * 9/5 + 32;
-
+      s.wet_bulb = s.wet_bulb * 9/5 + 32; 
+      
       s.enthalpy *= 0.429922614;
       s.enthalpy += 7.68;
     });
