@@ -262,13 +262,16 @@ export function setProcessLine(state1, state2) {
     return;
   }
 
-  const T1_display = chartUnitSystem === "IP"
+ /* const T1_display = chartUnitSystem === "IP"
     ? state1.dry_bulb * 9/5 + 32
     : state1.dry_bulb;
 
   const T2_display = chartUnitSystem === "IP"
     ? state2.dry_bulb * 9/5 + 32
-    : state2.dry_bulb;
+    : state2.dry_bulb;*/
+
+   const T1_display = state1.dry_bulb;
+const T2_display = state2.dry_bulb;
 
   processLine = {
     x1: scaleX(T1_display),
