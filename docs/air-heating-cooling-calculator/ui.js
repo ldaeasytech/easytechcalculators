@@ -1,9 +1,14 @@
+
 import {
   solvePsychrometrics,
   solveHeatingCoolingProcess
 } from "./solver.js";
 
-import { renderPsychChart } from "./psychrometric-chart.js";
+import {
+  renderPsychChart,
+  setProcessLine,
+  setChartUnitSystem
+} from "./psychrometric-chart.js";
 
 /* =========================================================
    STATE
@@ -21,6 +26,19 @@ const unitSelect = document.getElementById("unitSystem");
 
 const initialModeSelect = document.getElementById("initialMode");
 const finalModeSelect   = document.getElementById("finalMode");
+
+/* =========================================================
+   MODE & UNIT LISTENERS
+========================================================= */
+
+initialModeSelect.addEventListener("change", updateUnitLabels);
+
+finalModeSelect.addEventListener("change", updateUnitLabels);
+
+unitSelect.addEventListener("change", () => {
+  unitSystem = unitSelect.value;
+  updateUnitLabels();
+});
 
 const inputs = {
   init1: document.getElementById("init1"),
@@ -123,8 +141,10 @@ calculateBtn.addEventListener("click", () => {
     const resultDisplay = convertFromSIProcess({ ...resultSI });
 
     renderProcessResults(resultDisplay);
-    renderPsychChart(resultDisplay.state1, unitSystem);
-    plotProcess(resultDisplay.state1, resultDisplay.state2);
+    setProcessLine(resultDisplay.state1, resultDisplay.state2);
+
+    setChartUnitSystem(unitSystem);
+    renderPsychChart();
 
   } catch (err) {
     alert(err.message);
@@ -174,6 +194,9 @@ function renderProcessResults(r) {
   setValue("deltaHValue", r.delta_h, 3);
   setValue("sensibleValue", r.sensibleHeat, 3);
   setValue("condensedValue", r.moistureCondensed, 6);
+    // Wet Bulb
+  setValue("wb1Value", r.state1.wet_bulb, 2);
+  setValue("wb2Value", r.state2.wet_bulb, 2);
 
   // State 1
   setValue("T1Value", r.state1.dry_bulb, 2);
@@ -236,7 +259,8 @@ function convertFromSIProcess(r) {
 
       s.dry_bulb = s.dry_bulb * 9/5 + 32;
       s.dew_point = s.dew_point * 9/5 + 32;
-
+      s.wet_bulb = s.wet_bulb * 9/5 + 32; 
+      
       s.enthalpy *= 0.429922614;
       s.enthalpy += 7.68;
     });
@@ -251,7 +275,6 @@ function convertFromSIProcess(r) {
 /* =========================================================
    UNIT LABELS
 ========================================================= */
-
 function updateUnitLabels() {
 
   const tempUnit = unitSystem === "IP" ? "°F" : "°C";
@@ -295,29 +318,37 @@ function updateUnitLabels() {
 
   /* ================= FINAL MODE ================= */
 
+  const final2Field = document.getElementById("final2Field");
+
   if (finalMode === "T_only") {
+  
     labelFinal1.textContent = `Final Dry Bulb Temperature (${tempUnit})`;
-    labelFinal2.textContent = "";
-    document.getElementById("final2").disabled = true;
+  
+    final2Field.style.display = "none";
     document.getElementById("final2").value = "";
   }
 
   else if (finalMode === "T_RH") {
-    labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
-    labelFinal2.textContent = "Relative Humidity (%)";
-    document.getElementById("final2").disabled = false;
-  }
+
+  labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+  labelFinal2.textContent = "Relative Humidity (%)";
+
+  final2Field.style.display = "block";
+}
 
   else if (finalMode === "T_w") {
-    labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
-    labelFinal2.textContent = `Humidity Ratio (${wUnit})`;
-    document.getElementById("final2").disabled = false;
-  }
+
+  labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+  labelFinal2.textContent = `Humidity Ratio (${wUnit})`;
+
+  final2Field.style.display = "block";
+}
 
   /* ================= RESULT TABLE UNITS ================= */
 
   document.getElementById("TUnit").textContent = tempUnit;
   document.getElementById("dpUnit").textContent = tempUnit;
+  document.getElementById("wbUnit").textContent = tempUnit;
 
   document.getElementById("hUnit").textContent = hUnit;
   document.getElementById("deltaHUnit").textContent = hUnit;
@@ -330,6 +361,5 @@ function updateUnitLabels() {
 /* =========================================================
    INIT
 ========================================================= */
-
 updateUnitLabels();
 renderPsychChart(null, unitSystem);
