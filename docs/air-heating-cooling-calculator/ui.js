@@ -263,11 +263,53 @@ function updateUnitLabels() {
   document.getElementById("hUnit").textContent = hUnit;
   document.getElementById("deltaHUnit").textContent = hUnit;
   document.getElementById("sensibleUnit").textContent = hUnit;
+
+  function updateModeDropdownLabels() {
+
+  const tempUnit = unitSystem === "IP" ? "°F" : "°C";
+  const hUnit = unitSystem === "IP"
+    ? "Btu/lb dry air"
+    : "kJ/kg dry air";
+  const wUnit = unitSystem === "IP"
+    ? "lb/lb dry air"
+    : "kg/kg dry air";
+
+  // Initial state dropdown
+  const initSelect = document.getElementById("initialMode");
+  const finalSelect = document.getElementById("finalMode");
+
+  // Update Initial Options
+  initSelect.querySelector('[value="T_RH"]').textContent =
+    `Tdb (${tempUnit}) – RH (%)`;
+
+  initSelect.querySelector('[value="T_Twb"]').textContent =
+    `Tdb (${tempUnit}) – Twb (${tempUnit})`;
+
+  initSelect.querySelector('[value="T_Tdp"]').textContent =
+    `Tdb (${tempUnit}) – Tdew (${tempUnit})`;
+
+  initSelect.querySelector('[value="T_w"]').textContent =
+    `Tdb (${tempUnit}) – Humidity Ratio (${wUnit})`;
+
+  initSelect.querySelector('[value="H_RH"]').textContent =
+    `Enthalpy (${hUnit}) – RH (%)`;
+
+  // Update Final Options
+  finalSelect.querySelector('[value="T_only"]').textContent =
+    `Final Dry Bulb (${tempUnit}) Only`;
+
+  finalSelect.querySelector('[value="T_RH"]').textContent =
+    `Tdb (${tempUnit}) – RH (%)`;
+
+  finalSelect.querySelector('[value="T_w"]').textContent =
+    `Tdb (${tempUnit}) – Humidity Ratio (${wUnit})`;
+}
+
+  updateModeDropdownLabels();
 }
 
 /* =========================================================
    INIT
 ========================================================= */
-
 updateUnitLabels();
 renderPsychChart(null, unitSystem);
