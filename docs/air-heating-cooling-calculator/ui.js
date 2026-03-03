@@ -22,6 +22,19 @@ const unitSelect = document.getElementById("unitSystem");
 const initialModeSelect = document.getElementById("initialMode");
 const finalModeSelect   = document.getElementById("finalMode");
 
+/* =========================================================
+   MODE & UNIT LISTENERS
+========================================================= */
+
+initialModeSelect.addEventListener("change", updateUnitLabels);
+
+finalModeSelect.addEventListener("change", updateUnitLabels);
+
+unitSelect.addEventListener("change", () => {
+  unitSystem = unitSelect.value;
+  updateUnitLabels();
+});
+
 const inputs = {
   init1: document.getElementById("init1"),
   init2: document.getElementById("init2"),
@@ -251,61 +264,67 @@ function convertFromSIProcess(r) {
 /* =========================================================
    UNIT LABELS
 ========================================================= */
-
 function updateUnitLabels() {
 
   const tempUnit = unitSystem === "IP" ? "°F" : "°C";
-  const hUnit = unitSystem === "IP"
-    ? "Btu/lb dry air"
-    : "kJ/kg dry air";
+  const hUnit = unitSystem === "IP" ? "Btu/lb dry air" : "kJ/kg dry air";
+  const wUnit = unitSystem === "IP" ? "lb/lb dry air" : "kg/kg dry air";
 
-  document.getElementById("TUnit").textContent = tempUnit;
-  document.getElementById("hUnit").textContent = hUnit;
-  document.getElementById("deltaHUnit").textContent = hUnit;
-  document.getElementById("sensibleUnit").textContent = hUnit;
+  const initialMode = document.getElementById("initialMode").value;
+  const finalMode = document.getElementById("finalMode").value;
 
-  function updateModeDropdownLabels() {
+  const labelInit1 = document.getElementById("label-init1");
+  const labelInit2 = document.getElementById("label-init2");
+  const labelFinal1 = document.getElementById("label-final1");
+  const labelFinal2 = document.getElementById("label-final2");
 
-  const tempUnit = unitSystem === "IP" ? "°F" : "°C";
-  const hUnit = unitSystem === "IP"
-    ? "Btu/lb dry air"
-    : "kJ/kg dry air";
-  const wUnit = unitSystem === "IP"
-    ? "lb/lb dry air"
-    : "kg/kg dry air";
+  /* ================= INITIAL MODE ================= */
 
-  // Initial state dropdown
-  const initSelect = document.getElementById("initialMode");
-  const finalSelect = document.getElementById("finalMode");
+  if (initialMode === "T_RH") {
+    labelInit1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+    labelInit2.textContent = "Relative Humidity (%)";
+  }
 
-  // Update Initial Options
-  initSelect.querySelector('[value="T_RH"]').textContent =
-    `Tdb (${tempUnit}) – RH (%)`;
+  else if (initialMode === "T_Twb") {
+    labelInit1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+    labelInit2.textContent = `Wet Bulb Temperature (${tempUnit})`;
+  }
 
-  initSelect.querySelector('[value="T_Twb"]').textContent =
-    `Tdb (${tempUnit}) – Twb (${tempUnit})`;
+  else if (initialMode === "T_Tdp") {
+    labelInit1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+    labelInit2.textContent = `Dew Point Temperature (${tempUnit})`;
+  }
 
-  initSelect.querySelector('[value="T_Tdp"]').textContent =
-    `Tdb (${tempUnit}) – Tdew (${tempUnit})`;
+  else if (initialMode === "T_w") {
+    labelInit1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+    labelInit2.textContent = `Humidity Ratio (${wUnit})`;
+  }
 
-  initSelect.querySelector('[value="T_w"]').textContent =
-    `Tdb (${tempUnit}) – Humidity Ratio (${wUnit})`;
+  else if (initialMode === "H_RH") {
+    labelInit1.textContent = `Enthalpy (${hUnit})`;
+    labelInit2.textContent = "Relative Humidity (%)";
+  }
 
-  initSelect.querySelector('[value="H_RH"]').textContent =
-    `Enthalpy (${hUnit}) – RH (%)`;
+  /* ================= FINAL MODE ================= */
 
-  // Update Final Options
-  finalSelect.querySelector('[value="T_only"]').textContent =
-    `Final Dry Bulb (${tempUnit}) Only`;
+  if (finalMode === "T_only") {
+    labelFinal1.textContent = `Final Dry Bulb Temperature (${tempUnit})`;
+    labelFinal2.textContent = "";
+    document.getElementById("final2").disabled = true;
+    document.getElementById("final2").value = "";
+  }
 
-  finalSelect.querySelector('[value="T_RH"]').textContent =
-    `Tdb (${tempUnit}) – RH (%)`;
+  else if (finalMode === "T_RH") {
+    labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+    labelFinal2.textContent = "Relative Humidity (%)";
+    document.getElementById("final2").disabled = false;
+  }
 
-  finalSelect.querySelector('[value="T_w"]').textContent =
-    `Tdb (${tempUnit}) – Humidity Ratio (${wUnit})`;
-}
-
-  updateModeDropdownLabels();
+  else if (finalMode === "T_w") {
+    labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+    labelFinal2.textContent = `Humidity Ratio (${wUnit})`;
+    document.getElementById("final2").disabled = false;
+  }
 }
 
 /* =========================================================
