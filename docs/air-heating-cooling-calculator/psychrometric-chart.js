@@ -4,6 +4,7 @@
 
 let chartUnitSystem = "SI";
 let processLine = null;
+let dynamicLimits = null;
 
 export function setChartUnitSystem(system) {
   chartUnitSystem = system;
@@ -30,13 +31,17 @@ const P = 101.325; // kPa (always SI internally)
 ========================================================= */
 
 function getChartLimits() {
+
+  if (dynamicLimits) return dynamicLimits;
+
   if (chartUnitSystem === "IP") {
     return {
-      T_MIN: 32,     // 0°C
-      T_MAX: 122,    // 50°C
+      T_MIN: 32,
+      T_MAX: 122,
       W_MAX: 0.030
     };
   }
+
   return {
     T_MIN: 0,
     T_MAX: 50,
@@ -254,11 +259,52 @@ renderBackground();
 /* =========================================================
    Process Line Setter
 ========================================================= */
+const T1 = state1.dry_bulb;
+const T2 = state2.dry_bulb;
+
+const w1 = state1.humidity_ratio;
+const w2 = state2.humidity_ratio;
+
+const Tmin = Math.min(T1, T2);
+const Tmax = Math.max(T1, T2);
+const wMaxProcess = Math.max(w1, w2);
+
+// Temperature margin
+const Tmargin = chartUnitSystem === "IP" ? 5 : 3;
+
+// Humidity margin (15%)
+const wMargin = wMaxProcess * 0.15;
+
+// Round temperature nicely
+const T_MIN = Math.floor((Tmin - Tmargin) / 10) * 10;
+const T_MAX = Math.ceil((Tmax + Tmargin) / 10) * 10;
+
+// Round humidity nicely (to 0.005 steps)
+const W_MAX =
+  Math.ceil((wMaxProcess + wMargin) / 0.005) * 0.005;
+
+dynamicLimits = {
+  T_MIN,
+  T_MAX,
+  W_MAX
+};
+
+renderBackground();
+
+// Add margin (5°F or 3°C)
+const margin = chartUnitSystem === "IP" ? 5 : 3;
+
+dynamicLimits = {
+  T_MIN: Math.floor((Tmin - margin) / 10) * 10,
+  T_MAX: Math.ceil((Tmax + margin) / 10) * 10,
+  W_MAX: 0.030
+};
 
 export function setProcessLine(state1, state2) {
 
   if (!state1 || !state2) {
     processLine = null;
+    dynamicLimits = null;
     return;
   }
 
