@@ -26,6 +26,15 @@ const unitSelect = document.getElementById("unitSystem");
 const initialModeSelect = document.getElementById("initialMode");
 const finalModeSelect   = document.getElementById("finalMode");
 
+const inputs = {
+  init1: document.getElementById("init1"),
+  init2: document.getElementById("init2"),
+  final1: document.getElementById("final1"),
+  final2: document.getElementById("final2"),
+  pressure: document.getElementById("pressure"),
+  elevation: document.getElementById("elevation")
+};
+
 /* =========================================================
    MODE & UNIT LISTENERS
 ========================================================= */
@@ -34,31 +43,6 @@ initialModeSelect.addEventListener("change", updateUnitLabels);
 
 finalModeSelect.addEventListener("change", updateUnitLabels);
 
-unitSelect.addEventListener("change", () => {
-
-  const old = unitSystem;
-  unitSystem = unitSelect.value;
-
-  autoConvertInputs(old, unitSystem);
-  updateUnitLabels();
-
-  if (lastResultSI) {
-
-    // Re-render table
-    renderProcessResults(
-      convertFromSIProcess({ ...lastResultSI })
-    );
-
-    // IMPORTANT: reset process line using SI only
-    setProcessLine(
-      lastResultSI.state1,
-      lastResultSI.state2
-    );
-
-    setChartUnitSystem(unitSystem);
-    renderPsychChart();
-  }
-});
 /* =========================================================
    MODE FIELD MAP
 ========================================================= */
@@ -117,14 +101,20 @@ unitSelect.addEventListener("change", () => {
   updateUnitLabels();
 
   if (lastResultSI) {
-  renderProcessResults(convertFromSIProcess({ ...lastResultSI }));
 
-  setProcessLine(lastResultSI.state1, lastResultSI.state2);
-  setChartUnitSystem(unitSystem);
-  renderPsychChart();
-}
+    renderProcessResults(
+      convertFromSIProcess({ ...lastResultSI })
+    );
+
+    setProcessLine(
+      lastResultSI.state1,
+      lastResultSI.state2
+    );
+
+    setChartUnitSystem(unitSystem);
+    renderPsychChart();
+  }
 });
-
 /* =========================================================
    CALCULATE PROCESS
 ========================================================= */
