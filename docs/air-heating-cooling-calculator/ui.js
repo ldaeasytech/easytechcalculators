@@ -187,6 +187,9 @@ function renderProcessResults(r) {
   setValue("deltaHValue", r.delta_h, 3);
   setValue("sensibleValue", r.sensibleHeat, 3);
   setValue("condensedValue", r.moistureCondensed, 6);
+    // Wet Bulb
+  setValue("wb1Value", r.state1.wet_bulb, 2);
+  setValue("wb2Value", r.state2.wet_bulb, 2);
 
   // State 1
   setValue("T1Value", r.state1.dry_bulb, 2);
@@ -330,6 +333,7 @@ function updateUnitLabels() {
 
   document.getElementById("TUnit").textContent = tempUnit;
   document.getElementById("dpUnit").textContent = tempUnit;
+  document.getElementById("wbUnit").textContent = tempUnit;
 
   document.getElementById("hUnit").textContent = hUnit;
   document.getElementById("deltaHUnit").textContent = hUnit;
