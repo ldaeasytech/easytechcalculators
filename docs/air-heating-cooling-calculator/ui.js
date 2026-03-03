@@ -122,8 +122,13 @@ calculateBtn.addEventListener("click", () => {
     const initialMode = initialModeSelect.value;
     const finalMode   = finalModeSelect.value;
 
-    const pressure =
-      parseFloat(inputs.pressure.value) || 101.325;
+    let pressure = parseFloat(inputs.pressure.value);
+
+    if (isNaN(pressure)) {
+      pressure = unitSystem === "IP"
+        ? 14.696   // psia
+        : 101.325; // kPa
+    }
 
     const initialInputs = buildStateInputs(initialMode, true);
     const finalInputs   = buildStateInputs(finalMode, false);
@@ -133,8 +138,8 @@ calculateBtn.addEventListener("click", () => {
       finalMode,
       initialInputs: convertToSI(initialInputs),
       finalInputs: convertToSI(finalInputs),
-      /*pressure: convertPressureToSI(pressure)*/
-      pressure: pressure
+      pressure: convertPressureToSI(pressure)
+      /*pressure: pressure*/
     });
 
     lastResultSI = resultSI;
@@ -248,9 +253,9 @@ function convertToSI(data) {
   return data;
 }
 
-/*function convertPressureToSI(P) {
+function convertPressureToSI(P) {
   return unitSystem === "IP" ? P * 6.89476 : P;
-}*/
+}
 
 function convertFromSIProcess(r) {
 
@@ -274,6 +279,98 @@ function convertFromSIProcess(r) {
 }
 
 /* =========================================================
+   Autoconvert
+========================================================= */
+function autoConvertInputs(from, to) {
+
+  if (from === to) return;
+
+  Object.keys(inputs).forEach(key => {
+
+    const input = inputs[key];
+    if (!input) return;
+
+    const value = parseFloat(input.value);
+    if (isNaN(value)) return;
+
+    /* -----------------------------
+       TEMPERATURE
+    ----------------------------- */
+    if (["init1", "init2", "final1", "final2"].includes(key)) {
+
+      const initialMode = initialModeSelect.value;
+      const finalMode   = finalModeSelect.value;
+
+      const mode = key.startsWith("init")
+        ? initialMode
+        : finalMode;
+
+      const fields = modeMap[mode];
+      if (!fields) return;
+
+      const fieldIndex =
+        key.endsWith("1") ? 0 : 1;
+
+      const fieldName = fields[fieldIndex];
+
+      if (["Tdb", "Twb", "Tdp"].includes(fieldName)) {
+
+        if (from === "SI" && to === "IP")
+          input.value = (value * 9/5 + 32).toFixed(2);
+
+        else if (from === "IP" && to === "SI")
+          input.value = ((value - 32) * 5/9).toFixed(2);
+      }
+
+      /* -----------------------------
+         ENTHALPY INPUT (H_RH MODE)
+      ----------------------------- */
+      if (fieldName === "h") {
+
+        if (from === "SI" && to === "IP")
+          input.value = (value * 0.429922614).toFixed(3);
+
+        else if (from === "IP" && to === "SI")
+          input.value = (value / 0.429922614).toFixed(3);
+      }
+
+      return;
+    }
+
+    /* -----------------------------
+       PRESSURE
+    ----------------------------- */
+    if (key === "pressure") {
+
+      if (from === "SI" && to === "IP")
+        input.value = (value / 6.89476).toFixed(3);
+
+      else if (from === "IP" && to === "SI")
+        input.value = (value * 6.89476).toFixed(3);
+
+      return;
+    }
+
+    /* -----------------------------
+       ELEVATION
+    ----------------------------- */
+    if (key === "elevation") {
+
+      if (from === "SI" && to === "IP")
+        input.value = (value / 0.3048).toFixed(2);
+
+      else if (from === "IP" && to === "SI")
+        input.value = (value * 0.3048).toFixed(2);
+
+      return;
+    }
+
+  });
+}
+
+
+
+/* =========================================================
    UNIT LABELS
 ========================================================= */
 function updateUnitLabels() {
@@ -290,6 +387,12 @@ function updateUnitLabels() {
   const labelFinal1 = document.getElementById("label-final1");
   const labelFinal2 = document.getElementById("label-final2");
 
+  const pUnit = unitSystem === "IP" ? "psi" : "kPa";
+  document.getElementById("pressureUnit").textContent = pUnit;
+
+  const elevUnit = unitSystem === "IP" ? "ft" : "m";
+  document.getElementById("label-elevation").innerText =
+    `Elevation (${elevUnit})`;
   /* ================= INITIAL MODE ================= */
 
   if (initialMode === "T_RH") {
