@@ -120,12 +120,19 @@ function drawAxes(context) {
   }
 
   // Vertical axis label
-  context.save();
-  context.translate(15, canvas.height / 2 + 60);
-  context.rotate(-Math.PI / 2);
-  context.fillText("Humidity Ratio (kg/kg dry air)", 0, 0);
-  context.restore();
-}
+context.save();
+
+context.fillStyle = "#aaa";
+context.font = "13px sans-serif";
+
+// Move slightly inward so it's not clipped
+context.translate(25, canvas.height / 2 + 40);
+context.rotate(-Math.PI / 2);
+
+context.textAlign = "center";
+context.fillText("Humidity Ratio (kg/kg dry air)", 0, 0);
+
+context.restore();
 
 /* =========================================================
    Saturation Curve
@@ -307,22 +314,29 @@ export function renderPsychChart(state) {
   ctx.drawImage(bgCanvas, 0, 0);
 
   // Draw process line if exists
-  if (processLine) {
+if (processLine) {
 
-    ctx.strokeStyle = "#ff4d6d";
-    ctx.lineWidth = 3;
+  // Draw process line
+  ctx.strokeStyle = "#ff4d6d";
+  ctx.lineWidth = 3;
 
-    ctx.beginPath();
-    ctx.moveTo(processLine.x1, processLine.y1);
-    ctx.lineTo(processLine.x2, processLine.y2);
-    ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(processLine.x1, processLine.y1);
+  ctx.lineTo(processLine.x2, processLine.y2);
+  ctx.stroke();
 
-    // Final state marker
-    ctx.fillStyle = "#ff4d6d";
-    ctx.beginPath();
-    ctx.arc(processLine.x2, processLine.y2, 6, 0, 2 * Math.PI);
-    ctx.fill();
-  }
+  // Initial state marker (cyan)
+  ctx.fillStyle = "#00d4ff";
+  ctx.beginPath();
+  ctx.arc(processLine.x1, processLine.y1, 6, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Final state marker (red)
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath();
+  ctx.arc(processLine.x2, processLine.y2, 6, 0, 2 * Math.PI);
+  ctx.fill();
+}
 
   // Draw single-state marker (fallback mode)
   else if (state) {
