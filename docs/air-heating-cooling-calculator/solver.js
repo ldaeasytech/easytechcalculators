@@ -240,3 +240,105 @@ export function solvePsychrometrics(mode, inputs) {
     degree_of_saturation: mu
   };
 }
+
+
+/* =========================================================
+   HEATING & COOLING PROCESS SOLVER
+   Reuses solvePsychrometrics()
+   ========================================================= */
+
+export function solveHeatingCoolingProcess({
+  initialMode,
+  finalMode,
+  initialInputs,
+  finalInputs,
+  pressure
+}) {
+
+  const P = pressure || P_ATM;
+
+  // ---------------------------
+  // 1️⃣ Solve Initial State
+  // ---------------------------
+  const s1 = solvePsychrometrics(initialMode, {
+    ...initialInputs,
+    pressure: P
+  });
+
+  const T1 = s1.dry_bulb;
+  const w1 = s1.humidity_ratio;
+
+  let s2;
+  let processType = "";
+  let moistureCondensed = 0;
+
+  // --------------------------------------------------
+  // 2️⃣ Final State — Standard Heating/Cooling Mode
+  // --------------------------------------------------
+  if (finalMode === "T_only") {
+
+    const T2 = finalInputs.Tdb;
+
+    const w_sat2 = humidityRatio(Psat(T2), P);
+
+    let w2;
+
+    if (w1 <= w_sat2) {
+      // Sensible only
+      w2 = w1;
+      processType = T2 > T1
+        ? "Sensible Heating"
+        : "Sensible Cooling";
+    } else {
+      // Condensation occurs
+      w2 = w_sat2;
+      moistureCondensed = w1 - w2;
+      processType = "Cooling with Condensation";
+    }
+
+    const Pv2 = vaporPressureFromW(w2, P);
+
+    s2 = {
+      dry_bulb: T2,
+      relative_humidity: (Pv2 / Psat(T2)) * 100,
+      humidity_ratio: w2,
+      dew_point: dewPoint(Pv2),
+      wet_bulb: wetBulb(T2, w2, P),
+      enthalpy: enthalpy(T2, w2),
+      specific_volume: specificVolume(T2, w2, P),
+      vapor_pressure: Pv2,
+      degree_of_saturation: degreeOfSaturation(w2, T2, P)
+    };
+
+  }
+
+  // --------------------------------------------------
+  // 3️⃣ Advanced Final Mode (reuse full solver)
+  // --------------------------------------------------
+  else {
+
+    s2 = solvePsychrometrics(finalMode, {
+      ...finalInputs,
+      pressure: P
+    });
+
+    processType = "General Psychrometric Process";
+  }
+
+  // ---------------------------
+  // 4️⃣ Energy Calculations
+  // ---------------------------
+  const delta_h = s2.enthalpy - s1.enthalpy;
+
+  const sensibleHeat =
+    1.006 * (s2.dry_bulb - s1.dry_bulb);
+
+  return {
+    state1: s1,
+    state2: s2,
+    processType,
+    delta_h,
+    sensibleHeat,
+    moistureCondensed
+  };
+}
