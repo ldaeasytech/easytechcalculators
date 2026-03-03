@@ -1,5 +1,6 @@
 const canvas = document.getElementById("psychChart");
 const ctx = canvas.getContext("2d");
+let processLine = null;
 
 const bgCanvas = document.createElement("canvas");
 const bgCtx = bgCanvas.getContext("2d");
@@ -284,13 +285,48 @@ renderBackground();
    Render Public Function
 ========================================================= */
 
+export function setProcessLine(state1, state2) {
+
+  if (!state1 || !state2) {
+    processLine = null;
+    return;
+  }
+
+  processLine = {
+    x1: scaleX(state1.dry_bulb),
+    y1: scaleY(state1.humidity_ratio),
+    x2: scaleX(state2.dry_bulb),
+    y2: scaleY(state2.humidity_ratio)
+  };
+}
+
 export function renderPsychChart(state) {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   ctx.drawImage(bgCanvas, 0, 0);
 
-  if (state) {
+  // Draw process line if exists
+  if (processLine) {
+
+    ctx.strokeStyle = "#ff4d6d";
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.moveTo(processLine.x1, processLine.y1);
+    ctx.lineTo(processLine.x2, processLine.y2);
+    ctx.stroke();
+
+    // Final state marker
+    ctx.fillStyle = "#ff4d6d";
+    ctx.beginPath();
+    ctx.arc(processLine.x2, processLine.y2, 6, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+  // Draw single-state marker (fallback mode)
+  else if (state) {
+
     const x = scaleX(state.dry_bulb);
     const y = scaleY(state.humidity_ratio);
 
