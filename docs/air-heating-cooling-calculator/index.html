@@ -4,37 +4,34 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Psychrometric Chart Calculator (RH, WB, DP, W, h Modes) | HVAC Air Properties (Wet Bulb, Dew Point, Humidity Ratio & Enthalpy)</title>
+<title>Air Heating & Cooling Psychrometric Calculator | Sensible Heating, Cooling & Condensation Analysis</title>
 
 <meta name="description"
-content="Advanced Psychrometric Chart Calculator supporting Dry-bulb + RH, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy input pairs. Compute humidity ratio, enthalpy, wet-bulb, dew point, specific volume, vapor pressure and degree of saturation." />
+content="Air heating and cooling psychrometric calculator for HVAC process analysis. Determine sensible heating, sensible cooling, cooling with condensation, enthalpy change, humidity ratio, and moisture removal with interactive psychrometric chart." />
 
 <meta name="keywords"
-content="psychrometric calculator, psychrometric chart calculator, HVAC air properties calculator, humidity ratio calculator, wet bulb calculator, dew point calculator, enthalpy moist air, specific volume air, ASHRAE psychrometrics" />
+content="air heating calculator, sensible cooling calculator, psychrometric process calculator, HVAC cooling with condensation, enthalpy change moist air, humidity ratio change, cooling coil analysis, HVAC process chart" />
 
-<meta name="author" content="EasyTechCalculators" />
-<meta name="robots" content="index, follow" />
-<meta name="theme-color" content="#0b1220" />
+<link rel="canonical" href="https://easytechcalculators.com/air-heating-cooling-calculator/" />
 
-<!-- Open Graph Meta Tags -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Psychrometric Calculator with Wet Bulb, Dew Point & Interactive HVAC Chart">
-<meta property="og:description" content="Advanced HVAC psychrometric calculator supporting Dry-bulb + RH, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy input pairs. Includes interactive psychrometric chart with full moist air property outputs.">
-<meta property="og:url" content="https://easytechcalculators.com/psychrometric-chart-calculator/">
+<meta property="og:title" content="Air Heating & Cooling Psychrometric Process Calculator">
+<meta property="og:description" content="Analyze HVAC heating and cooling processes including condensation and moisture removal using psychrometric relationships.">
+<meta property="og:url" content="https://easytechcalculators.com/air-heating-cooling-calculator/">
 <meta property="og:site_name" content="EasyTech Calculators">
-<meta property="og:image" content="https://easytechcalculators.com/images/psychrometric-preview.png">
+<meta property="og:image" content="https://easytechcalculators.com/images/air-heating-cooling-preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Psychrometric Chart Calculator showing moist air properties and interactive HVAC chart">
+<meta property="og:image:alt" content="Air heating and cooling psychrometric process chart showing sensible heating and cooling with condensation">
 <meta property="og:locale" content="en_US">
 
-<!-- Twitter Card (also used by LinkedIn fallback) -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Psychrometric Calculator with Wet Bulb, Dew Point & HVAC Chart">
-<meta name="twitter:description" content="Compute humidity ratio, enthalpy, dew point, wet-bulb, specific volume and vapor pressure with interactive psychrometric visualization.">
-<meta name="twitter:image" content="https://easytechcalculators.com/images/psychrometric-preview.png">
+<meta name="twitter:title" content="HVAC Air Heating & Cooling Psychrometric Calculator">
+<meta name="twitter:description" content="Compute enthalpy change, sensible heat, and moisture condensation for HVAC heating and cooling processes.">
+<meta name="twitter:image" content="https://easytechcalculators.com/images/air-heating-cooling-preview.png">
   
-<link rel="canonical" href="https://easytechcalculators.com/psychrometric-chart-calculator/" />
+<link rel="canonical" href="https://easytechcalculators.com/air-heating-cooling-calculator/" />
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
@@ -56,22 +53,19 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "Psychrometric Chart Calculator",
+  "name": "Air Heating & Cooling Psychrometric Calculator",
   "applicationCategory": "EngineeringApplication",
   "operatingSystem": "Web",
-  "url": "https://easytechcalculators.com/psychrometric-chart-calculator/",
-  "description": "Online HVAC psychrometric calculator for complete moist air property analysis using multiple input pairs.",
+  "url": "https://easytechcalculators.com/air-heating-cooling-calculator/",
+  "description": "Online HVAC psychrometric process calculator for sensible heating, sensible cooling, and cooling with condensation analysis.",
   "featureList": [
-    "Dry-bulb + Relative Humidity",
-    "Dry-bulb + Wet-bulb",
-    "Dry-bulb + Dew Point",
-    "Dry-bulb + Humidity Ratio",
-    "Enthalpy + RH (Advanced)",
-    "Humidity ratio",
-    "Wet-bulb temperature",
-    "Dew point temperature",
-    "Specific volume",
-    "Degree of saturation"
+    "Sensible heating analysis",
+    "Sensible cooling analysis",
+    "Cooling with condensation detection",
+    "Humidity ratio change",
+    "Enthalpy change calculation",
+    "Moisture removal calculation",
+    "Interactive psychrometric chart process line"
   ],
   "offers": {
     "@type": "Offer",
@@ -89,51 +83,26 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
  "mainEntity": [
   {
    "@type": "Question",
-   "name": "What input pairs are supported?",
+   "name": "What is sensible heating in psychrometry?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "The calculator supports Dry-bulb with Relative Humidity, Wet-bulb, Dew Point, Humidity Ratio, and Enthalpy with RH."
-   }
-  },
-
-  {
-  "@type": "Question",
-  "name": "How do you calculate wet bulb temperature?",
-  "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Wet bulb temperature is calculated from dry bulb temperature and humidity using psychrometric relations based on energy balance between sensible and latent heat."
-  }
-},
-{
-  "@type": "Question",
-  "name": "What is humidity ratio?",
-  "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Humidity ratio is the mass of water vapor per mass of dry air, typically expressed as kg water per kg dry air."
-  }
-},
-{
-  "@type": "Question",
-  "name": "Why are two independent properties required?",
-  "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "Moist air is a thermodynamic mixture, and two independent properties are required to fully define its state according to thermodynamic principles."
-  }
-},
-  {
-   "@type": "Question",
-   "name": "Why are two independent properties required?",
-   "acceptedAnswer": {
-    "@type": "Answer",
-    "text": "According to thermodynamic state principles, moist air requires two independent properties to fully define its condition."
+    "text": "Sensible heating increases dry-bulb temperature without changing humidity ratio. On a psychrometric chart, it appears as a horizontal movement to the right."
    }
   },
   {
    "@type": "Question",
-   "name": "Are the calculations based on ASHRAE equations?",
+   "name": "What happens during cooling with condensation?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Yes. Standard psychrometric relations based on ASHRAE formulations are used for engineering accuracy."
+    "text": "When air is cooled below its dew point, moisture condenses. Both temperature and humidity ratio decrease."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How is enthalpy change calculated for heating or cooling?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Enthalpy change is calculated from the difference between initial and final moist air enthalpy values at constant pressure."
    }
   }
  ]
@@ -195,9 +164,9 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
       </picture>
 
       <div class="brand-text">
-        <h1>Psychrometric Chart Calculator – Complete Moist Air Properties & HVAC Chart</h1>
+        <h1>Air Heating & Cooling Psychrometric Process Calculator</h1>
         <div class="capability-line">
-          Multiple Input Pairs · ASHRAE-Based Moist Air Properties
+          Sensible Heating · Sensible Cooling · Cooling with Condensation · HVAC Process Analysis
         </div>
       </div>
     </div>
@@ -249,45 +218,19 @@ content="psychrometric calculator, psychrometric chart calculator, HVAC air prop
   <section class="seo-intro-section">
   <div class="container-learning intro-compact">
 
-    <h2>HVAC Psychrometric Calculator for Moist Air Analysis</h2>
+    <h2>HVAC Air Heating & Cooling Process Calculator</h2>
 
     <p>
-      This psychrometric chart calculator determines complete moist air
-      properties using multiple independent input pairs including dry-bulb
-      temperature with relative humidity, wet-bulb temperature, dew point,
-      humidity ratio, or enthalpy.
+      This air heating and cooling psychrometric calculator analyzes
+      constant-pressure HVAC processes including sensible heating,
+      sensible cooling, and cooling with condensation.
     </p>
 
     <p>
-      Instantly compute humidity ratio, wet-bulb temperature, dew point,
-      enthalpy, specific volume, vapor pressure, and degree of saturation
-      for HVAC engineering applications.
+      Determine humidity ratio change, enthalpy difference, sensible heat
+      transfer, and moisture condensation directly on an interactive
+      psychrometric chart.
     </p>
-
-    <h2>Complete Psychrometric Calculator for HVAC Engineering</h2>
-
-<p>
-This online psychrometric calculator computes all moist air properties
-from any two independent inputs.
-</p>
-
-<ul>
-<li>Dry-bulb + Relative Humidity</li>
-<li>Dry-bulb + Wet-bulb</li>
-<li>Dry-bulb + Dew Point</li>
-<li>Dry-bulb + Humidity Ratio</li>
-<li>Enthalpy + Relative Humidity</li>
-</ul>
-
-<p>
-Outputs include humidity ratio, dew point, wet-bulb temperature,
-enthalpy, specific volume, vapor pressure, and degree of saturation.
-</p>
-
-<p>
-The interactive psychrometric chart displays the current air state
-directly on the saturation curve.
-</p>
 
   </div>
 </section>
@@ -297,149 +240,177 @@ directly on the saturation curve.
 
   <div class="main-grid">
     
-    <section class="card">
-      <h2>Moist Air Input Parameters</h2>
+   <section class="card">
+  <h2>Air Heating & Cooling Process Inputs</h2>
 
-      <div class="grid-form">
+  <div class="grid-form">
 
-        <!-- Mode Selection -->
-        <div class="input-group mode-group">
-          <div class="group-title">Calculation Mode</div>
-          <div class="input-tabs">
-            <button class="tab active" data-mode="T_RH">Tdb – RH</button>
-            <button class="tab" data-mode="T_Twb">Tdb – Twb</button>
-            <button class="tab" data-mode="T_Tdp">Tdb – Tdew</button>
-            <button class="tab" data-mode="T_w">Tdb – Y</button>
-            <button class="tab" data-mode="H_RH">h – RH</button>
-          </div>
-        </div>
+    <!-- Unit System -->
+    <div class="field full">
+      <label>Unit System</label>
+      <select id="unitSystem">
+        <option value="SI">SI (Metric)</option>
+        <option value="IP">IP (English)</option>
+      </select>
+    </div>
 
-        <div class="field full">
-          <label>Unit System</label>
-          <select id="unitSystem">
-            <option value="SI">SI (Metric)</option>
-            <option value="IP">IP (English)</option>
-          </select>
-        </div>
-        
-        <!-- Dry Bulb -->
-        <div class="field">
-          <label id="label-Tdb">Tdb: Dry Bulb Temperature (°C)</label>
-          <input type="number" id="Tdb">
-        </div>
+    <!-- ================= INITIAL STATE ================= -->
+    <div class="input-group">
+      <div class="group-title">Initial State</div>
 
-        <!-- Relative Humidity -->
-        <div class="field">
-          <label>RH: Relative Humidity (%)</label>
-          <input type="number" id="RH">
-        </div>
-
-        <!-- Wet Bulb -->
-        <div class="field">
-          <label id="label-Twb">Twb: Wet Bulb Temperature (°C)</label>
-          <input type="number" id="Twb">
-        </div>
-
-        <!-- Dew Point -->
-        <div class="field">
-          <label id="label-Tdp">Tdew: Dew Point Temperature (°C)</label>
-          <input type="number" id="Tdp">
-        </div>
-
-        <!-- Humidity Ratio -->
-        <div class="field">
-          <label id="label-w">Y: Humidity Ratio (kg/kg dry air)</label>
-          <input type="number" id="w">
-        </div>
-
-        <!-- Enthalpy -->
-        <div class="field">
-          <label id="label-h">h: Enthalpy (kJ/kg dry air)</label>
-          <input type="number" id="h">
-        </div>
-
-      <!-- Elevation -->
-        <div class="field">
-          <label id="label-elevation">Elevation (m)</label>
-          <input type="number" id="elevation">
-          <div class="helper-text">
-            If elevation is entered, pressure will be calculated automatically.
-          </div>
-        </div>
-        
-        <!-- Pressure -->
-        <div class="field">
-          <label id="label-pressure">Atmospheric Pressure (kPa)</label>
-          <input type="number" id="pressure" value="101.325">
-        </div>
-
-        <div class="form-actions">
-          <button class="primary">Calculate</button>
-        </div>
-
+      <div class="field full">
+        <label>Initial Input Pair</label>
+        <select id="initialMode">
+          <option value="T_RH">Tdb – RH</option>
+          <option value="T_Twb">Tdb – Twb</option>
+          <option value="T_Tdp">Tdb – Tdew</option>
+          <option value="T_w">Tdb – Humidity Ratio</option>
+          <option value="H_RH">Enthalpy – RH</option>
+        </select>
       </div>
-    </section>
+
+      <div class="field">
+        <label id="label-init1">Dry Bulb Temperature</label>
+        <input type="number" id="init1">
+      </div>
+
+      <div class="field">
+        <label id="label-init2">Relative Humidity (%)</label>
+        <input type="number" id="init2">
+      </div>
+    </div>
+
+    <!-- ================= FINAL STATE ================= -->
+    <div class="input-group">
+      <div class="group-title">Final State</div>
+
+      <div class="field full">
+        <label>Final Input Pair</label>
+        <select id="finalMode">
+          <option value="T_only">Final Dry Bulb Only (Standard Heating/Cooling)</option>
+          <option value="T_RH">Tdb – RH</option>
+          <option value="T_w">Tdb – Humidity Ratio</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label id="label-final1">Final Dry Bulb Temperature</label>
+        <input type="number" id="final1">
+      </div>
+
+      <div class="field">
+        <label id="label-final2">Relative Humidity (%)</label>
+        <input type="number" id="final2">
+      </div>
+    </div>
+
+    <!-- Elevation -->
+    <div class="field">
+      <label id="label-elevation">Elevation (m)</label>
+      <input type="number" id="elevation">
+      <div class="helper-text">
+        If elevation is entered, pressure will be calculated automatically.
+      </div>
+    </div>
+
+    <!-- Pressure -->
+    <div class="field">
+      <label id="label-pressure">Atmospheric Pressure (kPa)</label>
+      <input type="number" id="pressure" value="101.325">
+    </div>
+
+    <div class="form-actions">
+      <button class="primary" id="calculateBtn">Calculate Process</button>
+    </div>
+
+  </div>
+</section>
 
     <!-- ================= RESULT CARD ================= -->
 <section class="card result-section">
 
-  <h2 style="margin-bottom:20px;">Calculation Results</h2>
+  <h2 style="margin-bottom:20px;">Heating & Cooling Process Results</h2>
+
+  <!-- ================= PROCESS SUMMARY ================= -->
+  <div class="process-summary">
+
+    <table class="results-clean">
+      <tbody>
+        <tr>
+          <td><strong>Process Type</strong></td>
+          <td id="processType">—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Enthalpy Change (Δh)</strong></td>
+          <td id="deltaHValue">—</td>
+          <td id="deltaHUnit">kJ/kg dry air</td>
+        </tr>
+        <tr>
+          <td><strong>Sensible Heat (Qs)</strong></td>
+          <td id="sensibleValue">—</td>
+          <td id="sensibleUnit">kJ/kg dry air</td>
+        </tr>
+        <tr>
+          <td><strong>Moisture Condensed</strong></td>
+          <td id="condensedValue">—</td>
+          <td id="condensedUnit">kg/kg dry air</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- ================= STATE COMPARISON ================= -->
+  <h3 style="margin-top:30px;">State Comparison</h3>
 
   <table class="results-clean">
     <thead>
       <tr>
         <th>Property</th>
-        <th>Value</th>
+        <th>Initial</th>
+        <th>Final</th>
         <th>Unit</th>
       </tr>
     </thead>
     <tbody>
-  <tr>
-    <td>Dry Bulb Temperature</td>
-    <td id="dryBulbValue">—</td>
-    <td id="dryBulbUnit">°C</td>
-  </tr>
-  <tr>
-    <td>Relative Humidity</td>
-    <td id="rhValue">—</td>
-    <td id="rhUnit">%</td>
-  </tr>
-  <tr>
-    <td>Humidity Ratio</td>
-    <td id="humidityValue">—</td>
-    <td id="humidityUnit">kg/kg dry air</td>
-  </tr>
-  <tr>
-    <td>Dew Point</td>
-    <td id="dpValue">—</td>
-    <td id="dpUnit">°C</td>
-  </tr>
-  <tr>
-    <td>Wet Bulb</td>
-    <td id="wbValue">—</td>
-    <td id="wbUnit">°C</td>
-  </tr>
-  <tr>
-    <td>Enthalpy</td>
-    <td id="hValue">—</td>
-    <td id="hUnit">kJ/kg dry air</td>
-  </tr>
-  <tr>
-    <td>Specific Volume</td>
-    <td id="vValue">—</td>
-    <td id="vUnit">m³/kg</td>
-  </tr>
-  <tr>
-    <td>Vapor Pressure</td>
-    <td id="pvValue">—</td>
-    <td id="pvUnit">kPa</td>
-  </tr>
-  <tr>
-    <td>Degree of Saturation</td>
-    <td id="muValue">—</td>
-    <td id="muUnit">—</td>
-  </tr>
-</tbody>
+
+      <tr>
+        <td>Dry Bulb Temperature</td>
+        <td id="T1Value">—</td>
+        <td id="T2Value">—</td>
+        <td id="TUnit">°C</td>
+      </tr>
+
+      <tr>
+        <td>Relative Humidity</td>
+        <td id="RH1Value">—</td>
+        <td id="RH2Value">—</td>
+        <td>%</td>
+      </tr>
+
+      <tr>
+        <td>Humidity Ratio</td>
+        <td id="w1Value">—</td>
+        <td id="w2Value">—</td>
+        <td id="wUnit">kg/kg dry air</td>
+      </tr>
+
+      <tr>
+        <td>Enthalpy</td>
+        <td id="h1Value">—</td>
+        <td id="h2Value">—</td>
+        <td id="hUnit">kJ/kg dry air</td>
+      </tr>
+
+      <tr>
+        <td>Dew Point</td>
+        <td id="dp1Value">—</td>
+        <td id="dp2Value">—</td>
+        <td id="dpUnit">°C</td>
+      </tr>
+
+    </tbody>
   </table>
 
 </section>
