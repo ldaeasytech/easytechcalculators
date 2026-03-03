@@ -449,151 +449,271 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
 
 <section class="container-learning">
 
-<h2>Common Psychrometric Questions</h2>
+<h2>Common Heating & Cooling Psychrometric Questions</h2>
 
 <ul>
-<li>How do you calculate wet bulb temperature?</li>
-<li>How do you calculate dew point from temperature and humidity?</li>
-<li>What is humidity ratio formula?</li>
-<li>What is enthalpy of moist air?</li>
-<li>How do you read a psychrometric chart?</li>
+<li>What is sensible heating in psychrometry?</li>
+<li>What is sensible cooling?</li>
+<li>What is cooling with condensation?</li>
+<li>How do you calculate enthalpy change during heating or cooling?</li>
+<li>Does dew point change when air is heated?</li>
+<li>How do you calculate moisture removed during cooling?</li>
+<li>What is the difference between sensible heat and latent heat?</li>
+<li>Why does relative humidity decrease when air is heated?</li>
+<li>What happens when air is cooled below its dew point?</li>
+<li>What limits evaporative cooling performance?</li>
 </ul>
 
-<p><strong>Humidity Ratio (w) = 0.622 Pv / (P - Pv)</strong></p>
-<p><strong>Enthalpy ≈ 1.005 T + w(2500 + 1.88 T)</strong></p>
+<hr>
+
+<h3>Key Heating & Cooling Formulas</h3>
+
+<p><strong>Sensible Heat (SI):</strong><br>
+Qs ≈ 1.006 (T₂ − T₁) kJ/kg dry air
+</p>
+
+<p><strong>Sensible Heat (IP):</strong><br>
+Qs ≈ 0.24 (T₂ − T₁) Btu/lb dry air
+</p>
+
+<p><strong>Humidity Ratio:</strong><br>
+w = 0.622 Pv / (P − Pv)
+</p>
+
+<p><strong>Moist Air Enthalpy (SI):</strong><br>
+h ≈ 1.006 T + w(2501 + 1.86 T)
+</p>
+
+<p><strong>Moisture Condensed:</strong><br>
+Δw = w₁ − w₂
+</p>
+
+<p>
+These relationships form the foundation of HVAC process analysis,
+cooling coil design, dehumidification systems, and evaporative cooling
+equipment.
+</p>
 
 </section>
 
   <!-- ================= Learning Section ================= -->
 <main class="container-learning">
 
-<h2>Psychrometry Learning Section – Moist Air Fundamentals & Applications</h2>
+<h2>Air Heating & Cooling Psychrometric Learning Guide</h2>
 
-<h3>1. What is Psychrometry and Its Applications?</h3>
 <p>
-Psychrometry is the study of the thermodynamic properties of moist air,
-which is a mixture of dry air and water vapor. It is widely used in HVAC
-engineering, air conditioning design, drying processes, cooling towers,
-agricultural storage, meteorology, and industrial climate control.
+Understanding heating, cooling, condensation, and evaporation processes
+is essential in HVAC engineering, cooling tower design, drying systems,
+and air conditioning analysis. The following explanations connect
+psychrometric principles to real-world applications.
+</p>
+
+<hr>
+
+<h3>1. What Happens to Saturated Air When It Is Heated?</h3>
+
+<p>
+If saturated air (100% relative humidity) is heated without adding
+moisture, its humidity ratio remains constant, but its relative humidity
+decreases significantly.
 </p>
 
 <p>
-Understanding humidity ratio, dew point, wet-bulb temperature, and
-enthalpy allows engineers to design comfortable, efficient, and
-energy-optimized environmental systems.
+This occurs because warm air can hold more water vapor. As temperature
+increases, the saturation humidity ratio increases, meaning the air's
+capacity to hold moisture becomes larger.
 </p>
 
-<h3>2. What is a Psychrometric Chart?</h3>
-<p>
-A psychrometric chart is a graphical representation of moist air
-properties. The horizontal axis represents dry-bulb temperature,
-while the vertical axis represents humidity ratio. Curved lines
-indicate constant relative humidity, and diagonal lines represent
-constant enthalpy or wet-bulb temperature.
-</p>
-
-<h4>Advantages Compared to Manual Calculations</h4>
+<p><strong>Result:</strong></p>
 <ul>
-<li>Instant visualization of air-conditioning processes</li>
-<li>Rapid estimation of multiple properties simultaneously</li>
-<li>Clear understanding of cooling, heating, humidification and dehumidification</li>
-<li>No need for repeated thermodynamic equation solving</li>
+<li>Relative humidity decreases</li>
+<li>Dew point remains constant</li>
+<li>Air becomes drier in relative terms</li>
 </ul>
 
-<h3>3. How Do Psychrometric Properties Change? (Trend Analysis)</h3>
-
-<h4>a) What Happens if Dry-Bulb Temperature Decreases?</h4>
 <p>
-If moisture content remains constant, decreasing dry-bulb temperature
-increases relative humidity. If temperature drops below the dew point,
-condensation occurs, forming water droplets or fog.
+This principle explains why indoor air becomes dry during winter heating.
 </p>
 
-<h4>b) What Happens if Relative Humidity Increases?</h4>
+<hr>
+
+<h3>2. What Happens to Dew Point When Air Is Heated?</h3>
+
 <p>
-As relative humidity increases at constant temperature, the air becomes
-closer to saturation. Dew point temperature increases and drying potential
-decreases. Comfort levels may decline when RH exceeds 60%.
+If air is heated without adding or removing moisture, its dew point
+temperature remains constant.
 </p>
 
-<h4>c) What Happens During Cooling and Dehumidification?</h4>
 <p>
-When air is cooled below its dew point inside an air-conditioning coil,
-water vapor condenses. Both temperature and humidity ratio decrease.
+Dew point depends only on the actual moisture content (humidity ratio),
+not on dry-bulb temperature.
 </p>
 
-<h4>d) What Happens During Heating?</h4>
 <p>
-When air is heated without adding moisture, relative humidity decreases,
-which is why indoor air feels dry during winter heating.
+However, relative humidity decreases because the saturation pressure
+increases with temperature.
 </p>
 
-<h3>4. Why Do We See Fog During Certain Times of the Day?</h3>
+<p><strong>Key Insight:</strong> Heating changes relative humidity but does not change dew point unless moisture content changes.</p>
+
+<hr>
+
+<h3>3. What Happens When Air Is Heated While Passing Through a Stream of Water? (Cooling Tower Principle)</h3>
+
 <p>
-Fog forms when air temperature drops to its dew point and the relative
-humidity reaches 100%. This commonly occurs early in the morning when
-ground cooling reduces air temperature, causing water vapor to condense
-into tiny suspended droplets.
+When warm air passes over or through water, evaporation occurs. Water
+evaporation absorbs latent heat from the air and surrounding liquid.
 </p>
 
+<p>
+This process:
+</p>
 
-<h3>5. Why Do Air Conditioning Units Produce Water?</h3>
+<ul>
+<li>Increases humidity ratio</li>
+<li>Reduces dry-bulb temperature</li>
+<li>Moves air state approximately along a constant enthalpy line</li>
+</ul>
+
+<p>
+This is the core principle of cooling towers and evaporative coolers.
+The wet-bulb temperature becomes the limiting temperature for cooling.
+</p>
+
+<p>
+Cooling towers operate by transferring heat from warm water into air
+through evaporation, reducing water temperature toward the ambient
+wet-bulb temperature.
+</p>
+
+<hr>
+
+<h3>4. How Do Hair Dryers Dry Hair?</h3>
+
+<p>
+Hair dryers accelerate evaporation by increasing air temperature and
+air velocity.
+</p>
+
+<p>
+Heating the air:
+</p>
+
+<ul>
+<li>Decreases relative humidity</li>
+<li>Increases moisture absorption capacity</li>
+<li>Increases vapor pressure difference</li>
+</ul>
+
+<p>
+Without heating, drying still occurs but at a slower rate because the
+air's moisture-holding capacity is lower.
+</p>
+
+<p>
+Higher air temperature significantly reduces drying time by increasing
+evaporation rate.
+</p>
+
+<hr>
+
+<h3>5. How Do Air Fryers Work? (Psychrometric Perspective)</h3>
+
+<p>
+Air fryers use rapid convection of hot air to remove moisture from food
+surfaces.
+</p>
+
+<p>
+High-temperature, low-relative-humidity air:
+</p>
+
+<ul>
+<li>Promotes rapid surface evaporation</li>
+<li>Creates a dry crust through moisture removal</li>
+<li>Increases heat transfer rate through forced convection</li>
+</ul>
+
+<p>
+The drying effect combined with Maillard reactions produces the crispy
+texture typically associated with frying.
+</p>
+
+<hr>
+
+<h3>6. Why Do Air Conditioning Units Produce Water?</h3>
+
 <p>
 Air conditioning systems cool indoor air below its dew point temperature.
-When this happens, excess moisture condenses on the evaporator coil.
-The condensed water drains away, reducing indoor humidity.
+When this happens, water vapor condenses on the evaporator coil.
 </p>
 
 <p>
-For thermal comfort, recommended indoor relative humidity typically
-ranges between 40% and 60%. Maintaining this range improves comfort,
-reduces mold growth risk, and enhances perceived cooling.
+This process:
 </p>
-
-
-<h3>6. Why Do Clothes Dry Indoors Without Direct Sunlight?</h3>
-<p>
-Drying occurs due to evaporation, not sunlight alone. If indoor air has
-lower humidity than the wet surface, water molecules naturally evaporate
-into the air. The driving force is the difference between the surface
-vapor pressure and surrounding air vapor pressure.
-</p>
-
-<p>
-Even without sunlight, evaporation continues as long as air is not fully
-saturated.
-</p>
-
-
-<h3>7. How Does Evaporative Cooling Work?</h3>
-<p>
-Evaporative cooling occurs when water evaporates into air. The phase change
-from liquid to vapor absorbs latent heat, reducing air temperature while
-increasing humidity ratio.
-</p>
-
-<p>
-This process follows approximately constant enthalpy lines on a
-psychrometric chart and is highly effective in dry climates.
-</p>
-
-
-<h3>8. Additional Interesting Applications of Psychrometry</h3>
 
 <ul>
-<li>Cooling tower performance analysis</li>
-<li>Greenhouse humidity control</li>
-<li>Food drying and dehydration processes</li>
-<li>Pharmaceutical clean room control</li>
-<li>Data center climate management</li>
-<li>Aircraft environmental control systems</li>
-<li>Moisture load calculations in buildings</li>
+<li>Reduces dry-bulb temperature</li>
+<li>Reduces humidity ratio</li>
+<li>Produces liquid water (condensate)</li>
 </ul>
 
 <p>
-Psychrometry is fundamental to understanding both comfort and energy
-efficiency in modern engineering systems.
+This is an example of cooling with condensation on a psychrometric chart.
 </p>
+
+<hr>
+
+<h3>7. How Does Rain Form? (Cooling and Condensation of Rising Air)</h3>
+
+<p>
+As warm air rises in the atmosphere, it expands and cools due to lower
+atmospheric pressure.
+</p>
+
+<p>
+When the air temperature drops to its dew point:
+</p>
+
+<ul>
+<li>Relative humidity reaches 100%</li>
+<li>Condensation begins</li>
+<li>Cloud droplets form</li>
+</ul>
+
+<p>
+Further cooling leads to droplet growth and eventual precipitation
+(rain).
+</p>
+
+<hr>
+
+<h3>8. Additional HVAC & Engineering Insights</h3>
+
+<ul>
+<li>Heating reduces relative humidity but not moisture content.</li>
+<li>Cooling below dew point causes condensation and dehumidification.</li>
+<li>Wet-bulb temperature limits evaporative cooling performance.</li>
+<li>Humidity ratio remains constant during sensible heating or cooling.</li>
+<li>Latent heat removal dominates in dehumidification processes.</li>
+<li>Cooling coils are designed based on apparatus dew point (ADP).</li>
+<li>Psychrometric process analysis is fundamental in load calculations.</li>
+<li>Cooling tower performance depends on approach to wet-bulb temperature.</li>
+<li>Drying systems operate based on vapor pressure difference principles.</li>
+</ul>
+
+<hr>
+
+<h3>Keywords Related to Air Heating and Cooling</h3>
+
+<p>
+HVAC psychrometric process analysis, sensible heating calculation,
+cooling with condensation, humidity ratio change, evaporative cooling,
+cooling tower principle, dew point temperature, moist air enthalpy,
+dehumidification process, HVAC coil design, air drying mechanisms.
+</p>
+
+
 
 </main>
 
