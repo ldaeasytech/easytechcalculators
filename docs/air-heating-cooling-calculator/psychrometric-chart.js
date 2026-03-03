@@ -259,71 +259,55 @@ renderBackground();
 /* =========================================================
    Process Line Setter
 ========================================================= */
-const T1 = state1.dry_bulb;
-const T2 = state2.dry_bulb;
-
-const w1 = state1.humidity_ratio;
-const w2 = state2.humidity_ratio;
-
-const Tmin = Math.min(T1, T2);
-const Tmax = Math.max(T1, T2);
-const wMaxProcess = Math.max(w1, w2);
-
-// Temperature margin
-const Tmargin = chartUnitSystem === "IP" ? 5 : 3;
-
-// Humidity margin (15%)
-const wMargin = wMaxProcess * 0.15;
-
-// Round temperature nicely
-const T_MIN = Math.floor((Tmin - Tmargin) / 10) * 10;
-const T_MAX = Math.ceil((Tmax + Tmargin) / 10) * 10;
-
-// Round humidity nicely (to 0.005 steps)
-const W_MAX =
-  Math.ceil((wMaxProcess + wMargin) / 0.005) * 0.005;
-
-dynamicLimits = {
-  T_MIN,
-  T_MAX,
-  W_MAX
-};
-
-renderBackground();
-
-// Add margin (5°F or 3°C)
-const margin = chartUnitSystem === "IP" ? 5 : 3;
-
-dynamicLimits = {
-  T_MIN: Math.floor((Tmin - margin) / 10) * 10,
-  T_MAX: Math.ceil((Tmax + margin) / 10) * 10,
-  W_MAX: 0.030
-};
-
 export function setProcessLine(state1, state2) {
 
   if (!state1 || !state2) {
     processLine = null;
     dynamicLimits = null;
+    renderBackground();
     return;
   }
 
- /* const T1_display = chartUnitSystem === "IP"
-    ? state1.dry_bulb * 9/5 + 32
-    : state1.dry_bulb;
+  /* -----------------------------
+     Adaptive Limits
+  ----------------------------- */
 
-  const T2_display = chartUnitSystem === "IP"
-    ? state2.dry_bulb * 9/5 + 32
-    : state2.dry_bulb;*/
+  const T1 = state1.dry_bulb;
+  const T2 = state2.dry_bulb;
 
-   const T1_display = state1.dry_bulb;
-const T2_display = state2.dry_bulb;
+  const w1 = state1.humidity_ratio;
+  const w2 = state2.humidity_ratio;
+
+  const Tmin = Math.min(T1, T2);
+  const Tmax = Math.max(T1, T2);
+  const wMaxProcess = Math.max(w1, w2);
+
+  const Tmargin = chartUnitSystem === "IP" ? 5 : 3;
+  const wMargin = wMaxProcess * 0.15;
+
+  const T_MIN = Math.floor((Tmin - Tmargin) / 10) * 10;
+  const T_MAX = Math.ceil((Tmax + Tmargin) / 10) * 10;
+
+  const W_MAX =
+    Math.ceil((wMaxProcess + wMargin) / 0.005) * 0.005;
+
+  dynamicLimits = {
+    T_MIN,
+    T_MAX,
+    W_MAX
+  };
+
+  renderBackground();
+
+  /* -----------------------------
+     Process Line
+  ----------------------------- */
 
   processLine = {
-    x1: scaleX(T1_display),
-    y1: scaleY(state1.humidity_ratio),
-    x2: scaleX(T2_display),
-    y2: scaleY(state2.humidity_ratio)
+    x1: scaleX(T1),
+    y1: scaleY(w1),
+    x2: scaleX(T2),
+    y2: scaleY(w2)
   };
 }
 
