@@ -1,3 +1,10 @@
+let chartUnitSystem = "SI";
+
+export function setChartUnitSystem(system) {
+  chartUnitSystem = system;
+  renderBackground();
+}
+
 const canvas = document.getElementById("psychChart");
 const ctx = canvas.getContext("2d");
 let processLine = null;
@@ -9,9 +16,23 @@ bgCanvas.width = canvas.width;
 bgCanvas.height = canvas.height;
 
 const P = 101.325;
-const T_MIN = 0;
-const T_MAX = 50;
-const W_MAX = 0.030;
+
+function getChartLimits() {
+
+  if (chartUnitSystem === "IP") {
+    return {
+      T_MIN: 32,          // 0°C
+      T_MAX: 122,         // 50°C
+      W_MAX: 0.030        // same numeric (ratio identical)
+    };
+  }
+
+  return {
+    T_MIN: 0,
+    T_MAX: 50,
+    W_MAX: 0.030
+  };
+}
 
 /* =========================================================
    Thermo Functions
@@ -38,10 +59,16 @@ function specificVolume(T, w) {
 ========================================================= */
 
 function scaleX(T) {
+
+  const { T_MIN, T_MAX } = getChartLimits();
+
   return 60 + (T - T_MIN) / (T_MAX - T_MIN) * (canvas.width - 100);
 }
 
 function scaleY(w) {
+
+  const { W_MAX } = getChartLimits();
+
   return canvas.height - 50 - (w / W_MAX) * (canvas.height - 100);
 }
 
@@ -91,11 +118,12 @@ function drawAxes(context) {
     );
   }
 
-  context.fillText(
-    "Dry Bulb Temperature (°C)",
-    canvas.width / 2 - 90,
-    canvas.height - 10
-  );
+  const tempUnit = chartUnitSystem === "IP" ? "°F" : "°C";
+   context.fillText(
+  `Dry Bulb Temperature (${tempUnit})`,
+  canvas.width / 2 - 90,
+  canvas.height - 10
+);
 
   /* =========================
      Y AXIS (Humidity Ratio)
@@ -130,7 +158,16 @@ context.translate(25, canvas.height / 2 + 40);
 context.rotate(-Math.PI / 2);
 
 context.textAlign = "center";
-context.fillText("Humidity Ratio (kg/kg dry air)", 0, 0);
+const wUnit =
+  chartUnitSystem === "IP"
+    ? "lb/lb dry air"
+    : "kg/kg dry air";
+
+context.fillText(
+  `Humidity Ratio (${wUnit})`,
+  0,
+  0
+);
 
 context.restore();
 }
@@ -325,12 +362,20 @@ export function setProcessLine(state1, state2) {
     return;
   }
 
-  processLine = {
-    x1: scaleX(state1.dry_bulb),
-    y1: scaleY(state1.humidity_ratio),
-    x2: scaleX(state2.dry_bulb),
-    y2: scaleY(state2.humidity_ratio)
-  };
+  const T1 = chartUnitSystem === "IP"
+  ? state1.dry_bulb * 9/5 + 32
+  : state1.dry_bulb;
+
+const T2 = chartUnitSystem === "IP"
+  ? state2.dry_bulb * 9/5 + 32
+  : state2.dry_bulb;
+
+processLine = {
+  x1: scaleX(T1),
+  y1: scaleY(state1.humidity_ratio),
+  x2: scaleX(T2),
+  y2: scaleY(state2.humidity_ratio)
+};
 }
 
 
