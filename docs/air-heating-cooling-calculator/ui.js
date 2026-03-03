@@ -310,24 +310,31 @@ function updateUnitLabels() {
 
   /* ================= FINAL MODE ================= */
 
+  const final2Field = document.getElementById("final2Field");
+
   if (finalMode === "T_only") {
+  
     labelFinal1.textContent = `Final Dry Bulb Temperature (${tempUnit})`;
-    labelFinal2.textContent = "";
-    document.getElementById("final2").disabled = true;
+  
+    final2Field.style.display = "none";
     document.getElementById("final2").value = "";
   }
 
   else if (finalMode === "T_RH") {
-    labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
-    labelFinal2.textContent = "Relative Humidity (%)";
-    document.getElementById("final2").disabled = false;
-  }
+
+  labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+  labelFinal2.textContent = "Relative Humidity (%)";
+
+  final2Field.style.display = "block";
+}
 
   else if (finalMode === "T_w") {
-    labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
-    labelFinal2.textContent = `Humidity Ratio (${wUnit})`;
-    document.getElementById("final2").disabled = false;
-  }
+
+  labelFinal1.textContent = `Dry Bulb Temperature (${tempUnit})`;
+  labelFinal2.textContent = `Humidity Ratio (${wUnit})`;
+
+  final2Field.style.display = "block";
+}
 
   /* ================= RESULT TABLE UNITS ================= */
 
