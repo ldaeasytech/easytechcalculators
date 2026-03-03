@@ -133,7 +133,8 @@ calculateBtn.addEventListener("click", () => {
       finalMode,
       initialInputs: convertToSI(initialInputs),
       finalInputs: convertToSI(finalInputs),
-      pressure: convertPressureToSI(pressure)
+      /*pressure: convertPressureToSI(pressure)*/
+      pressure: pressure
     });
 
     lastResultSI = resultSI;
@@ -247,9 +248,9 @@ function convertToSI(data) {
   return data;
 }
 
-function convertPressureToSI(P) {
+/*function convertPressureToSI(P) {
   return unitSystem === "IP" ? P * 6.89476 : P;
-}
+}*/
 
 function convertFromSIProcess(r) {
 
