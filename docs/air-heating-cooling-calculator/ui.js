@@ -106,8 +106,12 @@ unitSelect.addEventListener("change", () => {
   updateUnitLabels();
 
   if (lastResultSI) {
-    renderProcessResults(convertFromSIProcess({ ...lastResultSI }));
-  }
+  renderProcessResults(convertFromSIProcess({ ...lastResultSI }));
+
+  setProcessLine(lastResultSI.state1, lastResultSI.state2);
+  setChartUnitSystem(unitSystem);
+  renderPsychChart();
+}
 });
 
 /* =========================================================
@@ -140,7 +144,7 @@ calculateBtn.addEventListener("click", () => {
     const resultDisplay = convertFromSIProcess({ ...resultSI });
 
     renderProcessResults(resultDisplay);
-    setProcessLine(resultDisplay.state1, resultDisplay.state2);
+    setProcessLine(resultSI.state1, resultSI.state2);  // <-- SI ONLY
 
     setChartUnitSystem(unitSystem);
     renderPsychChart();
