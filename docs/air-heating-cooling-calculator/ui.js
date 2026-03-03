@@ -293,6 +293,10 @@ function autoConvertInputs(from, to) {
     const value = parseFloat(input.value);
     if (isNaN(value)) return;
 
+    if (!inputs.pressure.value) {
+  setDefaultPressure();
+}
+
     /* -----------------------------
        TEMPERATURE
     ----------------------------- */
@@ -463,7 +467,23 @@ function updateUnitLabels() {
 }
 
 /* =========================================================
+   Default Pressure
+========================================================= */
+
+function setDefaultPressure() {
+
+  if (unitSystem === "IP") {
+    inputs.pressure.value = "14.696";
+  } else {
+    inputs.pressure.value = "101.325";
+  }
+
+  autoPressureFromElevation = true;
+}
+
+/* =========================================================
    INIT
 ========================================================= */
 updateUnitLabels();
+setDefaultPressure();
 renderPsychChart(null, unitSystem);
