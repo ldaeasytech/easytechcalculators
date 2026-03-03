@@ -133,7 +133,7 @@ context.textAlign = "center";
 context.fillText("Humidity Ratio (kg/kg dry air)", 0, 0);
 
 context.restore();
-
+}
 /* =========================================================
    Saturation Curve
 ========================================================= */
@@ -270,53 +270,32 @@ function drawWetBulb(context) {
   }
 }
 
-if (processLine) {
+function drawLegend() {
 
-  const { x1, y1, x2, y2 } = processLine;
+  const legendX = canvas.width - 200;
+  const legendY = 30;
 
-  /* ========= Draw Line ========= */
-  ctx.strokeStyle = "#ff4d6d";
-  ctx.lineWidth = 3;
+  ctx.font = "13px sans-serif";
+  ctx.textAlign = "left";
 
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(x2, y2);
-  ctx.stroke();
-
-  /* ========= Arrow Head ========= */
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-  const arrowLength = 12;
-
-  ctx.fillStyle = "#ff4d6d";
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(
-    x2 - arrowLength * Math.cos(angle - Math.PI / 6),
-    y2 - arrowLength * Math.sin(angle - Math.PI / 6)
-  );
-  ctx.lineTo(
-    x2 - arrowLength * Math.cos(angle + Math.PI / 6),
-    y2 - arrowLength * Math.sin(angle + Math.PI / 6)
-  );
-  ctx.closePath();
-  ctx.fill();
-
-  /* ========= Initial Marker ========= */
+  // Initial
   ctx.fillStyle = "#00d4ff";
   ctx.beginPath();
-  ctx.arc(x1, y1, 6, 0, 2 * Math.PI);
+  ctx.arc(legendX, legendY, 5, 0, 2 * Math.PI);
   ctx.fill();
 
-  /* ========= Final Marker ========= */
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText("Initial State", legendX + 12, legendY + 4);
+
+  // Final
   ctx.fillStyle = "#ff4d6d";
   ctx.beginPath();
-  ctx.arc(x2, y2, 6, 0, 2 * Math.PI);
+  ctx.arc(legendX, legendY + 20, 5, 0, 2 * Math.PI);
   ctx.fill();
 
-  /* ========= Legend ========= */
-  drawLegend();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText("Final State", legendX + 12, legendY + 24);
 }
-   
 /* =========================================================
    Pre-render Background
 ========================================================= */
