@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // GA4 event
   gtag('event', 'calculate', {
-    calculator_name: 'water_steam_properties'
+    calculator_name: 'optimum_pipe'
   });
 
     const rho = Number(document.getElementById("rho").value);
