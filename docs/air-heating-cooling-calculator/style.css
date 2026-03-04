@@ -1166,3 +1166,57 @@ p {
     grid-template-columns: 1.3fr 0.9fr;
   }
 }
+
+/* ===============================
+   RESULTS TABLE VISUAL UPGRADE
+================================ */
+
+.result-section h2,
+.result-section h3 {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+/* Property names */
+.results-clean td:first-child {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Initial values */
+#T1Value, #wb1Value, #dp1Value,
+#RH1Value, #w1Value, #h1Value {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Final values (accent) */
+#T2Value, #wb2Value, #dp2Value,
+#RH2Value, #w2Value, #h2Value {
+  color: #93c5fd;
+  font-weight: 600;
+}
+
+/* Units column */
+.results-clean td:last-child {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* Table separators */
+.results-clean tr {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Process summary highlight */
+.process-summary td:first-child {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+#deltaHValue,
+#sensibleValue,
+#condensedValue {
+  color: #22d3ee;   /* cyan highlight for key results */
+  font-weight: 700;
+}
