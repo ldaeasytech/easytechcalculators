@@ -116,6 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("calculateBtn")
     .addEventListener("click", () => {
 
+        // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'water_steam_properties'
+  });
+
     const rho = Number(document.getElementById("rho").value);
     const mu  = Number(document.getElementById("mu").value) * 1e-6;
     const L   = Number(document.getElementById("pipeLength").value);
