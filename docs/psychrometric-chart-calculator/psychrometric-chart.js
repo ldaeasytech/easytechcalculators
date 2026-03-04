@@ -22,14 +22,14 @@ function getChartLimits() {
 
   if (chartUnitSystem === "IP") {
     return {
-      T_MIN: 32,
-      T_MAX: 122,
+      T_MIN: 0,
+      T_MAX: 120,
       W_MAX: 0.030
     };
   }
 
   return {
-    T_MIN: 0,
+    T_MIN: -10,
     T_MAX: 50,
     W_MAX: 0.030
   };
@@ -105,7 +105,7 @@ function drawAxes(context) {
   ========================= */
 
   const { T_MIN, T_MAX } = getChartLimits();
-const step = chartUnitSystem === "IP" ? 10 : 5;
+const step = chartUnitSystem === "IP" ? 20 : 5;
 
 for (let T = T_MIN; T <= T_MAX; T += step) {
 
