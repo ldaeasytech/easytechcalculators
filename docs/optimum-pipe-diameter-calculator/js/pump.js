@@ -60,6 +60,40 @@ document.addEventListener("DOMContentLoaded", () => {
   massInput.addEventListener("input", updateFlowState);
   volInput.addEventListener("input", updateFlowState);
 
+
+/* ===============================
+   Economic Mode Toggle
+=============================== */
+
+const economicModeSelect =
+  document.getElementById("economicMode");
+
+const crfFields =
+  document.getElementById("crfFields");
+
+function updateEconomicMode() {
+
+  if (!economicModeSelect || !crfFields) return;
+
+  if (economicModeSelect.value === "crf") {
+    crfFields.style.display = "";
+  } else {
+    crfFields.style.display = "none";
+  }
+
+}
+
+// run once on load
+updateEconomicMode();
+
+// update when user changes
+economicModeSelect?.addEventListener(
+  "change",
+  updateEconomicMode
+);
+
+  
+
   /* ===============================
      Unit Conversion
   =============================== */
