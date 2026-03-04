@@ -23,6 +23,7 @@ import {
 } from "./pipeMaterialHandler.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  let optChartInstance = null;
 
      const h_input =
       Number(document.getElementById("deltaZ").value);
@@ -373,8 +374,6 @@ results.push({
   
 function displayEconomicOptimization(results, optimum) {
 
-    let optChartInstance = null;
-
   document.getElementById("results")
     .classList.remove("hidden");
 
@@ -410,7 +409,10 @@ function displayEconomicOptimization(results, optimum) {
     results.slice(start, end);
 
   const ctx =
-    document.getElementById("optChart").getContext("2d");
+  document.getElementById("optChart")
+  ?.getContext("2d");
+
+if (!ctx) return;
 
   if (optChartInstance) {
     optChartInstance.destroy();
