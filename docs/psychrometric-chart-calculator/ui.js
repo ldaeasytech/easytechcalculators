@@ -1,5 +1,5 @@
 import { solvePsychrometrics } from "./solver.js";
-import { renderPsychChart } from "./psychrometric-chart.js";
+import { renderPsychChart, setChartUnitSystem } from "./psychrometric-chart.js";
 
 /* =========================================================
    STATE
@@ -67,11 +67,12 @@ unitSelect.addEventListener("change", () => {
 
   updateUnitLabels();
   updateResultUnitColumn();
+   setChartUnitSystem(unitSystem);
 
   if (lastResultSI) {
     const converted = convertFromSI({ ...lastResultSI });
     renderResults(converted);
-    renderPsychChart(converted, unitSystem);
+    renderPsychChart(converted);
   }
    
 });
@@ -163,7 +164,8 @@ calculateBtn.addEventListener("click", () => {
     let resultDisplay = convertFromSI({ ...resultSI });
 
     renderResults(resultDisplay);
-    renderPsychChart(resultDisplay, unitSystem);
+    setChartUnitSystem(unitSystem);
+    renderPsychChart(resultDisplay);
 
   } catch (err) {
     alert(err.message);
