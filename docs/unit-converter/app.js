@@ -57,6 +57,11 @@ quantitySelect.addEventListener("change", e => {
 
 document.getElementById("convertBtn").addEventListener("click", () => {
 
+     // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'unit_converter'
+  });
+
   const quantity = quantitySelect.value;
   const value = parseFloat(inputValue.value);
   const from = fromSelect.value;
