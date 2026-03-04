@@ -1193,7 +1193,7 @@ p {
 /* Final values (accent) */
 #T2Value, #wb2Value, #dp2Value,
 #RH2Value, #w2Value, #h2Value {
-  color: #7dd3fc;
+  color: #60a5fa;
   font-weight: 600;
   text-shadow: 0 0 4px rgba(56,189,248,0.25);
 }
