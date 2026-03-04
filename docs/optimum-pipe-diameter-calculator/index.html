@@ -468,13 +468,15 @@ to the minimum total annual cost.
 <div class="input-group" id="economicSection">
   <div class="group-title">Economic Parameters</div>
 
-  <div class="field">
+<div class="field">
 <label for="economicMode">Economic Model</label>
 <select id="economicMode">
   <option value="simple">Simple Annuity</option>
   <option value="crf">Capital Recovery Factor</option>
 </select>
 </div>
+
+<div id="crfFields">
 
 <div class="field">
 <label for="interestRate">Interest Rate (%)</label>
@@ -484,6 +486,8 @@ to the minimum total annual cost.
 <div class="field">
 <label for="projectLife">Project Life (years)</label>
 <input id="projectLife" type="number" step="any" value="10">
+</div>
+
 </div>
   
 
