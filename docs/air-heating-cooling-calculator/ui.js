@@ -470,6 +470,7 @@ function updateUnitLabels() {
   document.getElementById("heatUnit").textContent = hUnit;
   document.getElementById("heatUnit2").textContent = hUnit;
   document.getElementById("heatUnit3").textContent = hUnit;
+  document.getElementById("hUnit").textContent = hUnit;
 
   document.getElementById("wUnit").textContent = wUnit;
   document.getElementById("condensedUnit").textContent = wUnit;
