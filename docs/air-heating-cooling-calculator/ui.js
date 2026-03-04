@@ -467,9 +467,9 @@ function updateUnitLabels() {
   document.getElementById("dpUnit").textContent = tempUnit;
   document.getElementById("wbUnit").textContent = tempUnit;
 
-  document.getElementById("hUnit").textContent = hUnit;
-  document.getElementById("deltaHUnit").textContent = hUnit;
-  document.getElementById("sensibleUnit").textContent = hUnit;
+  document.getElementById("heatUnit").textContent = hUnit;
+  document.getElementById("heatUnit2").textContent = hUnit;
+  document.getElementById("heatUnit3").textContent = hUnit;
 
   document.getElementById("wUnit").textContent = wUnit;
   document.getElementById("condensedUnit").textContent = wUnit;
