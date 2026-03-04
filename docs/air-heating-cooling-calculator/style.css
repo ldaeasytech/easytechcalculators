@@ -1291,3 +1291,9 @@ p {
     #0c1726
   );
 }
+
+.results-clean td:nth-child(3) {
+  color: #7dd3fc;
+  font-weight: 700;
+  text-shadow: 0 0 4px rgba(56,189,248,0.25);
+}
