@@ -83,10 +83,8 @@ function updateEconomicMode() {
 
 }
 
-// run once on load
 updateEconomicMode();
 
-// update when user changes
 economicModeSelect?.addEventListener(
   "change",
   updateEconomicMode
