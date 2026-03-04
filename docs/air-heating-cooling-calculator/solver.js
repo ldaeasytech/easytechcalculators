@@ -245,7 +245,7 @@ export function solvePsychrometrics(mode, inputs) {
 /* =========================================================
    HEATING & COOLING PROCESS SOLVER
    Reuses solvePsychrometrics()
-   ========================================================= */
+========================================================= */
 
 export function solveHeatingCoolingProcess({
   initialMode,
@@ -257,9 +257,10 @@ export function solveHeatingCoolingProcess({
 
   const P = pressure || P_ATM;
 
-  // ---------------------------
-  // 1️⃣ Solve Initial State
-  // ---------------------------
+  /* ---------------------------
+     1️⃣ Solve Initial State
+  --------------------------- */
+
   const s1 = solvePsychrometrics(initialMode, {
     ...initialInputs,
     pressure: P
@@ -272,9 +273,10 @@ export function solveHeatingCoolingProcess({
   let processType = "";
   let moistureCondensed = 0;
 
-  // --------------------------------------------------
-  // 2️⃣ Final State — Standard Heating/Cooling Mode
-  // --------------------------------------------------
+  /* --------------------------------------------------
+     2️⃣ Standard Heating/Cooling Mode (T_only)
+  -------------------------------------------------- */
+
   if (finalMode === "T_only") {
 
     const T2 = finalInputs.Tdb;
@@ -284,43 +286,35 @@ export function solveHeatingCoolingProcess({
     let w2;
 
     if (w1 <= w_sat2) {
-      // Sensible only
+
+      // Sensible process only
       w2 = w1;
+
       processType = T2 > T1
         ? "Sensible Heating"
         : "Sensible Cooling";
+
     } else {
-      // Condensation occurs
+
+      // Cooling with condensation
       w2 = w_sat2;
       moistureCondensed = w1 - w2;
-      processType = "Cooling with Condensation";
+
+      processType = "Cooling with Dehumidification";
     }
 
-    const Pv2 = vaporPressureFromW(w2, P);
-
-    /*s2 = {
-      dry_bulb: T2,
-      relative_humidity: (Pv2 / Psat(T2)) * 100,
-      humidity_ratio: w2,
-      dew_point: dewPoint(Pv2),
-      wet_bulb: wetBulb(T2, w2, P),
-      enthalpy: enthalpy(T2, w2),
-      specific_volume: specificVolume(T2, w2, P),
-      vapor_pressure: Pv2,
-      degree_of_saturation: degreeOfSaturation(w2, T2, P)
-    };*/
-
-     s2 = solvePsychrometrics("T_w", {
-  Tdb: T2,
-  w: w2,
-  pressure: P
-});
+    s2 = solvePsychrometrics("T_w", {
+      Tdb: T2,
+      w: w2,
+      pressure: P
+    });
 
   }
 
-  // --------------------------------------------------
-  // 3️⃣ Advanced Final Mode (reuse full solver)
-  // --------------------------------------------------
+  /* --------------------------------------------------
+     3️⃣ Advanced Final Modes
+  -------------------------------------------------- */
+
   else {
 
     s2 = solvePsychrometrics(finalMode, {
@@ -328,12 +322,48 @@ export function solveHeatingCoolingProcess({
       pressure: P
     });
 
-    processType = "General Psychrometric Process";
+    const T2 = s2.dry_bulb;
+    const w2 = s2.humidity_ratio;
+
+    const dT = T2 - T1;
+    const dw = w2 - w1;
+
+    const tol = 1e-6;
+
+    /* ---------------------------
+       Process Classification
+    --------------------------- */
+
+    if (Math.abs(dw) < tol) {
+
+      processType =
+        dT > 0
+          ? "Sensible Heating"
+          : "Sensible Cooling";
+
+    }
+    else if (dT < 0 && dw < 0) {
+
+      processType = "Cooling with Dehumidification";
+      moistureCondensed = w1 - w2;
+
+    }
+    else if (dw > 0) {
+
+      processType = "Humidification";
+
+    }
+    else {
+
+      processType = "General Psychrometric Process";
+
+    }
   }
 
-  // ---------------------------
-  // 4️⃣ Energy Calculations
-  // ---------------------------
+  /* ---------------------------
+     4️⃣ Energy Calculations
+  --------------------------- */
+
   const delta_h = s2.enthalpy - s1.enthalpy;
 
   const sensibleHeat =
