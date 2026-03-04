@@ -282,6 +282,8 @@ function convertFromSIProcess(r) {
 
     r.delta_h *= 0.429922614;
     r.sensibleHeat *= 0.429922614;
+    r.totalHeat *= 0.429922614;
+    r.latentHeat *= 0.429922614;
   }
 
   return r;
