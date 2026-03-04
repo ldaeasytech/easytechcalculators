@@ -347,51 +347,6 @@ select:focus {
     inset 0 1px 0 rgba(255,255,255,0.2);
 }
 
-/* ============================================================
-   RESULTS TABLE – CLEAN & TECHNICAL
-   ============================================================ */
-
-.results-clean {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-}
-
-.results-clean thead th {
-  text-align: left;
-  font-weight: 600;
-  opacity: 0.75;
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.18);
-}
-
-.results-clean tbody tr {
-  transition: background 0.15s ease;
-}
-
-.results-clean tbody tr:hover {
-  background: rgba(255,255,255,0.04);
-}
-
-.results-clean td {
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-/* Value column – numeric emphasis */
-.results-clean td:nth-child(2) {
-  text-align: right;
-  font-family: "JetBrains Mono", "Courier New", monospace;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-/* Unit column – de-emphasized */
-.results-clean td:nth-child(3) {
-  opacity: 0.65;
-  white-space: nowrap;
-}
-
 
 /* =========================================================
    INPUT PAIR GROUPING (UI UPGRADE)
@@ -805,32 +760,6 @@ select:focus {
   gap: 10px;
 }
 
-.results-clean {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.results-clean th {
-  text-align: left;
-  border-bottom: 2px solid #3b82f6;
-  padding: 6px 0;
-}
-
-.results-clean td {
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.results-clean td:nth-child(2) {
-  text-align: right;
-  font-weight: 500;
-}
-
-.results-clean td:nth-child(3) {
-  text-align: right;
-  opacity: 0.7;
-}
-
 /* =========================================================
    MOBILE OPTIMIZATION LAYER
    Water & Steam Properties Calculator
@@ -1014,44 +943,6 @@ select:focus {
   grid-column: 1 / -1;
 }
 
-.results-clean {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-.results-clean thead th {
-  text-align: left;
-  padding: 8px 10px;
-  border-bottom: 2px solid #3b82f6;
-  opacity: 0.85;
-}
-
-.results-clean td {
-  padding: 8px 10px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: #ffffff;
-}
-
-.results-clean td:nth-child(2) {
-  text-align: right;
-  font-family: "JetBrains Mono", monospace;
-}
-
-.results-clean td:nth-child(3) {
-  text-align: right;
-  opacity: 0.6;
-}
-
-/* Make Final State same brightness as Initial */
-.results-clean td:nth-child(3) {
-  color: #ffffff;
-}
-
-.results-clean td:nth-child(4) {
-  color: #cbd5e1; /* softer but readable */
-  font-weight: 500;
-}
 /* ===============================
    Global Footer
 ================================ */
@@ -1177,11 +1068,6 @@ p {
   font-weight: 600;
 }
 
-/* Property names */
-.results-clean td:first-child {
-  color: #cbd5e1;
-  font-weight: 500;
-}
 
 /* Initial values */
 #T1Value, #wb1Value, #dp1Value,
@@ -1196,17 +1082,6 @@ p {
   color: #60a5fa;
   font-weight: 600;
   text-shadow: 0 0 4px rgba(56,189,248,0.25);
-}
-
-/* Units column */
-.results-clean td:last-child {
-  color: #94a3b8;
-  font-size: 0.9rem;
-}
-
-/* Table separators */
-.results-clean tr {
-  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 /* Process summary highlight */
@@ -1232,33 +1107,9 @@ p {
   color: #22d3ee;
 }
 
-.results-clean td:nth-child(2) {
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.results-clean td:nth-child(3) {
-  color: #93c5fd;
-  font-weight: 600;
-}
-
-.results-clean td:last-child {
-  color: #a3b8cc;
-  font-size: 0.88rem;
-  opacity: 0.9;
-}
 
 .process-summary {
   margin-bottom: 30px;
-}
-
-.results-clean {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.results-clean tr {
-  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
 .result-cta {
@@ -1279,12 +1130,6 @@ p {
   color: #3b82f6;
 }
 
-.results-clean thead th {
-  color: #e2e8f0;
-  font-weight: 600;
-  padding-bottom: 10px;
-}
-
 .result-section {
   background: linear-gradient(
     145deg,
@@ -1293,8 +1138,51 @@ p {
   );
 }
 
+/* ===============================
+   RESULTS TABLE VISUAL UPGRADE
+================================ */
+
+.results-clean {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.results-clean thead th {
+  color: #e2e8f0;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #3b82f6;
+}
+
+.results-clean td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Property names */
+.results-clean td:first-child {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Initial values */
+.results-clean td:nth-child(2) {
+  color: #ffffff;
+  font-weight: 600;
+  text-align: right;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Final values */
 .results-clean td:nth-child(3) {
   color: #7dd3fc;
   font-weight: 700;
   text-shadow: 0 0 4px rgba(56,189,248,0.25);
+  text-align: right;
+}
+
+/* Units */
+.results-clean td:last-child {
+  color: #a3b8cc;
+  font-size: 0.88rem;
 }
