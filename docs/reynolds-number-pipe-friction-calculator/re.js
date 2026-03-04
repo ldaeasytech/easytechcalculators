@@ -53,6 +53,11 @@ methodSelect.addEventListener("change", () => {
 
 calculateBtn.addEventListener("click", () => {
 
+    // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'reynolds'
+  });
+
   // Normalize base inputs
   const rho = normalize(
     "density",
