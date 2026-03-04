@@ -377,21 +377,21 @@ renderBackground();
 export function renderPsychChart(state) {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   ctx.drawImage(bgCanvas, 0, 0);
 
-  if (state) {
-    const T_display = chartUnitSystem === "IP"
-  ? state.dry_bulb * 9/5 + 32
-  : state.dry_bulb;
+  if (!state) return;
 
-   const x = scaleX(T_display);
-     
-    const y = scaleY(state.humidity_ratio);
+  // Convert temperature to display units
+  const T_display =
+    chartUnitSystem === "IP"
+      ? state.dry_bulb * 9/5 + 32
+      : state.dry_bulb;
 
-    ctx.fillStyle = "#ff4d6d";
-    ctx.beginPath();
-    ctx.arc(x, y, 6, 0, 2 * Math.PI);
-    ctx.fill();
-  }
+  const x = scaleX(T_display);
+  const y = scaleY(state.humidity_ratio);
+
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath();
+  ctx.arc(x, y, 6, 0, 2 * Math.PI);
+  ctx.fill();
 }
