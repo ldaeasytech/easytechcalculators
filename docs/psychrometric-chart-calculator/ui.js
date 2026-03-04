@@ -152,6 +152,11 @@ inputsMap.pressure.addEventListener("input", () => {
 
 calculateBtn.addEventListener("click", () => {
 
+     // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'psychrometric_chart'
+  });
+
   try {
 
     let data = collectInputs();
