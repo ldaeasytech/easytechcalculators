@@ -382,10 +382,7 @@ export function renderPsychChart(state) {
   if (!state) return;
 
   // Convert temperature to display units
-  const T_display =
-    chartUnitSystem === "IP"
-      ? state.dry_bulb * 9/5 + 32
-      : state.dry_bulb;
+  const T_display = state.dry_bulb;
 
   const x = scaleX(T_display);
   const y = scaleY(state.humidity_ratio);
