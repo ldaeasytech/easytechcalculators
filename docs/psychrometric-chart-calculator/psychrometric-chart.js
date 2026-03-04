@@ -139,7 +139,7 @@ context.fillText(
 
   const { W_MAX } = getChartLimits();
 
-for (let w = 0; w <= W_MAX; w += 0.005)
+for (let w = 0; w <= W_MAX; w += 0.005) {
 
     const y = scaleY(w);
 
