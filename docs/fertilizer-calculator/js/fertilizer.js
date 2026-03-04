@@ -393,6 +393,11 @@ document.getElementById("calculateBtn")
     displayResults(results,false);
   }
 
+  // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'fertilizer_mix'
+  });
+  
 });
 
 // =====================================================
@@ -542,6 +547,7 @@ const amountDisplay = `
 
   block.classList.remove("hidden");
 }
+
 
 
 
