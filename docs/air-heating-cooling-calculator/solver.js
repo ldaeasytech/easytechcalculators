@@ -359,22 +359,31 @@ export function solveHeatingCoolingProcess({
 
     }
   }
+/* ---------------------------
+   4️⃣ Energy Calculations
+--------------------------- */
 
-  /* ---------------------------
-     4️⃣ Energy Calculations
-  --------------------------- */
+// Total heat = enthalpy change
+const totalHeat = s2.enthalpy - s1.enthalpy;
 
-  const delta_h = s2.enthalpy - s1.enthalpy;
+// Moist air sensible heat capacity
+const w_avg =
+  (s1.humidity_ratio + s2.humidity_ratio) / 2;
 
-  const sensibleHeat =
-    1.006 * (s2.dry_bulb - s1.dry_bulb);
+const sensibleHeat =
+  (1.006 + 1.86 * w_avg) *
+  (s2.dry_bulb - s1.dry_bulb);
+
+// Latent heat
+const latentHeat = totalHeat - sensibleHeat;
 
   return {
-    state1: s1,
-    state2: s2,
-    processType,
-    delta_h,
-    sensibleHeat,
-    moistureCondensed
-  };
+  state1: s1,
+  state2: s2,
+  processType,
+  totalHeat,
+  sensibleHeat,
+  latentHeat,
+  moistureCondensed
+};
 }
