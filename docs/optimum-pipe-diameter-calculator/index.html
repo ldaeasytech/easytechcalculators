@@ -477,6 +477,24 @@ to the minimum total annual cost.
   </div>
 
   <div class="field">
+<label for="economicMode">Economic Model</label>
+<select id="economicMode">
+  <option value="simple">Simple Annuity</option>
+  <option value="crf">Capital Recovery Factor</option>
+</select>
+</div>
+
+<div class="field">
+<label for="interestRate">Interest Rate (%)</label>
+<input id="interestRate" type="number" step="any" value="8">
+</div>
+
+<div class="field">
+<label for="projectLife">Project Life (years)</label>
+<input id="projectLife" type="number" step="any" value="10">
+</div>
+  
+  <div class="field">
     <label for="operatingHours">
       Operating Hours per Year
     </label>
