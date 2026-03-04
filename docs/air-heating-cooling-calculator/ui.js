@@ -205,8 +205,9 @@ function renderProcessResults(r) {
 
   // Summary
   setValue("processType", r.processType);
-  setValue("deltaHValue", r.delta_h, 3);
+  setValue("totalHeatValue", r.totalHeat, 3);
   setValue("sensibleValue", r.sensibleHeat, 3);
+  setValue("latentValue", r.latentHeat, 3);  
   setValue("condensedValue", r.moistureCondensed, 6);
     // Wet Bulb
   setValue("wb1Value", r.state1.wet_bulb, 2);
