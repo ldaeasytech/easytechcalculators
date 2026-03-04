@@ -1179,7 +1179,7 @@ p {
 
 /* Property names */
 .results-clean td:first-child {
-  color: #cbd5e1;
+  color: #cfd8e3;
   font-weight: 500;
 }
 
@@ -1193,13 +1193,13 @@ p {
 /* Final values (accent) */
 #T2Value, #wb2Value, #dp2Value,
 #RH2Value, #w2Value, #h2Value {
-  color: #93c5fd;
+  color: #cfd8e3;
   font-weight: 600;
 }
 
 /* Units column */
 .results-clean td:last-child {
-  color: #94a3b8;
+  color: #cfd8e3;
   font-size: 0.9rem;
 }
 
@@ -1210,13 +1210,13 @@ p {
 
 /* Process summary highlight */
 .process-summary td:first-child {
-  color: #e2e8f0;
+  color: #cfd8e3;
   font-weight: 600;
 }
 
 #deltaHValue,
 #sensibleValue,
 #condensedValue {
-  color: #22d3ee;   /* cyan highlight for key results */
+  color: #cfd8e3;   /* cyan highlight for key results */
   font-weight: 700;
 }
