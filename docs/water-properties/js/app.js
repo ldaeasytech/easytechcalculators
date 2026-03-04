@@ -112,6 +112,12 @@ populateUnitDropdowns(
 document.getElementById("calcForm").addEventListener("submit", async e => {
   e.preventDefault();
 
+     // GA4 event: calculation performed
+  gtag('event', 'calculate', {
+    calculator_name: 'water_steam_properties'
+  });
+
+
   clearMessages();
   clearResults();
   setLoading(true);
