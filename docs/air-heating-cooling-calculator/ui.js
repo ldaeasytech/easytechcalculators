@@ -164,6 +164,12 @@ calculateBtn.addEventListener("click", () => {
     alert(err.message);
   }
 
+  // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'air_heating_cooling'
+  });
+
+  
 });
 
 /* =========================================================
