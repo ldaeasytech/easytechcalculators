@@ -1186,3 +1186,8 @@ p {
   color: #a3b8cc;
   font-size: 0.88rem;
 }
+
+.final-state .field {
+  grid-column: 1 / -1;
+}
+
