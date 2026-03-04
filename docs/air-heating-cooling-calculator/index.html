@@ -544,14 +544,18 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
 </ul>
 
 
-<h3>Key Heating & Cooling Formulas</h3>
+<h3>Key Heating & Cooling Equations</h3>
 
-<p><strong>Sensible Heat (SI):</strong><br>
-Qs ≈ 1.006 (T₂ − T₁) kJ/kg dry air
+<p><strong>Total Heat Transfer (Enthalpy Change):</strong><br>
+Qt = Δh = h₂ − h₁
 </p>
 
-<p><strong>Sensible Heat (IP):</strong><br>
-Qs ≈ 0.24 (T₂ − T₁) Btu/lb dry air
+<p><strong>Sensible Heat (Moist Air):</strong><br>
+Qs ≈ (1.006 + 1.86 w̄)(T₂ − T₁) &nbsp; kJ/kg dry air
+</p>
+
+<p><strong>Latent Heat:</strong><br>
+Ql = Qt − Qs
 </p>
 
 <p><strong>Humidity Ratio:</strong><br>
@@ -559,7 +563,11 @@ w = 0.622 Pv / (P − Pv)
 </p>
 
 <p><strong>Moist Air Enthalpy (SI):</strong><br>
-h ≈ 1.006 T + w(2501 + 1.86 T)
+h ≈ 1.006 T + w(2501 + 1.86 T) &nbsp; kJ/kg dry air
+</p>
+
+<p><strong>Moist Air Enthalpy (IP):</strong><br>
+h ≈ 0.24 T + w(1061 + 0.444 T) &nbsp; Btu/lb dry air
 </p>
 
 <p><strong>Moisture Condensed:</strong><br>
