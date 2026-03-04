@@ -132,6 +132,11 @@ const deltaZInput =
   document.getElementById("calculateBtn")
     .addEventListener("click", () => {
 
+        // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'tank_elevation'
+  });
+
     const rho = Number(document.getElementById("rho").value);
     const mu  = Number(document.getElementById("mu").value) * 1e-6;
     const L   = Number(document.getElementById("pipeLength").value);
