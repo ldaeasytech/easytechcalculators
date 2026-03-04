@@ -1,3 +1,10 @@
+let chartUnitSystem = "SI";
+
+export function setChartUnitSystem(system) {
+  chartUnitSystem = system;
+  renderBackground();
+}
+
 const canvas = document.getElementById("psychChart");
 const ctx = canvas.getContext("2d");
 
@@ -8,10 +15,25 @@ bgCanvas.width = canvas.width;
 bgCanvas.height = canvas.height;
 
 const P = 101.325;
-const T_MIN = 0;
-const T_MAX = 50;
-const W_MAX = 0.030;
 
+const { T_MIN, T_MAX } = getChartLimits();
+
+function getChartLimits() {
+
+  if (chartUnitSystem === "IP") {
+    return {
+      T_MIN: 32,
+      T_MAX: 122,
+      W_MAX: 0.030
+    };
+  }
+
+  return {
+    T_MIN: 0,
+    T_MAX: 50,
+    W_MAX: 0.030
+  };
+}
 /* =========================================================
    Thermo Functions
 ========================================================= */
@@ -36,12 +58,22 @@ function specificVolume(T, w) {
    Scaling
 ========================================================= */
 
-function scaleX(T) {
-  return 60 + (T - T_MIN) / (T_MAX - T_MIN) * (canvas.width - 100);
+function scaleX(T_display) {
+
+  const { T_MIN, T_MAX } = getChartLimits();
+
+  return 60 + (T_display - T_MIN) /
+    (T_MAX - T_MIN) *
+    (canvas.width - 100);
 }
 
 function scaleY(w) {
-  return canvas.height - 50 - (w / W_MAX) * (canvas.height - 100);
+
+  const { W_MAX } = getChartLimits();
+
+  return canvas.height - 50 -
+    (w / W_MAX) *
+    (canvas.height - 100);
 }
 
 /* =========================================================
@@ -72,7 +104,10 @@ function drawAxes(context) {
      X AXIS (Temperature °C)
   ========================= */
 
-  for (let T = T_MIN; T <= T_MAX; T += 5) {
+  const { T_MIN, T_MAX } = getChartLimits();
+const step = chartUnitSystem === "IP" ? 10 : 5;
+
+for (let T = T_MIN; T <= T_MAX; T += step) {
 
     const x = scaleX(T);
 
@@ -90,17 +125,21 @@ function drawAxes(context) {
     );
   }
 
-  context.fillText(
-    "Dry Bulb Temperature (°C)",
-    canvas.width / 2 - 90,
-    canvas.height - 10
-  );
+ const tempUnit = chartUnitSystem === "IP" ? "°F" : "°C";
+
+context.fillText(
+  `Dry Bulb Temperature (${tempUnit})`,
+  canvas.width / 2 - 90,
+  canvas.height - 10
+);
 
   /* =========================
      Y AXIS (Humidity Ratio)
   ========================= */
 
-  for (let w = 0; w <= W_MAX; w += 0.005) {
+  const { W_MAX } = getChartLimits();
+
+for (let w = 0; w <= W_MAX; w += 0.005)
 
     const y = scaleY(w);
 
@@ -122,7 +161,16 @@ function drawAxes(context) {
   context.save();
   context.translate(15, canvas.height / 2 + 60);
   context.rotate(-Math.PI / 2);
-  context.fillText("Humidity Ratio (kg/kg dry air)", 0, 0);
+  const wUnit =
+  chartUnitSystem === "IP"
+    ? "lb/lb dry air"
+    : "kg/kg dry air";
+
+context.fillText(
+  `Humidity Ratio (${wUnit})`,
+  0,
+  0
+);
   context.restore();
 }
 
@@ -136,9 +184,18 @@ function drawSaturation(context) {
   context.lineWidth = 2;
   context.beginPath();
 
-  for (let T = T_MIN; T <= T_MAX; T += 0.5) {
-    const w = humidityRatio(Psat(T));
-    const x = scaleX(T);
+  const { T_MIN, T_MAX } = getChartLimits();
+
+for (let T = T_MIN; T <= T_MAX; T += (chartUnitSystem === "IP" ? 1 : 0.5)) {
+
+  const T_SI = chartUnitSystem === "IP"
+    ? (T - 32) * 5/9
+    : T;
+
+   const w = humidityRatio(Psat(T_SI));
+
+   const x = scaleX(T);
+   
     const y = scaleY(w);
 
     if (T === T_MIN) context.moveTo(x, y);
@@ -154,6 +211,8 @@ function drawSaturation(context) {
 
 function drawRH(context) {
 
+  const { T_MIN, T_MAX } = getChartLimits();
+
   context.lineWidth = 1;
 
   for (let rh = 0.1; rh < 1.0; rh += 0.1) {
@@ -161,9 +220,15 @@ function drawRH(context) {
     context.strokeStyle = "rgba(200,200,200,0.35)";
     context.beginPath();
 
-    for (let T = T_MIN; T <= T_MAX; T += 0.5) {
-      const Pv = rh * Psat(T);
+    for (let T = T_MIN; T <= T_MAX; T += (chartUnitSystem === "IP" ? 1 : 0.5)) {
+
+      const T_SI = chartUnitSystem === "IP"
+        ? (T - 32) * 5/9
+        : T;
+
+      const Pv = rh * Psat(T_SI);
       const w = humidityRatio(Pv);
+
       const x = scaleX(T);
       const y = scaleY(w);
 
@@ -181,6 +246,8 @@ function drawRH(context) {
 
 function drawEnthalpy(context) {
 
+  const { T_MIN, T_MAX } = getChartLimits();
+
   context.strokeStyle = "rgba(255,165,0,0.35)";
   context.lineWidth = 1;
 
@@ -189,7 +256,14 @@ function drawEnthalpy(context) {
     context.beginPath();
 
     for (let T = T_MIN; T <= T_MAX; T += 1) {
-      const w = (hVal - 1.006 * T) / (2501 + 1.86 * T);
+
+      const T_SI = chartUnitSystem === "IP"
+        ? (T - 32) * 5/9
+        : T;
+
+      const w = (hVal - 1.006 * T_SI) /
+                (2501 + 1.86 * T_SI);
+
       if (w < 0) continue;
 
       const x = scaleX(T);
@@ -202,12 +276,12 @@ function drawEnthalpy(context) {
     context.stroke();
   }
 }
-
 /* =========================================================
    Constant Specific Volume Lines
 ========================================================= */
-
 function drawSpecificVolume(context) {
+
+  const { T_MIN, T_MAX } = getChartLimits();
 
   context.strokeStyle = "rgba(0,255,150,0.3)";
   context.lineWidth = 1;
@@ -217,7 +291,14 @@ function drawSpecificVolume(context) {
     context.beginPath();
 
     for (let T = T_MIN; T <= T_MAX; T += 1) {
-      const w = ((vVal * P) / (0.287 * (T + 273.15)) - 1) / 1.607;
+
+      const T_SI = chartUnitSystem === "IP"
+        ? (T - 32) * 5/9
+        : T;
+
+      const w = ((vVal * P) /
+        (0.287 * (T_SI + 273.15)) - 1) / 1.607;
+
       if (w < 0) continue;
 
       const x = scaleX(T);
@@ -237,6 +318,8 @@ function drawSpecificVolume(context) {
 
 function drawWetBulb(context) {
 
+  const { T_MIN, T_MAX } = getChartLimits();
+
   context.strokeStyle = "rgba(255,255,255,0.2)";
   context.lineWidth = 1;
 
@@ -248,7 +331,14 @@ function drawWetBulb(context) {
     context.beginPath();
 
     for (let T = Twb; T <= T_MAX; T += 1) {
-      const w = (hwb - 1.006 * T) / (2501 + 1.86 * T);
+
+      const T_SI = chartUnitSystem === "IP"
+        ? (T - 32) * 5/9
+        : T;
+
+      const w = (hwb - 1.006 * T_SI) /
+                (2501 + 1.86 * T_SI);
+
       if (w < 0) continue;
 
       const x = scaleX(T);
@@ -291,7 +381,12 @@ export function renderPsychChart(state) {
   ctx.drawImage(bgCanvas, 0, 0);
 
   if (state) {
-    const x = scaleX(state.dry_bulb);
+    const T_display = chartUnitSystem === "IP"
+  ? state.dry_bulb * 9/5 + 32
+  : state.dry_bulb;
+
+   const x = scaleX(T_display);
+     
     const y = scaleY(state.humidity_ratio);
 
     ctx.fillStyle = "#ff4d6d";
