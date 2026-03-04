@@ -134,6 +134,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const pipeCostIndex =
       Number(document.getElementById("pipeCostIndex").value);
 
+      const economicMode =
+  document.getElementById("economicMode")?.value || "simple";
+
+const interestRate =
+  Number(document.getElementById("interestRate")?.value) / 100;
+
+const projectLife =
+  Number(document.getElementById("projectLife")?.value) || 10;
+
     /* ===============================
        Flow Conversion
     =============================== */
@@ -266,10 +275,27 @@ document.addEventListener("DOMContentLoaded", () => {
       totalPipeCost +
       totalFittingCost;
 
-    // Annualized over 10 years
-    const annualizedCapital =
-      totalCapitalCost / 10;
+  let annualizedCapital;
 
+if (economicMode === "crf") {
+
+  const i = interestRate;
+  const n = projectLife;
+
+  const CRF =
+    (i * Math.pow(1 + i, n)) /
+    (Math.pow(1 + i, n) - 1);
+
+  annualizedCapital =
+    totalCapitalCost * CRF;
+
+} else {
+
+  // Simple annuity (original method)
+  annualizedCapital =
+    totalCapitalCost / projectLife;
+
+}
     const totalAnnualCost =
       annualEnergyCost +
       annualizedCapital;
@@ -455,6 +481,11 @@ function displayEconomicOptimization(results, optimum) {
       <td>Annualized Capital Cost</td>
       <td>${optimum.annualizedCapital.toFixed(2)}</td>
       <td>$</td>
+    </tr>
+    <tr>
+    <td>Total Annual Cost</td>
+    <td>${optimum.totalAnnualCost.toFixed(2)}</td>
+    <td>$</td>
     </tr>
   `;
 
