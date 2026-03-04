@@ -95,6 +95,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("calculateBtn")
     .addEventListener("click", () => {
 
+        // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'npsh'
+  });
+
     /* ===============================
        1. Read Inputs
     =============================== */
@@ -375,5 +380,6 @@ else {
   });
 
 });
+
 
 
