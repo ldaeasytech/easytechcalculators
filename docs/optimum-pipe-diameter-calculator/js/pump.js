@@ -485,7 +485,7 @@ document.getElementById("optimumDiameter")
 <div class="optimum-container">
 
 <div class="optimum-label">
-OPTIMUM PIPE SIZE
+OPTIMUM PIPE INNER DIAMETER
 </div>
 
 <div class="optimum-value">
