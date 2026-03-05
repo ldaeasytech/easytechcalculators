@@ -4,6 +4,10 @@ import "./uiInit.js";
 import "./fittingsHandler.js";
 import "./pipeMaterialHandler.js";
 import "./schematicHandler.js";
+import "./pumpEfficiencyHandler.js";
+
+import { getEfficiencyDecimal }
+  from "./pumpEfficiencyHandler.js";
 
 import { pumpPower } from "./energyBalance.js";
 import { totalFrictionLoss } from "./frictionLoss.js";
@@ -267,27 +271,35 @@ const projectLife =
 
       const F_total = totalFrictionLoss(v, Ktotal);
 
-      const powerKW =
-        pumpPower({
-          m_flow,
-          v1,
-          v2,
-          h,
-          P1,
-          P2,
-          rho,
-          F_total
-        }).Ws;
+      const result =
+  pumpPower({
+    m_flow,
+    v1,
+    v2,
+    h,
+    P1,
+    P2,
+    rho,
+    F_total
+  });
 
+const hydraulicPower = result.Ws;
+
+const eta = getEfficiencyDecimal();
+
+const actualPower =
+  eta && eta > 0
+    ? hydraulicPower / eta
+    : hydraulicPower;
       /* ===============================
          Economic Model
       =============================== */
 
       // Annual energy cost
-    const annualEnergyCost =
-      powerKW *
-      operatingHours *
-      electricityRate;
+   annualEnergyCost =
+  actualPower *
+  operatingHours *
+  electricityRate;
 
     // Pipe cost scaling (D^1.8)
     const pipeCostPerMeter =
@@ -351,7 +363,8 @@ results.push({
   Kpipe,
   Ktotal,
   F_total,
-  powerKW,
+  powerHydraulic: hydraulicPower,
+  powerActual: actualPower,
   annualEnergyCost,
   annualizedCapital,
   totalAnnualCost
@@ -393,8 +406,8 @@ function displayEconomicOptimization(results, optimum) {
         ${optimum.inch} in
       </div>
       <div class="optimum-power">
-        Pump Power: ${optimum.powerKW.toFixed(3)} kW
-        (${(optimum.powerKW * 1.341022).toFixed(2)} hp)
+        Actual Pump Power: ${optimum.powerActual.toFixed(3)} kW
+      (${(optimum.powerActual * 1.341022).toFixed(2)} hp)
       </div>
     </div>
   `;
@@ -492,38 +505,62 @@ if (!ctx) return;
   const energyTable =
     document.getElementById("energyTable");
 
-  energyTable.innerHTML = `
-    <tr>
-      <th>Term</th>
-      <th>Value</th>
-      <th>Unit</th>
-    </tr>
-    <tr>
-      <td>Pipe Velocity</td>
-      <td>${optimum.v.toFixed(4)}</td>
-      <td>m/s</td>
-    </tr>
-    <tr>
-      <td>Total Head Loss</td>
-      <td>${optimum.F_total.toFixed(4)}</td>
-      <td>J/kg</td>
-    </tr>
-    <tr>
-      <td>Annual Energy Cost</td>
-      <td>${optimum.annualEnergyCost.toFixed(2)}</td>
-      <td>$</td>
-    </tr>
-    <tr>
-      <td>Annualized Capital Cost</td>
-      <td>${optimum.annualizedCapital.toFixed(2)}</td>
-      <td>$</td>
-    </tr>
-    <tr>
-    <td>Total Annual Cost</td>
-    <td>${optimum.totalAnnualCost.toFixed(2)}</td>
-    <td>$</td>
-    </tr>
-  `;
+    const velocityStatus =
+  optimum.v < 1
+    ? "<span style='color:#4da6ff'>Below economic range</span>"
+    : optimum.v > 3
+    ? "<span style='color:#ff4d4d'>Above economic range</span>"
+    : "<span style='color:#66ff66'>Within economic range</span>";
+
+energyTable.innerHTML = `
+<tr>
+  <th>Term</th>
+  <th>Value</th>
+  <th>Unit</th>
+</tr>
+
+<tr>
+  <td>Pipe Velocity</td>
+  <td>${optimum.v.toFixed(4)}</td>
+  <td>m/s</td>
+</tr>
+
+<tr>
+  <td>Economic Velocity Range</td>
+  <td>1 – 3</td>
+  <td>m/s</td>
+</tr>
+
+<tr>
+  <td>Velocity Assessment</td>
+  <td>${velocityStatus}</td>
+  <td>—</td>
+</tr>
+
+<tr>
+  <td>Total Head Loss</td>
+  <td>${optimum.F_total.toFixed(4)}</td>
+  <td>J/kg</td>
+</tr>
+
+<tr>
+  <td>Annual Energy Cost</td>
+  <td>${optimum.annualEnergyCost.toFixed(2)}</td>
+  <td>$</td>
+</tr>
+
+<tr>
+  <td>Annualized Capital Cost</td>
+  <td>${optimum.annualizedCapital.toFixed(2)}</td>
+  <td>$</td>
+</tr>
+
+<tr>
+  <td>Total Annual Cost</td>
+  <td>${optimum.totalAnnualCost.toFixed(2)}</td>
+  <td>$</td>
+</tr>
+`;
 
   const hydraulicTable =
     document.getElementById("hydraulicTable");
