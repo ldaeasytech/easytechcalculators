@@ -26,6 +26,68 @@ import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
 
+
+function inchToFraction(inch) {
+
+  const whole = Math.floor(inch);
+  const frac = inch - whole;
+
+  const fractions = {
+    0.125: "1/8",
+    0.25: "1/4",
+    0.375: "3/8",
+    0.5: "1/2",
+    0.625: "5/8",
+    0.75: "3/4",
+    0.875: "7/8"
+  };
+
+  const roundedFrac =
+    Math.round(frac * 8) / 8;
+
+  const fracText = fractions[roundedFrac];
+
+  if (!fracText) return `${inch}`;
+
+  if (whole === 0) return fracText;
+
+  return `${whole} ${fracText}`;
+}
+
+
+function findClosestSteelPipe(optimumID) {
+
+  let bestMatch = null;
+
+  for (const nps in PIPE_ID) {
+
+    const schedules = PIPE_ID[nps];
+
+    for (const schedule in schedules) {
+
+      const id = schedules[schedule];
+
+      if (id >= optimumID) {
+
+        if (!bestMatch || id < bestMatch.id) {
+
+          bestMatch = {
+            nps,
+            schedule,
+            id
+          };
+
+        }
+
+      }
+
+    }
+
+  }
+
+  return bestMatch;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   let optChartInstance = null;
 
@@ -403,7 +465,7 @@ function displayEconomicOptimization(results, optimum) {
         OPTIMUM PIPE SIZE
       </div>
       <div class="optimum-value">
-        ${optimum.inch} in
+        ${inchToFraction(optimum.inch)} in (${(optimum.D*1000).toFixed(1)} mm)
       </div>
       <div class="optimum-power">
         Actual Pump Power: ${optimum.powerActual.toFixed(3)} kW
@@ -436,7 +498,7 @@ if (!ctx) return;
   optChartInstance = new Chart(ctx, {
     type: "line",
     data: {
-      labels: sliced.map(r => r.inch),
+      labels: sliced.map(r => inchToFraction(r.inch)),
       datasets: [
   {
     label: "Annual Energy Cost ($)",
