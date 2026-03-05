@@ -473,7 +473,7 @@ if (recommendedPipe) {
   recommendationHTML = `
   <div class="optimum-commercial">
     Recommended Commercial Pipe<br>
-    <strong>${recommendedPipe.nps} in – Schedule ${recommendedPipe.schedule.replace(/ST|S|XS/g,"").trim()}</strong><br>
+    <strong>${recommendedPipe.nps} in – Schedule ${recommendedPipe.schedule}</strong><br>
     Inner Diameter: ${(recommendedPipe.id * 1000).toFixed(1)} mm
   </div>
   `;
