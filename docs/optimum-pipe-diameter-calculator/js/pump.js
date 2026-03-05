@@ -296,7 +296,7 @@ const actualPower =
       =============================== */
 
       // Annual energy cost
-   annualEnergyCost =
+  const annualEnergyCost =
   actualPower *
   operatingHours *
   electricityRate;
