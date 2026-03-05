@@ -16,6 +16,7 @@ import { K_entrance } from "./entranceExitLoss.js";
 import { getTotalFittingsK } from "./fittingsHandler.js";
 
 import { PIPE_ROUGHNESS } from "./data/pipeRoughness.js";
+import { PIPE_ID } from "./data/pipeInnerDiameter.js";
 
 import {
   getElevationReference,
@@ -440,7 +441,15 @@ results.push({
         r.totalAnnualCost < min.totalAnnualCost ? r : min
       );
 
-    displayEconomicOptimization(results, optimum);
+      let recommendedPipe = null;
+
+      const material = getPipeMaterial();
+      
+      if (material === "commercialSteel") {
+        recommendedPipe = findClosestSteelPipe(optimum.D);
+      }
+
+    displayEconomicOptimization(results, optimum, recommendedPipe);
     displayOptimumTables(optimum, rho, mu);
 
   });
@@ -449,7 +458,7 @@ results.push({
      Display Optimization
   =============================== */
   
-function displayEconomicOptimization(results, optimum) {
+function displayEconomicOptimization(results, optimum, recommendedPipe) {
 
   document.getElementById("results")
     .classList.remove("hidden");
@@ -458,21 +467,44 @@ function displayEconomicOptimization(results, optimum) {
     .classList.remove("hidden");
 
   // Display optimum
-  document.getElementById("optimumDiameter")
-  .innerHTML = `
-    <div class="optimum-container">
-      <div class="optimum-label">
-        OPTIMUM PIPE SIZE
-      </div>
-      <div class="optimum-value">
-        ${inchToFraction(optimum.inch)} in (${(optimum.D*1000).toFixed(1)} mm)
-      </div>
-      <div class="optimum-power">
-        Actual Pump Power: ${optimum.powerActual.toFixed(3)} kW
-      (${(optimum.powerActual * 1.341022).toFixed(2)} hp)
-      </div>
-    </div>
+let recommendationHTML = "";
+
+if (recommendedPipe) {
+
+  recommendationHTML = `
+  <div class="optimum-commercial">
+    Recommended Commercial Pipe<br>
+    <strong>${recommendedPipe.nps} in – Schedule ${recommendedPipe.schedule}</strong><br>
+    Inner Diameter: ${(recommendedPipe.id * 1000).toFixed(1)} mm
+  </div>
   `;
+
+}
+
+document.getElementById("optimumDiameter")
+.innerHTML = `
+<div class="optimum-container">
+
+<div class="optimum-label">
+OPTIMUM PIPE SIZE
+</div>
+
+<div class="optimum-value">
+${inchToFraction(optimum.inch)} in (${(optimum.D*1000).toFixed(1)} mm)
+</div>
+
+<div class="optimum-power">
+Actual Pump Power: ${optimum.powerActual.toFixed(3)} kW
+(${(optimum.powerActual * 1.341022).toFixed(2)} hp)
+</div>
+
+${recommendationHTML}
+
+</div>
+`;
+
+
+  
   const optimumIndex =
     results.findIndex(r => r.inch === optimum.inch);
 
