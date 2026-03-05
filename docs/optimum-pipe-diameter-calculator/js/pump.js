@@ -268,7 +268,7 @@ const projectLife =
     }
 
     const material = getPipeMaterial();
-      console.log("Pipe material:", material);
+     
     const e = PIPE_ROUGHNESS[material];
 
     const nominalInches = [
@@ -444,7 +444,7 @@ results.push({
 
       let recommendedPipe = null;
 
-      if (material === "commercialSteel") {
+      if (material === "Commercial steel") {
         recommendedPipe = findClosestSteelPipe(optimum.D);
       }
 
@@ -473,7 +473,7 @@ if (recommendedPipe) {
   recommendationHTML = `
   <div class="optimum-commercial">
     Recommended Commercial Pipe<br>
-    <strong>${recommendedPipe.nps} in – Schedule ${recommendedPipe.schedule}</strong><br>
+    <strong>${recommendedPipe.nps} in – Schedule ${recommendedPipe.schedule.replace(/ST|S|XS/g,"").trim()}</strong><br>
     Inner Diameter: ${(recommendedPipe.id * 1000).toFixed(1)} mm
   </div>
   `;
