@@ -25,9 +25,6 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
   let optChartInstance = null;
 
-     const h_input =
-      Number(document.getElementById("deltaZ").value);
-
 //Hide Pipe Diameter and Schedule number
     const steelOptions =
       document.getElementById("steelOptions");
@@ -124,6 +121,23 @@ economicModeSelect?.addEventListener(
     }
   }
 
+;
+
+  /* ===============================
+     Optimization Logic
+  =============================== */
+
+  document.getElementById("calculateBtn")
+    .addEventListener("click", () => {
+
+        // GA4 event
+  gtag('event', 'calculate', {
+    calculator_name: 'optimum_pipe'
+  });
+
+
+  const h_input =
+    Number(document.getElementById("deltaZ").value);
    /* ===============================
        3. PRESSURE (ATM TOGGLE SUPPORT)
     =============================== */
@@ -140,20 +154,8 @@ economicModeSelect?.addEventListener(
 
     const P2 = P2_atm
       ? 101325
-      : Number(document.getElementById("P2").value);
-
-  /* ===============================
-     Optimization Logic
-  =============================== */
-
-  document.getElementById("calculateBtn")
-    .addEventListener("click", () => {
-
-        // GA4 event
-  gtag('event', 'calculate', {
-    calculator_name: 'optimum_pipe'
-  });
-
+      : Number(document.getElementById("P2").value)
+      
     const rho = Number(document.getElementById("rho").value);
     const mu  = Number(document.getElementById("mu").value) * 1e-6;
     const L   = Number(document.getElementById("pipeLength").value);
