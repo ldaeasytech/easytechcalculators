@@ -443,8 +443,6 @@ results.push({
 
       let recommendedPipe = null;
 
-      const material = getPipeMaterial();
-      
       if (material === "commercialSteel") {
         recommendedPipe = findClosestSteelPipe(optimum.D);
       }
