@@ -268,6 +268,7 @@ const projectLife =
     }
 
     const material = getPipeMaterial();
+      console.log("Pipe material:", material);
     const e = PIPE_ROUGHNESS[material];
 
     const nominalInches = [
