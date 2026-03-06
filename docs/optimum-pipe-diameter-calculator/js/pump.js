@@ -92,34 +92,6 @@ function findClosestSteelPipe(optimumID) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
-  /* ===============================
-   TOOLTIP TOGGLE
-================================ */
-
-document.querySelectorAll(".help-icon").forEach(icon => {
-
-document.querySelectorAll(".help-icon").forEach(icon => {
-
-  icon.addEventListener("click", (e) => {
-
-    e.stopPropagation();
-    e.preventDefault();
-
-    const tooltip = icon.querySelector(".tooltip");
-
-    const visible =
-      tooltip.style.display === "block";
-
-    document.querySelectorAll(".tooltip")
-      .forEach(t => t.style.display = "none");
-
-    tooltip.style.display =
-      visible ? "none" : "block";
-
-  });
-
-});
   
   let optChartInstance = null;
 
