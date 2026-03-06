@@ -1023,10 +1023,10 @@ select:focus {
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:18px;
-  height:18px;
+  width:22px;
+  height:22px;
   margin-left:6px;
-  font-size:12px;
+  font-size:13px;
   font-weight:bold;
   border-radius:50%;
   background:#1f3b5c;
@@ -1035,7 +1035,7 @@ select:focus {
   position:relative;
 }
 
-/* Tooltip hidden by default */
+/* hidden by default */
 .tooltip{
   display:none;
   position:absolute;
@@ -1053,17 +1053,7 @@ select:focus {
   z-index:100;
 }
 
-/* Visible state */
+/* shown via JS */
 .tooltip.show{
   display:block;
-}
-
-.help-icon:hover .tooltip{
-  display:block !important;
-}
-
-.help-icon{
-  width:22px;
-  height:22px;
-  font-size:13px;
 }
