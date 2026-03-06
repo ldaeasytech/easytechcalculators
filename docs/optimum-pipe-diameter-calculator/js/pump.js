@@ -97,6 +97,34 @@ function findClosestSteelPipe(optimumID) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+
+
+  const tooltips = document.querySelectorAll("[data-tooltip]");
+
+  tooltips.forEach(tip => {
+
+    tip.addEventListener("click", (e) => {
+
+      e.stopPropagation();
+
+      tooltips.forEach(t => {
+        if (t !== tip) t.classList.remove("active");
+      });
+
+      tip.classList.toggle("active");
+
+    });
+
+  });
+
+  document.addEventListener("click", () => {
+    tooltips.forEach(t => t.classList.remove("active"));
+  });
+
+
+
+  
+
   let optChartInstance = null;
 
 //Hide Pipe Diameter and Schedule number
