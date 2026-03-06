@@ -92,6 +92,47 @@ function findClosestSteelPipe(optimumID) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ============================================================
+     TOOLTIP UX (MOBILE + ACCESSIBLE)
+  ============================================================ */
+
+  function initTooltips() {
+    const tooltips = document.querySelectorAll("[data-tooltip]");
+
+    document.addEventListener("click", e => {
+      let activeTooltip = null;
+
+      tooltips.forEach(tip => {
+        if (tip.contains(e.target)) {
+          activeTooltip = tip;
+        } else {
+          tip.classList.remove("active");
+        }
+      });
+
+      if (activeTooltip) {
+        activeTooltip.classList.toggle("active");
+      }
+    });
+
+    document.addEventListener("keydown", e => {
+      const el = document.activeElement;
+      if (
+        el?.dataset?.tooltip !== undefined &&
+        (e.key === "Enter" || e.key === " ")
+      ) {
+        e.preventDefault();
+        el.classList.toggle("active");
+      }
+    });
+  }
+
+  initTooltips();
+
+});
   
   let optChartInstance = null;
 
@@ -709,39 +750,3 @@ energyTable.innerHTML = `
 
 
 });
-
-function initTooltips() {
-  const tooltips = document.querySelectorAll("[data-tooltip]");
-
-  // Tap / click support (mobile)
-  document.addEventListener("click", e => {
-    let activeTooltip = null;
-
-    tooltips.forEach(tip => {
-      if (tip.contains(e.target)) {
-        activeTooltip = tip;
-      } else {
-        tip.classList.remove("active");
-      }
-    });
-
-    if (activeTooltip) {
-      activeTooltip.classList.toggle("active");
-    }
-  });
-
-  // Keyboard support (Enter / Space)
-  document.addEventListener("keydown", e => {
-    const el = document.activeElement;
-    if (
-      el?.dataset?.tooltip !== undefined &&
-      (e.key === "Enter" || e.key === " ")
-    ) {
-      e.preventDefault();
-      el.classList.toggle("active");
-    }
-  });
-}
-
-// initialize once DOM is ready
-initTooltips();
