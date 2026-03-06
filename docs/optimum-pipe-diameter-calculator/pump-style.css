@@ -1061,3 +1061,9 @@ select:focus {
 .help-icon:hover .tooltip{
   display:block !important;
 }
+
+.help-icon{
+  width:22px;
+  height:22px;
+  font-size:13px;
+}
