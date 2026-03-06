@@ -97,19 +97,23 @@ document.querySelectorAll(".help-icon").forEach(icon => {
 
     e.stopPropagation();
 
-    // close all other tooltips
+    // close other tooltips
     document.querySelectorAll(".tooltip").forEach(t => {
       if (t !== tooltip) t.classList.remove("show");
     });
 
-    // toggle this tooltip
     tooltip.classList.toggle("show");
 
   });
 
+  // prevent tooltip clicks from closing immediately
+  tooltip.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
 });
 
-// close when clicking anywhere else
+// close when clicking outside
 document.addEventListener("click", () => {
   document.querySelectorAll(".tooltip")
     .forEach(t => t.classList.remove("show"));
