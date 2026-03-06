@@ -1035,7 +1035,8 @@ select:focus {
   position:relative;
 }
 
-.tooltip{
+.help-icon .tooltip{
+  display:none;
   position:absolute;
   top:28px;
   left:0;
@@ -1048,23 +1049,9 @@ select:focus {
   color:#d8e4f0;
   border-radius:6px;
   box-shadow:0 4px 10px rgba(0,0,0,0.4);
-  display:none;
   z-index:100;
 }
 
 .help-icon:hover .tooltip{
   display:block;
-}
-
-/* Mobile support */
-.help-icon:focus .tooltip{
-  display:block;
-}
-
-/* Mobile adjustments */
-@media (max-width:768px){
-  .tooltip{
-    width:220px;
-    left:-100px;
-  }
 }
