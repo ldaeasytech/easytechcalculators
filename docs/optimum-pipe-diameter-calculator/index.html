@@ -487,26 +487,27 @@ to the minimum total annual cost.
 </select>
 </div>
 
-  <div class="input-help">
-  <strong>Choosing an Economic Model</strong><br>
+<label for="economicMode">
+  Economic Model
+  <span class="help-icon" tabindex="0">
+    ?
+    <span class="tooltip">
+      <strong>Choosing an Economic Model</strong><br><br>
 
-  <b>Simple Annuity</b> – Suitable for preliminary studies,
-  student exercises, and short-term projects.  
-  Capital cost is distributed evenly over the project life.
+      <b>Simple Annuity</b> – Suitable for preliminary studies,
+      student exercises, and short-term projects. Capital cost
+      is distributed evenly over the project life.<br><br>
 
-  <br><br>
+      <b>Capital Recovery Factor (CRF)</b> – Recommended for
+      professional engineering analysis. This method accounts
+      for the time value of money using interest rate and
+      project life.<br><br>
 
-  <b>Capital Recovery Factor (CRF)</b> – Recommended for
-  professional engineering analysis.  
-  This method accounts for the time value of money
-  using interest rate and project life.
-
-  <br><br>
-
-  <em>Tip:</em>  
-  Use Simple Annuity for quick estimation.  
-  Use CRF for realistic economic evaluations.
-</div>
+      <em>Tip:</em> Use Simple Annuity for quick estimates.
+      Use CRF for realistic economic evaluations.
+    </span>
+  </span>
+</label>
 
 <div class="field">
 <label for="projectLife">Project Life (years)</label>
@@ -548,27 +549,23 @@ to the minimum total annual cost.
 
 <div class="input-help">
 
-<strong>Pipe Cost Index Guide</strong><br>
+<label for="pipeCostIndex">
+  Pipe Cost Index
+  <span class="help-icon" tabindex="0">
+    ?
+    <span class="tooltip">
+      <strong>Pipe Cost Index Guide</strong><br><br>
 
-The pipe cost index represents the relative cost of pipe
-materials and installation. The cost generally increases
-with pipe diameter.
+      Steel pipe systems: <b>50 – 200</b><br>
+      Plastic pipe systems: <b>20 – 80</b><br>
+      Large industrial pipelines: <b>100 – 400</b><br><br>
 
-Typical values used in preliminary design:
-
-<br><br>
-
-Steel pipe systems: <b>50 – 200</b>  
-Plastic pipe systems: <b>20 – 80</b>  
-Large industrial pipelines: <b>100 – 400</b>
-
-<br><br>
-
-These values are dimensionless scaling factors used for
-economic comparison. Actual pipe costs depend on
-material, schedule, installation method, and location.
-
-</div>
+      These values are dimensionless scaling factors used for
+      economic comparison. Actual costs depend on pipe
+      material, schedule, installation method, and location.
+    </span>
+  </span>
+</label>
 
 
       <!-- FLUID PROPERTIES -->
