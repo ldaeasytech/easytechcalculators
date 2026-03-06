@@ -96,7 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ============================================================
    TOOLTIP UX (MOBILE + ACCESSIBLE)
 ============================================================ */
-
+// initialize once DOM is ready
+initTooltips();
+  
 function initTooltips() {
 
   const tooltips = document.querySelectorAll("[data-tooltip]");
