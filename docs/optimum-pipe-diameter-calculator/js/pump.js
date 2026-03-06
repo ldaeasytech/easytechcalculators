@@ -472,9 +472,9 @@ if (recommendedPipe) {
 
   recommendationHTML = `
   <div class="optimum-commercial">
-    Recommended Commercial Pipe<br>
-    <strong>${recommendedPipe.nps} in – Schedule ${recommendedPipe.schedule}</strong><br>
-    Inner Diameter: ${(recommendedPipe.id * 1000).toFixed(1)} mm
+    Recommended Nominal Pipe Size<br>
+    <strong>${recommendedPipe.nps} in (NPS ${recommendedPipe.nps})</strong><br>
+    Approx. Inner Diameter: ${(recommendedPipe.id * 1000).toFixed(1)} mm
   </div>
   `;
 
