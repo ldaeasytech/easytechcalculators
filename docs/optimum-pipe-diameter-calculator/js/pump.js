@@ -89,6 +89,14 @@ function findClosestSteelPipe(optimumID) {
   return bestMatch;
 }
 
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* ===============================
+   TOOLTIP TOGGLE
+================================ */
+
 document.querySelectorAll(".help-icon").forEach(icon => {
 
   const tooltip = icon.querySelector(".tooltip");
@@ -106,7 +114,6 @@ document.querySelectorAll(".help-icon").forEach(icon => {
 
   });
 
-  // prevent tooltip clicks from closing immediately
   tooltip.addEventListener("click", (e) => {
     e.stopPropagation();
   });
@@ -119,7 +126,7 @@ document.addEventListener("click", () => {
     .forEach(t => t.classList.remove("show"));
 });
 
-document.addEventListener("DOMContentLoaded", () => {
+  
   let optChartInstance = null;
 
 //Hide Pipe Diameter and Schedule number
