@@ -471,13 +471,20 @@ let recommendationHTML = "";
 if (recommendedPipe) {
 
   recommendationHTML = `
-  <div class="optimum-commercial">
-    Recommended Nominal Pipe Size<br>
-    <strong>${recommendedPipe.nps} in (NPS ${recommendedPipe.nps})</strong><br>
-    Approx. Inner Diameter: ${(recommendedPipe.id * 1000).toFixed(1)} mm
+  <div class="recommended-pipe">
+    <div class="recommended-title">
+      Recommended Nominal Pipe
+    </div>
+
+    <div class="recommended-value">
+      ⭐ ${recommendedPipe.nps} in (NPS ${recommendedPipe.nps})
+    </div>
+
+    <div class="recommended-id">
+      Commercial Pipe ID: ${(recommendedPipe.id * 1000).toFixed(1)} mm
+    </div>
   </div>
   `;
-
 }
 
 document.getElementById("optimumDiameter")
@@ -498,6 +505,16 @@ Actual Pump Power: ${optimum.powerActual.toFixed(3)} kW
 </div>
 
 ${recommendationHTML}
+
+<div class="optimum-note">
+Note: Commercial pipes follow standardized nominal sizes (NPS).
+The recommended pipe is the nearest available pipe with inner
+diameter greater than or equal to the calculated optimum.
+
+Pipe schedule numbers (wall thickness) depend on design pressure,
+temperature, and material strength. Use the Pipe Schedule
+Calculator to determine the required schedule.
+</div>
 
 </div>
 `;
