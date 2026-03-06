@@ -1,5 +1,9 @@
 // pump-optimize.js  (PIPE DIAMETER OPTIMIZATION ONLY)
 
+import { initTooltips } from "../ui/tooltips.js";
+
+document.addEventListener("DOMContentLoaded", initTooltips);
+
 import "./uiInit.js";
 import "./fittingsHandler.js";
 import "./pipeMaterialHandler.js";
@@ -26,49 +30,6 @@ import {
 import {
   getPipeMaterial
 } from "./pipeMaterialHandler.js";
-
-
-/* ============================================================
-   TOOLTIP UX (MOBILE + ACCESSIBLE)
-   ============================================================ */
-function initTooltips() {
-  const tooltips = document.querySelectorAll("[data-tooltip]");
-
-  // Tap / click support (mobile)
-  document.addEventListener("click", e => {
-    let activeTooltip = null;
-
-    tooltips.forEach(tip => {
-      if (tip.contains(e.target)) {
-        activeTooltip = tip;
-      } else {
-        tip.classList.remove("active");
-      }
-    });
-
-    if (activeTooltip) {
-      activeTooltip.classList.toggle("active");
-    }
-  });
-
-  // Keyboard support (Enter / Space)
-  document.addEventListener("keydown", e => {
-    const el = document.activeElement;
-    if (
-      el?.dataset?.tooltip !== undefined &&
-      (e.key === "Enter" || e.key === " ")
-    ) {
-      e.preventDefault();
-      el.classList.toggle("active");
-    }
-  });
-}
-
-// initialize once DOM is ready
-document.addEventListener("DOMContentLoaded", initTooltips);
-
-
-
 
 
 function inchToFraction(inch) {
