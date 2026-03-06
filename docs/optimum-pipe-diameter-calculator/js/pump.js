@@ -99,33 +99,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.querySelectorAll(".help-icon").forEach(icon => {
 
-  const tooltip = icon.querySelector(".tooltip");
+document.querySelectorAll(".help-icon").forEach(icon => {
 
   icon.addEventListener("click", (e) => {
 
     e.stopPropagation();
+    e.preventDefault();
 
-    // close other tooltips
-    document.querySelectorAll(".tooltip").forEach(t => {
-      if (t !== tooltip) t.classList.remove("show");
-    });
+    const tooltip = icon.querySelector(".tooltip");
 
-    tooltip.classList.toggle("show");
+    const visible =
+      tooltip.style.display === "block";
+
+    document.querySelectorAll(".tooltip")
+      .forEach(t => t.style.display = "none");
+
+    tooltip.style.display =
+      visible ? "none" : "block";
 
   });
 
-  tooltip.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
-
 });
-
-// close when clicking outside
-document.addEventListener("click", () => {
-  document.querySelectorAll(".tooltip")
-    .forEach(t => t.classList.remove("show"));
-});
-
   
   let optChartInstance = null;
 
