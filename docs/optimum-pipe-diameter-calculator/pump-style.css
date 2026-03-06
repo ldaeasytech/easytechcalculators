@@ -1019,6 +1019,12 @@ select:focus {
   border-radius:4px;
 }
 
+.label-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
 .help-icon{
   display:inline-flex;
   align-items:center;
