@@ -93,46 +93,51 @@ function findClosestSteelPipe(optimumID) {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("DOMContentLoaded", () => {
+/* ============================================================
+   TOOLTIP UX (MOBILE + ACCESSIBLE)
+============================================================ */
 
-  /* ============================================================
-     TOOLTIP UX (MOBILE + ACCESSIBLE)
-  ============================================================ */
+function initTooltips() {
 
-  function initTooltips() {
-    const tooltips = document.querySelectorAll("[data-tooltip]");
+  const tooltips = document.querySelectorAll("[data-tooltip]");
 
-    document.addEventListener("click", e => {
-      let activeTooltip = null;
+  document.addEventListener("click", e => {
 
-      tooltips.forEach(tip => {
-        if (tip.contains(e.target)) {
-          activeTooltip = tip;
-        } else {
-          tip.classList.remove("active");
-        }
-      });
+    let activeTooltip = null;
 
-      if (activeTooltip) {
-        activeTooltip.classList.toggle("active");
+    tooltips.forEach(tip => {
+      if (tip.contains(e.target)) {
+        activeTooltip = tip;
+      } else {
+        tip.classList.remove("active");
       }
     });
 
-    document.addEventListener("keydown", e => {
-      const el = document.activeElement;
-      if (
-        el?.dataset?.tooltip !== undefined &&
-        (e.key === "Enter" || e.key === " ")
-      ) {
-        e.preventDefault();
-        el.classList.toggle("active");
-      }
-    });
-  }
+    if (activeTooltip) {
+      activeTooltip.classList.toggle("active");
+    }
 
-  initTooltips();
+  });
 
-});
+  document.addEventListener("keydown", e => {
+
+    const el = document.activeElement;
+
+    if (
+      el?.dataset?.tooltip !== undefined &&
+      (e.key === "Enter" || e.key === " ")
+    ) {
+      e.preventDefault();
+      el.classList.toggle("active");
+    }
+
+  });
+
+}
+
+/* Run only after DOM is ready */
+
+document.addEventListener("DOMContentLoaded", initTooltips);
   
   let optChartInstance = null;
 
