@@ -1068,3 +1068,14 @@ select:focus {
     left:-100px;
   }
 }
+
+.help-icon{
+  position:relative;
+}
+
+.tooltip{
+  position:absolute;
+  top:26px;
+  left:50%;
+  transform:translateX(-50%);
+}
