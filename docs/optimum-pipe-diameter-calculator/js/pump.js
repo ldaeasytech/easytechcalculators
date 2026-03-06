@@ -1,9 +1,5 @@
 // pump-optimize.js  (PIPE DIAMETER OPTIMIZATION ONLY)
 
-import { initTooltips } from "../ui/tooltips.js";
-
-document.addEventListener("DOMContentLoaded", initTooltips);
-
 import "./uiInit.js";
 import "./fittingsHandler.js";
 import "./pipeMaterialHandler.js";
