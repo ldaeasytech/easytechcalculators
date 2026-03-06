@@ -1007,3 +1007,14 @@ select:focus {
   color:#9fb7cc;
   line-height:1.4;
 }
+
+.input-help{
+  margin-top:8px;
+  font-size:12px;
+  line-height:1.5;
+  color:#9fb7cc;
+  background:#0f1a26;
+  padding:10px;
+  border-left:3px solid #4da6ff;
+  border-radius:4px;
+}
