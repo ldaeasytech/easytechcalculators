@@ -974,3 +974,36 @@ select:focus {
     font-size: 0.8rem;
   }
 }
+
+.recommended-pipe{
+  margin-top:14px;
+  padding:12px;
+  border:2px solid #ffaa00;
+  border-radius:6px;
+  background:#0f1a26;
+}
+
+.recommended-title{
+  font-size:12px;
+  letter-spacing:1px;
+  color:#9fb7cc;
+  margin-bottom:4px;
+}
+
+.recommended-value{
+  font-size:22px;
+  font-weight:700;
+  color:#ffd84d;
+}
+
+.recommended-id{
+  font-size:14px;
+  color:#d0d7e2;
+}
+
+.optimum-note{
+  margin-top:10px;
+  font-size:12px;
+  color:#9fb7cc;
+  line-height:1.4;
+}
