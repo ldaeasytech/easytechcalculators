@@ -1055,27 +1055,3 @@ select:focus {
 .help-icon:hover .tooltip{
   display:block !important;
 }
-
-/* Mobile support */
-.help-icon:focus .tooltip{
-  display:block !important;
-}
-
-/* Mobile adjustments */
-@media (max-width:768px){
-  .tooltip{
-    width:220px;
-    left:-100px;
-  }
-}
-
-.help-icon{
-  position:relative;
-}
-
-.tooltip{
-  position:absolute;
-  top:26px;
-  left:50%;
-  transform:translateX(-50%);
-}
