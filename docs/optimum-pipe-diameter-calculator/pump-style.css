@@ -1019,20 +1019,14 @@ select:focus {
   border-radius:4px;
 }
 
-.label-row{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
 .help-icon{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:22px;
-  height:22px;
+  width:18px;
+  height:18px;
   margin-left:6px;
-  font-size:13px;
+  font-size:12px;
   font-weight:bold;
   border-radius:50%;
   background:#1f3b5c;
@@ -1041,9 +1035,7 @@ select:focus {
   position:relative;
 }
 
-/* hidden by default */
 .tooltip{
-  display:none;
   position:absolute;
   top:28px;
   left:0;
@@ -1056,10 +1048,23 @@ select:focus {
   color:#d8e4f0;
   border-radius:6px;
   box-shadow:0 4px 10px rgba(0,0,0,0.4);
+  display:none;
   z-index:100;
 }
 
-/* shown via JS */
-.tooltip.show{
+.help-icon:hover .tooltip{
   display:block;
+}
+
+/* Mobile support */
+.help-icon:focus .tooltip{
+  display:block;
+}
+
+/* Mobile adjustments */
+@media (max-width:768px){
+  .tooltip{
+    width:220px;
+    left:-100px;
+  }
 }
