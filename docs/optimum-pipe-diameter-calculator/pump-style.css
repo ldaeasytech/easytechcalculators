@@ -1018,3 +1018,53 @@ select:focus {
   border-left:3px solid #4da6ff;
   border-radius:4px;
 }
+
+.help-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:18px;
+  height:18px;
+  margin-left:6px;
+  font-size:12px;
+  font-weight:bold;
+  border-radius:50%;
+  background:#1f3b5c;
+  color:#fff;
+  cursor:pointer;
+  position:relative;
+}
+
+.tooltip{
+  position:absolute;
+  top:28px;
+  left:0;
+  width:260px;
+  background:#0f1a26;
+  border:1px solid #2e4c70;
+  padding:10px;
+  font-size:12px;
+  line-height:1.5;
+  color:#d8e4f0;
+  border-radius:6px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.4);
+  display:none;
+  z-index:100;
+}
+
+.help-icon:hover .tooltip{
+  display:block;
+}
+
+/* Mobile support */
+.help-icon:focus .tooltip{
+  display:block;
+}
+
+/* Mobile adjustments */
+@media (max-width:768px){
+  .tooltip{
+    width:220px;
+    left:-100px;
+  }
+}
