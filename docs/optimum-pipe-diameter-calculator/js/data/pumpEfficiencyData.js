@@ -6,6 +6,8 @@ export const PUMP_TYPES = {
   "Axial flow": { min: 0.75, max: 0.90 },
   "Mixed flow": { min: 0.65, max: 0.85 },
   "Gear pump": { min: 0.70, max: 0.85 },
+  "Rotary lobe pump": { min: 0.65, max: 0.80 },
+  "Progressive cavity pump": { min: 0.70, max: 0.85 },
   "Piston pump": { min: 0.80, max: 0.95 },
   "Screw pump": { min: 0.65, max: 0.85 }
 };
