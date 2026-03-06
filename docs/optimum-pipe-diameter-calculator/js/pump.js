@@ -91,24 +91,28 @@ function findClosestSteelPipe(optimumID) {
 
 document.querySelectorAll(".help-icon").forEach(icon => {
 
+  const tooltip = icon.querySelector(".tooltip");
+
   icon.addEventListener("click", (e) => {
 
     e.stopPropagation();
-    e.preventDefault();
 
-    const tooltip = icon.querySelector(".tooltip");
+    // close all other tooltips
+    document.querySelectorAll(".tooltip").forEach(t => {
+      if (t !== tooltip) t.classList.remove("show");
+    });
 
-    const visible =
-      tooltip.style.display === "block";
-
-    document.querySelectorAll(".tooltip")
-      .forEach(t => t.style.display = "none");
-
-    tooltip.style.display =
-      visible ? "none" : "block";
+    // toggle this tooltip
+    tooltip.classList.toggle("show");
 
   });
 
+});
+
+// close when clicking anywhere else
+document.addEventListener("click", () => {
+  document.querySelectorAll(".tooltip")
+    .forEach(t => t.classList.remove("show"));
 });
 
 document.addEventListener("DOMContentLoaded", () => {
