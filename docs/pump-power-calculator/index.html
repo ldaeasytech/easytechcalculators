@@ -68,14 +68,21 @@ content="Pump Power Calculator to compute hydraulic, shaft, and motor power usin
  "@type": "Person",
  "name": "Leonard D. Agana",
  "jobTitle": "Chemical Engineer",
- "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, and engineering calculation tools.",
- "url": "https://easytechcalculators.com",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, pump systems, and engineering computational tools.",
+ "url": "https://easytechcalculators.com/about.html",
  "worksFor": {
    "@type": "Organization",
    "name": "EasyTech Calculators"
  },
- "sameAs": [
-   "https://easytechcalculators.com/about.html"
+ "knowsAbout": [
+   "Fluid Mechanics",
+   "Thermodynamics",
+   "Heat Transfer",
+   "Pump Systems",
+   "Pipe Flow",
+   "Computational Fluid Dynamics",
+   "Finite Element Analysis",
+   "Engineering Calculations"
  ]
 }
 </script>
@@ -243,48 +250,57 @@ content="Pump Power Calculator to compute hydraulic, shaft, and motor power usin
   </div>
 </header>
 
-   <!-- NAV -->
-    <style>
 
-/* ===============================
-   TOP EXPLORE BUTTON
-================================ */
+<div class="page-wrapper">
 
-.top-cta {
-    display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-  margin-bottom: 0px;
-}
+  <!-- Sticky Navigation -->
+  <aside class="left-sidebar">
 
-.top-cta + section h2,
-.top-cta + h2 {
-  margin-top: 0;         /* remove large heading gap */
-}      
-           
-.explore-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: #60a5fa;
-  color: #0b1220;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.explore-button:hover {
-  background: #3b82f6;
-}
-     </style>
-  
-<div class="top-cta container">
   <a href="/" class="explore-button">
     Explore More Calculators →
   </a>
-</div>
+
+  <div class="side-nav">
+
+    <div class="side-nav-title">
+      On This Page
+    </div>
+
+    <nav class="side-nav-links">
+      <a href="#calculator">Pump Power Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#pump-basics">Pump Engineering Guide</a>
+      <a href="#motor-sizing">Motor Selection</a>
+      <a href="#author-prof">About the Author</a>
+    </nav>
+
+  </div>
+
   
+
+</aside>
+  <!-- Main Page Content -->
+  <div class="page-content">
+
+<div class="mobile-nav">
+
+<button class="mobile-nav-toggle">
+Jump to Section ▼
+</button>
+
+<div class="mobile-nav-links">
+
+      <a href="#calculator">Pump Power Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#pump-basics">Pump Engineering Guide</a>
+      <a href="#motor-sizing">Motor Selection</a>
+      <a href="#author-prof">About the Author</a>
+
+</div>
+
+</div>
 
 <section class="container-learning intro-compact">
 
@@ -379,7 +395,7 @@ friction losses, hydraulic power, and required shaft power.
 </section>
 
 <!-- ================= MAIN GRID ================= -->
-<main class="container">
+<main class="container" id="calculator">
 
   <!-- ================= LEFT COLUMN – INPUTS ================= -->
   <section class="card">
@@ -636,8 +652,7 @@ friction losses, hydraulic power, and required shaft power.
 
 </div>
 
-  <!-- ================= RIGHT COLUMN – RESULTS ================= 
-  <section class="card">-->
+  <!-- ================= RIGHT COLUMN – RESULTS =================--> 
     <h2 class="results-title">Results</h2>
 
     <div id="results" class="hidden">
@@ -698,13 +713,12 @@ friction losses, hydraulic power, and required shaft power.
         <table class="results-clean" id="hydraulicTable"></table>
       </div>
 
-    </div>
   </section>
 
 </main>
 
 
-<section class="container-learning">
+<section class="container-learning" id="common-searches">
 
 <h2>Common Pump Power Calculation Searches</h2>
 
@@ -723,10 +737,6 @@ This tool calculates:
 <p><strong>Hydraulic Power = ρ g Q H</strong></p>
 <p><strong>Shaft Power = Hydraulic Power / Efficiency</strong></p>
 
-</section>
-  
-
-<section class="container-learning">
 
 <h2>Pump Power Calculation Examples (Step-by-Step)</h2>
 
@@ -738,7 +748,9 @@ equation. These examples are typical of problems encountered in
 courses as well as real industrial pumping systems.
 </p>
 
+</section>
 
+<section class="container-learning" id="examples">
 <!-- ====================================================== -->
 <!-- EXAMPLE 1 -->
 <!-- ====================================================== -->
@@ -1353,7 +1365,7 @@ You can evaluate this condition using the
 
 
 
-<section class="related-calculators">
+<section class="related-calculators" id="related">
 
   <h2>Related Pump Calculators</h2>
 
@@ -1390,7 +1402,7 @@ You can evaluate this condition using the
 
   
 <!-- Learning Section -->
- <section class="container-learning">
+ <section class="container-learning" id="pump-basics">
 
 <h2>Why Do We Use Pumps?</h2>
 <p>
@@ -1622,7 +1634,7 @@ over the lifetime of the system.
 </ul>
 
 
-<h2>How to Select the Correct Motor Power for a Pump</h2>
+<h2 id="motor-sizing">How to Select the Correct Motor Power for a Pump</h2>
 
 <p>
 Motor power must exceed the calculated shaft power to account for:
@@ -1642,18 +1654,36 @@ A common engineering practice is to select a motor
    
 </section>
 
-<section class="author-box">
+<section class="author-box" id="author-prof">
 
-<h3>About the Author</h3>
+<h2>About the Creator</h2>
 
 <p>
-<strong>Leonard D. Agana</strong> is a chemical engineer and founder of
-EasyTechCalculators.com. He develops engineering calculators and
-educational resources focused on fluid mechanics, thermodynamics, 
-process engineering design and other related fields.
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
 </p>
 
 </section>
+
+</div>
+</div>
 
 <!-- ================= FOOTER ================= -->
  <footer class="site-footer">
