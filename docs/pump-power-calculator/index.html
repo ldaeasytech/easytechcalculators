@@ -815,22 +815,29 @@ commercial steel pipes, and fittings and valve coefficients for faster computati
 <li>
 <strong>Elevation Profile:</strong>
 </li>
+<ul>
 <li>Input elevation difference: 6.8 m</li>
-<li>Select Relative elevation of the liquid source -> the liquid source is below the discharge</li>
+<li>Relative elevation of the liquid source -> the liquid source is below the discharge</li>
 <li>Select where the elevation is measured -> the elevation was measured between the source liquid surface and pipe outlet</li>
+</ul>
 
-<strong>Pressure profile:</strong><br>
-Pressure 1 = 100000 Pa<br>
-Pressure 2 = 100000 Pa
-</li>
+
+<li><strong>Pressure profile:</strong></li>
+<ul>
+<li>Pressure 1 = 100000 Pa</li>
+<li>Pressure 2 = 100000 Pa</li>
+</ul>
 
 <li>
 <strong>Pipe specification:</strong><br>
-Pipe material: Commercial steel<br>
-Nominal pipe size: 1½ inch<br>
-Schedule number: 40<br>
-Total pipe length: 11.4475 m
 </li>
+
+<ul>
+<li>Pipe material: Commercial steel</li>
+<li>Nominal pipe size: 1½ inch</li>
+<li>Schedule number: 40ST/40S</li>
+<li>Total pipe length: 11.4475 m</li>
+</ul>
 
 <li>
 <strong>Fluid properties (water at 25°C & 100 kPa):</strong>
@@ -1041,7 +1048,7 @@ receiving tank liquid level to prevent air entrainment. The system uses a
 
 <p>
 The pipeline consists of <strong>2 inch Schedule 40 commercial steel pipe</strong>
-with a diaphragm valve and check valve.
+with a diaphragm valve and ball-type check valve.
 The elevation difference between tanks is <strong>3 m</strong>.
 </p>
 
@@ -1063,14 +1070,71 @@ The elevation difference between tanks is <strong>3 m</strong>.
 </figure>
 
 
+<h4>Step-by-Step Calculator Procedure</h4>
 
-<h4>Fluid Properties</h4>
+<ol>
 
+<li><strong>Input flow rate:</strong> 15 m³/h</li>
+
+<li>
+<strong>Elevation Profile:</strong>
+</li>
 <ul>
-<li>Density = 1400 kg/m³</li>
-<li>Viscosity = 8 Pa·s</li>
+<li>Input elevation difference: 3 m</li>
+<li>Relative elevation of the liquid source -> the liquid source is above the discharge</li>
+<li>Select where the elevation is measured -> the elevation was measured between the source 
+  liquid surface (storage tank) and sink liquid surface (receiving tank) with sink velocity equal to zero</li>
 </ul>
 
+
+<li><strong>Pressure profile:</strong></li>
+<ul>
+<li>Toggle the atmospheric pressure in both pressure 1 and 2</li>
+</ul>
+
+<li>
+<strong>Pipe specification:</strong><br>
+</li>
+
+<ul>
+<li>Pipe material: Commercial steel</li>
+<li>Nominal pipe size: 2 inch</li>
+<li>Schedule number: 40ST/40S</li>
+<li>Total pipe length: 8.02585 m</li>
+</ul>
+
+<li>
+<strong>Fluid properties:</strong>
+<ul>
+<li>Density = 1400 kg/m³</li>
+<li>Viscosity = 8000000 µPa·s</li>
+</ul>
+</li>
+
+<li>
+<strong>Pump selection:</strong><br>
+Pump type: Rotary lobe pump<br>
+Efficiency: 75%
+<p>Typical efficiency of pumps are provided which can be your 
+  basis in case the efficiency is not given.</p>
+</li>
+
+<li>
+<strong>Fittings and valves:</strong>
+<ul>
+<li>Check valve ball, 1 pc</li>
+<li>90° elbow standard, 3 pcs</li>
+<li>Diaphragm valve at 100% opening (fully open), 1 pc</li>
+<p>Note: All added fittings and valves is display below the schematics. 
+  You can remove added fittings or valves by clicking the “x” button.</p>
+</ul>
+</li>
+
+<li>
+Click <strong>Calculate Pump Power</strong>.
+</li>
+
+</ol>
 
 
 <h4>Results</h4>
@@ -1081,7 +1145,8 @@ The elevation difference between tanks is <strong>3 m</strong>.
 </ul>
 
 <p>
-Therefore a <strong>12 hp rotary lobe pump</strong> should be selected.
+Therefore a <strong>12 hp rotary lobe pump</strong> with 
+an efficiency of <strong>75%</strong> should be selected.
 </p>
 
 
