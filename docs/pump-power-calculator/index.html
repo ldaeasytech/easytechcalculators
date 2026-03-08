@@ -7,10 +7,7 @@
   <title>Pump Power Calculator (kW & HP) | Hydraulic Power, Head Loss & Efficiency</title>
 
 <meta name="description"
-content="Advanced Pump Power Calculator to compute hydraulic power, shaft power, and motor power using flow rate, total dynamic head (TDH), efficiency, and pipe friction losses. Includes pump types selectiion and efficiency guidance. Supports SI and English units for accurate pump sizing and energy analysis." />
-
-<meta name="keywords"
-content="pump power calculator, hydraulic power calculator, shaft power calculator, motor power calculator, pump efficiency calculation, pump energy consumption, Darcy-Weisbach pump power, pump sizing calculator" />
+content="Pump Power Calculator to compute hydraulic, shaft, and motor power using flow rate, TDH, efficiency, and pipe losses. Includes built-in K-values for fittings and commercial steel pipe diameters, pump types selectiion and efficiency guidance. Supports SI and English units for accurate pump sizing and energy analysis." />
 
 <meta name="author" content="EasyTechCalculators" />
 <meta name="robots" content="index, follow" />
@@ -62,6 +59,24 @@ content="pump power calculator, hydraulic power calculator, shaft power calculat
   "name": "EasyTechCalculators",
   "url": "https://easytechcalculators.com",
   "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
+}
+</script>
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Leonard D. Agana",
+ "jobTitle": "Chemical Engineer",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, and engineering calculation tools.",
+ "url": "https://easytechcalculators.com",
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
+ "sameAs": [
+   "https://easytechcalculators.com/about.html"
+ ]
 }
 </script>
 
@@ -169,8 +184,9 @@ content="pump power calculator, hydraulic power calculator, shaft power calculat
   "headline": "Pump Power Calculation Explained – Hydraulic, Shaft and Motor Power",
   "description": "Comprehensive guide explaining pump hydraulic power, shaft power, motor sizing, efficiency losses, and friction head calculation in piping systems.",
   "author": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators",
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
     "url": "https://easytechcalculators.com"
   },
   "publisher": {
@@ -269,25 +285,55 @@ content="pump power calculator, hydraulic power calculator, shaft power calculat
   </a>
 </div>
   
+
 <section class="container-learning intro-compact">
 
 <h2>Pump Power Calculator – Hydraulic, Shaft & Motor Power Analysis</h2>
 
 <p>
-This <strong>Pump Power Calculator</strong> computes hydraulic power, shaft power, and motor power based on flow rate, total head, fluid properties, and pump efficiency. It incorporates static head and friction losses to provide realistic power requirements for pump sizing and energy analysis.
+Pumps are essential components in many engineering systems, including
+<strong>water supply networks, chemical processing plants, irrigation systems,
+HVAC installations, and industrial fluid transport pipelines</strong>.
+To move a fluid from one location to another, a pump must supply
+sufficient <strong>mechanical energy</strong> to overcome elevation changes,
+pressure differences, pipe friction, and losses from fittings and valves.
 </p>
 
 <p>
-Use this tool to evaluate energy consumption, optimize pump efficiency, and ensure proper motor selection in piping systems.
+The amount of energy required to drive the pump is known as
+<strong>pump power</strong>. Accurate pump power calculation is important
+for selecting the correct pump size, determining motor requirements,
+and estimating the energy consumption of a pumping system.
+Underestimating the power requirement may result in insufficient flow,
+while oversizing a pump can lead to unnecessary energy costs and
+inefficient operation.
+</p>
+
+<p>
+The <strong>Pump Power Calculator</strong> below evaluates the energy
+required to move a fluid through a piping system by combining
+<strong>fluid mechanics principles</strong> with practical engineering
+design parameters. The calculator determines the
+<strong>hydraulic power, shaft power, and motor power</strong> required
+based on flow rate, total head, fluid properties, pipe characteristics,
+and pump efficiency.
+</p>
+
+<p>
+Static head and friction losses from pipes, fittings, and valves are
+automatically included in the analysis to provide realistic estimates
+of the <strong>total dynamic head (TDH)</strong> and the corresponding
+pump power requirement.
 </p>
 
 
 <h2>Easy-to-Use Pump Power & Motor Sizing Calculator</h2>
 
 <p>
-This pump power calculator simplifies motor selection and energy analysis.
-Users can select pump type, view typical efficiency ranges,
-and input projected efficiency for accurate shaft and motor power estimation.
+This calculator simplifies pump sizing and motor selection for both
+engineering students and practicing engineers. Users can select
+the pump type, view typical efficiency ranges, and input projected
+efficiency to estimate the required shaft power and motor power.
 </p>
 
 <ul>
@@ -296,14 +342,40 @@ and input projected efficiency for accurate shaft and motor power estimation.
 <li>Commercial steel pipe schedule lookup</li>
 <li>Pump type selection with efficiency guidance</li>
 <li>Theoretical vs actual power comparison</li>
-<li>Results in kW and horsepower (HP)</li>
+<li>Results in both kilowatts (kW) and horsepower (HP)</li>
 </ul>
 
 <p>
-The calculator helps engineers size pumps and motors correctly
-while minimizing energy consumption.
+This tool helps engineers correctly size pumps and motors,
+evaluate pumping energy requirements, and design more efficient
+piping systems.
 </p>
-  
+
+<p>
+The calculator is based on the <strong>mechanical energy balance equation</strong>
+commonly used in fluid mechanics to analyze pumping systems. It
+accounts for elevation head, velocity head, pressure differences,
+and friction losses within the piping system.
+</p>
+
+<h2>How to Use the Pump Power Calculator</h2>
+
+<ol>
+<li>Enter the flow rate (mass or volumetric).</li>
+<li>Specify the elevation difference between source and discharge.</li>
+<li>Enter pressure conditions at inlet and outlet.</li>
+<li>Select pipe material, pipe size, and pipe length.</li>
+<li>Input fluid density and viscosity.</li>
+<li>Select pump type and enter estimated efficiency.</li>
+<li>Add fittings and valves if present.</li>
+<li>Click “Calculate Pump Power”.</li>
+</ol>
+
+<p>
+The calculator automatically determines total dynamic head,
+friction losses, hydraulic power, and required shaft power.
+</p>
+
 </section>
 
 <!-- ================= MAIN GRID ================= -->
@@ -654,6 +726,568 @@ This tool calculates:
 </section>
   
 
+<section class="container-learning">
+
+<h2>Pump Power Calculation Examples (Step-by-Step)</h2>
+
+<p>
+The following worked examples demonstrate how to determine the
+<strong>pump power requirement</strong> using the mechanical energy balance
+equation. These examples are typical of problems encountered in
+<strong>fluid mechanics, chemical engineering, and mechanical engineering</strong>
+courses as well as real industrial pumping systems.
+</p>
+
+
+<!-- ====================================================== -->
+<!-- EXAMPLE 1 -->
+<!-- ====================================================== -->
+
+<h3>Example 1: Power Requirement for Pumping Groundwater to a Storage Tank</h3>
+
+<p>
+Groundwater at <strong>25 °C</strong> is pumped to a storage tank using
+<strong>1½-inch Schedule 40 commercial steel pipe</strong> as shown in Figure 1.
+A gate valve is installed for maintenance purposes and remains fully open
+during operation. A foot valve is installed at the suction line.
+</p>
+
+<p>
+The elevation difference between the groundwater surface and the pipe outlet
+is <strong>6.8 m</strong>. The system must deliver
+<strong>100 gallons per minute (gpm)</strong>.
+A centrifugal pump with an efficiency of <strong>60%</strong> is used.
+Local atmospheric pressure is assumed to be <strong>100 kPa</strong>.
+</p>
+
+<figure class="problem-figure">
+  <img
+    src="/images/pump-example1.webp"
+    alt="Groundwater pumping system using centrifugal pump showing pipe lengths, elbows, gate valve and elevation difference"
+    loading="lazy"
+    width="900"
+    height="350"
+  />
+  <figcaption>
+    <strong>Figure 1.</strong> Groundwater pumping system used in Example 1.
+    Water is pumped from a groundwater well to an elevated storage tank through
+    1½ inch Schedule 40 commercial steel pipe with a foot valve, gate valve,
+    and three 90° elbows.
+  </figcaption>
+</figure>
+
+
+<h4>Assumptions</h4>
+
+<ul>
+<li>Dissolved solids in groundwater have negligible effect on water properties.</li>
+<li>Atmospheric pressure difference between inlet and outlet is negligible.</li>
+</ul>
+
+
+<h4>Mechanical Energy Balance Equation</h4>
+
+<p>
+The theoretical pump work is calculated using the mechanical energy balance:
+</p>
+
+<p><strong>Ws = ΔPE + ΔKE + ΔP/ρ + Ftotal</strong></p>
+
+<p>
+The actual pump power is calculated using pump efficiency:
+</p>
+
+<p><strong>Wa = Ws / η</strong></p>
+
+<p>
+This <strong>calculator</strong> provides a <strong>fast</strong> and <strong>reliable</strong> calculations 
+with built-in select options for nominal size and schedule number of
+commercial steel pipes, and fittings and valve coefficients for faster computations.
+</p>
+
+
+<h4>Step-by-Step Calculator Procedure</h4>
+
+<ol>
+
+<li><strong>Input flow rate:</strong> 100 gpm</li>
+
+<li>
+<strong>Elevation Profile:</strong>
+</li>
+<li>Input elevation difference: 6.8 m</li>
+<li>Select Relative elevation of the liquid source -> the liquid source is below the discharge</li>
+<li>Select where the elevation is measured -> the elevation was measured between the source liquid surface and pipe outlet</li>
+
+<strong>Pressure profile:</strong><br>
+Pressure 1 = 100000 Pa<br>
+Pressure 2 = 100000 Pa
+</li>
+
+<li>
+<strong>Pipe specification:</strong><br>
+Pipe material: Commercial steel<br>
+Nominal pipe size: 1½ inch<br>
+Schedule number: 40<br>
+Total pipe length: 11.4475 m
+</li>
+
+<li>
+<strong>Fluid properties (water at 25°C & 100 kPa):</strong>
+<p>
+You can use
+<a href="https://easytechcalculators.com/water-properties/">
+<strong>Water & Steam Properties calculator</strong>
+</a>to determine this. Use TP input pair with T = 298.15 K (25°C) and 0.1 MPa (100 kPa). 
+</p>
+
+<ul>
+<li>Density = 995.71 kg/m³</li>
+<li>Viscosity = 853.83 µPa·s</li>
+</ul>
+</li>
+
+<li>
+<strong>Pump selection:</strong><br>
+Pump type: Centrifugal pump<br>
+Efficiency: 60%
+<p>Typical efficiency of pumps are provided which can be your 
+  basis in case the efficiency is not given.</p>
+</li>
+
+<li>
+<strong>Fittings and valves:</strong>
+<ul>
+<li>Foot valve, 1 pc</li>
+<li>90° elbow standard, 3 pcs</li>
+<li>Gate valve at 100% opening (fully open), 1 pc</li>
+<p>Note: All added fittings and valves is display below the schematics. 
+  You can remove added fittings or valves by clicking the “x” button.</p>
+</ul>
+</li>
+
+<li>
+Click <strong>Calculate Pump Power</strong>.
+</li>
+
+</ol>
+
+
+<h4>Results</h4>
+
+<p>
+The calculator produces the following results:
+</p>
+
+<ul>
+<li>Theoretical power = <strong>2.227 kW (2.99 hp)</strong></li>
+<li>Actual power = <strong>3.711 kW (4.98 hp)</strong></li>
+</ul>
+
+<p>
+Therefore, a <strong>5 hp centrifugal pump</strong> with an efficiency of <strong>60%</strong> should be selected.
+</p>
+
+
+<h4>Energy Balance Terms</h4>
+
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td>Mass Flow Rate</td><td>6.2820</td><td>kg/s</td></tr>
+<tr><td>Δ Kinetic Energy</td><td>11.5365</td><td>J/kg</td></tr>
+<tr><td>Δ Potential Energy</td><td>66.7080</td><td>J/kg</td></tr>
+<tr><td>Δ Pressure Energy</td><td>0.0000</td><td>J/kg</td></tr>
+<tr><td>Pipe Friction Loss</td><td>69.3910</td><td>J/kg</td></tr>
+<tr><td>Entrance Loss</td><td>5.7683</td><td>J/kg</td></tr>
+<tr><td>Exit Loss</td><td>0.0000</td><td>J/kg</td></tr>
+<tr><td>Fittings Loss</td><td>201.0727</td><td>J/kg</td></tr>
+<tr><td>Total Friction Loss</td><td>276.2319</td><td>J/kg</td></tr>
+
+</tbody>
+</table>
+
+
+<h4>Hydraulic Parameters</h4>
+
+<table>
+
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr><td>Pipe Diameter</td><td>0.0409</td><td>m</td></tr>
+<tr><td>Pipe Velocity</td><td>4.8034</td><td>m/s</td></tr>
+<tr><td>Reynolds Number</td><td>2.291e+5</td><td>-</td></tr>
+<tr><td>Flow Regime</td><td>Turbulent</td><td>-</td></tr>
+<tr><td>Total Loss Coefficient</td><td>23.9441</td><td>-</td></tr>
+<tr><td>Pump Efficiency</td><td>60%</td><td>-</td></tr>
+
+</tbody>
+
+</table>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+Although the elevation difference in this system is only <strong>6.8 m</strong>,
+the largest energy loss comes from <strong>pipe friction and fitting losses</strong>.
+This occurs because the fluid must pass through several elbows, valves,
+and pipe sections that create resistance to flow.
+</p>
+
+<p>
+This illustrates an important engineering principle in piping system design:
+</p>
+
+<blockquote>
+<strong>Minor losses from fittings and valves can dominate the total energy
+loss in a piping system.</strong>
+</blockquote>
+
+<p>
+For long piping systems with multiple fittings, the combined resistance
+from elbows, valves, and pipe roughness can significantly increase
+the pump power requirement.
+</p>
+
+
+<h4>Design Optimization</h4>
+
+<p>
+The operating cost of a pumping system can often be reduced by selecting
+the <strong>optimum pipe diameter</strong>. Larger pipes reduce friction losses
+but increase installation cost, while smaller pipes reduce capital cost
+but increase pumping energy requirements.
+</p>
+
+<p>
+You can evaluate this trade-off using our
+<a href="https://easytechcalculators.com/optimum-pipe-diameter-calculator/">
+<strong>Optimum Pipe Diameter Calculator</strong>
+</a>.
+</p>
+
+<p>
+This calculator determines the <strong>economic pipe diameter</strong> that
+minimizes the <strong>total lifetime cost</strong> of a piping system by
+balancing pipe capital cost and pumping energy cost.
+</p>
+
+
+<h4>Cavitation Considerations</h4>
+
+<p>
+Before selecting a pump, it is also important to verify the
+<strong>Net Positive Suction Head (NPSH)</strong>.
+</p>
+
+<p>
+If the available NPSH is insufficient, the pump may experience
+<strong>cavitation</strong>, which can cause serious operational problems.
+</p>
+
+<p>
+Potential consequences of cavitation include:
+</p>
+
+<ul>
+<li>Cavitation bubbles inside the pump</li>
+<li>Excessive noise and vibration</li>
+<li>Impeller damage</li>
+<li>Reduced pump efficiency</li>
+</ul>
+
+<p>
+You can evaluate this condition using our
+<a href="https://easytechcalculators.com/npsh-available-calculator/">
+<strong>NPSH Available Calculator</strong>
+</a> to ensure safe and reliable pump operation.
+</p>
+
+</section>
+
+<!-- ====================================================== -->
+<!-- EXAMPLE 2 -->
+<!-- ====================================================== -->
+
+<h3>Example 2: Power Requirement for Pumping Molasses Between Tanks</h3>
+
+<p>
+Molasses is pumped from a ground-level storage tank to an elevated receiving
+tank in a fermentation plant at a rate of <strong>15 m³/h</strong>.
+</p>
+
+<p>
+Because molasses is highly viscous, the discharge pipe is submerged below the
+receiving tank liquid level to prevent air entrainment. The system uses a
+<strong>rotary lobe pump</strong> with efficiency <strong>75%</strong>.
+</p>
+
+<p>
+The pipeline consists of <strong>2 inch Schedule 40 commercial steel pipe</strong>
+with a diaphragm valve and check valve.
+The elevation difference between tanks is <strong>3 m</strong>.
+</p>
+
+
+<figure class="problem-figure">
+  <img
+    src="/images/pump-example2.webp"
+    alt="Molasses pumping system using rotary lobe pump between storage tank and elevated receiving tank"
+    loading="lazy"
+    width="900"
+    height="350"
+  />
+  <figcaption>
+    <strong>Figure 2.</strong> Molasses pumping system used in Example 2.
+    Highly viscous molasses is pumped from a ground-level storage tank to an
+    elevated fermentation tank using a rotary lobe pump through a 2 inch
+    Schedule 40 commercial steel pipe with elbows, diaphragm valve and check valve.
+  </figcaption>
+</figure>
+
+
+
+<h4>Fluid Properties</h4>
+
+<ul>
+<li>Density = 1400 kg/m³</li>
+<li>Viscosity = 8 Pa·s</li>
+</ul>
+
+
+
+<h4>Results</h4>
+
+<ul>
+<li>Theoretical power = <strong>6.628 kW (8.89 hp)</strong></li>
+<li>Actual power = <strong>8.837 kW (11.85 hp)</strong></li>
+</ul>
+
+<p>
+Therefore a <strong>12 hp rotary lobe pump</strong> should be selected.
+</p>
+
+
+
+<h4>Energy Balance Terms</h4>
+
+<table>
+
+<thead>
+<tr>
+<th>Term</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr><td>Mass Flow Rate</td><td>5.8333</td><td>kg/s</td></tr>
+<tr><td>Δ Kinetic Energy</td><td>0.0000</td><td>J/kg</td></tr>
+<tr><td>Δ Potential Energy</td><td>-29.4300</td><td>J/kg</td></tr>
+<tr><td>Δ Pressure Energy</td><td>0.0000</td><td>J/kg</td></tr>
+<tr><td>Pipe Friction Loss</td><td>1024.7197</td><td>J/kg</td></tr>
+<tr><td>Entrance Loss</td><td>0.9261</td><td>J/kg</td></tr>
+<tr><td>Exit Loss</td><td>1.8521</td><td>J/kg</td></tr>
+<tr><td>Fittings Loss</td><td>138.0660</td><td>J/kg</td></tr>
+<tr><td>Total Friction Loss</td><td>1165.5639</td><td>J/kg</td></tr>
+
+</tbody>
+
+</table>
+
+
+
+<h4>Hydraulic Parameters</h4>
+
+<table>
+
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr><td>Pipe Diameter</td><td>0.0525</td><td>m</td></tr>
+<tr><td>Pipe Velocity</td><td>1.9246</td><td>m/s</td></tr>
+<tr><td>Reynolds Number</td><td>1.768e+1</td><td>-</td></tr>
+<tr><td>Flow Regime</td><td>Laminar</td><td>-</td></tr>
+<tr><td>Total Loss Coefficient</td><td>629.3107</td><td>-</td></tr>
+<tr><td>Pump Efficiency</td><td>75%</td><td>-</td></tr>
+
+</tbody>
+
+</table>
+
+<section class="engineering-insight">
+
+<h4>Engineering Interpretation</h4>
+
+<p>
+Several important observations can be made from the results of this pumping system.
+</p>
+
+<h5>1. Extremely Low Reynolds Number</h5>
+
+<p>
+The calculated Reynolds number is:
+</p>
+
+<p><strong>Re = 17.68</strong></p>
+
+<p>
+Since laminar flow occurs when:
+</p>
+
+<p><strong>Re &lt; 2100</strong></p>
+
+<p>
+the flow inside the pipe is <strong>deeply laminar</strong>. This condition is typical
+when pumping highly viscous fluids such as <strong>molasses, syrups, and heavy oils</strong>.
+</p>
+
+
+<h5>2. Friction Loss Dominates the Energy Balance</h5>
+
+<p>
+The calculated pipe friction loss is <strong>1024.72 J/kg</strong>, which is significantly
+larger than all other energy terms in the mechanical energy balance.
+</p>
+
+<p>
+This indicates that the pump power requirement is dominated by
+<strong>viscous shear forces inside the pipe</strong> rather than elevation or kinetic
+energy changes.
+</p>
+
+
+<h5>3. Minor Losses Are Still Significant</h5>
+
+<p>
+Losses from fittings and valves contribute approximately:
+</p>
+
+<p><strong>138.07 J/kg</strong></p>
+
+<p>
+Although smaller than the pipe friction loss, these minor losses still represent
+<strong>more than 10% of the total friction losses</strong> in the system.
+</p>
+
+
+<h5>4. Pipe Velocity Is Moderate</h5>
+
+<p>
+The calculated pipe velocity is:
+</p>
+
+<p><strong>v = 1.9246 m/s</strong></p>
+
+<p>
+This velocity is typical for viscous fluid transport systems because it balances
+<strong>pressure drop, pumping power, and pipe installation cost</strong>.
+</p>
+
+
+<h4>Why a Rotary Lobe Pump Is Used</h4>
+
+<p>
+Centrifugal pumps often become inefficient when pumping highly viscous fluids
+because their performance decreases rapidly with increasing viscosity.
+</p>
+
+<p>
+Positive displacement pumps such as <strong>rotary lobe pumps</strong> are typically
+preferred for viscous fluids because they:
+</p>
+
+<ul>
+<li>Maintain stable flow at high viscosity</li>
+<li>Operate efficiently under laminar flow conditions</li>
+<li>Provide steady, low-shear pumping</li>
+<li>Handle shear-sensitive fluids effectively</li>
+</ul>
+
+<p>
+For these reasons, a <strong>rotary lobe pump with 75% efficiency</strong> is selected
+for this system.
+</p>
+
+
+<h4>Design Tip: Optimize Pipe Diameter</h4>
+
+<p>
+Highly viscous fluids generate very large friction losses in pipes. Increasing
+the pipe diameter slightly can significantly reduce the required pumping power.
+</p>
+
+<p>
+You can evaluate this trade-off using our
+<a href="https://easytechcalculators.com/optimum-pipe-diameter-calculator/">
+<strong>Optimum Pipe Diameter Calculator</strong>
+</a>.
+</p>
+
+<p>
+This tool determines the pipe diameter that minimizes the
+<strong>combined capital cost and operating energy cost</strong> of the pumping system.
+</p>
+
+
+<h4>Additional Design Check: NPSH</h4>
+
+<p>
+When designing pumping systems, engineers must also verify the
+<strong>Net Positive Suction Head Available (NPSH<sub>a</sub>)</strong>.
+</p>
+
+<p>
+If the available NPSH is lower than the pump's required NPSH, the system may
+experience:
+</p>
+
+<ul>
+<li>Cavitation</li>
+<li>Pump vibration</li>
+<li>Reduced efficiency</li>
+<li>Premature pump failure</li>
+</ul>
+
+<p>
+You can evaluate this condition using the
+<a href="https://easytechcalculators.com/npsh-available-calculator/">
+<strong>NPSH Available Calculator</strong>
+</a>.
+</p>
+
+</section>
+
+</section>
+
+
+
 <section class="related-calculators">
 
   <h2>Related Pump Calculators</h2>
@@ -691,7 +1325,7 @@ This tool calculates:
 
   
 <!-- Learning Section -->
- <main class="container-learning">
+ <section class="container-learning">
 
 <h2>Why Do We Use Pumps?</h2>
 <p>
@@ -941,8 +1575,21 @@ A common engineering practice is to select a motor
 10–15% higher than the calculated shaft power.
 </p>  
    
-</main>
-  
+</section>
+
+<section class="author-box">
+
+<h3>About the Author</h3>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and founder of
+EasyTechCalculators.com. He develops engineering calculators and
+educational resources focused on fluid mechanics, thermodynamics, 
+process engineering design and other related fields.
+</p>
+
+</section>
+
 <!-- ================= FOOTER ================= -->
  <footer class="site-footer">
 
