@@ -105,10 +105,9 @@ body {
 ========================================================= */
 
 .container {
-  max-width: 1350px;
+  max-width: 900px;
   margin: 40px auto;
   padding: 0 24px;
-  display: grid;
   gap: 28px;
 }
 
@@ -147,7 +146,7 @@ p {
     }
 
     li {
-      margin: 6px 0;
+      margin: 6px 20px;
     }
 
     a {
@@ -308,7 +307,7 @@ p {
 
 .helper-text {
   margin-top: 6px;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #cbd5f5;              /* lighter text */
 }
 
@@ -1621,4 +1620,219 @@ select:focus {
   align-items: center;
   gap: 6px;
   font-size: 0.9rem;
+}
+
+/* ===============================
+   TOP EXPLORE BUTTON
+================================ */
+
+.top-cta {
+    display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+  margin-bottom: 0px;
+}
+
+.top-cta + section h2,
+.top-cta + h2 {
+  margin-top: 0;         /* remove large heading gap */
+}      
+           
+.explore-button {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: #60a5fa;
+  color: #0b1220;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.explore-button:hover {
+  background: #3b82f6;
+}
+
+
+.author-box {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      text-align: justify;
+}
+
+/* ============================
+PAGE LAYOUT
+============================ */
+
+.page-wrapper {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0px;
+  max-width: 1300px;
+  margin: auto;
+  padding: 20px 0px;
+}
+
+/* ============================
+Left Sidebar
+============================ */
+.left-sidebar {
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+}
+
+@media (max-width: 1000px) {
+
+  .left-sidebar {
+    display: none;
+  }
+
+}
+
+/* ============================
+STICKY SIDEBAR
+============================ */
+
+.side-nav {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+  background: #0f1c2f;
+  border-radius: 8px;
+  padding: 10px 10px;
+  border: 1px solid #223a5e;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.side-nav-title {
+  font-weight: 600;
+  color: #9fb3d9;
+  margin-bottom: 12px;
+}
+
+.side-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.side-nav-links a {
+  text-decoration: none;
+  color: #cbd5f5;
+  font-size: 0.9rem;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.side-nav-links a:hover {
+  background: rgba(96,165,250,0.15);
+  color: #ffffff;
+}
+
+/* ============================
+MAIN CONTENT
+============================ */
+
+.page-content {
+  min-width: 0;
+}
+
+@media (max-width: 1000px) {
+
+  .page-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .side-nav {
+    display: none;
+  }
+
+}
+
+/* ============================
+MOBILE NAV
+============================ */
+.mobile-nav {
+  display: none;
+  margin-bottom: 20px;
+}
+
+.mobile-nav-toggle {
+  width: 100%;
+  padding: 10px;
+  background: #0f1c2f;
+  border: 1px solid #223a5e;
+  color: #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.mobile-nav-links {
+  display: none;
+  flex-direction: column;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.mobile-nav-links a {
+  text-decoration: none;
+  padding: 8px;
+  color: #cbd5f5;
+  border-radius: 6px;
+}
+
+/* Mobile only */
+
+@media (max-width: 1000px) {
+
+  .mobile-nav {
+    display: block;
+  }
+
+}
+
+
+/* ===============================
+   TOP EXPLORE BUTTON
+================================ */
+.explore-button {
+  align-self: start;
+  display: block;
+  width: 100%;
+  padding: 10px 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: #60a5fa;
+  color: #0b1220;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.explore-button:hover {
+  background: #3b82f6;
+}
+
+/* ===============================
+   Left Side Ads
+================================ */
+.sidebar-ad {
+
+  position: sticky;
+  top: 360px;
+  min-height: 250px;
+  background: #0f1c2f;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #223a5e;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+
 }
