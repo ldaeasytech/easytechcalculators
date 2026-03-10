@@ -1350,7 +1350,7 @@ PAGE LAYOUT
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 0px;
-  max-width: 1300px;
+  max-width: 1400px;
   margin: auto;
   padding: 20px 0px;
 }
@@ -1515,4 +1515,72 @@ MOBILE NAV
   border: 1px solid #223a5e;
   box-shadow: 0 8px 24px rgba(0,0,0,0.35);
 
+}
+
+/* =========================================
+   TOOLTIP (HIDDEN BY DEFAULT)
+========================================= */
+
+.tooltip-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  margin-left: 6px;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  border-radius: 50%;
+  background: #334155;
+  color: #e6edf5;
+
+  cursor: pointer;
+}
+
+.tooltip-icon:focus .tooltip,
+.tooltip-icon:hover .tooltip {
+  display: block;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+
+  bottom: 130%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background:#0f1a26;
+  color:#d8e4f0;
+
+  padding: 10px 12px;
+  border-radius: 6px;
+
+  font-size: 0.8rem;
+  line-height: 1.4;
+
+  width: 240px;
+  max-width: 240px;
+
+  white-space: normal;   /* IMPORTANT */
+
+  z-index: 20;
+}
+
+.tooltip-icon:hover .tooltip,
+.tooltip-icon:focus .tooltip,
+.tooltip-icon.active .tooltip {
+  display: block;
+}
+
+.procedure-note{
+margin:12px 0 20px 0;
+padding:10px 14px;
+border-left:4px solid #2563eb;
+font-size:0.95rem;
 }
