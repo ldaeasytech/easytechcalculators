@@ -263,7 +263,7 @@ const deltaZInput =
     const Re = (rho * v_pipe * D) / mu;
 
     let flowRegime;
-    if (Re < 2300) flowRegime = "Laminar";
+    if (Re < 2100) flowRegime = "Laminar";
     else if (Re <= 4000) flowRegime = "Transitional";
     else flowRegime = "Turbulent";
 

@@ -114,7 +114,7 @@ calculateBtn.addEventListener("click", () => {
 
   // Flow regime
   let regime;
-  if (Re < 2300) regime = "(Laminar)";
+  if (Re < 2100) regime = "(Laminar)";
   else if (Re <= 4000) regime = "(Transitional)";
   else regime = "(Turbulent)";
 

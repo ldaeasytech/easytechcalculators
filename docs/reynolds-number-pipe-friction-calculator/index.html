@@ -12,9 +12,6 @@ Reynolds Number & Friction Factor Calculator | Darcy & Fanning Friction Factor, 
 <meta name="description"
 content="Advanced Reynolds Number Calculator with Darcy and Fanning friction factors, pipe pressure drop, and interactive Moody diagram. Supports SI and English units for laminar, transitional, and turbulent flow analysis." />
 
-<meta name="keywords"
-content="Reynolds number calculator, Darcy friction factor calculator, Fanning friction factor calculator, Moody diagram calculator, pipe pressure drop calculator, laminar vs turbulent flow, friction factor equation, Re = rho V D / mu, Re = V D / nu" />
-
 <meta name="author" content="EasyTechCalculators" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#0b1220" />
@@ -67,6 +64,32 @@ content="Reynolds number calculator, Darcy friction factor calculator, Fanning f
 }
 </script>
 
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Leonard D. Agana",
+ "jobTitle": "Chemical Engineer",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, pump systems, and engineering computational tools.",
+ "url": "https://easytechcalculators.com/about.html",
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
+ "knowsAbout": [
+   "Fluid Mechanics",
+   "Thermodynamics",
+   "Heat Transfer",
+   "Pump Systems",
+   "Pipe Flow",
+   "Computational Fluid Dynamics",
+   "Finite Element Analysis",
+   "Engineering Calculations"
+ ]
+}
+</script>
+
   
 <!-- SoftwareApplication Schema -->
 <script type="application/ld+json">
@@ -76,7 +99,7 @@ content="Reynolds number calculator, Darcy friction factor calculator, Fanning f
   "name": "Reynolds Number & Friction Factor Calculator",
   "applicationCategory": "EngineeringApplication",
   "operatingSystem": "Web",
-  "url": "https://easytechcalculators.com/reynolds-number-calculator/",
+  "url": "https://easytechcalculators.com/reynolds-number-pipe-friction-calculator/",
   "description": "Online engineering calculator for Reynolds number, Darcy friction factor, Fanning friction factor, pipe pressure drop, and Moody diagram visualization.",
   "featureList": [
     "Reynolds number calculation (dynamic and kinematic viscosity)",
@@ -165,9 +188,10 @@ crossorigin="anonymous"></script>
   "headline": "Reynolds Number, Friction Factor, Pressure Drop and Moody Diagram Explained",
   "description": "Comprehensive guide explaining Reynolds number, laminar and turbulent flow regimes, Darcy and Fanning friction factors, pipe pressure drop calculation, and interpretation of the Moody diagram.",
   "author": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators",
-    "url": "https://easytechcalculators.com"
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
+    "url": "https://easytechcalculators.com/about.html"
   },
   "publisher": {
     "@type": "Organization",
@@ -179,7 +203,7 @@ crossorigin="anonymous"></script>
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://easytechcalculators.com/reynolds-number-calculator/"
+    "@id": "https://easytechcalculators.com/reynolds-number-pipe-friction-calculator/"
   },
   "about": [
     {
@@ -258,86 +282,174 @@ crossorigin="anonymous"></script>
 </header>
 
 
-   <!-- NAV -->
-    <style>
+ <div class="page-wrapper">
 
-/* ===============================
-   TOP EXPLORE BUTTON
-================================ */
+  <!-- Sticky Navigation -->
+  <aside class="left-sidebar">
 
-.top-cta {
-    display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-  margin-bottom: 0px;
-}
-
-.top-cta + section h2,
-.top-cta + h2 {
-  margin-top: 0;         /* remove large heading gap */
-}      
-           
-.explore-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: #60a5fa;
-  color: #0b1220;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.explore-button:hover {
-  background: #3b82f6;
-}
-     </style>
-  
-<div class="top-cta container">
   <a href="/" class="explore-button">
     Explore More Calculators →
   </a>
+
+  <div class="side-nav">
+
+    <div class="side-nav-title">
+      On This Page
+    </div>
+
+    <nav class="side-nav-links">
+      <a href="#calculator">Reynolds Number & Pipe Friction Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics"> Reynolds Number, Pipe Friction, and Pressure Drop Fundamentals</a>
+      <a href="#author-prof">About the Author</a>
+    </nav>
+
+  </div>
+
+  
+
+</aside>
+  <!-- Main Page Content -->
+  <div class="page-content">
+
+<div class="mobile-nav">
+
+<button class="mobile-nav-toggle">
+Jump to Section ▼
+</button>
+
+<div class="mobile-nav-links">
+
+      <a href="#calculator">Reynolds Number & Pipe Friction Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics"> Reynolds Number, Pipe Friction, and Pressure Drop Fundamentals</a>
+      <a href="#author-prof">About the Author</a>
+
 </div>
+
+</div> 
 
 <!-- ================= INTRO LEARNING BLOCK ================= -->
 
 <section class="container-learning intro-compact">
 
-<h2>Reynolds Number & Friction Factor Calculator</h2>
+<h2>Reynolds Number & Pipe Friction Calculator</h2>
 
 <p>
-Calculate Reynolds number, Darcy and Fanning friction factors,
-pipe pressure drop, and visualize results on a Moody diagram.
-Supports SI and English units.
+The <strong>Reynolds number</strong> is one of the most important
+dimensionless parameters in fluid mechanics. It describes the
+relationship between <strong>inertial forces and viscous forces</strong>
+in a flowing fluid and determines whether the flow inside a pipe is
+<strong>laminar, transitional, or turbulent</strong>.
+</p>
+
+<p>
+Understanding the flow regime is essential when analyzing
+<strong>pipe friction, pressure drop, and pumping power</strong>.
+In laminar flow, viscous forces dominate and the friction factor
+can be calculated directly from analytical relationships.
+In turbulent flow, friction depends on both
+<strong>Reynolds number and pipe roughness</strong>, which is commonly
+represented using the <strong>Moody diagram</strong>.
+</p>
+
+<p>
+The <strong>Reynolds Number & Pipe Friction Calculator</strong>
+automatically determines the Reynolds number, friction factors,
+pressure drop, and head loss in pipelines using the
+<strong>Darcy–Weisbach equation</strong>.
+The results are also displayed on an interactive
+<strong>Moody diagram</strong> to visualize the flow condition.
 </p>
 
 
-<h2>Easy-to-Use Reynolds Number & Pipe Friction Calculator</h2>
+<h2>Traditional Pipe Friction Calculations</h2>
 
 <p>
-This calculator determines Reynolds number, Darcy friction factor,
-Fanning friction factor, and pipe pressure drop using the
-Darcy–Weisbach equation.
+Traditionally, engineers determine pipe friction losses through
+a multi-step process that includes:
+</p>
+
+<ol>
+
+<li>Calculating Reynolds number using fluid properties and pipe velocity.</li>
+
+<li>Identifying the flow regime (laminar, transitional, or turbulent).</li>
+
+<li>Determining the friction factor from analytical equations
+or the Moody diagram.</li>
+
+<li>Applying the <strong>Darcy–Weisbach equation</strong> to calculate
+pressure drop or head loss.</li>
+
+</ol>
+
+<p>
+While this approach is accurate, it often requires
+<strong>iterative calculations and manual reading of friction factors
+from the Moody chart</strong>. This becomes time-consuming when
+evaluating multiple pipe sizes, flow rates, or fluid properties.
+</p>
+
+
+<h2>Advantages of Using This Reynolds Number & Pipe Friction Calculator</h2>
+
+<p>
+This calculator automates the complete pipe flow analysis process,
+allowing engineers and students to quickly determine friction losses
+and visualize flow conditions.
 </p>
 
 <ul>
-<li>Automatic pipe roughness selection by material</li>
-<li>Manual roughness override capability</li>
-<li>Laminar, transitional, and turbulent regime detection</li>
-<li>Interactive Moody diagram with live operating point</li>
-<li>SI and English unit support</li>
+
+<li>Automatic Reynolds number calculation</li>
+
+<li>Darcy and Fanning friction factor determination</li>
+
+<li>Automatic flow regime classification</li>
+
+<li>Pipe roughness selection based on material type</li>
+
+<li>Pressure drop and head loss calculation using Darcy–Weisbach equation</li>
+
+<li>Interactive Moody diagram showing the operating point</li>
+
+<li>Support for both SI and English engineering units</li>
+
 </ul>
 
 <p>
-Ideal for fluid mechanics students, engineers,
-and pipeline design analysis.
+These features allow users to evaluate piping systems quickly
+without performing repetitive manual calculations.
 </p>
 
+
+<h2>How to Use the Reynolds Number & Pipe Friction Calculator</h2>
+
+<ol>
+
+<li>Select the calculation method based on the available fluid property data.</li>
+
+<li>Enter the fluid properties such as density and viscosity.</li>
+
+<li>Input the pipe diameter and average fluid velocity.</li>
+
+<li>Select the pipe material to automatically load its roughness value.</li>
+
+<li>Enter the pipe length if pressure drop or head loss calculations are required.</li>
+
+<li>Click <strong>Calculate</strong> to determine Reynolds number,
+friction factors, pressure loss, and flow regime.</li>
+
+</ol>
+
 </section>
+
 <!-- ================= MAIN CALCULATOR ================= -->
 
-<main class="container">
+<main class="container" id="calculator">
 
   <div class="main-grid">
   <section class="card">
@@ -511,7 +623,6 @@ Moody diagrams use the Darcy formulation.
     </div>
   </div>
    
-<div class="ad-slot ad-vertical"></div>
 </section>
 
   </div>
@@ -550,9 +661,683 @@ Moody diagrams use the Darcy formulation.
 </section>
   
 
+<section class="container-learning" id="examples">
+
+<h2>Reynolds Number and Pipe Friction Calculation Examples</h2>
+
+<p>
+The following examples demonstrate how the
+<strong>Reynolds Number & Pipe Friction Calculator</strong> can be used
+to determine flow regimes, friction factors, pressure losses, and head
+losses in pipeline systems.
+</p>
+
+<p>
+These examples illustrate how fluid properties, pipe diameter,
+and flow velocity influence the Reynolds number and the resulting
+hydraulic behavior of fluids in pipes.
+</p>
+
+
+
+
+<h3>Example 1: Flow Regime in a Water Supply Pipe</h3>
+
+<p>
+A municipal water line carries water through a
+<strong>25 mm diameter pipe</strong>.
+</p>
+
+<p>
+Water properties at operating temperature:
+</p>
+
+<ul>
+<li>Density = <strong>998 kg/m³</strong></li>
+<li>Viscosity = <strong>1.0 × 10⁻³ Pa·s</strong></li>
+</ul>
+
+<p>
+Determine the Reynolds number and flow regime when the average velocity is:
+</p>
+
+<ul>
+<li>(a) 0.05 m/s</li>
+<li>(b) 0.09 m/s</li>
+<li>(c) 3 m/s</li>
+</ul>
+
+<h4>Reynolds Number Equation</h4>
+
+<p><strong>Re = ρDv / μ</strong></p>
+
+<p>
+Where:
+</p>
+
+<ul>
+<li>ρ = fluid density</li>
+<li>D = pipe diameter</li>
+<li>v = fluid velocity</li>
+<li>μ = dynamic viscosity</li>
+</ul>
+
+<p>
+Flow regime classification:
+</p>
+
+<ul>
+<li>Re &lt; 2100 → Laminar flow</li>
+<li>2100 &lt; Re &lt; 4000 → Transitional flow</li>
+<li>Re &gt; 4000 → Turbulent flow</li>
+</ul>
+
+<h4>Step-by-Step Procedure</h4>
+
+<ol>
+
+<li>Select method: <strong>Dynamic viscosity (ρDv/μ)</strong></li>
+
+<li>Input fluid properties:
+<ul>
+<li>Density = 998 kg/m³</li>
+<li>Diameter = 0.025 m</li>
+<li>Velocity = 0.05, 0.09, and 3 m/s</li>
+<li>Dynamic viscosity = 1×10⁻³ Pa·s</li>
+</ul>
+</li>
+
+<li>Click <strong>Calculate</strong>.</li>
+
+</ol>
+
+<h4>Results</h4>
+
+<ul>
+<li>Velocity = 0.05 m/s → Re = <strong>1247.5</strong> (Laminar)</li>
+<li>Velocity = 0.09 m/s → Re = <strong>2245.5</strong> (Transitional)</li>
+<li>Velocity = 3 m/s → Re = <strong>74850</strong> (Turbulent)</li>
+</ul>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+This example illustrates how strongly the Reynolds number depends on
+fluid velocity. A small increase in velocity can shift the flow regime
+from laminar to transitional and eventually to turbulent flow.
+</p>
+
+<p>
+In municipal water distribution systems, flow is typically
+<strong>turbulent</strong> because velocities are usually higher than
+1 m/s. Turbulent flow enhances mixing and allows greater flow capacity,
+but it also increases friction losses within the pipeline.
+</p>
+
+</section>
+
+
+
+
+<h3>Example 2: Oil Flow in a Process Pipeline</h3>
+
+<p>
+A food processing plant pumps vegetable oil through a
+<strong>40 mm commercial steel pipe</strong> at an average velocity of
+<strong>1.2 m/s</strong>.
+</p>
+
+<p>
+Oil properties:
+</p>
+
+<ul>
+<li>Density = <strong>920 kg/m³</strong></li>
+<li>Viscosity = <strong>0.065 Pa·s</strong></li>
+</ul>
+
+<h4>Tasks</h4>
+
+<ul>
+<li>Calculate the Reynolds number.</li>
+<li>Determine the flow regime.</li>
+<li>Compute the <strong>Fanning friction factor</strong>.</li>
+</ul>
+
+
+<h4>Fanning Friction Factor Correlations</h4>
+
+<p>
+The <strong>Fanning friction factor</strong> depends on the
+<strong>Reynolds number</strong> and the <strong>pipe roughness</strong>.
+Different equations are used depending on the flow regime.
+</p>
+
+<h5>1. Laminar Flow (Hagen–Poiseuille Equation)</h5>
+
+<p>
+For laminar flow, the Fanning friction factor is calculated using:
+</p>
+
+<p><strong>f<sub>F</sub> = 16 / Re</strong></p>
+
+<p>
+This equation applies when the Reynolds number is
+<strong>Re &lt; 2100</strong>.
+</p>
+
+
+<h5>2. Turbulent Flow (Churchill Approximation of the Colebrook Equation)</h5>
+
+<p>
+For turbulent flow, the friction factor can be estimated using
+the <strong>Churchill (1977) correlation</strong>, which approximates
+the Colebrook equation:
+</p>
+
+<p>
+<strong>
+1 / √f<sub>F</sub> = −4 log₁₀[(0.27 ε / D) + (7 / Re)<sup>0.9</sup>]
+</strong>
+</p>
+
+<p>
+where:
+</p>
+
+<ul>
+<li><strong>ε</strong> = pipe roughness (m)</li>
+<li><strong>D</strong> = pipe diameter (m)</li>
+<li><strong>Re</strong> = Reynolds number</li>
+</ul>
+
+
+<h5>3. Transitional Flow (Extended Churchill Equation)</h5>
+
+<p>
+Churchill also proposed a single equation that smoothly bridges
+laminar and turbulent flow regimes:
+</p>
+
+<p>
+<strong>
+f<sub>F</sub> =
+2 [(8 / Re)<sup>12</sup> +
+1 / (A + B)<sup>3/2</sup>]<sup>1/12</sup>
+</strong>
+</p>
+
+<p>
+where:
+</p>
+
+<p><strong>A = {2.457 ln [1 / ((7 / Re)<sup>0.9</sup> + (0.27 ε / D))]}<sup>16</sup></strong></p>
+
+<p><strong>B = (37530 / Re)<sup>16</sup></strong></p>
+
+<p>
+This formulation provides a continuous solution across
+<strong>laminar, transitional, and turbulent flow regimes</strong>.
+</p>
+
+<p>
+The <strong>Reynolds Number & Pipe Friction Calculator</strong>
+automatically applies the appropriate equation based on the
+calculated Reynolds number.
+</p>
+
+<h4>Step-by-Step Procedure</h4>
+
+<ol>
+
+<li>Select method: <strong>Dynamic viscosity (ρDv/μ)</strong></li>
+
+<li>Input fluid properties:
+<ul>
+<li>Density = 920 kg/m³</li>
+<li>Diameter = 0.04 m</li>
+<li>Velocity = 1.2 m/s</li>
+<li>Viscosity = 0.065 Pa·s</li>
+</ul>
+</li>
+
+<li>Select pipe material: <strong>Commercial steel</strong></li>
+
+<li>Click <strong>Calculate</strong>.</li>
+
+</ol>
+
+<h4>Results</h4>
+
+<ul>
+<li>Reynolds number = <strong>679.38</strong></li>
+<li>Flow regime = <strong>Laminar</strong></li>
+<li>Fanning friction factor = <strong>0.023551</strong></li>
+</ul>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+Although the velocity is relatively high, the large viscosity of the oil
+reduces the Reynolds number significantly, resulting in laminar flow.
+</p>
+
+<p>
+Highly viscous fluids commonly produce laminar flow conditions even
+in moderate-size pipelines. Under laminar flow conditions, the friction
+factor depends primarily on Reynolds number rather than pipe roughness.
+</p>
+
+</section>
+
+
+
+
+<h3>Example 3: Molasses Transfer Line</h3>
+
+<p>
+A sugar refinery transfers molasses through a
+<strong>75 mm commercial steel pipeline</strong> at
+<strong>0.8 m/s</strong>.
+</p>
+
+<p>
+Molasses properties:
+</p>
+
+<ul>
+<li>Density = <strong>1400 kg/m³</strong></li>
+<li>Viscosity = <strong>3.0 Pa·s</strong></li>
+</ul>
+
+<h4>Tasks</h4>
+
+<ul>
+<li>Compute the Reynolds number.</li>
+<li>Calculate the Darcy friction factor.</li>
+<li>Comment on the typical flow regime of viscous fluids.</li>
+</ul>
+
+<h4>Relationship Between Fanning and Darcy Friction Factors</h4>
+
+<p>
+The <strong>Reynolds number</strong> and <strong>Fanning friction factor</strong>
+are calculated using the same equations presented in
+<strong>Example 2</strong>.
+</p>
+
+<p>
+In many engineering calculations, particularly when using the
+<strong>Darcy–Weisbach equation</strong> for pipe friction losses,
+the <strong>Darcy friction factor</strong> is used instead of the
+Fanning friction factor.
+</p>
+
+<p>
+The two friction factors are related by the following equation:
+</p>
+
+f_D = 4 f_F
+
+<p>
+where:
+</p>
+
+<ul>
+<li><strong>f<sub>D</sub></strong> = Darcy friction factor</li>
+<li><strong>f<sub>F</sub></strong> = Fanning friction factor</li>
+</ul>
+
+<p>
+This relationship is widely used in fluid mechanics and pipeline
+design because the <strong>Darcy friction factor</strong> appears
+directly in the <strong>Darcy–Weisbach equation</strong> used to
+calculate pressure drop and head loss in pipes.
+</p>
+
+<p>
+The <strong>Reynolds Number & Pipe Friction Calculator</strong>
+automatically converts between these two friction factors when
+required, ensuring that the correct form is used in pressure
+loss calculations.
+</p>
+
+
+<h4>Step-by-Step Calculator Procedure</h4>
+
+<ol>
+
+<li>
+<strong>Select calculation method</strong><br>
+Choose <strong>Dynamic viscosity (ρDv/μ)</strong>.
+</li>
+
+<li>
+<strong>Input fluid properties:</strong>
+
+<ul>
+<li>Density = 1,400 kg/m³</li>
+<li>Pipe diameter = 0.075 m (75 mm)</li>
+<li>Velocity = 0.8 m/s</li>
+<li>Dynamic viscosity = 3 Pa·s</li>
+</ul>
+
+</li>
+
+<li>
+<strong>Select pipe properties:</strong>
+
+<ul>
+<li>Material = Commercial steel</li>
+</ul>
+
+<p>
+Note: When the pipe material is selected, the
+<strong>pipe roughness value</strong> automatically appears
+in the pipe roughness field of the calculator.
+</p>
+
+</li>
+
+<li>
+Click <strong>Calculate</strong> to determine the Reynolds number,
+friction factor, and pipe flow characteristics.
+</li>
+
+</ol>
+
+<h4>Results</h4>
+
+<ul>
+<li>Reynolds number = <strong>28</strong></li>
+<li>Flow regime = <strong>Laminar</strong></li>
+<li>Darcy friction factor = <strong>2.2857</strong></li>
+</ul>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+Molasses is an extremely viscous fluid, resulting in very low Reynolds
+numbers even when flowing through relatively large pipes.
+</p>
+
+<p>
+Because the Reynolds number is very small, the flow is strongly laminar,
+and the friction factor becomes very large. This leads to significant
+pressure losses and increased pumping power requirements.
+</p>
+
+<p>
+For this reason, pipelines transporting viscous fluids are often designed
+with larger pipe diameters to reduce friction losses.
+</p>
+
+</section>
+
+
+
+
+<h3>Example 4: Water Pipeline Between Two Tanks</h3>
+
+<p>
+Water flows through a <strong>50 m long commercial steel pipe</strong>
+connecting two storage tanks.
+</p>
+
+<ul>
+<li>Density = 998 kg/m³</li>
+<li>Viscosity = 1×10⁻³ Pa·s</li>
+<li>Pipe diameter = 0.05 m</li>
+<li>Velocity = 2 m/s</li>
+</ul>
+
+<h4>Tasks</h4>
+
+<ul>
+<li>Determine the pressure drop across the pipe.</li>
+<li>Calculate the head loss due to pipe friction.</li>
+</ul>
+
+<h4>Solution</h4>
+
+<p>
+The pressure drop across a pipe can be calculated using the
+<strong>Darcy–Weisbach equation</strong>. The relationship between
+the Fanning friction factor and Darcy friction factor can be used
+to express the pressure drop as:
+</p>
+
+<p>
+<strong>ΔP<sub>p</sub> = (4 f<sub>F</sub> L / D) (v<sup>2</sup> / 2)
+= (f<sub>D</sub> L / D) (v<sup>2</sup> / 2)</strong>
+</p>
+
+<p>
+where:
+</p>
+
+<ul>
+<li><strong>f<sub>F</sub></strong> = Fanning friction factor</li>
+<li><strong>f<sub>D</sub></strong> = Darcy friction factor</li>
+<li><strong>L</strong> = pipe length</li>
+<li><strong>D</strong> = pipe diameter</li>
+<li><strong>v</strong> = average fluid velocity</li>
+</ul>
+
+<p>
+Once the pressure drop is known, the corresponding head loss can
+be determined using:
+</p>
+
+<p>
+<strong>h<sub>pipe</sub> = ΔP / (ρ g)</strong>
+</p>
+
+
+<h4>Step-by-Step Calculator Procedure</h4>
+
+<ol>
+
+<li>
+<strong>Select calculation method</strong><br>
+Choose <strong>Dynamic viscosity (ρDv/μ)</strong>.
+</li>
+
+<li>
+<strong>Input fluid properties:</strong>
+
+<ul>
+<li>Density = 998 kg/m³</li>
+<li>Pipe diameter = 0.05 m</li>
+<li>Velocity = 2 m/s</li>
+<li>Dynamic viscosity = 1×10⁻³ Pa·s</li>
+</ul>
+
+</li>
+
+<li>
+<strong>Select pipe properties:</strong>
+
+<ul>
+<li>Material = Commercial steel</li>
+<li>Pipe length = 50 m</li>
+</ul>
+
+<p>
+Note: When the pipe material is selected, the
+<strong>pipe roughness value</strong> automatically appears
+in the pipe roughness input field.
+</p>
+
+</li>
+
+<li>
+Click <strong>Calculate</strong> to determine the Reynolds number,
+friction factor, pressure drop, and head loss in the pipeline.
+</li>
+
+</ol>
+
+<h4>Results</h4>
+
+<p>
+Pressure drop across the pipe:
+</p>
+
+<p><strong>ΔP = 44.01 kPa</strong></p>
+
+<p>
+Head loss due to friction:
+</p>
+
+<p><strong>h = 4.5 m</strong></p>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+In long pipelines, friction losses accumulate along the pipe length.
+Even moderate velocities can produce significant pressure drops when
+the pipe length is large.
+</p>
+
+<p>
+This example highlights the importance of considering pipeline length
+when designing fluid transport systems, particularly in water supply
+and distribution networks.
+</p>
+
+</section>
+
+
+
+
+<h3>Example 5: Cooling Water Line in a Power Plant</h3>
+
+<p>
+Cooling water flows at <strong>20 °C</strong> through a
+<strong>120 m long pipe</strong> with a diameter of
+<strong>100 mm</strong>.
+</p>
+
+<p>
+Velocity = <strong>1.5 m/s</strong>.
+</p>
+
+<h4>Step-by-Step Calculator Procedure</h4>
+
+<ol>
+
+<li>
+<strong>Determine water properties</strong> at
+<strong>20 °C (293.15 K)</strong> and
+<strong>1 atm (0.101325 MPa)</strong>.
+</li>
+
+<p>
+The density and viscosity can be obtained using the
+<a href="/water-properties/"><strong>Water & Steam Properties Calculator</strong></a>
+using the <strong>T–P input mode</strong>.
+</p>
+
+<ul>
+<li>Temperature = 293.15 K</li>
+<li>Pressure = 0.101325 MPa</li>
+</ul>
+
+<p>
+This returns the following properties:
+</p>
+
+<ul>
+<li>Density = <strong>995.71 kg/m³</strong></li>
+<li>Dynamic viscosity = <strong>0.00085383 Pa·s</strong></li>
+</ul>
+
+
+<li>
+<strong>Select calculation method</strong><br>
+Choose <strong>Dynamic viscosity (ρDv/μ)</strong>.
+</li>
+
+
+<li>
+<strong>Input fluid properties:</strong>
+
+<ul>
+<li>Density = 995.71 kg/m³</li>
+<li>Pipe diameter = 0.10 m</li>
+<li>Velocity = 1.5 m/s</li>
+<li>Dynamic viscosity = 0.00085383 Pa·s</li>
+</ul>
+
+</li>
+
+
+<li>
+<strong>Select pipe properties:</strong>
+
+<ul>
+<li>Material = Commercial steel</li>
+<li>Pipe length = 120 m</li>
+</ul>
+
+<p>
+Note: When the pipe material is selected, the
+<strong>pipe roughness value</strong> automatically appears
+in the pipe roughness input field.
+</p>
+
+</li>
+
+
+<li>
+Click <strong>Calculate</strong> to determine the Reynolds number,
+friction factor, pressure drop, and head loss in the pipeline.
+</li>
+
+</ol>
+
+<h4>Results</h4>
+
+<p>
+Pressure drop across the pipeline:
+</p>
+
+<p><strong>ΔP = 25.48 kPa</strong></p>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+Cooling water pipelines in power plants typically operate under
+turbulent flow conditions because the Reynolds number is high
+due to moderate velocity and relatively low viscosity of water.
+</p>
+
+<p>
+Although the velocity is modest, the long pipeline length
+(120 m in this case) produces a measurable pressure drop.
+Engineers must account for these losses when sizing pumps
+and determining the required pumping power.
+</p>
+
+</section>
+
+</section>
+
+
 <!-- ================= RELATED CALCULATORS ================= -->
 
-<section class="related-calculators">
+<section class="related-calculators" id="related">
 
   <h2>Related Engineering Calculators</h2>
 
@@ -582,7 +1367,71 @@ Moody diagrams use the Darcy formulation.
 
 </section>
 
-<main class="container-learning learning-section">
+<section class="container-learning" id="basics">
+
+<h2>Reynolds Number, Pipe Friction, and Pressure Drop Fundamentals</h2>
+
+<p>
+Understanding how fluids flow inside pipes is one of the most important
+topics in <strong>fluid mechanics</strong> and <strong>pipeline engineering</strong>.
+Engineers must determine whether the flow is laminar or turbulent,
+how much friction occurs between the fluid and pipe wall,
+and how this friction affects pressure loss and energy consumption.
+</p>
+
+<p>
+Two key concepts are used to analyze internal pipe flow:
+</p>
+
+<ul>
+<li><strong>Reynolds Number</strong> – determines the flow regime (laminar, transitional, or turbulent).</li>
+<li><strong>Friction Factor</strong> – quantifies the resistance to flow caused by pipe wall friction.</li>
+</ul>
+
+<p>
+These parameters are fundamental for calculating
+<strong>pressure drop, head loss, and pumping power</strong>
+in piping systems used in water supply networks,
+chemical processing plants, HVAC systems,
+oil and gas pipelines, and power plants.
+</p>
+
+<p>
+Traditionally, engineers determine friction losses through a multi-step process:
+</p>
+
+<ul>
+<li>Calculate Reynolds number from fluid properties and velocity</li>
+<li>Identify the flow regime</li>
+<li>Determine the friction factor using equations or the Moody diagram</li>
+<li>Apply the Darcy–Weisbach equation to compute pressure loss</li>
+</ul>
+
+<p>
+While this process is accurate, it often requires
+<strong>manual calculations and reading friction factors
+from the Moody chart</strong>, which can be time-consuming
+when evaluating multiple pipe sizes or flow conditions.
+</p>
+
+<p>
+The <strong>Reynolds Number & Pipe Friction Calculator</strong>
+automates these calculations and instantly determines:
+</p>
+
+<ul>
+<li>Reynolds number</li>
+<li>Flow regime</li>
+<li>Darcy and Fanning friction factors</li>
+<li>Pressure drop and head loss</li>
+<li>Operating point on the Moody diagram</li>
+</ul>
+
+<p>
+The following sections explain the fundamental concepts
+behind Reynolds number, pipe friction, and pressure loss
+in internal flows.
+</p>
 
 <h2 id="what-is-reynolds-number">1. What is Reynolds Number?</h2>
 
@@ -808,9 +1657,41 @@ on the Moody chart, helping visualize whether the flow
 is laminar, transitional, or turbulent.
 </p>
 
-</main>
+</section>
 
-  
+
+<section class="author-box" id="author-prof">
+
+<h2>About the Creator</h2>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, computer programming, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
+</p>
+
+</section>
+
+</div>
+</div>
+
+
 <!-- ================= FOOTER ================= -->
 
 <footer class="site-footer">
