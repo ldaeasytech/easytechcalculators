@@ -57,20 +57,118 @@ function detectCurrencyFromLocale() {
 
   if (!timeZone) return "USD";
 
-  const tzMap = {
-    "Asia/Manila": "PHP",
-    "Asia/Jakarta": "IDR",
-    "Asia/Kuala_Lumpur": "MYR",
-    "Asia/Singapore": "SGD",
-    "Asia/Kolkata": "INR",
-    "Europe/Berlin": "EUR",
-    "Europe/Paris": "EUR",
-    "Europe/Rome": "EUR",
-    "America/New_York": "USD",
-    "America/Los_Angeles": "USD",
-    "Australia/Sydney": "AUD",
-    "America/Toronto": "CAD"
-  };
+const tzMap = {
+
+  /* ===============================
+     SOUTHEAST ASIA
+  =============================== */
+
+  "Asia/Manila": "PHP",
+  "Asia/Jakarta": "IDR",
+  "Asia/Kuala_Lumpur": "MYR",
+  "Asia/Singapore": "SGD",
+  "Asia/Bangkok": "THB",
+  "Asia/Ho_Chi_Minh": "VND",
+
+  /* ===============================
+     SOUTH ASIA
+  =============================== */
+
+  "Asia/Kolkata": "INR",
+  "Asia/Dhaka": "BDT",
+  "Asia/Kathmandu": "NPR",
+  "Asia/Colombo": "LKR",
+  "Asia/Karachi": "PKR",
+
+  /* ===============================
+     EAST ASIA
+  =============================== */
+
+  "Asia/Shanghai": "CNY",
+  "Asia/Hong_Kong": "HKD",
+  "Asia/Taipei": "TWD",
+  "Asia/Tokyo": "JPY",
+  "Asia/Seoul": "KRW",
+
+  /* ===============================
+     MIDDLE EAST
+  =============================== */
+
+  "Asia/Dubai": "AED",
+  "Asia/Riyadh": "SAR",
+  "Asia/Qatar": "QAR",
+  "Asia/Kuwait": "KWD",
+  "Asia/Bahrain": "BHD",
+  "Asia/Jerusalem": "ILS",
+
+  /* ===============================
+     EUROPE
+  =============================== */
+
+  "Europe/Berlin": "EUR",
+  "Europe/Paris": "EUR",
+  "Europe/Rome": "EUR",
+  "Europe/Madrid": "EUR",
+  "Europe/Amsterdam": "EUR",
+  "Europe/Brussels": "EUR",
+  "Europe/Vienna": "EUR",
+  "Europe/Dublin": "EUR",
+  "Europe/Helsinki": "EUR",
+  "Europe/Prague": "CZK",
+  "Europe/Warsaw": "PLN",
+  "Europe/Budapest": "HUF",
+  "Europe/Zurich": "CHF",
+  "Europe/Stockholm": "SEK",
+  "Europe/Oslo": "NOK",
+  "Europe/Copenhagen": "DKK",
+  "Europe/London": "GBP",
+
+  /* ===============================
+     NORTH AMERICA
+  =============================== */
+
+  "America/New_York": "USD",
+  "America/Chicago": "USD",
+  "America/Denver": "USD",
+  "America/Los_Angeles": "USD",
+
+  "America/Toronto": "CAD",
+  "America/Vancouver": "CAD",
+
+  "America/Mexico_City": "MXN",
+
+  /* ===============================
+     LATIN AMERICA
+  =============================== */
+
+  "America/Sao_Paulo": "BRL",
+  "America/Argentina/Buenos_Aires": "ARS",
+  "America/Bogota": "COP",
+  "America/Lima": "PEN",
+  "America/Santiago": "CLP",
+
+  /* ===============================
+     AFRICA
+  =============================== */
+
+  "Africa/Johannesburg": "ZAR",
+  "Africa/Nairobi": "KES",
+  "Africa/Lagos": "NGN",
+  "Africa/Cairo": "EGP",
+  "Africa/Casablanca": "MAD",
+
+  /* ===============================
+     OCEANIA
+  =============================== */
+
+  "Australia/Sydney": "AUD",
+  "Australia/Melbourne": "AUD",
+  "Australia/Brisbane": "AUD",
+  "Australia/Perth": "AUD",
+
+  "Pacific/Auckland": "NZD"
+
+};
 
   return tzMap[timeZone] || "USD";
 }
