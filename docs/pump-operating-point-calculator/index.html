@@ -9,8 +9,6 @@
 <meta name="description"
 content="Advanced Pump Operating Point Calculator to determine actual flow rate and operating head from pump curve and system curve intersection. Analyze static head, friction loss, and system resistance in piping systems." />
 
-<meta name="keywords"
-content="pump operating point calculator, system curve calculator, pump curve intersection, actual pump flow rate, operating head calculator, pump performance curve, system head curve, pump and system curve analysis" />
 <meta name="author" content="EasyTechCalculators" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#0b1220" />
@@ -53,6 +51,7 @@ content="pump operating point calculator, system curve calculator, pump curve in
   gtag('config', 'G-XZVJYM389Z');
 </script>
   
+
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -62,6 +61,32 @@ content="pump operating point calculator, system curve calculator, pump curve in
   "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
 }
 </script>
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Leonard D. Agana",
+ "jobTitle": "Chemical Engineer",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, pump systems, and engineering computational tools.",
+ "url": "https://easytechcalculators.com/about.html",
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
+ "knowsAbout": [
+   "Fluid Mechanics",
+   "Thermodynamics",
+   "Heat Transfer",
+   "Pump Systems",
+   "Pipe Flow",
+   "Computational Fluid Dynamics",
+   "Finite Element Analysis",
+   "Engineering Calculations"
+ ]
+}
+</script>
+
 
 <script type="application/ld+json">
 {
@@ -165,9 +190,10 @@ content="pump operating point calculator, system curve calculator, pump curve in
   "headline": "Pump Operating Point and System Curve Explained",
   "description": "Guide explaining pump performance curves, system curves, friction losses, static head, and how to determine actual pump operating flow rate and head.",
   "author": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators",
-    "url": "https://easytechcalculators.com"
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
+    "url": "https://easytechcalculators.com/about.html"
   },
   "publisher": {
     "@type": "Organization",
@@ -215,87 +241,203 @@ content="pump operating point calculator, system curve calculator, pump curve in
   </div>
 </header>
 
-   <!-- NAV -->
-    <style>
-
-/* ===============================
-   TOP EXPLORE BUTTON
-================================ */
-
-.top-cta {
-    display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-  margin-bottom: 0px;
-}
-
-.top-cta + section h2,
-.top-cta + h2 {
-  margin-top: 0;         /* remove large heading gap */
-}      
-           
-.explore-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: #60a5fa;
-  color: #0b1220;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.explore-button:hover {
-  background: #3b82f6;
-}
-     </style>
   
-<div class="top-cta container">
+<div class="page-wrapper">
+
+  <!-- Sticky Navigation -->
+  <aside class="left-sidebar">
+
   <a href="/" class="explore-button">
     Explore More Calculators →
   </a>
+
+  <div class="side-nav">
+
+    <div class="side-nav-title">
+      On This Page
+    </div>
+
+    <nav class="side-nav-links">
+      <a href="#calculator">Operating Point Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics">Operating Point Guide</a>
+      <a href="#author-prof">About the Author</a>
+    </nav>
+
+  </div>
+
+  
+
+</aside>
+  <!-- Main Page Content -->
+  <div class="page-content">
+
+<div class="mobile-nav">
+
+<button class="mobile-nav-toggle">
+Jump to Section ▼
+</button>
+
+<div class="mobile-nav-links">
+
+      <a href="#calculator">Operating Point Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics">Operating Point Guide</a>
+      <a href="#author-prof">About the Author</a>
+
 </div>
 
+</div>
 
 <section class="container-learning intro-compact">
 
 <h2>Pump Operating Point Calculator – System and Pump Curve Analysis</h2>
 
 <p>
-This <strong>Pump Operating Point Calculator</strong> determines the actual flow rate and operating head by analyzing the intersection of the <strong>pump performance curve</strong> and the <strong>system curve</strong>. The operating point represents the real working condition of the pump within a piping system.
+The <strong>operating point of a pump</strong> represents the actual
+flow rate and head at which a pump operates within a piping system.
+It occurs at the intersection of the <strong>pump performance curve</strong>
+and the <strong>system head curve</strong>. Understanding this operating
+condition is essential for proper pump selection, system design,
+and troubleshooting pump performance issues.
 </p>
 
 <p>
-The tool evaluates static head, friction losses, and flow-dependent system resistance to identify the equilibrium point where pump head equals system required head. Ideal for pump selection, troubleshooting, and performance analysis.
+The <strong>pump curve</strong> describes the relationship between
+flow rate and head generated by the pump, while the
+<strong>system curve</strong> represents the head required by the
+piping system, including elevation differences, pressure changes,
+and friction losses in pipes, fittings, and valves.
 </p>
 
-<h2>Easy-to-Use Pump Operating Point Analysis Tool</h2>
+<p>
+The operating point is the equilibrium condition where
+<strong>pump head equals system head</strong>. At this point, the pump
+delivers a stable flow rate that satisfies the hydraulic resistance
+of the system.
+</p>
+
+
+
+<h2>Traditional Method for Determining the Pump Operating Point</h2>
 
 <p>
-This calculator simplifies pump-system interaction analysis.
-Users can select pipe material (including commercial steel),
-choose nominal pipe size and schedule,
-and automatically include friction losses from fittings and valves.
+Traditionally, engineers determine the pump operating point using
+graphical or iterative calculations. The process typically involves:
+</p>
+
+<ol>
+
+<li>Calculating the system head for several flow rate values.</li>
+
+<li>Constructing the <strong>system head curve</strong>
+based on static head and friction losses.</li>
+
+<li>Obtaining the <strong>pump characteristic curve</strong>
+from manufacturer data.</li>
+
+<li>Plotting both curves on the same graph.</li>
+
+<li>Identifying the intersection point where
+pump head equals system head.</li>
+
+</ol>
+
+<p>
+While this approach is accurate, it can be
+<strong>time-consuming and computationally intensive</strong>,
+especially when friction losses, pipe fittings, and changing system
+conditions must be evaluated repeatedly.
+</p>
+
+
+
+<h2>Advantages of Using This Pump Operating Point Calculator</h2>
+
+<p>
+This calculator automates the analysis of pump-system interaction.
+Instead of manually constructing curves and solving iterative
+equations, engineers can quickly determine the operating point
+for different piping configurations and pump characteristics.
 </p>
 
 <ul>
-<li>Built-in pipe roughness database</li>
-<li>Commercial steel pipe schedule lookup</li>
-<li>Fittings and valve loss library</li>
-<li>Atmospheric pressure toggle at inlet and outlet</li>
-<li>Graphical intersection of pump curve and system curve</li>
+
+<li>Automatic system head calculation using the mechanical energy balance</li>
+
+<li>Built-in commercial pipe size and schedule database</li>
+
+<li>Automatic friction loss calculations for fittings and valves</li>
+
+<li>Integrated Reynolds number and flow regime evaluation</li>
+
+<li>Graphical visualization of pump curve and system curve</li>
+
+<li>Automatic identification of the operating point</li>
+
 </ul>
 
 <p>
-Simply input the pump characteristic equation H(Q),
-and the calculator determines the actual operating flow rate and head.
+This tool allows engineers and students to rapidly evaluate
+different piping configurations and understand how changes
+in pipe diameter, elevation, or friction losses affect
+pump performance.
 </p>
-  
+
+
+
+<h2>How to Use the Pump Operating Point Calculator</h2>
+
+<ol>
+
+<li>
+Enter the <strong>system elevation difference</strong>
+between the liquid source and discharge point.
+</li>
+
+<li>
+Define the <strong>pressure conditions</strong>
+at the inlet and outlet of the system.
+</li>
+
+<li>
+Select the <strong>pipe material, nominal pipe size,
+and schedule number</strong>.
+</li>
+
+<li>
+Enter the <strong>total pipe length</strong>
+for the pipeline.
+</li>
+
+<li>
+Input the <strong>fluid properties</strong>
+(density and viscosity).
+</li>
+
+<li>
+Add any <strong>fittings and valves</strong>
+present in the piping system.
+</li>
+
+<li>
+Enter the <strong>pump characteristic equation</strong>
+in the form <strong>H(Q)</strong>.
+</li>
+
+<li>
+Click <strong>Calculate Operating Point</strong>
+to determine the actual flow rate and operating head.
+</li>
+
+</ol>
+
 </section>
   
 <!-- ================= MAIN GRID ================= -->
-<main class="container">
+<main class="container" id="calculator">
 
   <!-- ================= LEFT COLUMN – INPUTS ================= -->
   <section class="card">
@@ -422,7 +564,7 @@ and the calculator determines the actual operating flow rate and head.
 
         <div class="helper-text">
           Need fluid properties?
-          <a href="../water-properties/index.html" target="_blank">
+          <a href="../water-properties/" target="_blank">
             Open Water & Steam Properties Calculator
           </a>
         </div>
@@ -550,6 +692,310 @@ and the calculator determines the actual operating flow rate and head.
 
 </main>
 
+
+<section class="container-learning" id="examples">
+
+<h2>Pump Operating Point Calculation Example</h2>
+
+<p>
+The following example demonstrates how to determine the
+<strong>operating flow rate and operating head</strong> of a pump in a
+piping system. The operating point occurs at the
+<strong>intersection of the pump characteristic curve and the system head curve</strong>.
+</p>
+
+<h3>Example 1: Pump Operating Point for Pumping Groundwater to a Storage Tank</h3>
+
+<p>
+Groundwater at <strong>25 °C</strong> will be pumped to a storage tank
+using <strong>1½-inch Schedule 40 commercial steel pipe</strong> as
+shown in Figure 1.
+</p>
+
+<p>
+A <strong>gate valve</strong> is installed for maintenance purposes and
+remains fully open during operation. A <strong>foot valve</strong> is
+installed at the suction line to maintain pump priming.
+</p>
+
+<p>
+The elevation difference between the groundwater surface and the pipe
+outlet is <strong>6.8 m</strong>.
+</p>
+
+<p>
+A pump available locally has the following performance limits:
+</p>
+
+<ul>
+<li>Maximum head (shutoff head) = <strong>100 m</strong></li>
+<li>Maximum discharge (free delivery flow rate) = <strong>25 L/s</strong></li>
+</ul>
+
+<p>
+Determine:
+</p>
+
+<ul>
+<li><strong>(a)</strong> The operating flow rate and operating head when
+using <strong>1½-inch Schedule 40 pipe</strong>.</li>
+
+<li><strong>(b)</strong> The operating flow rate and operating head if
+<strong>2½-inch Schedule 40 pipe</strong> is used instead.</li>
+</ul>
+
+<p>
+Assume atmospheric pressure of <strong>100 kPa</strong>.
+</p>
+
+
+<h4>Assumptions</h4>
+
+<ul>
+<li>Dissolved solids in groundwater have negligible effect on fluid properties.</li>
+<li>Atmospheric pressure variation between suction and discharge is negligible.</li>
+</ul>
+
+
+<h3>System Head Equation</h3>
+
+<p>
+The system head is calculated using the mechanical energy balance:
+</p>
+
+<p>
+<strong>
+H<sub>sys</sub> = h<sub>z</sub> + h<sub>KE</sub> + h<sub>dP</sub> + h<sub>f</sub>
+</strong>
+</p>
+
+<ul>
+<li><strong>h<sub>z</sub></strong> = elevation head</li>
+<li><strong>h<sub>KE</sub></strong> = kinetic energy head</li>
+<li><strong>h<sub>dP</sub></strong> = pressure head</li>
+<li><strong>h<sub>f</sub></strong> = friction losses in pipes and fittings</li>
+</ul>
+
+<p>
+The friction head is determined from:
+</p>
+
+<p>
+<strong>h<sub>f</sub> = K<sub>total</sub> v² / (2g)</strong>
+</p>
+
+
+<h3>Pump Characteristic Curve</h3>
+
+<p>
+The pump characteristic curve is estimated using the maximum head
+and maximum discharge:
+</p>
+
+<p>
+<strong>H<sub>pump</sub> = H<sub>max</sub> − aQ²</strong>
+</p>
+
+<p>
+where
+</p>
+
+<p>
+<strong>a = H<sub>max</sub> / Q<sub>max</sub>²</strong>
+</p>
+
+<p>
+Because the system curve uses <strong>m³/s</strong> for flow rate,
+the maximum pump discharge must be converted:
+</p>
+
+<p>
+<strong>25 L/s = 0.025 m³/s</strong>
+</p>
+
+<p>
+Therefore the pump characteristic curve becomes:
+</p>
+
+<p>
+<strong>H<sub>pump</sub> = 100 − 160000 Q²</strong>
+</p>
+
+
+<h3>Step-by-Step Calculator Procedure</h3>
+
+<ol>
+
+<li>
+<strong>Input elevation difference</strong><br>
+6.8 m
+</li>
+
+<li>
+Select relative elevation: <br>
+<strong>Liquid source below discharge</strong>
+</li>
+
+<li>
+Elevation measured between: <br>
+<strong>source liquid surface and pipe outlet</strong>
+</li>
+
+<li>
+<strong>Pressure profile</strong><br>
+Pressure 1 = 100000 Pa<br>
+Pressure 2 = 100000 Pa
+</li>
+
+<li>
+<strong>Pipe specification</strong>
+<ul>
+<li>Pipe material: commercial steel</li>
+<li>Nominal pipe size: 1½ in</li>
+<li>Schedule: 40</li>
+<li>Total pipe length = 11.4475 m</li>
+</ul>
+</li>
+
+<li>
+<strong>Determine fluid properties</strong><br>
+
+Using the
+<a href="/water-properties/"><strong>Water & Steam Properties Calculator</strong></a>,
+select the <strong>TP input pair</strong>:
+
+<ul>
+<li>T = 298.15 K (25 °C)</li>
+<li>P = 0.1 MPa</li>
+</ul>
+
+This yields:
+
+<ul>
+<li>Density = 995.71 kg/m³</li>
+<li>Viscosity = 0.00085383 Pa·s</li>
+</ul>
+
+</li>
+
+<li>
+<strong>Add fittings</strong>
+<ul>
+<li>Foot valve (1)</li>
+<li>90° elbow (3)</li>
+<li>Gate valve fully open (1)</li>
+</ul>
+</li>
+
+<p>
+<strong>Note:</strong> Added fittings appear in the list below the
+schematic. They can be removed by clicking the “×” button.
+</p>
+
+<li>
+<strong>Input pump characteristic curve</strong><br>
+
+Enter:
+
+<strong>100 - 160000*Q*Q</strong>
+</li>
+
+<li>
+Click <strong>Calculate Operating Point</strong>.
+</li>
+
+</ol>
+
+
+<h3>Results</h3>
+
+<p>
+<strong>(a) Using 1½-inch Schedule 40 pipe:</strong>
+</p>
+
+<ul>
+<li>Operating flow rate = <strong>0.0102 m³/s (10.2 L/s)</strong></li>
+<li>Operating head = <strong>83.31 m</strong></li>
+</ul>
+
+<p>
+<strong>(b) Using 2½-inch Schedule 40 pipe:</strong>
+</p>
+
+<ul>
+<li>Operating flow rate = <strong>0.0182 m³/s (18.2 L/s)</strong></li>
+<li>Operating head = <strong>46.71 m</strong></li>
+</ul>
+
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+The operating point of a pump is determined by the intersection
+between the <strong>pump characteristic curve</strong> and the
+<strong>system head curve</strong>. Any change in the piping system
+will modify the system curve and therefore shift the operating point.
+</p>
+
+<p>
+In this example, increasing the pipe diameter significantly reduces
+friction losses in the pipeline. As a result, the system curve shifts
+downward, allowing the pump to operate at a
+<strong>higher flow rate and lower operating head</strong>.
+</p>
+
+<p>
+This behavior illustrates an important principle in pump system design:
+<strong>pipe friction losses strongly influence the operating point of
+a pumping system</strong>.
+</p>
+
+</section>
+
+
+
+<div class="design-note">
+
+<strong>Design Note:</strong>
+
+<p>
+While larger pipe diameters reduce friction losses and increase
+the achievable flow rate, they also increase installation and
+material costs. Engineers must therefore balance hydraulic
+performance and economic considerations when selecting pipe sizes.
+</p>
+
+<p>
+The optimal pipe size can be determined using the
+<a href="/optimum-pipe-diameter-calculator/">
+<strong>Optimum Pipe Diameter Calculator</strong>
+</a>.
+</p>
+
+<p>
+After determining the operating flow rate, engineers should also verify:
+</p>
+
+<ul>
+<li>Pump power requirement using the
+<a href="/pump-power-calculator/"><strong>Pump Power Calculator</strong></a></li>
+
+<li>Available suction head using the
+<a href="/npsh-available-calculator/"><strong>NPSH Available Calculator</strong></a></li>
+</ul>
+
+<p>
+These evaluations ensure that the selected pump operates efficiently
+without exceeding motor power limits or experiencing cavitation.
+</p>
+
+</div>
+
+</section>
+
+
 <section class="container-learning">
 
 <h2>Common Pump Operating Point Searches</h2>
@@ -571,7 +1017,7 @@ This tool solves the intersection between:
 </section>
 
   
-<section class="related-calculators">
+<section class="related-calculators" id="related">
 
   <h2>Related Pump Calculators</h2>
 
@@ -608,7 +1054,7 @@ This tool solves the intersection between:
 
   
 <!-- Learning Section -->
- <main class="container-learning">
+ <section class="container-learning" id="basics">
 
 <h2>What is a System Curve?</h2>
 <p>
@@ -816,8 +1262,40 @@ Proper operating point analysis is essential in water supply,
 industrial processing, HVAC systems, and irrigation networks.
 </p>
 
-</main>
-  
+</section>
+
+
+<section class="author-box" id="author-prof">
+
+<h2>About the Creator</h2>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, computer programming, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
+</p>
+
+</section>
+
+</div>
+</div>
+
 <!-- ================= FOOTER ================= -->
 <footer class="site-footer">
 
