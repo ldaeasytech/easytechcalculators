@@ -9,9 +9,6 @@
 <meta name="description"
 content="NPSH Calculator to compute Available NPSH (NPSHa), Required NPSH (NPSHr), and NPSH margin. Analyze pump suction head, vapor pressure, friction loss, and cavitation risk with pipe and fitting options." />
 
-<meta name="keywords"
-content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head calculator, cavitation calculator, pump suction analysis, vapor pressure head, suction line friction loss, pump cavitation prevention" />
-
 <meta name="author" content="EasyTechCalculators" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#0b1220" />
@@ -38,9 +35,6 @@ content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head
 
 <link rel="stylesheet" href="pump-style.css" />
 
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
   <!-- Favicons -->
@@ -69,6 +63,58 @@ content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head
 }
 </script>
   
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Leonard D. Agana",
+ "jobTitle": "Chemical Engineer",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, pump systems, and engineering computational tools.",
+ "url": "https://easytechcalculators.com/about.html",
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
+ "knowsAbout": [
+   "Fluid Mechanics",
+   "Thermodynamics",
+   "Heat Transfer",
+   "Pump Systems",
+   "Pipe Flow",
+   "Computational Fluid Dynamics",
+   "Finite Element Analysis",
+   "Engineering Calculations"
+ ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "NPSH Available Calculator"
+  "applicationCategory": "EngineeringApplication",
+  "operatingSystem": "Web",
+  "url": "https://easytechcalculators.com/npsh-available-calculator/",
+  "description": "Engineering calculator for determining Available Net Positive Suction Head (NPSHa) in pump suction systems. The tool evaluates atmospheric pressure head, elevation head, suction pipeline friction losses, vapor pressure head, Reynolds number, and flow regime to assess cavitation risk and pump suction performance.",
+  "featureList": [
+    "Available NPSH (NPSHa) calculation",
+    "Pump NPSH margin evaluation",
+    "Cavitation risk assessment",
+    "Suction pipeline friction loss calculation",
+    "Pipe material and schedule selection",
+    "Valve and fitting loss integration",
+    "Reynolds number and flow regime determination",
+    "Engineering energy balance breakdown"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -139,9 +185,10 @@ content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head
   "headline": "Available Net Positive Suction Head (NPSHa) Explained",
   "description": "Complete guide explaining NPSHa formula, cavitation, suction head, vapor pressure effects, and friction losses in pump systems.",
   "author": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators",
-    "url": "https://easytechcalculators.com"
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
+    "url": "https://easytechcalculators.com/about.html"
   },
   "publisher": {
     "@type": "Organization",
@@ -153,7 +200,7 @@ content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://easytechcalculators.com/npsh-calculator/"
+    "@id": "https://easytechcalculators.com/npsh-available-calculator/"
   },
   "about": [
     { "@type": "Thing", "name": "Net Positive Suction Head" },
@@ -206,88 +253,187 @@ content="NPSH calculator, available NPSH calculator, NPSHa formula, suction head
   </div>
 </header>
 
-   <!-- NAV -->
-    <style>
-
-/* ===============================
-   TOP EXPLORE BUTTON
-================================ */
-
-.top-cta {
-    display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-  margin-bottom: 0px;
-}
-
-.top-cta + section h2,
-.top-cta + h2 {
-  margin-top: 0;         /* remove large heading gap */
-}      
-           
-.explore-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: #60a5fa;
-  color: #0b1220;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.explore-button:hover {
-  background: #3b82f6;
-}
-     </style>
   
-<div class="top-cta container">
+<div class="page-wrapper">
+
+  <!-- Sticky Navigation -->
+  <aside class="left-sidebar">
+
   <a href="/" class="explore-button">
     Explore More Calculators →
   </a>
+
+  <div class="side-nav">
+
+    <div class="side-nav-title">
+      On This Page
+    </div>
+
+    <nav class="side-nav-links">
+      <a href="#calculator">NPSH Available Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics">NPSH Guide</a>
+      <a href="#author-prof">About the Author</a>
+    </nav>
+
+  </div>
+
+  
+
+</aside>
+  <!-- Main Page Content -->
+  <div class="page-content">
+
+<div class="mobile-nav">
+
+<button class="mobile-nav-toggle">
+Jump to Section ▼
+</button>
+
+<div class="mobile-nav-links">
+
+      <a href="#calculator">NPSH Available Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics">NPSH Guide</a>
+      <a href="#author-prof">About the Author</a>
+
+</div>
+
 </div>
 
 <section class="container-learning intro-compact">
 
-<h2>Available NPSH (NPSHa) Calculator</h2>
+<h2>Available Net Positive Suction Head (NPSHa) Calculator</h2>
 
 <p>
-Calculate Available Net Positive Suction Head (NPSHa) at the pump suction
-using the complete energy balance equation. This tool accounts for
-absolute pressure head, static suction head, suction line friction losses,
-vapor pressure head, Reynolds number, and flow regime to evaluate cavitation risk.
-</p>
-
-<h2>Easy-to-Use NPSH Calculator with Pipe & Fitting Selection</h2>
-
-<p>
-This NPSH calculator is designed with a user-friendly interface requiring minimal manual input.
-Simply select pipe material, nominal pipe size, and schedule number,
-and the internal diameter is automatically determined.
+The <strong>Net Positive Suction Head (NPSH)</strong> is one of the most
+important parameters in pump system design. It represents the amount of
+pressure available at the pump inlet above the vapor pressure of the
+fluid. If the suction pressure falls below the vapor pressure, vapor
+bubbles can form inside the pump, leading to a phenomenon known as
+<strong>cavitation</strong>.
 </p>
 
 <p>
-Users can:
+Cavitation can cause <strong>noise, vibration, loss of pump performance,
+impeller damage, and premature pump failure</strong>. For this reason,
+engineers must always verify that the
+<strong>available NPSH (NPSH<sub>A</sub>)</strong> in the system is greater
+than the <strong>required NPSH (NPSH<sub>R</sub>)</strong> specified by the
+pump manufacturer.
+</p>
+
+<p>
+This <strong>NPSH Available Calculator</strong> determines the suction head
+available at the pump inlet using the complete suction energy balance.
+The tool evaluates atmospheric pressure, elevation head, friction losses
+in the suction pipeline, and vapor pressure of the fluid to estimate the
+risk of cavitation.
+</p>
+
+
+
+<h2>Traditional Method for Calculating NPSH</h2>
+
+<p>
+Traditionally, engineers calculate the available NPSH by performing a
+detailed energy balance along the suction line. This process typically
+involves the following steps:
+</p>
+
+<ol>
+<li>Determine the atmospheric pressure head.</li>
+<li>Calculate the static elevation head between the liquid surface and pump centerline.</li>
+<li>Estimate suction pipe friction losses using the Darcy–Weisbach equation.</li>
+<li>Include minor losses from fittings, valves, and entrances.</li>
+<li>Determine the vapor pressure head of the liquid at the operating temperature.</li>
+<li>Combine all terms to compute the available NPSH.</li>
+</ol>
+
+<p>
+While this method is accurate, it can be <strong>time-consuming and prone
+to calculation errors</strong>, especially when multiple fittings,
+pipe sizes, and fluid properties must be considered.
+</p>
+
+
+
+<h2>Advantages of Using This NPSH Calculator</h2>
+
+<p>
+This calculator automates the hydraulic analysis required to evaluate
+pump suction conditions. Instead of performing repetitive manual
+calculations, engineers can quickly estimate the available NPSH and
+determine whether a pump will operate safely without cavitation.
 </p>
 
 <ul>
-<li>Select commercial steel pipe with automatic diameter lookup</li>
-<li>Choose pipe material and input custom diameter if needed</li>
-<li>Add fittings and valves from predefined options</li>
-<li>Toggle atmospheric pressure automatically</li>
-<li>Enter pump NPSHr to calculate NPSH margin</li>
+<li>Automatic suction head calculation using the energy balance equation</li>
+<li>Built-in commercial pipe size and schedule lookup</li>
+<li>Automatic internal diameter determination</li>
+<li>Minor loss calculations for fittings and valves</li>
+<li>Reynolds number and flow regime evaluation</li>
+<li>NPSH margin evaluation when pump NPSH<sub>R</sub> is provided</li>
 </ul>
 
 <p>
-A built-in schematic diagram helps verify elevation configuration
-and ensures correct suction system modeling before calculation.
+A built-in schematic diagram helps verify the relative elevation between
+the liquid source and the pump, ensuring correct suction system modeling
+before calculation.
 </p>
-  
+
+
+
+<h2>How to Use the NPSH Calculator</h2>
+
+<ol>
+
+<li>
+Enter the <strong>flow rate</strong> of the fluid (mass or volumetric).
+</li>
+
+<li>
+Specify the <strong>elevation difference</strong> between the liquid
+surface and the pump centerline.
+</li>
+
+<li>
+Define the <strong>pressure condition</strong> at the liquid surface
+(usually atmospheric pressure).
+</li>
+
+<li>
+Select the <strong>pipe material, nominal pipe size, and schedule number</strong>
+for the suction pipeline.
+</li>
+
+<li>
+Input the <strong>fluid properties</strong> including density, viscosity,
+and vapor pressure.
+</li>
+
+<li>
+Add any <strong>fittings and valves</strong> present in the suction line.
+</li>
+
+<li>
+Enter the <strong>pump's required NPSH</strong> (optional) to evaluate
+the NPSH safety margin.
+</li>
+
+<li>
+Click <strong>Calculate Available NPSH</strong> to determine the suction
+conditions at the pump inlet.
+</li>
+
+</ol>
+
 </section>
   
 <!-- ================= MAIN GRID ================= -->
-<main class="container">
+<main class="container" id="calculator">
 
   <!-- ================= LEFT COLUMN – INPUTS ================= -->
   <section class="card">
@@ -597,7 +743,569 @@ and ensures correct suction system modeling before calculation.
 
 </main>
 
-<section class="related-calculators">
+<section class="container-learning" id="examples">
+
+<h2>Net Positive Suction Head (NPSH) Calculation Examples</h2>
+
+<p>
+The following worked examples demonstrate how the
+<strong>NPSH Available Calculator</strong> can be used to evaluate
+whether a pumping system has sufficient suction head to prevent
+<strong>cavitation</strong>. Cavitation occurs when the pressure at the
+pump inlet drops below the vapor pressure of the fluid, causing vapor
+bubbles to form and collapse inside the pump.
+</p>
+
+<p>
+These examples illustrate how atmospheric pressure, elevation head,
+friction losses, and vapor pressure influence the
+<strong>available net positive suction head (NPSH<sub>A</sub>)</strong>
+and how engineers evaluate whether a pump has sufficient
+<strong>NPSH margin</strong> for reliable operation.
+</p>
+
+
+<h3>Example 1: NPSH for Pumping Groundwater to a Storage Tank</h3>
+
+<p>
+Groundwater at <strong>25 °C</strong> will be pumped to a storage tank
+using <strong>3-inch Schedule 40 commercial steel pipe</strong> as shown
+in Figure 1. A <strong>foot valve</strong> is installed at the end of the
+suction line to keep the pump primed.
+</p>
+
+<p>
+The pump is installed <strong>5 m above the groundwater level</strong>.
+Determine the <strong>available</strong> and
+<strong>required net positive suction head</strong> for the system.
+</p>
+
+<h4>Assumptions</h4>
+
+<ul>
+<li>Dissolved solids in groundwater have negligible effect on fluid properties.</li>
+<li>Atmospheric pressure variation between the groundwater and pump location is negligible.</li>
+</ul>
+
+
+<h4>NPSH Equation</h4>
+
+<p>
+The available net positive suction head is calculated using:
+</p>
+
+<p><strong>NPSH<sub>A</sub> = h<sub>a</sub> + h<sub>z</sub> − h<sub>f</sub> − h<sub>vp</sub></strong></p>
+
+<ul>
+<li><strong>h<sub>a</sub></strong> = atmospheric pressure head</li>
+<li><strong>h<sub>z</sub></strong> = static elevation head</li>
+<li><strong>h<sub>f</sub></strong> = suction line friction losses</li>
+<li><strong>h<sub>vp</sub></strong> = vapor pressure head</li>
+</ul>
+
+<p>
+The recommended required NPSH can be estimated using:
+</p>
+
+<p><strong>NPSH<sub>R</sub> = NPSH<sub>A</sub> − 5 ft</strong></p>
+
+<p>or</p>
+
+<p><strong>NPSH<sub>R</sub> = NPSH<sub>A</sub> / 1.35</strong></p>
+
+
+<h4>Step-by-Step Calculator Procedure</h4>
+
+<ol>
+
+<li><strong>Input flow rate:</strong> 100 gpm</li>
+
+<li>
+<strong>Elevation profile</strong><br>
+Elevation difference = 5 m<br>
+Relative elevation = liquid source below pump centerline
+</li>
+
+<li>
+<strong>Pressure profile</strong><br>
+Pressure = 100000 Pa
+</li>
+
+<li>
+<strong>Pipe specification</strong><br>
+Pipe material: commercial steel<br>
+Nominal pipe size: 3 in<br>
+Schedule: 40<br>
+Total pipe length = 6.9475 m
+</li>
+
+<li>
+<strong>Determine fluid properties</strong>
+
+<p>
+The density, viscosity, and vapor pressure of water at
+<strong>25&nbsp;°C and 100&nbsp;kPa</strong> can be obtained using the
+<a href="/water-properties/"><strong>Water & Steam Properties Calculator</strong></a>.
+</p>
+
+<p>
+Use the following input modes in the calculator:
+</p>
+
+<ul>
+<li>
+<strong>TP input pair</strong><br>
+Temperature: <strong>T = 298.15 K (25 °C)</strong><br>
+Pressure: <strong>P = 0.1 MPa (100 kPa)</strong>
+</li>
+</ul>
+
+<p>
+After clicking <strong>Calculate Properties</strong>, the calculator
+returns the following fluid properties:
+</p>
+
+<ul>
+<li>Density = <strong>995.71 kg/m³</strong></li>
+<li>Dynamic viscosity = <strong>0.00085383 Pa·s</strong> (853.83 µPa·s)</li>
+</ul>
+
+<p>
+To determine the <strong>vapor pressure</strong>, switch the calculator
+to the <strong>Tx input pair</strong> and use either:
+</p>
+
+<ul>
+<li>x = 0 (saturated liquid), or</li>
+<li>x = 1 (saturated vapor)</li>
+</ul>
+
+<p>
+This yields a vapor pressure of:
+<strong>0.003157 MPa = 3157 Pa</strong>.
+</p>
+
+<p>
+Enter the density, viscosity, and vapor pressure into the
+<strong>Fluid Properties</strong> input fields of the NPSH calculator.
+</p>
+
+</li>
+
+<li>
+<strong>Add fittings</strong>
+<ul>
+<li>Foot valve (1 pc)</li>
+<li>90° elbow (1 pc)</li>
+</ul>
+</li>
+
+</ol>
+
+<p><strong>Note:</strong> All added fittings and valves appear in the
+list below the schematic. Items can be removed by clicking the
+<strong>“×”</strong> button.</p>
+
+
+<h4>Results</h4>
+
+<p>
+The calculator predicts the following suction head conditions:
+</p>
+
+<ul>
+<li><strong>NPSH Available = 3.303 m</strong></li>
+<li><strong>Recommended Maximum NPSH Required = 1.779 m</strong></li>
+</ul>
+
+<p>
+To avoid cavitation, the selected pump should have a
+<strong>required NPSH (NPSH<sub>R</sub>) lower than 1.779 m</strong>
+at the operating flow rate.
+</p>
+
+<p>
+When selecting a pump, engineers typically consult the
+<strong>pump manufacturer’s performance curve</strong> and verify that
+the pump’s required NPSH at the design flow rate is less than the
+calculated allowable value.
+</p>
+
+<p>
+Therefore, when purchasing a pump for this system, the selected pump
+should have an <strong>NPSH requirement below 1.779 m</strong> to ensure
+reliable operation without cavitation.
+</p>
+
+
+<h4>Energy Balance Terms</h4>
+
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td>Atmospheric Head (Ha)</td><td>10.238</td><td>m</td></tr>
+<tr><td>Static Head (Hz)</td><td>-5.000</td><td>m</td></tr>
+<tr><td>Friction Loss (Hf)</td><td>1.611</td><td>m</td></tr>
+<tr><td>Vapor Pressure Head (Hvp)</td><td>0.323</td><td>m</td></tr>
+<tr><td>NPSH Available</td><td>3.303</td><td>m</td></tr>
+</tbody>
+</table>
+
+
+<h4>Hydraulic Parameters</h4>
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+<tr><td>Velocity</td><td>1.323</td><td>m/s</td></tr>
+<tr><td>Reynolds Number</td><td>1.202e+5</td><td>—</td></tr>
+</tbody>
+</table>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+In this system, the pump is installed
+<strong>5 m above the groundwater level</strong>. This configuration
+creates a <strong>suction lift</strong>, which reduces the available
+suction head because the fluid must be lifted upward before entering
+the pump.
+</p>
+
+<p>
+The largest contributor to the available NPSH is the
+<strong>atmospheric pressure head</strong> (10.238 m). However,
+friction losses in the suction pipe and the vapor pressure of the
+liquid reduce the total suction head available at the pump inlet.
+</p>
+
+<p>
+The resulting <strong>NPSH available of 3.303 m</strong> represents the
+maximum suction head that can be safely used by the pump. To maintain
+a safety margin against cavitation, the pump should be selected so
+that its <strong>NPSH required is lower than 1.779 m</strong>.
+</p>
+
+<p>
+This example illustrates an important design principle:
+<strong>pump selection must consider both hydraulic performance and
+suction conditions</strong>. Even if a pump can deliver the required
+flow rate and head, insufficient NPSH can lead to cavitation, noise,
+and pump damage.
+</p>
+
+</section>
+
+
+
+<div class="design-note">
+
+<strong>Design Note:</strong>
+
+<p>
+Whenever possible, pumps should be installed
+<strong>below the liquid level</strong> to create a
+<strong>flooded suction condition</strong>. Flooded suction increases
+the available NPSH and significantly reduces the risk of cavitation.
+</p>
+
+<p>
+Other engineering strategies to improve NPSH include:
+</p>
+
+<ul>
+<li>Reducing suction pipe length.</li>
+<li>Increasing suction pipe diameter.</li>
+<li>Minimizing valves and fittings in the suction line.</li>
+<li>Lowering the pump installation height.</li>
+</ul>
+
+<p>
+After selecting a pump with an appropriate NPSH requirement, engineers
+should also verify the pumping power using the
+<a href="/pump-power-calculator/"><strong>Pump Power Calculator</strong></a>
+and evaluate the economic pipe size using the
+<a href="/optimum-pipe-diameter-calculator/"><strong>Optimum Pipe Diameter Calculator</strong></a>.
+</p>
+
+</div>
+
+
+<h3>Example 2: NPSH Evaluation for Pumping Molasses</h3>
+
+<p>
+Molasses is pumped from a ground-level storage tank to an elevated
+fermentation tank at a rate of <strong>15 m³/h</strong>.
+</p>
+
+<p>
+The suction pipeline consists of
+<strong>3⅓-inch Schedule 40 commercial steel pipe</strong>
+with a diaphragm valve for isolation.
+</p>
+
+<p>
+The minimum elevation difference between the storage tank and the
+pump centerline is <strong>0.13 m</strong>. The installed pump has a
+required NPSH of <strong>1.2 m</strong>.
+</p>
+
+<p>
+Determine whether the pump has sufficient suction head to prevent
+cavitation.
+</p>
+
+
+<h4>NPSH Ratio Criterion</h4>
+
+<p>
+Pump performance can be evaluated using the NPSH ratio:
+</p>
+
+<p><strong>NPSH Ratio = NPSH<sub>A</sub> / NPSH<sub>Pump</sub></strong></p>
+
+<ul>
+<li>NPSH Ratio &lt; 1.0 → Cavitation will occur</li>
+<li>NPSH Ratio &lt; 1.1 → Very high cavitation risk</li>
+<li>NPSH Ratio &lt; 1.3 → Marginal NPSH margin</li>
+<li>NPSH Ratio &lt; 1.5 → Acceptable NPSH margin</li>
+<li>NPSH Ratio &gt; 1.5 → Excellent NPSH margin</li>
+</ul>
+
+
+<h4>Step-by-Step Procedure</h4>
+
+<ol>
+
+<li>Input flow rate = 15 m³/h</li>
+
+<li>
+Elevation difference = 0.13 m<br>
+Relative elevation = liquid source above pump centerline
+</li>
+
+<li>
+Toggle atmospheric pressure
+</li>
+
+<li>
+Pipe specification:<br>
+3⅓ in Schedule 40 pipe<br>
+Total suction length = 1.5 m
+</li>
+
+<li>
+Fluid properties:<br>
+Density = 1400 kg/m³<br>
+Viscosity = 8 Pa·s<br>
+Vapor pressure = 2300 Pa
+</li>
+
+<li>
+Pump required NPSH = 1.2 m
+</li>
+
+<li>
+Add fittings:<br>
+Diaphragm valve (fully open), 1 pc
+</li>
+
+</ol>
+
+
+<h4>Results</h4>
+
+<p>
+The calculator predicts:
+</p>
+
+<ul>
+<li><strong>NPSH Available = 5.031 m</strong></li>
+<li><strong>NPSH Required = 3.507 m</strong></li>
+</ul>
+
+<p>
+The resulting NPSH ratio is:
+</p>
+
+<p><strong>NPSH Ratio = 4.19</strong></p>
+
+<p>
+This indicates an <strong>excellent NPSH margin</strong>, meaning the
+pump has more than sufficient suction head to operate safely without
+cavitation.
+</p>
+
+
+<h4>If NPSH Is Insufficient</h4>
+
+<p>
+If the NPSH ratio falls below acceptable limits, cavitation may occur.
+Several engineering solutions can be applied to increase the available
+NPSH:
+</p>
+
+<ul>
+<li>Lower the pump installation height relative to the liquid source.</li>
+<li>Place the pump closer to the suction tank.</li>
+<li>Increase the suction pipe diameter.</li>
+<li>Reduce suction pipe friction losses.</li>
+<li>Lower the fluid temperature to reduce vapor pressure.</li>
+</ul>
+
+<p>
+For example, if the cavitation risk is high, installing the pump closer
+to the liquid source or below the liquid level can significantly
+increase the available NPSH.
+</p>
+
+
+<h4>Energy Balance Terms</h4>
+
+<table>
+
+<thead>
+<tr>
+<th>Term</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr><td>Atmospheric Head (Ha)</td><td>7.378</td><td>m</td></tr>
+<tr><td>Static Head (Hz)</td><td>0.130</td><td>m</td></tr>
+<tr><td>Friction Loss (Hf)</td><td>2.310</td><td>m</td></tr>
+<tr><td>Vapor Pressure Head (Hvp)</td><td>0.167</td><td>m</td></tr>
+<tr><td>NPSH Available</td><td>5.031</td><td>m</td></tr>
+
+</tbody>
+
+</table>
+
+
+<h4>Hydraulic Parameters</h4>
+
+<table>
+
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Unit</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr><td>Velocity</td><td>0.653</td><td>m/s</td></tr>
+<tr><td>Reynolds Number</td><td>1.030e+1</td><td>—</td></tr>
+
+</tbody>
+
+</table>
+
+<section class="engineering-insight">
+
+<h4>Engineering Insight</h4>
+
+<p>
+The calculated Reynolds number for this system is
+<strong>1.03 × 10¹</strong>, indicating that the flow is
+<strong>deeply laminar</strong>. This behavior is expected because
+molasses has a very high viscosity (<strong>8 Pa·s</strong>).
+</p>
+
+<p>
+Under laminar flow conditions, friction losses are strongly influenced
+by fluid viscosity rather than turbulence. Even small increases in
+pipe length or fittings can significantly increase suction losses,
+which directly reduce the available NPSH.
+</p>
+
+<p>
+In this example, the calculated
+<strong>NPSH available is 5.031 m</strong>, while the pump requires only
+<strong>1.2 m</strong>. The resulting
+<strong>NPSH ratio of 4.19</strong> indicates an
+<strong>excellent NPSH margin</strong>, meaning cavitation is highly
+unlikely under the current operating conditions.
+</p>
+
+</section>
+
+
+<div class="design-note">
+
+<strong>Design Note:</strong>
+
+<p>
+When pumping highly viscous fluids such as molasses, engineers must pay
+special attention to suction line design because viscous fluids produce
+larger friction losses than low-viscosity liquids.
+</p>
+
+<p>
+If the NPSH ratio were to fall below acceptable limits, several
+engineering modifications could be implemented to increase the
+available suction head:
+</p>
+
+<ul>
+<li>Install the pump closer to the liquid source.</li>
+<li>Lower the pump elevation relative to the tank.</li>
+<li>Increase the suction pipe diameter.</li>
+<li>Reduce suction pipe length and fittings.</li>
+<li>Use a pump with a lower required NPSH.</li>
+</ul>
+
+<p>
+For highly viscous fluids, positive displacement pumps such as
+<strong>rotary lobe pumps</strong> are commonly preferred because they
+operate efficiently under laminar flow conditions and maintain
+consistent flow at high viscosity.
+</p>
+
+</div>
+
+
+<h4>Related Pump System Calculations</h4>
+
+<p>
+Apart from evaluating suction conditions, engineers should also verify
+the pump power requirement and optimize pipe size for economical
+operation.
+</p>
+
+<ul>
+<li><a href="/pump-power-calculator/">Pump Power Calculator</a></li>
+<li><a href="/optimum-pipe-diameter-calculator/">Optimum Pipe Diameter Calculator</a></li>
+</ul>
+
+</section>
+
+
+
+
+
+<section class="related-calculators" id="related">
 
   <h2>Related Pump Calculators</h2>
 
@@ -654,39 +1362,39 @@ absolute pressure head, vapor pressure head, and suction line losses.
   
 
 <!-- Learning Section -->
- <main class="container-learning">
+ <section class="container-learning" id="basics">
 
-<h1>Learn more about Net Positive Suction Head</h1>
+<h2>Learn more about Net Positive Suction Head</h2>
    
-<h2>What is the Difference Between NPSH and Suction Head?</h2>
+<h3>What is the Difference Between NPSH and Suction Head?</h3>
 <p>
 Suction head refers to the elevation or pressure conditions at the pump inlet.
 NPSH, however, accounts specifically for the pressure above the liquid’s vapor
 pressure. While related, NPSH focuses on preventing vapor formation inside the pump.
 </p>
 
-<h2>What Happens if NPSHa is Less Than NPSHr?</h2>
+<h3>What Happens if NPSHa is Less Than NPSHr?</h3>
 <p>
 If NPSH Available is lower than NPSH Required, cavitation will occur.
 This leads to noise, vibration, unstable flow, and progressive mechanical damage.
 Long-term operation under insufficient NPSH can severely reduce pump lifespan.
 </p>
 
-<h2>How Does Temperature Affect NPSH?</h2>
+<h3>How Does Temperature Affect NPSH?</h3>
 <p>
 As fluid temperature increases, vapor pressure increases.
 Higher vapor pressure reduces NPSH Available, making cavitation more likely.
 Hot liquids require greater attention to suction design.
 </p>
 
-<h2>Does Increasing Pump Speed Affect NPSH Required?</h2>
+<h3>Does Increasing Pump Speed Affect NPSH Required?</h3>
 <p>
 Yes. Increasing pump speed increases NPSH Required.
 Higher rotational speeds create lower pressure at the impeller eye,
 raising the risk of cavitation if suction conditions are not improved.
 </p>
 
-<h2>How Can Engineers Increase NPSH Available?</h2>
+<h3>How Can Engineers Increase NPSH Available?</h3>
 <ul>
   <li>Shorten suction pipe length</li>
   <li>Reduce number of fittings</li>
@@ -695,35 +1403,35 @@ raising the risk of cavitation if suction conditions are not improved.
   <li>Raise liquid source elevation</li>
 </ul>
 
-<h2>What is a Safe NPSH Margin?</h2>
+<h3>What is a Safe NPSH Margin?</h3>
 <p>
 A common engineering practice is to maintain NPSHa greater than NPSHr
 by at least 0.5 to 1 meter (or 10–20% above NPSHr).
 Critical systems may require higher safety margins.
 </p>
 
-<h2>Is NPSH the Same for All Pumps?</h2>
+<h3>Is NPSH the Same for All Pumps?</h3>
 <p>
 No. NPSH Required varies depending on pump design, impeller geometry,
 speed, and manufacturer specifications. Always refer to the pump’s
 performance curve for accurate NPSHr values.
 </p>
 
-<h2>How is NPSH Related to Cavitation Damage?</h2>
+<h3>How is NPSH Related to Cavitation Damage?</h3>
 <p>
 When vapor bubbles collapse inside the impeller, they generate localized
 high-pressure shock waves. These repeated micro-impacts cause surface
 erosion, known as cavitation pitting.
 </p>
 
-<h2>Can Cavitation Occur Even if NPSHa is Slightly Higher Than NPSHr?</h2>
+<h3>Can Cavitation Occur Even if NPSHa is Slightly Higher Than NPSHr?</h3>
 <p>
 Yes. Transient conditions such as startup, flow fluctuations, or temperature
 changes may temporarily reduce NPSHa below safe limits.
 Maintaining an adequate safety margin helps prevent this.
 </p>
 
-<h2>NPSH Formula Used in This Calculator</h2>
+<h3>NPSH Formula Used in This Calculator</h3>
 
 <p>
 The Available NPSH (NPSHa) is calculated using the energy balance equation:
@@ -738,7 +1446,40 @@ If NPSHa is lower than NPSHr (pump required NPSH),
 the pump will experience cavitation.
 </p>
 
- </main>
+</section>
+
+<section class="author-box" id="author-prof">
+
+<h2>About the Creator</h2>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, computer programming, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
+</p>
+
+</section>
+
+</div>
+</div>
+
+
 <!-- ================= FOOTER ================= -->
 
 <footer class="site-footer">
