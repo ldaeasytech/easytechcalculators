@@ -9,9 +9,6 @@
 <meta name="description"
 content="Free HVAC air heating & cooling calculator with interactive psychrometric chart. Analyze sensible heating, cooling with condensation, enthalpy change, humidity ratio, and moisture removal instantly." />
 
-  <meta name="keywords"
-content="air heating calculator, sensible cooling calculator, psychrometric process calculator, HVAC cooling with condensation, enthalpy change moist air, humidity ratio change, cooling coil analysis, HVAC process chart" />
-
 <link rel="canonical" href="https://easytechcalculators.com/air-heating-cooling-calculator/" />
 
 <!-- Open Graph -->
@@ -36,6 +33,12 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
+
+ <!-- Google AdSense -->
+  <script async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341457826307951"
+    crossorigin="anonymous"></script>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XZVJYM389Z"></script>
 <script>
@@ -44,6 +47,16 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
   gtag('js', new Date());
 
   gtag('config', 'G-XZVJYM389Z');
+</script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "EasyTechCalculators",
+  "url": "https://easytechcalculators.com",
+  "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
+}
 </script>
 
 <script type="application/ld+json">
@@ -56,6 +69,31 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
  "operatingSystem": "Any",
  "browserRequirements": "Requires JavaScript",
  "description": "Interactive HVAC psychrometric heating and cooling process calculator with condensation and moisture removal analysis."
+}
+</script>
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Leonard D. Agana",
+ "jobTitle": "Chemical Engineer",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, pump systems, and engineering computational tools.",
+ "url": "https://easytechcalculators.com/about.html",
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
+ "knowsAbout": [
+   "Fluid Mechanics",
+   "Thermodynamics",
+   "Heat Transfer",
+   "Pump Systems",
+   "Pipe Flow",
+   "Computational Fluid Dynamics",
+   "Finite Element Analysis",
+   "Engineering Calculations"
+ ]
 }
 </script>
   
@@ -137,12 +175,13 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Psychrometric Chart and Moist Air Properties Explained",
-  "description": "Comprehensive explanation of psychrometric principles including dry-bulb temperature, wet-bulb temperature, dew point, humidity ratio, enthalpy, specific volume, and degree of saturation used in HVAC engineering.",
+  "headline": "HVAC Air Heating and Cooling Psychrometric Processes Explained",
+  "description": "Detailed explanation of psychrometric heating, cooling, humidification, and dehumidification processes used in HVAC engineering. Learn how dry bulb temperature, humidity ratio, enthalpy, wet bulb temperature, dew point, and moisture removal are calculated during air conditioning processes.",
   "author": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators",
-    "url": "https://easytechcalculators.com"
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
+    "url": "https://easytechcalculators.com/about.html"
   },
   "publisher": {
     "@type": "Organization",
@@ -154,17 +193,20 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://easytechcalculators.com/psychrometric-chart-calculator/"
+    "@id": "https://easytechcalculators.com/air-heating-cooling-calculator/"
   },
   "articleSection": "HVAC Engineering",
   "keywords": [
-    "psychrometric chart",
-    "humidity ratio",
-    "wet bulb temperature",
-    "dew point temperature",
-    "moist air enthalpy",
-    "HVAC air properties",
-    "ASHRAE psychrometrics"
+    "HVAC heating and cooling calculator",
+    "psychrometric heating process",
+    "cooling with condensation",
+    "sensible heating HVAC",
+    "psychrometric cooling process",
+    "air conditioning process analysis",
+    "humidity ratio change",
+    "moist air enthalpy calculation",
+    "cooling coil load calculation",
+    "psychrometric process chart"
   ]
 }
 </script>
@@ -192,98 +234,230 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
   </div>
 </header>
 
-   <!-- NAV -->
-    <style>
+ <div class="page-wrapper">
 
-/* ===============================
-   TOP EXPLORE BUTTON
-================================ */
+  <!-- Sticky Navigation -->
+  <aside class="left-sidebar">
 
-.top-cta {
-    display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-  margin-bottom: 0px;
-}
-
-.top-cta + section h2,
-.top-cta + h2 {
-  margin-top: 0;         /* remove large heading gap */
-}      
-           
-.explore-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: #60a5fa;
-  color: #0b1220;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.explore-button:hover {
-  background: #3b82f6;
-}
-     </style>
-  
-<div class="top-cta container">
   <a href="/" class="explore-button">
     Explore More Calculators →
   </a>
+
+  <div class="side-nav">
+
+    <div class="side-nav-title">
+      On This Page
+    </div>
+
+    <nav class="side-nav-links">
+      <a href="#calculator">Air Heating & Cooling Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics">Air Heating & Cooling Learning Guide</a>
+      <a href="#author-prof">About the Author</a>
+    </nav>
+
+  </div>
+
+  
+
+</aside>
+  <!-- Main Page Content -->
+  <div class="page-content">
+
+<div class="mobile-nav">
+
+<button class="mobile-nav-toggle">
+Jump to Section ▼
+</button>
+
+<div class="mobile-nav-links">
+
+      <a href="#calculator">Air Heating & Cooling Calculator</a>
+      <a href="#examples">Worked Examples</a>
+      <a href="#related">Related Calculators</a>
+      <a href="#basics">Air Heating & Cooling Learning Guide</a>
+      <a href="#author-prof">About the Author</a>
+
 </div>
+
+</div> 
+
 
  <section class="seo-intro-section">
   <div class="container-learning intro-compact">
 
     <h2>HVAC Air Heating & Cooling Psychrometric Calculator</h2>
 
-    <p>
-      This <strong>HVAC air heating and cooling calculator</strong> performs
-      complete <strong>psychrometric process analysis</strong> for
-      constant-pressure air systems. Instantly determine
-      <strong>sensible heating</strong>, <strong>sensible cooling</strong>,
-      <strong>cooling with condensation</strong>, enthalpy change (Δh),
-      humidity ratio variation, dew point, wet-bulb temperature, and
-      moisture removal using an interactive psychrometric chart.
-    </p>
+<p>
+Air heating, cooling, humidification, and dehumidification are among the most
+important processes in <strong>HVAC engineering</strong>. These processes determine
+indoor thermal comfort, air quality, energy consumption, and system performance
+in buildings, industrial drying systems, and climate control applications.
+Understanding how air properties change during these processes is a fundamental
+part of <strong>psychrometric analysis</strong>.
+</p>
 
-    <p>
-      Designed for <strong>HVAC engineers, mechanical engineers, students,
-      and energy analysts</strong>, this tool evaluates heating coils,
-      cooling coils, dehumidification systems, evaporative cooling
-      processes, and air-conditioning performance using
-      ASHRAE-based moist air equations.
-    </p>
+<p>
+This <strong>HVAC air heating and cooling psychrometric calculator</strong> performs
+complete <strong>constant-pressure moist air process analysis</strong>. It allows users
+to evaluate common HVAC processes such as:
+</p>
 
-    <p>
-      Enter an initial air state (Tdb–RH, Tdb–Twb, Tdb–Tdew, Tdb–w, or
-      Enthalpy–RH) and specify a final dry-bulb temperature or target
-      humidity condition. The calculator automatically determines:
-    </p>
+<ul>
+<li><strong>Sensible heating</strong> – air temperature increases without changing moisture content</li>
+<li><strong>Sensible cooling</strong> – air temperature decreases while humidity ratio remains constant</li>
+<li><strong>Cooling with dehumidification</strong> – air is cooled below its dew point causing moisture condensation</li>
+<li><strong>Humidification</strong> – water vapor is added to the air</li>
+<li><strong>Evaporative processes</strong> used in cooling towers and air washers</li>
+</ul>
 
-    <ul>
-      <li>Process type (Sensible Heating, Sensible Cooling, or Cooling with Condensation)</li>
-      <li>Enthalpy change (kJ/kg or Btu/lb dry air)</li>
-      <li>Sensible heat transfer</li>
-      <li>Humidity ratio change (Δw)</li>
-      <li>Moisture condensed during cooling</li>
-      <li>Updated relative humidity, dew point, and wet-bulb temperature</li>
-    </ul>
+<p>
+In real engineering practice, analyzing these processes is necessary for
+<strong>air-conditioning design, heating coil sizing, cooling coil load
+calculations, dehumidification systems, drying processes, cooling towers,
+and air-handling unit (AHU) performance evaluation</strong>.
+</p>
 
-    <p>
-      This psychrometric heating and cooling calculator is ideal for
-      <strong>cooling coil load calculations</strong>, HVAC system design,
-      dehumidification analysis, drying system evaluation, and
-      energy performance assessment in air-handling units (AHUs).
-    </p>
+<h3>Traditional Method of Psychrometric Process Calculation</h3>
+
+<p>
+Traditionally, HVAC engineers analyze moist air processes using a
+<strong>psychrometric chart</strong>. This graphical tool shows relationships between
+air properties such as dry bulb temperature, humidity ratio, wet bulb
+temperature, relative humidity, and enthalpy.
+</p>
+
+<p>
+However, manual psychrometric chart calculations require several steps:
+</p>
+
+<ul>
+<li>Locating the initial air state on the psychrometric chart</li>
+<li>Following the correct process path (heating, cooling, humidification)</li>
+<li>Reading property changes from multiple chart lines</li>
+<li>Estimating enthalpy change and moisture removal</li>
+<li>Repeating the process for multiple design conditions</li>
+</ul>
+
+<p>
+While the psychrometric chart is extremely useful for visualization,
+manual calculations can be <strong>time-consuming and prone to reading errors</strong>,
+especially when high accuracy is required in engineering design.
+</p>
+
+<h3>Advantages of This Psychrometric Process Calculator</h3>
+
+<p>
+This calculator automates the entire psychrometric analysis using
+<strong>ASHRAE-based moist air equations</strong> while still providing a visual
+psychrometric chart for interpretation.
+</p>
+
+<p>
+Key advantages include:
+</p>
+
+<ul>
+
+<li><strong>Automatic process identification</strong> (heating, cooling, condensation)</li>
+
+<li><strong>Instant calculation of heat transfer</strong> including sensible and latent heat</li>
+
+<li><strong>Accurate humidity ratio and moisture removal calculations</strong></li>
+
+<li><strong>Automatic detection of condensation</strong> during cooling processes</li>
+
+<li><strong>Interactive psychrometric chart</strong> showing the initial and final air states</li>
+
+<li><strong>Support for both SI (metric) and IP (English) units</strong></li>
+
+<li><strong>Multiple input combinations</strong> including Tdb–RH, Tdb–Twb, Tdb–Tdp, Tdb–w, and Enthalpy–RH</li>
+
+</ul>
+
+<p>
+Because the calculator uses analytical equations instead of graphical
+interpolation, it provides <strong>higher accuracy than manual chart readings</strong>
+while maintaining the educational benefit of visualizing the process path.
+</p>
+
+<h3>How to Use the Air Heating and Cooling Calculator</h3>
+
+<p>
+Follow these steps to analyze a psychrometric heating or cooling process:
+</p>
+
+<ol>
+
+<li>
+<strong>Select the unit system</strong> (SI or IP) depending on your preferred units.
+</li>
+
+<li>
+<strong>Choose the initial air state input pair</strong> such as:
+<ul>
+<li>Dry Bulb Temperature – Relative Humidity (Tdb–RH)</li>
+<li>Dry Bulb – Wet Bulb Temperature (Tdb–Twb)</li>
+<li>Dry Bulb – Dew Point (Tdb–Tdp)</li>
+<li>Dry Bulb – Humidity Ratio (Tdb–w)</li>
+<li>Enthalpy – Relative Humidity (h–RH)</li>
+</ul>
+</li>
+
+<li>
+Enter the known properties of the <strong>initial air condition</strong>.
+</li>
+
+<li>
+Specify the <strong>final air condition</strong> by entering either the final
+dry bulb temperature or another property pair.
+</li>
+
+<li>
+Confirm the <strong>atmospheric pressure</strong> or specify the elevation.
+</li>
+
+<li>
+Click <strong>"Calculate Process"</strong> to determine the thermodynamic changes.
+</li>
+
+</ol>
+
+<p>
+The calculator automatically determines the process type and displays
+the resulting changes in:
+</p>
+
+<ul>
+
+<li>Dry bulb temperature</li>
+<li>Wet bulb temperature</li>
+<li>Dew point temperature</li>
+<li>Relative humidity</li>
+<li>Humidity ratio</li>
+<li>Moisture condensation or evaporation</li>
+<li>Enthalpy change and sensible heat transfer</li>
+
+</ul>
+
+<p>
+The resulting <strong>psychrometric chart visualization</strong> clearly shows the
+process path between the initial and final air conditions, helping users
+understand how heating, cooling, and moisture transfer affect air properties.
+</p>
+
+<p>
+This tool is particularly useful for <strong>HVAC engineers, mechanical engineers,
+building designers, energy analysts, and engineering students</strong> who need
+to analyze air-conditioning processes quickly and accurately.
+</p>
 
   </div>
 </section>
 
  <!-- ================= MAIN CALCULATOR ================= -->
-<main class="container">
+<main class="container" id="calculator">
 
   <div class="main-grid">
     
@@ -365,7 +539,7 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
       <label id="label-elevation">Elevation (m)</label>
       <input type="number" id="elevation">
       <div class="helper-text">
-        If elevation is entered, pressure will be calculated automatically.
+        If elevation is entered, atmospheric pressure will be estimated using the standard atmosphere model.
       </div>
     </div>
 
@@ -520,7 +694,7 @@ content="air heating calculator, sensible cooling calculator, psychrometric proc
     <p style="margin-top:15px; opacity:0.85;">
       Psychrometric chart showing saturation curve, relative humidity lines,
       enthalpy lines, specific volume lines, and wet-bulb lines.
-      The red marker indicates the current air state.
+      The chart shows the initial and final air states with the process path between them.
     </p>
   </section>
 
@@ -551,7 +725,7 @@ Qt = Δh = h₂ − h₁
 </p>
 
 <p><strong>Sensible Heat (Moist Air):</strong><br>
-Qs ≈ (1.006 + 1.86 w̄)(T₂ − T₁) &nbsp; kJ/kg dry air
+Qs ≈ (1.006 + 1.86 Y<sub>ave</sub>)(T₂ − T₁) &nbsp; kJ/kg dry air
 </p>
 
 <p><strong>Latent Heat:</strong><br>
@@ -559,19 +733,19 @@ Ql = Qt − Qs
 </p>
 
 <p><strong>Humidity Ratio:</strong><br>
-w = 0.622 Pv / (P − Pv)
+Y = 0.62198 p / (P<sub>T</sub> − p)
 </p>
 
 <p><strong>Moist Air Enthalpy (SI):</strong><br>
-h ≈ 1.006 T + w(2501 + 1.86 T) &nbsp; kJ/kg dry air
+h ≈ 1.006 T + Y(2501 + 1.86 T) &nbsp; kJ/kg dry air
 </p>
 
 <p><strong>Moist Air Enthalpy (IP):</strong><br>
-h ≈ 0.24 T + w(1061 + 0.444 T) &nbsp; Btu/lb dry air
+h ≈ 0.24 T + Y(1061 + 0.444 T) &nbsp; Btu/lb dry air
 </p>
 
 <p><strong>Moisture Condensed:</strong><br>
-Δw = w₁ − w₂
+ΔY = Y₁ − Y₂
 </p>
 
 <p>
@@ -582,8 +756,373 @@ equipment.
 
 </section>
 
+
+<section class="container-learning" id="examples">
+
+<h2>Real-World Psychrometric Applications</h2>
+
+<p>
+Psychrometric calculations are essential in <strong>HVAC engineering, drying processes, cooling towers,
+indoor air quality control, and industrial climate control</strong>. 
+The following examples demonstrate how the governing equations of moist air are applied in real engineering problems.
+These examples are particularly useful for <strong>engineering students, HVAC designers, and early career professionals</strong>.
+</p>
+
+<h3>Governing Equations Used in This Calculator</h3>
+
+<p>The saturation vapor pressure is calculated using the <strong>Sonntag (1990)</strong> correlation.</p>
+
+<p><strong>For water:</strong></p>
+
+<p>
+ln(p<sub>s</sub>) =
+-6096.9385/T + 21.2409642 − 2.711193×10<sup>-2</sup>T +
+1.673952×10<sup>-5</sup>T² + 2.433502 ln(T)
+</p>
+
+<p><strong>For ice:</strong></p>
+
+<p>
+ln(p<sub>s</sub>) =
+-6024.5282/T + 29.32707 + 1.0613868×10<sup>-2</sup>T −
+1.3198825×10<sup>-5</sup>T² − 0.49382577 ln(T)
+</p>
+
+<p>
+where <strong>p<sub>s</sub></strong> is saturation vapor pressure (Pa)  
+and <strong>T</strong> is the absolute temperature (K).
+</p>
+
+<h3>Relative Humidity</h3>
+
+<p>
+RH = (p / p<sub>s</sub>) × 100%
+</p>
+
+<p>
+where <strong>p</strong> is the partial pressure of water vapor in the air.
+</p>
+
+<h3>Humidity Ratio (Absolute Humidity)</h3>
+
+<p>
+Y = 0.62198 p / (P<sub>T</sub> − p)
+</p>
+
+<p>
+where <strong>P<sub>T</sub></strong> is the total atmospheric pressure.
+</p>
+
+<h3>Moist Air Enthalpy</h3>
+
+<p>
+H = (1.006 + 1.86Y)(T − T<sub>0</sub>) + 2501Y
+</p>
+
+<p>
+where  
+H = enthalpy (kJ/kg dry air)  
+T<sub>0</sub> = reference temperature = 0°C
+</p>
+
+<h3>Enthalpy Change</h3>
+
+<p>
+ΔH = H<sub>2</sub> − H<sub>1</sub>
+</p>
+
+<h3>Sensible Heat</h3>
+
+<p>
+Q<sub>s</sub> = (1.006 + 1.86Y<sub>ave</sub>)(T<sub>db2</sub> − T<sub>db1</sub>)
+</p>
+
+<p>
+where  
+Y<sub>ave</sub> = (Y<sub>1</sub> + Y<sub>2</sub>) / 2
+</p>
+
+<h3>Latent Heat</h3>
+
+<p>
+Q<sub>l</sub> = ΔH − Q<sub>s</sub>
+</p>
+
+
+<h2>Example 1: Air-Conditioning Cooling Coil with Condensation</h2>
+
+<p>
+Warm humid air enters an air-conditioning cooling coil at <strong>32°C and 60% relative humidity</strong>.
+The air leaves the cooling coil at a dry bulb temperature of <strong>14°C</strong>.
+The atmospheric pressure is <strong>101.325 kPa</strong>.
+</p>
+
+<h3>Questions</h3>
+
+<ul>
+<li>What is the final relative humidity of the air?</li>
+<li>Does condensation occur during cooling?</li>
+<li>How much moisture condenses per kg of dry air?</li>
+<li>What is the total enthalpy change of the air?</li>
+</ul>
+
+<h3>Calculation Procedure</h3>
+
+<ol>
+
+<li>Calculate saturation vapor pressure using the entering dry bulb temperature.</li>
+
+<li>
+Calculate the partial pressure of water vapor:
+<br>
+p = RH/100 × p<sub>s</sub>
+</li>
+
+<li>
+Calculate saturation pressure at the final dry bulb temperature.
+</li>
+
+<li>
+Compare p<sub>1</sub> and p<sub>s2</sub>
+<ul>
+<li>If p<sub>1</sub> &lt; p<sub>s2</sub> → sensible cooling only</li>
+<li>If p<sub>1</sub> ≥ p<sub>s2</sub> → condensation occurs</li>
+</ul>
+</li>
+
+<li>If condensation occurs, the exit air becomes saturated (RH = 100%).</li>
+
+<li>
+Calculate humidity ratio
+<br>
+Y = 0.62198 p / (P<sub>T</sub> − p)
+</li>
+
+<li>
+Moisture removed from air:
+<br>
+ΔY = Y<sub>2</sub> − Y<sub>1</sub>
+</li>
+
+<li>
+Calculate enthalpy change
+<br>
+ΔH = H<sub>2</sub> − H<sub>1</sub>
+</li>
+
+</ol>
+
+<h3>Engineering Insight</h3>
+
+<p>
+This process is a classic example of <strong>cooling and dehumidification</strong> in air-conditioning systems.
+When air is cooled below its <strong>dew point temperature</strong>, moisture begins to condense on the cooling coil surface.
+This is why air-conditioning systems produce condensate water.
+</p>
+
+<h3>Design Note</h3>
+
+<p>
+HVAC engineers must properly size the cooling coil to handle both <strong>sensible heat removal and latent heat removal</strong>.
+In humid climates, the latent load can represent a large fraction of the total cooling load.
+</p>
+
+
+<h2>Example 2: Winter Heating of Cold Outdoor Air</h2>
+
+<p>
+Outdoor air enters a heating coil at <strong>5°C and 80% relative humidity</strong>.
+The air is heated to <strong>24°C</strong> without adding moisture.
+</p>
+
+<h3>Questions</h3>
+
+<ul>
+<li>What happens to the relative humidity after heating?</li>
+<li>What is the final humidity ratio?</li>
+<li>What is the sensible heat added?</li>
+<li>Why does indoor air feel dry during winter heating?</li>
+</ul>
+
+<h3>Engineering Insight</h3>
+
+<p>
+During sensible heating, the <strong>humidity ratio remains constant</strong> because no moisture is added or removed.
+However, the saturation vapor pressure increases significantly with temperature.
+As a result, the relative humidity drops dramatically.
+</p>
+
+<p>
+This explains why heated indoor air often feels <strong>dry and uncomfortable</strong> during winter months.
+</p>
+
+<h3>Design Note</h3>
+
+<p>
+Many HVAC systems include <strong>humidifiers</strong> during winter operation to maintain indoor comfort levels
+between <strong>40–60% relative humidity</strong>.
+</p>
+
+
+<h2>Example 3: Cooling Tower Air Heating and Humidification</h2>
+
+<p>
+Air enters a cooling tower at <strong>30°C and 40% RH</strong> and exits at <strong>35°C and 90% RH</strong>.
+The atmospheric pressure is <strong>95 kPa</strong>.
+</p>
+
+<h3>Questions</h3>
+
+<ul>
+<li>What is the increase in humidity ratio?</li>
+<li>What is the enthalpy change?</li>
+<li>How much water evaporated per kg of dry air?</li>
+<li>Why does air temperature increase inside cooling towers?</li>
+</ul>
+
+<h3>Engineering Insight</h3>
+
+<p>
+Cooling towers operate based on <strong>evaporative cooling</strong>.
+Water evaporates into the air stream, increasing the humidity ratio and enthalpy of the air.
+</p>
+
+<p>
+The temperature of the air rises because the latent heat of evaporation transfers energy from the water to the air.
+</p>
+
+<h3>Design Note</h3>
+
+<p>
+Cooling tower performance depends strongly on the <strong>wet bulb temperature</strong>.
+The wet bulb temperature sets the theoretical lower limit for cooling tower outlet water temperature.
+</p>
+
+
+<h2>Example 4: Industrial Drying Process</h2>
+
+<p>
+Air used for drying food enters at <strong>70°C and 10% RH</strong>.
+After drying, the air exits at <strong>45°C and 60% RH</strong>.
+</p>
+
+<h3>Questions</h3>
+
+<ul>
+<li>Increase in humidity ratio</li>
+<li>Moisture removed per kg dry air</li>
+<li>Enthalpy change</li>
+</ul>
+
+<h3>Engineering Insight</h3>
+
+<p>
+Drying processes rely on <strong>low humidity hot air</strong> to increase the vapor pressure difference
+between the product surface and the surrounding air.
+This drives moisture evaporation.
+</p>
+
+<h3>Design Note</h3>
+
+<p>
+Industrial dryers often use <strong>heated and recirculated air</strong> to maximize drying efficiency
+and minimize energy consumption.
+</p>
+
+
+<h2>Example 5: Indoor Comfort and Dehumidification</h2>
+
+<p>
+Indoor air initially has a temperature of <strong>80°F and 70% RH</strong>.
+After air-conditioning, the air becomes <strong>68°F and 50% RH</strong>.
+</p>
+
+<h3>Questions</h3>
+
+<ul>
+<li>Initial humidity ratio</li>
+<li>Final humidity ratio</li>
+<li>Moisture removed</li>
+<li>Total enthalpy change</li>
+</ul>
+
+<h3>Engineering Insight</h3>
+
+<p>
+Air-conditioning systems improve thermal comfort by removing both
+<strong>sensible heat and latent heat</strong>.
+The latent heat removal corresponds to moisture condensation on the cooling coil.
+</p>
+
+<h3>Design Note</h3>
+
+<p>
+ASHRAE comfort guidelines typically recommend indoor conditions of
+<strong>22–26°C and 40–60% relative humidity</strong> for optimal comfort and indoor air quality.
+</p>
+
+</section>
+
+
+<section class="related-calculators" id="related">
+
+<h2>Related Engineering Calculators</h2>
+
+<p class="related-subtitle">
+Explore other engineering calculators for thermodynamics, HVAC air properties,
+and fluid flow analysis including psychrometric calculations, steam tables,
+unit conversions, and hydraulic system evaluation.
+</p>  
+
+<div class="related-grid">
+
+<a href="../psychrometric-chart-calculator/" class="related-card">
+<strong>Psychrometric Chart & Moist Air Properties Calculator</strong>
+<span>
+Compute humidity ratio, enthalpy, wet-bulb temperature, dew point,
+specific volume, vapor pressure, and degree of saturation for HVAC
+air analysis.
+</span>
+</a>
+
+<a href="../water-properties/" class="related-card">
+<strong>Water & Steam Properties Calculator</strong>
+<span>
+Advanced thermodynamic calculator for saturated and superheated
+water and steam properties using multiple input pairs.
+</span>
+</a>
+
+<a href="../unit-converter/" class="related-card">
+<strong>Engineering Unit Converter</strong>
+<span>
+Convert between SI and English units with dimensional verification
+for pressure, temperature, density, viscosity, energy, and flow rate.
+</span>
+</a>
+
+<a href="../reynolds-number-pipe-friction-calculator/" class="related-card">
+<strong>Reynolds Number & Pipe Friction Calculator</strong>
+<span>
+Calculate Reynolds number, Darcy and Fanning friction factors,
+pipe pressure drop, and visualize results on a Moody diagram.
+</span>
+</a>
+
+<a href="../pump-power-calculator/" class="related-card">
+<strong>Pump Power Calculator</strong>
+<span>
+Estimate theoretical and actual pump power requirements
+including elevation head and friction losses.
+</span>
+</a>
+
+</div>
+
+</section>
+
   <!-- ================= Learning Section ================= -->
-<main class="container-learning">
+<section class="container-learning" id="basics">
 
 <h2>Air Heating & Cooling Psychrometric Learning Guide</h2>
 
@@ -798,9 +1337,41 @@ cooling tower principle, dew point temperature, moist air enthalpy,
 dehumidification process, HVAC coil design, air drying mechanisms.
 </p>
 
+</section>
 
 
-</main>
+<section class="author-box" id="author-prof">
+
+<h2>About the Creator</h2>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, computer programming, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
+</p>
+
+</section>
+
+</div>
+</div>
+
+
 
 <!-- ================= FOOTER ================= -->
 
