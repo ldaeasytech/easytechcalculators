@@ -31,8 +31,8 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #0b1220;
-      color: #e5e7eb;
+      background: #0B1E3A;
+      color: #E6EDF3;
       line-height: 1.6;
     }
 
@@ -92,6 +92,11 @@
     <h1>Contact EasyTech Calculators</h1>
 
     <p>
+    EasyTech Calculators is independently developed and maintained,
+    and we value feedback to improve accuracy, usability, and functionality.
+    </p>
+
+    <p>
       If you have questions, feedback, feature requests, or would like to report
       an issue with any calculator, please feel free to get in touch.
     </p>
@@ -126,14 +131,24 @@
     <h2>Professional Disclaimer</h2>
 
     <p>
-      Communication through this page does not establish a professional engineering,
-      agronomic, or consulting relationship. All tools remain subject to the Terms of Service
-      and Disclaimer available on this website.
+    Communication through this page does not establish a professional engineering,
+    agronomic, or consulting relationship. All tools remain subject to the
+    <a href="/terms.html">Terms of Service</a> and
+    <a href="/disclaimer.html">Disclaimer</a>.
     </p>
 
     <footer>
-      © EasyTechCalculators
-    </footer>
+  <p>© <span id="year"></span> EasyTechCalculators. All rights reserved.</p>
+  <p>
+    <a href="/privacy-policy.html">Privacy Policy</a> |
+    <a href="/terms.html">Terms</a> |
+    <a href="/disclaimer.html">Disclaimer</a>
+  </p>
+</footer>
+
+  <script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 
   </main>
 

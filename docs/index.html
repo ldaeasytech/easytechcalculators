@@ -7,14 +7,6 @@
   <meta name="description"
   content="Professional engineering calculators for fluid mechanics, thermodynamics, steam tables, HVAC psychrometrics, pump systems, pipe friction, dimensional analysis, and NPK fertilizer optimization. Accurate, educational, and free to use." />
   
-  <meta property="og:description" content="Engineering and agricultural calculators including Reynolds number, pipe friction, Moody diagram, pump power, thermodynamics, SI/English unit conversion, and NPK fertilizer optimization tools.">
-  <meta property="og:url" content="https://easytechcalculators.com/">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://easytechcalculators.com/logo-easytechcalculators.png">
-
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <!-- Open Graph Meta Tags -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="EasyTech Calculators – Professional Engineering & Thermofluid Tools">
@@ -39,6 +31,9 @@
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
+
+ <link rel="stylesheet" href="home.css" />
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XZVJYM389Z"></script>
 <script>
@@ -48,54 +43,39 @@
 
   gtag('config', 'G-XZVJYM389Z');
 </script>
-  
-<script type="application/ld+json">
+
+ <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "Professional Engineering and Agricultural Calculators",
-  "description": "EasyTechCalculators provides accurate online tools for Reynolds number, pipe friction, pump systems, thermodynamics, SI/English unit conversion, and NPK fertilizer optimization with economic ranking.",
-  "author": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "EasyTechCalculators",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://easytechcalculators.com/logo-easytechcalculators.png"
-    }
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://easytechcalculators.com/"
-  },
-  "articleSection": [
-    "Fluid Mechanics",
-    "Thermodynamics",
-    "Pump Systems",
-    "Pipe Friction",
-    "Unit Conversion",
-    "Agricultural Engineering",
-    "Fertilizer Optimization",
-    "HVAC Engineering",
-    "Psychrometry"
-  ],
-  "keywords": [
-    "Reynolds number calculator",
-    "Pipe friction calculator",
-    "Moody diagram",
-    "Pump power calculator",
-    "Engineering unit converter",
-    "NPK fertilizer calculator",
-    "Fertilizer cost optimizer",
-    "psychrometric chart",
-    "HVAC moist air properties",
-    "wet bulb temperature",
-    "dew point calculation",
-    "evaporative cooling"
-  ]
+  "@type": "Organization",
+  "name": "EasyTechCalculators",
+  "url": "https://easytechcalculators.com",
+  "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
+}
+</script>
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Person",
+ "name": "Leonard D. Agana",
+ "jobTitle": "Chemical Engineer",
+ "description": "Chemical engineer and founder of EasyTech Calculators, specializing in fluid mechanics, thermodynamics, pump systems, and engineering computational tools.",
+ "url": "https://easytechcalculators.com/about.html",
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
+ "knowsAbout": [
+   "Fluid Mechanics",
+   "Thermodynamics",
+   "Heat Transfer",
+   "Pump Systems",
+   "Pipe Flow",
+   "Computational Fluid Dynamics",
+   "Finite Element Analysis",
+   "Engineering Calculations"
+ ]
 }
 </script>
 
@@ -114,7 +94,8 @@
     "priceCurrency": "USD"
   }
 }
-</script>  
+</script>   
+
   
 <!-- Web App Manifest -->
 <link rel="manifest" href="/site.webmanifest">
@@ -248,237 +229,147 @@
 </script>
 
 
+
   <!-- Google AdSense -->
   <script async
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341457826307951"
     crossorigin="anonymous"></script>
   
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #0B1E3A;
-      color: #E6EDF3;
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 48px 20px;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-      color: #f9fafb;
-    }
-
-    .subtitle {
-      font-size: 1.05rem;
-      color: #cbd5f5;
-      max-width: 760px;
-    }
-
-    h2 {
-      margin-top: 48px;
-      margin-bottom: 12px;
-      font-size: 1.4rem;
-      color: #d1d5db;
-    }
-
-    p {
-      max-width: 820px;
-      color: #cbd5f5;
-    }
-
-    /* Calculator cards */
-    .calculator-card {
-      display: block;
-      margin-top: 16px;
-      padding: 18px 20px;
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 8px;
-      text-decoration: none;
-      color: #e5e7eb;
-      cursor: pointer;
-      transition: border-color 0.15s ease, transform 0.15s ease;
-    }
-
-    .calculator-card:hover {
-      border-color: #60a5fa;
-      transform: translateY(-2px);
-    }
-
-    .calculator-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #f9fafb;
-    }
-
-    .calculator-desc {
-      font-size: 0.9rem;
-      margin-top: 6px;
-      color: #cbd5f5;
-    }
-
-    /* Notes */
-    .note {
-      margin-top: 16px;
-      padding: 14px 18px;
-      background: #111827;
-      border-left: 3px solid #60a5fa;
-      font-size: 0.9rem;
-    }
-
-    /* Info cards */
-    .info-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .info-card {
-      display: block;
-      padding: 16px 18px;
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 8px;
-      color: #e5e7eb;
-      text-decoration: none;
-    }
-
-    .info-card:hover {
-      border-color: #60a5fa;
-    }
-
-    .info-card strong {
-      display: block;
-      font-size: 0.95rem;
-      color: #f9fafb;
-    }
-
-    .info-card span {
-      display: block;
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: #cbd5f5;
-    }
-
-    footer {
-      margin-top: 64px;
-      padding-top: 24px;
-      border-top: 1px solid #1f2937;
-      font-size: 0.85rem;
-      background: linear-gradient(
-      180deg,
-      #0f2a22,
-      #0c201b
-      );
-      color: #ffffff;
-    }
-
-    .calculator-cta {
-      margin-top: 10px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #60a5fa;
-    }  
-
-    /* ===============================
-   Highlight Section
-================================ */
-
-.highlight-section {
-  margin-top: 40px;
-  padding: 32px 28px;
-  background: #0f172a;
-  border: 1px solid #1f2937;
-  border-radius: 12px;
-}
-
-.highlight-title {
-  font-size: 1.8rem;
-  margin-bottom: 24px;
-  color: #ffffff;
-  border-left: 4px solid #60a5fa;
-  padding-left: 12px;
-}
-
-/* Category blocks */
-.category-block {
-  margin-bottom: 40px;
-}
-
-.category-title {
-  font-size: 1.2rem;
-  margin-bottom: 16px;
-  color: #93c5fd;
-}
-
-/* ===============================
-   HERO HEADER
-================================ */
-
-.hero-header {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 40px;
-}
-
-.hero-logo {
-  height: 85px;
-  width: auto;
-  object-fit: contain;
-}
-
-.hero-text h1 {
-  margin: 0;
-  font-size: 2.4rem;
-  color: #ffffff;
-}
-
-.hero-text .subtitle {
-  margin-top: 8px;
-  max-width: 700px;
-}
-
-/* Mobile */
-@media (max-width: 640px) {
-  .hero-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .hero-logo {
-    height: 70px;
-  }
-}
-
-.hero-logo {
-  height: 85px;
-  filter: drop-shadow(0 0 8px rgba(96,165,250,0.25));
-}
-
-.footer-copy {
-  font-size: 0.8rem;
-  background: linear-gradient(
-    180deg,
-    #0f2a22,
-    #0c201b
-  );
-  color: #b7f7dc;
-}
-
-    
-    
-  </style>
+ 
 </head>
 
 <body>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Professional Engineering and Agricultural Calculators",
+  "description": "EasyTechCalculators provides accurate online tools for Reynolds number, pipe friction, pump systems, thermodynamics, SI/English unit conversion, and NPK fertilizer optimization with economic ranking.",
+  "author": {
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
+    "url": "https://easytechcalculators.com/about.html"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EasyTechCalculators",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://easytechcalculators.com/logo-easytechcalculators.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://easytechcalculators.com/"
+  },
+  "articleSection": [
+    "Fluid Mechanics",
+    "Thermodynamics",
+    "Pump Systems",
+    "Pipe Friction",
+    "Unit Conversion",
+    "Agricultural Engineering",
+    "Fertilizer Optimization",
+    "HVAC Engineering",
+    "Psychrometry"
+  ],
+  "keywords": [
+    "Reynolds number calculator",
+    "Pipe friction calculator",
+    "Moody diagram",
+    "Pump power calculator",
+    "Engineering unit converter",
+    "NPK fertilizer calculator",
+    "Fertilizer cost optimizer",
+    "psychrometric chart",
+    "HVAC moist air properties",
+    "wet bulb temperature",
+    "dew point calculation",
+    "evaporative cooling"
+  ]
+}
+</script>
+
+
+<div class="page-wrapper">
+
+  <!-- Sticky Navigation -->
+  <aside class="left-sidebar">
+
+  <div class="side-nav">
+
+    <div class="side-nav-title">
+      On This Page
+    </div>
+
+    <nav class="side-nav-links">
+      
+      <a href="#S1">What is Engineering and Why It Matters</a>
+      <a href="#S2">Engineering Calculations and Their Impact in Design</a>
+      <a href="#S3">Challenges in Manual Engineering Calculations</a>
+      <a href="#S4">EasyTech Calculators: Professional Engineering & Agricultural Calculators</a>
+      <a href="#S5">Why Use EasyTech Calculators?</a>
+      <a href="#S6">How to Use This Platform</a>
+      <a href="#S7">Available Calculators</a>
+      <a href="#S7a">(a) Unit Conversion & Engineering Tools</a>
+      
+      <a href="#S7b">(b) Thermodynamic Property Calculators</a>
+      
+      <a href="#S7c">(c) Pump & Fluid Flow Calculators</a>
+      
+      <a href="#S7d">(d) Agriculture & Nutrient Management Calculators</a>
+      
+      <a href="#S8">Complete Engineering Calculation Ecosystem</a>
+      <a href="#S9">Accuracy and Disclaimer</a>
+      <a href="#S10">About the Creator</a>
+      <a href="#S11">About Advertisements</a>
+      <a href="#S12">About & Site Information</a>
+    
+    </nav>
+
+  </div>
+
+  
+
+</aside>
+  <!-- Main Page Content -->
+  <div class="page-content">
+
+<div class="mobile-nav">
+
+<button class="mobile-nav-toggle">
+Jump to Section ▼
+</button>
+
+<div class="mobile-nav-links">
+
+      <a href="#S1">What is Engineering and Why It Matters</a>
+      <a href="#S2">Engineering Calculations and Their Impact in Design</a>
+      <a href="#S3">Challenges in Manual Engineering Calculations</a>
+      <a href="#S4">EasyTech Calculators: Professional Engineering & Agricultural Calculators</a>
+      <a href="#S5">Why Use EasyTech Calculators?</a>
+      <a href="#S6">How to Use This Platform</a>
+      <a href="#S7">Available Calculators</a>
+      <a href="#S7a">(a) Unit Conversion & Engineering Tools</a>
+      
+      <a href="#S7b">(b) Thermodynamic Property Calculators</a>
+      
+      <a href="#S7c">(c) Pump & Fluid Flow Calculators</a>
+      
+      <a href="#S7d">(d) Agriculture & Nutrient Management Calculators</a>
+      
+      <a href="#S8">Complete Engineering Calculation Ecosystem</a>
+      <a href="#S9">Accuracy and Disclaimer</a>
+      <a href="#S10">About the Creator</a>
+      <a href="#S11">About Advertisements</a>
+      <a href="#S12">About & Site Information</a>
+
+</div>
+
+</div>
+
   <main class="container">
 
   <!-- ================= HERO HEADER ================= -->
@@ -491,7 +382,7 @@
             alt="EasyTechCalculators engineering calculator logo"
             class="brand-logo"
             width="90"
-            height="86"
+            height="90"
             decoding="async"
           >
         </picture>
@@ -510,65 +401,176 @@
 
 </div>
 
+<h2 id="S1">What is Engineering and Why It Matters</h2>
 
-    <!-- ABOUT -->
-    <h2>About EasyTech Calculators</h2>
-    <p>
-      EasyTech Calculators was created to support students, educators, engineers,
-      and professionals in their daily technical calculation needs. The focus is
-      on clarity, correctness, and practical usefulness.
-    </p>
+<p>
+Engineering is the application of science, mathematics, and practical knowledge
+to design systems, solve problems, and improve everyday life. From water supply
+systems and power plants to HVAC systems and agricultural production,
+engineering plays a critical role in modern society.
+</p>
 
-    <h2>Thermofluid Engineering Calculator Platform</h2>
+<p>
+Every engineered system depends on accurate calculations. Whether designing
+a pump system, analyzing fluid flow in pipes, or optimizing fertilizer usage,
+engineers rely on precise mathematical models to ensure safety, efficiency,
+and cost-effectiveness.
+</p>
 
-    <p>
-    EasyTech Calculators provides a growing collection of tools
-    covering the core subjects of thermofluid engineering:
-    </p>
-    
-    <ul>
-    <li>Fluid mechanics and pipe flow analysis</li>
-    <li>Reynolds number and friction factor computation</li>
-    <li>Steam tables and water thermodynamic properties</li>
-    <li>HVAC psychrometric analysis</li>
-    <li>Pump power and operating point evaluation</li>
-    <li>Dimensional analysis and SI ↔ English unit conversion</li>
-    </ul>
-    
-    <p>
-    These tools are designed to support engineering education,
-    professional design calculations, and real-world system analysis.
-    </p>
+<p>
+Without proper engineering calculations, systems may fail, energy may be wasted,
+and operational costs may increase significantly. This is why reliable
+calculation tools are essential in both education and professional practice.
+</p>
 
-    <!-- ================= AVAILABLE CALCULATORS ================= -->
-<section class="highlight-section">
+<h2 id="S2">Engineering Calculations and Their Impact in Design</h2>
 
-  <h2>Why Use EasyTech Calculators?</h2>
+<p>
+Engineering calculations form the foundation of all technical designs.
+They are used to predict system behavior, evaluate performance,
+and ensure safety under different operating conditions.
+</p>
 
 <ul>
-<li>✔ Multi-mode thermodynamic input pairs (TP, Ph, Ps, Tx, Px)</li>
-<li>✔ Interactive Moody diagram and psychrometric chart visualization</li>
-<li>✔ Phase detection for water & steam properties</li>
-<li>✔ Elevation-aware HVAC calculations</li>
-<li>✔ Economic fertilizer optimization with cost ranking</li>
-<li>✔ Dimensional analysis verification for engineering consistency</li>
+<li>Fluid mechanics calculations determine flow behavior and pressure losses</li>
+<li>Thermodynamic analysis evaluates energy transfer and system efficiency</li>
+<li>HVAC calculations ensure thermal comfort and air quality</li>
+<li>Pump and piping calculations optimize energy consumption</li>
+<li>Agricultural calculations improve crop yield and fertilizer efficiency</li>
 </ul>
 
 <p>
-Each calculator is built for clarity, technical correctness,
-and practical engineering application.
+Accurate calculations reduce risks, prevent equipment failure,
+and help engineers make informed decisions during design,
+operation, and optimization of systems.
 </p>
 
-  <h2 class="highlight-title">Available Calculators</h2>
-  <p>
-  Explore specialized calculators covering thermodynamics,
-  fluid mechanics, HVAC psychrometrics, hydraulic systems,
-  dimensional analysis, and agricultural nutrient optimization.
-  </p>
+<h2 id="S3">Challenges in Manual Engineering Calculations</h2>
+
+<p>
+Traditional engineering calculations are often time-consuming and prone to error.
+Manual computations require multiple steps, reference tables, and iterative solving,
+which can introduce inaccuracies if not handled carefully.
+</p>
+
+<ul>
+<li>Complex formulas and multiple variables</li>
+<li>Frequent unit conversion errors</li>
+<li>Dependence on printed tables (steam tables, charts)</li>
+<li>Time-consuming iterative calculations</li>
+<li>Difficulty visualizing system behavior</li>
+</ul>
+
+<p>
+For students, these challenges can slow down learning.
+For professionals, they can affect productivity and decision-making.
+This highlights the importance of reliable digital tools.
+</p>
+
+<section class="highlight-section">
+<!-- ABOUT -->
+<h2 class="highlight-title" id="S4">EasyTech Calculators: Professional Engineering & Agricultural Calculators</h2>
+<p>
+EasyTech Calculators is a professional platform designed to support students,
+educators, engineers, and agricultural professionals in solving real-world
+technical problems through accurate and reliable calculations.
+</p>
+
+<p>
+EasyTech Calculators provides a growing collection of tools covering
+core engineering disciplines alongside practical agricultural applications.
+The platform is designed to support both technical analysis and real-world
+decision-making across multiple fields.
+</p>
+
+<p>
+Key areas covered include:
+</p>
+
+<ul>
+<li><strong>Fluid mechanics:</strong> Pipe flow analysis, Reynolds number, and friction factor evaluation</li>
+<li><strong>Thermodynamics:</strong> Steam tables, water properties, and energy system calculations</li>
+<li><strong>HVAC engineering:</strong> Psychrometric analysis of moist air and thermal processes</li>
+<li><strong>Pump and hydraulic systems:</strong> Pump power, operating point, and NPSH evaluation</li>
+<li><strong>Dimensional analysis:</strong> SI ↔ English unit conversion and engineering consistency checks</li>
+<li><strong>Agricultural engineering:</strong> NPK fertilizer optimization and cost-based nutrient planning</li>
+</ul>
+
+<p>
+By combining engineering and agricultural tools in one platform,
+EasyTech Calculators supports a wide range of users—from students
+learning fundamental concepts to professionals performing system
+design, optimization, and field-level decision-making.
+</p>
+
+<p>
+Each calculator is built to provide accurate results, clear outputs,
+and practical insights that reflect real-world engineering and
+agricultural applications.
+</p>
+
+
+    <!-- ================= AVAILABLE CALCULATORS ================= -->
+
+
+<h2 id="S5">Why Use EasyTech Calculators?</h2>
+
+<p>
+EasyTech Calculators is designed to simplify complex engineering calculations
+while maintaining technical accuracy. The platform combines engineering theory,
+interactive computation, and visualization tools to support both learning
+and professional work.
+</p>
+
+<ul>
+<li>✔ Accurate engineering models based on standard equations</li>
+<li>✔ Multi-input thermodynamic calculations (TP, Ph, Ps, Tx, Px)</li>
+<li>✔ Interactive visualization (Moody diagram, psychrometric chart)</li>
+<li>✔ Built-in unit consistency and dimensional analysis</li>
+<li>✔ Practical tools for real-world engineering problems</li>
+<li>✔ Free and accessible without registration</li>
+</ul>
+
+<p>
+Each calculator is carefully designed to bridge the gap between theory
+and real-world engineering applications.
+</p>
+
+<h2 id="S6">How to Use This Platform</h2>
+
+<p>
+Using EasyTech Calculators is straightforward. Select a calculator based on your
+engineering problem, input known parameters, and the system will compute
+relevant properties instantly.
+</p>
+
+<p>
+Most tools support multiple input combinations, allowing flexibility depending
+on available data. Results are presented clearly to help users understand
+both the outcome and the underlying engineering principles.
+</p>
+
+<p>
+The platform is suitable for:
+</p>
+
+<ul>
+<li>Students solving homework and learning concepts</li>
+<li>Engineers performing quick design checks</li>
+<li>Professionals validating system performance</li>
+<li>Agricultural users optimizing fertilizer application</li>
+</ul>
+
+<h2 class="highlight-title" id="S7">Available Calculators</h2>
+<p>
+Explore specialized calculators covering thermodynamics,
+fluid mechanics, HVAC psychrometrics, hydraulic systems,
+dimensional analysis, and agricultural nutrient optimization.
+</p>
 
   <!-- UNIT CONVERTER -->
 <div class="category-block">
-  <h3 class="category-title">Unit Conversion & Engineering Tools</h3>
+  <h3 class="category-title" id="S7a">Unit Conversion & Engineering Tools</h3>
   <p>
 Engineering calculations require strict dimensional consistency.
 This unit conversion tool supports SI ↔ English transformations
@@ -577,7 +579,7 @@ specific heat, and power while verifying dimensional formulas used
 in thermodynamics, fluid mechanics, and heat transfer analysis.
 </p>
 
-  <a class="calculator-card" href="unit-converter/">
+  <a class="calculator-card" id="S7a1" href="unit-converter/">
     <div class="calculator-title">
       Engineering Unit Converter
     </div>
@@ -592,7 +594,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
 
   <!-- THERMODYNAMIC -->
   <div class="category-block">
-    <h3 class="category-title">Thermodynamic Property Calculators</h3>
+    <h3 class="category-title" id="S7b">Thermodynamic Property Calculators</h3>
     <p>
     Advanced thermodynamic calculators for water, steam, and moist air
     properties. Includes online steam tables, superheated and saturated
@@ -601,7 +603,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
     across multiple input pairs.
     </p>
 
-    <a class="calculator-card" href="water-properties/">
+    <a class="calculator-card" id="S7b1" href="water-properties/">
       <div class="calculator-title">
         Water &amp; Steam Properties Calculator
       </div>
@@ -612,7 +614,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       <div class="calculator-cta">Open calculator →</div>
     </a>
 
-      <a class="calculator-card" href="psychrometric-chart-calculator/">
+      <a class="calculator-card" id="S7b2" href="psychrometric-chart-calculator/">
       <div class="calculator-title">
         Psychrometric Chart & Moist Air Properties Calculator
       </div>
@@ -626,7 +628,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       <div class="calculator-cta">Open calculator →</div>
     </a>
 
-    <a class="calculator-card" href="air-heating-cooling-calculator/">
+    <a class="calculator-card" id="S7b3" href="air-heating-cooling-calculator/">
       <div class="calculator-title">
         Air Heating & Cooling Psychrometric Process Calculator
       </div>
@@ -646,7 +648,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
 
   <!-- PUMP -->
   <div class="category-block">
-    <h3 class="category-title">Pump & Fluid Flow Calculators</h3>
+    <h3 class="category-title" id="S7c">Pump & Fluid Flow Calculators</h3>
     <p>
     Comprehensive hydraulic system analysis tools including Reynolds number,
     Darcy and Fanning friction factors, Moody diagram visualization,
@@ -654,7 +656,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
     operating point determination, and economic pipe sizing.
     </p>
 
-    <a class="calculator-card" href="reynolds-number-pipe-friction-calculator/">
+    <a class="calculator-card" id="S7c1" href="reynolds-number-pipe-friction-calculator/">
     <div class="calculator-title">
     Reynolds Number & Pipe Friction Calculator
     </div>
@@ -665,7 +667,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
     <div class="calculator-cta">Open calculator →</div>
     </a>
 
-    <a class="calculator-card" href="pump-power-calculator/">
+    <a class="calculator-card" id="S7c2" href="pump-power-calculator/">
       <div class="calculator-title">Pump Power Calculator</div>
       <div class="calculator-desc">
         Calculate theoretical and actual pump power including friction and elevation.
@@ -673,7 +675,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       <div class="calculator-cta">Open calculator →</div>
     </a>
 
-    <a class="calculator-card" href="pump-operating-point-calculator/">
+    <a class="calculator-card" id="S7c3" href="pump-operating-point-calculator/">
       <div class="calculator-title">Pump Operating Point Calculator</div>
       <div class="calculator-desc">
         Determine operating flow rate using pump and system curve intersection.
@@ -681,7 +683,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       <div class="calculator-cta">Open calculator →</div>
     </a>
 
-    <a class="calculator-card" href="optimum-pipe-diameter-calculator/">
+    <a class="calculator-card" id="S7c4" href="optimum-pipe-diameter-calculator/">
       <div class="calculator-title">Optimum Pipe Diameter Calculator</div>
       <div class="calculator-desc">
         Economic pipe sizing based on minimum annual cost.
@@ -689,7 +691,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       <div class="calculator-cta">Open calculator →</div>
     </a>
 
-    <a class="calculator-card" href="npsh-available-calculator/">
+    <a class="calculator-card" id="S7c5" href="npsh-available-calculator/">
       <div class="calculator-title">NPSH Available Calculator</div>
       <div class="calculator-desc">
         Evaluate suction head to prevent cavitation.
@@ -697,7 +699,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       <div class="calculator-cta">Open calculator →</div>
     </a>
 
-    <a class="calculator-card" href="tank-elevation-calculator/">
+    <a class="calculator-card" id="S7c6" href="tank-elevation-calculator/">
       <div class="calculator-title">Tank Elevation Calculator</div>
       <div class="calculator-desc">
         Required tank height for gravity-driven flow systems.
@@ -709,7 +711,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
 
     <!-- AGRICULTURE -->
 <div class="category-block">
-  <h3 class="category-title">Agriculture & Nutrient Management Calculators</h3>
+  <h3 class="category-title" id="S7d">Agriculture & Nutrient Management Calculators</h3>
   <p>
   Agricultural nutrient optimization tools for NPK fertilizer
   recommendation, soil test adjustment, crop-specific nutrient
@@ -717,7 +719,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
   Designed for agronomy analysis and precision nutrient management.
   </p>
 
-  <a class="calculator-card" href="fertilizer-calculator/">
+  <a class="calculator-card" id="S7d1" href="fertilizer-calculator/">
     <div class="calculator-title">
       Fertilizer Combination & Cost Optimizer
     </div>
@@ -753,7 +755,7 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
     </p>
 
 
-    <h2>Complete Engineering Calculation Ecosystem</h2>
+    <h2 id="S8">Complete Engineering Calculation Ecosystem</h2>
 
     <p>
     EasyTech Calculators integrates fluid mechanics,
@@ -766,18 +768,78 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
     supports comprehensive thermofluid system analysis.
     </p>
     
+    <p>
+By integrating multiple disciplines into one platform, users can move seamlessly
+between calculations without switching tools. For example, a pump system can be
+analyzed using fluid mechanics, then evaluated using thermodynamic properties,
+and finally optimized for energy efficiency.
+</p>
+
+<p>
+This interconnected approach reflects real-world engineering workflows,
+making the platform not just a calculator collection, but a complete
+engineering analysis environment.
+</p>
+
+<h2 id="S9">Accuracy and Disclaimer</h2>
+
+<p>
+All calculators are developed using established engineering equations and
+industry-standard references. While every effort is made to ensure accuracy,
+results should be verified before use in critical design or safety applications.
+</p>
+
+<p>
+EasyTech Calculators is intended for educational and preliminary engineering
+analysis. Users are encouraged to validate results using professional judgment
+and applicable engineering standards.
+</p>
+
+
+<h2 id="S10">About the Creator</h2>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, computer programming, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
+</p>
+
+<p>
+This platform is independently developed and maintained, with a focus on
+accuracy, transparency, and practical engineering application.
+</p>
+
 
 
     <!-- ADS NOTE -->
-    <h2>About Advertisements</h2>
+    <h2 id="S11">About Advertisements</h2>
     <div class="note">
-      This site displays a small number of non-intrusive advertisements on
-      calculator pages. These help support hosting costs and future development
-      while keeping all tools freely accessible.
+      This website displays a limited number of non-intrusive advertisements
+      to support hosting, maintenance, and continued development of free
+      engineering tools.
+
+      Advertisements are placed carefully to avoid interfering with
+      calculator functionality and user experience.
     </div>
 
     <!-- ABOUT & POLICIES -->
-    <h2>About &amp; Site Information</h2>
+    <h2 id="S12">About &amp; Site Information</h2>
     <p>
       Transparency and responsible use are important. The following pages provide
       more information about this site, its purpose, and usage guidelines.
@@ -789,12 +851,12 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
         <span>Background and goals of EasyTech Calculators.</span>
       </a>
 
-      <a href="policy.html" class="info-card">
+      <a href="privacy-policy.html" class="info-card">
         <strong>Privacy Policy</strong>
         <span>How cookies, ads, and data are handled.</span>
       </a>
 
-      <a href="terms-of-service.html" class="info-card">
+      <a href="terms.html" class="info-card">
         <strong>Terms of Service</strong>
         <span>Conditions for using the calculators.</span>
       </a>
@@ -811,19 +873,24 @@ in thermodynamics, fluid mechanics, and heat transfer analysis.
       
     </div>
 
+  </main>
+
     <!-- FOOTER -->
-     <div class="footer-copy">
+    <footer>
+    <div class="footer-copy">
       © <span id="year"></span> EasyTechCalculators. All rights reserved.
     </div>
 
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+    </footer>
+
+    </div>
   </div>
 
-</footer>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
-  </main>
+<script type="module" src="./home.js"></script>
 </body>
 </html>

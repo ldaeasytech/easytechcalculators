@@ -13,6 +13,25 @@ const dynamicGroup = document.getElementById("dynamicGroup");
 const kinematicGroup = document.getElementById("kinematicGroup");
 const materialSelect = document.getElementById("materialSelect");
 
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const toggle = document.querySelector(".mobile-nav-toggle");
+  const links = document.querySelector(".mobile-nav-links");
+
+  if (toggle && links) {
+
+    toggle.addEventListener("click", () => {
+
+      links.style.display =
+        links.style.display === "flex" ? "none" : "flex";
+
+    });
+
+  }
+
+});
+
 // ----------------------------
 // Populate Materials
 // ----------------------------
