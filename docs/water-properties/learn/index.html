@@ -1,255 +1,645 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Learning Hub – Water & Steam Properties | EasyTech Calculators</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
- <!-- Favicons -->
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta charset="UTF-8" />
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0" />
 
+<title>
+Water & Steam Learning Hub |
+Thermodynamics Lessons & Worksheets
+</title>
+
+<meta name="description"
+content="Comprehensive learning hub for water and steam thermodynamics including conceptual lessons, verification worksheets, worked examples, and engineering problem-solving applications." />
+
+<meta name="author" content="EasyTechCalculators" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#0b1220" />
 
 <link rel="canonical"
 href="https://easytechcalculators.com/water-properties/learn/" />
 
-<meta http-equiv="refresh"
-content="0; url=/water-properties/learn/" />
 
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XZVJYM389Z"></script>
+<!-- Open Graph Meta -->
+
+<meta property="og:type" content="website">
+
+<meta property="og:title"
+content="Water & Steam Learning Hub – Thermodynamics Lessons">
+
+<meta property="og:description"
+content="Structured thermodynamics learning modules covering phase behavior, steam properties, and engineering applications.">
+
+<meta property="og:url"
+content="https://easytechcalculators.com/water-properties/learn/">
+
+<meta property="og:site_name"
+content="EasyTech Calculators">
+
+<meta property="og:image"
+content="https://easytechcalculators.com/images/steam-learning-preview.png">
+
+<meta property="og:image:width"
+content="1200">
+
+<meta property="og:image:height"
+content="630">
+
+<meta property="og:image:alt"
+content="Water and Steam Thermodynamics Learning Modules">
+
+<meta property="og:locale"
+content="en_US">
+
+
+
+<!-- Twitter Card -->
+
+<meta name="twitter:card"
+content="summary_large_image">
+
+<meta name="twitter:title"
+content="Water & Steam Thermodynamics Learning Hub">
+
+<meta name="twitter:description"
+content="Educational lessons and worksheets covering thermodynamic properties of water and steam.">
+
+<meta name="twitter:image"
+content="https://easytechcalculators.com/images/steam-learning-preview.png">
+
+
+
+<!-- Favicons -->
+
+<link rel="icon"
+href="/favicon.ico"
+sizes="any">
+
+<link rel="icon"
+type="image/png"
+sizes="512x512"
+href="/favicon-512x512.png">
+
+<link rel="apple-touch-icon"
+sizes="180x180"
+href="/apple-touch-icon.png">
+
+<link rel="manifest"
+href="/site.webmanifest">
+
+
+
+<!-- Google Analytics 
+
+<script async
+src="https://www.googletagmanager.com/gtag/js?id=G-XZVJYM389Z">
+</script>
+
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-XZVJYM389Z');
-</script>
-  
-  <script type="application/ld+json">
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){dataLayer.push(arguments);}
+
+gtag('js', new Date());
+
+gtag('config', 'G-XZVJYM389Z');
+
+</script>-->
+
+
+
+<!-- Organization Schema -->
+
+<script type="application/ld+json">
+
 {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "EasyTechCalculators",
-  "url": "https://easytechcalculators.com",
-  "logo": "https://easytechcalculators.com/logo-easytechcalculators.png"
+"@context": "https://schema.org",
+
+"@type": "Organization",
+
+"name": "EasyTechCalculators",
+
+"url": "https://easytechcalculators.com",
+
+"logo":
+"https://easytechcalculators.com/logo-easytechcalculators.png"
+
 }
+
 </script>
-<!-- Web App Manifest -->
-<link rel="manifest" href="/site.webmanifest">
 
 
-    <!-- Google AdSense -->
-  <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341457826307951"
-    crossorigin="anonymous"></script>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #0b1220;
-      color: #e5e7eb;
-      line-height: 1.6;
-    }
+<!-- Author Schema -->
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 48px 20px;
-    }
+<script type="application/ld+json">
 
-    h1 {
-      font-size: 2.1rem;
-      color: #f9fafb;
-      margin-bottom: 8px;
-    }
+{
+ "@context": "https://schema.org",
 
-    .subtitle {
-      color: #cbd5f5;
-      max-width: 880px;
-      margin-bottom: 28px;
-    }
+ "@type": "Person",
 
-    h2 {
-      margin-top: 40px;
-      font-size: 1.5rem;
-      color: #d1d5db;
-    }
+ "name": "Leonard D. Agana",
 
-    p {
-      color: #cbd5f5;
-      max-width: 900px;
-    }
+ "jobTitle": "Chemical Engineer",
 
-    a {
-      color: #60a5fa;
-      text-decoration: none;
-    }
+ "description":
+ "Chemical engineer specializing in thermodynamics, fluid mechanics, and engineering computational tools.",
 
-    a:hover {
-      text-decoration: underline;
-    }
+ "url":
+ "https://easytechcalculators.com/about.html",
 
-    .nav-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-    }
+ "worksFor": {
+   "@type": "Organization",
+   "name": "EasyTech Calculators"
+ },
 
-    .nav-button {
-      padding: 10px 16px;
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 6px;
-      color: #e5e7eb;
-      font-size: 0.9rem;
-      text-decoration: none;
-    }
+ "knowsAbout": [
 
-    .nav-button.primary {
-      background: #60a5fa;
-      color: #0b1220;
-      border: none;
-      font-weight: 500;
-    }
+   "Fluid Mechanics",
 
-    .nav-button.primary:hover {
-      background: #3b82f6;
-    }
+   "Thermodynamics",
 
-    .learning-card {
-      margin-top: 24px;
-      padding: 26px 30px;
-      background: linear-gradient(135deg, #0f172a, #111827);
-      border: 1px solid #1f2937;
-      border-radius: 10px;
-    }
+   "Heat Transfer",
 
-    .learning-card h3 {
-      margin-top: 0;
-      color: #f9fafb;
-      font-size: 1.3rem;
-    }
+   "Steam Systems",
 
-    .learning-card p {
-      margin: 10px 0 18px;
-      font-size: 0.95rem;
-      color: #cbd5f5;
-      max-width: 900px;
-    }
+   "Engineering Calculations",
 
-    .learning-button {
-      display: inline-block;
-      padding: 11px 18px;
-      background: #60a5fa;
-      color: #0b1220;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-decoration: none;
-    }
+   "Computational Modeling"
 
-    .learning-button:hover {
-      background: #3b82f6;
-    }
+ ]
 
-    footer {
-      margin-top: 64px;
-      padding-top: 24px;
-      border-top: 1px solid #1f2937;
-      font-size: 0.85rem;
-      color: #9ca3af;
-    }
-  </style>
+}
+
+</script>
+
+
+
+<!-- Article Schema -->
+
+<script type="application/ld+json">
+
+{
+"@context": "https://schema.org",
+
+"@type": "Article",
+
+"headline":
+"Water and Steam Thermodynamics Learning Hub",
+
+"description":
+"Educational resource covering thermodynamic states, steam properties, verification exercises, and engineering problem solving.",
+
+ "author": {
+    "@type": "Person",
+    "name": "Leonard D. Agana",
+    "jobTitle": "Chemical Engineer",
+    "url": "https://easytechcalculators.com/about.html"
+  },
+
+"publisher": {
+
+"@type": "Organization",
+
+"name": "EasyTechCalculators"
+
+},
+
+"mainEntityOfPage": {
+
+"@type": "WebPage",
+
+"@id":
+"https://easytechcalculators.com/water-properties/learn/"
+
+}
+
+}
+
+</script>
+
+
+
+<!-- FAQ Schema (Optional but Recommended) -->
+
+<script type="application/ld+json">
+
+{
+"@context": "https://schema.org",
+
+"@type": "FAQPage",
+
+"mainEntity": [
+
+{
+"@type": "Question",
+
+"name":
+"What topics are covered in the water and steam learning hub?",
+
+"acceptedAnswer": {
+
+"@type": "Answer",
+
+"text":
+"The learning hub includes thermodynamic states, phase diagrams, mixture properties, verification worksheets, and engineering problem-solving exercises."
+
+}
+
+},
+
+{
+"@type": "Question",
+
+"name":
+"Do I need steam tables to use the learning hub?",
+
+"acceptedAnswer": {
+
+"@type": "Answer",
+
+"text":
+"Yes. Most exercises are designed to reinforce proper use of steam tables or engineering references."
+
+}
+
+}
+
+]
+
+}
+
+</script>
+
+
+
+<link rel="stylesheet" href="style.css" />
+
+
+
+<!-- Google AdSense -->
+
+<script async
+src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3341457826307951"
+crossorigin="anonymous">
+</script>
+
 </head>
 
 <body>
-  <main class="container">
 
-    <!-- NAV -->
-    <div class="nav-actions">
-      <a class="nav-button primary" href="../index.html">
-        Go to Water & Steam Calculator →
-      </a>
-      <a class="nav-button" href="../../index.html">
-        ← Back to Home Page
-      </a>
+<main class="learning-container">
+
+<!-- NAV -->
+
+<div class="nav-actions">
+
+<a class="nav-button primary"
+href="../index.html">
+Go to Water & Steam Calculator →
+</a>
+
+<a class="nav-button"
+href="../../index.html">
+← Back to Home Page
+</a>
+
+</div>
+
+<!-- TITLE -->
+<section class="container-learning intro-compact">
+  
+<h1>Learning Hub: Water & Steam Properties</h1>
+
+<p>
+Water and steam thermodynamic properties are fundamental to many
+engineering disciplines including power generation,
+HVAC systems, chemical processing, refrigeration,
+and industrial heat transfer operations.
+Accurate understanding of phase behavior,
+energy relationships, and property trends
+allows engineers and students to analyze
+thermal systems safely and efficiently.
+</p>
+
+<p>
+This Learning Hub provides structured educational
+material designed to support conceptual understanding,
+calculation verification, and real-world
+engineering applications related to water
+and steam thermodynamic properties.
+The resources included here complement the
+Water & Steam Properties Calculator
+by explaining the physical principles
+behind the computed results.
+</p>
+
+<!-- LEARNING OBJECTIVES -->
+
+<h2>Learning Objectives</h2>
+
+<p>
+After completing the learning materials in this section,
+you will be able to:
+</p>
+
+<ul>
+
+<li>Identify thermodynamic phases of water and steam</li>
+
+<li>Interpret saturated and superheated property behavior</li>
+
+<li>Use steam tables and property correlations correctly</li>
+
+<li>Determine thermodynamic states using multiple property pairs</li>
+
+<li>Apply energy balance methods in engineering systems</li>
+
+<li>Understand how phase behavior influences equipment design</li>
+
+</ul>
+
+
+
+<!-- CONTENT OVERVIEW -->
+
+<h2>How This Learning Hub Is Organized</h2>
+
+<p>
+The learning materials are organized into three progressive
+levels that guide users from fundamental understanding
+to applied engineering problem solving.
+</p>
+
+<div class="lesson-box">
+
+</section>
+
+
+<h3>Conceptual Foundations</h3>
+
+<p>
+These lessons focus on understanding thermodynamic
+principles such as phase behavior,
+saturation conditions,
+and thermodynamic property relationships.
+Conceptual reasoning questions help strengthen
+fundamental understanding before performing calculations.
+</p>
+
+<h3>Instructor Verification Worksheets</h3>
+
+<p>
+Structured verification worksheets allow instructors
+and students to validate computed results
+using multiple input pairs such as temperature–pressure,
+pressure–enthalpy, pressure–entropy,
+temperature–quality, and pressure–quality.
+These worksheets are useful for confirming
+correct interpretation of thermodynamic states.
+</p>
+
+<h3>Problem-Solving Applications</h3>
+
+<p>
+Application problems simulate real engineering scenarios
+such as boiler operation, turbine expansion,
+heat exchanger analysis,
+and industrial steam system design.
+These problems strengthen the connection
+between theoretical principles
+and real-world engineering practice.
+</p>
+
+</div>
+
+<!-- MINI LESSON -->
+
+<h2>Fundamental Thermodynamic Regions of Water</h2>
+
+<div class="lesson-box">
+
+<p>
+Water exists in different thermodynamic regions
+depending on temperature and pressure conditions.
+Understanding these regions is essential
+when performing thermodynamic analysis
+or interpreting steam table data.
+</p>
+
+<h3>Subcooled (Compressed Liquid)</h3>
+
+<p>
+When the temperature of water is below
+its saturation temperature at a given pressure,
+the fluid exists as a compressed liquid.
+In this region,
+properties depend on both temperature and pressure,
+and vapor formation does not occur.
+Compressed liquid conditions are common
+in boiler feedwater systems
+and pressurized piping networks.
+</p>
+
+<h3>Saturated Mixture</h3>
+
+<p>
+At saturation conditions,
+liquid and vapor phases coexist in equilibrium.
+Only one independent variable,
+either temperature or pressure,
+is required to define the state.
+The quality (x) describes the mass fraction
+of vapor present in the mixture.
+Saturated conditions are critical
+in boiling and condensation processes.
+</p>
+
+<h3>Superheated Vapor</h3>
+
+<p>
+When the temperature exceeds the saturation
+temperature at a given pressure,
+water exists as superheated steam.
+This region is widely used
+in turbine systems because
+superheated vapor reduces moisture formation
+and improves equipment reliability.
+</p>
+
+</div>
+
+<!-- EXAMPLE -->
+
+<h2>Example: Determining Thermodynamic Phase</h2>
+
+<div class="lesson-box">
+
+<h3>Problem</h3>
+
+<p>
+Determine the phase of water at
+400 K and 1 MPa.
+</p>
+
+<h3>Method</h3>
+
+<p>
+Compare the given temperature
+with the saturation temperature
+at the specified pressure.
+</p>
+
+<h3>Result</h3>
+
+<p>
+Since the temperature is below
+the saturation temperature
+at 1 MPa,
+the fluid exists as
+a compressed (subcooled) liquid.
+</p>
+
+<p>
+This method is commonly used
+in thermodynamic phase identification
+during system design
+and troubleshooting.
+</p>
+
+</div>
+
+
+<!-- NAVIGATION CARDS -->
+
+<section class="learn-more-card" id="basics">
+
+<h2>Available Learning Modules</h2>
+
+<h3>Conceptual Foundations</h3>
+
+<p>
+Build a strong understanding of water and steam
+phase behavior,
+property relationships,
+and thermodynamic reasoning
+through guided conceptual lessons.
+</p>
+
+<a class="learning-button"
+href="water-steam-concepts.html">
+Explore Water & Steam Concepts →
+</a>
+
+
+<h3>Instructor Verification Worksheet</h3>
+
+<p>
+Verify calculated thermodynamic properties
+using structured worksheets designed
+for academic instruction
+and engineering validation.
+</p>
+
+<a class="learning-button"
+href="water-steam-verification-worksheet.html">
+Open Verification Worksheet →
+</a>
+
+
+<h3>Problem-Solving Applications</h3>
+
+<p>
+Practice solving real-world engineering
+problems involving boilers,
+turbines,
+heat exchangers,
+and industrial steam systems.
+</p>
+
+<a class="learning-button"
+href="water-steam-problem-solving.html">
+Open Problem-Solving Worksheet →
+</a>
+
+</section>
+
+
+<section class="author-box" id="author-prof">
+
+<h2>About the Creator</h2>
+
+<p>
+<strong>Leonard D. Agana</strong> is a chemical engineer and the founder of
+<strong>EasyTech Calculators</strong>. His professional experience spans
+engineering design, computational modeling, computer programming, applied research,
+technology transfer, and academic instruction.
+</p>
+
+<p>
+His technical background includes fluid mechanics, thermodynamics,
+heat transfer, pump and piping systems, Computational Fluid Dynamics
+(CFD), and Finite Element Analysis (FEA). These disciplines form the
+foundation of many of the engineering tools available on this platform.
+</p>
+
+<p>
+He created EasyTech Calculators to make structured engineering
+analysis more accessible by transforming complex formulas and
+design methods into reliable computational tools that engineers
+and students can use for learning, preliminary design, and
+system optimization.
+</p>
+
+</section>
+
+</div>
+</div>
+
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+ <footer class="site-footer">
+
+  <div class="footer-inner">
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom">
+      <div class="footer-disclaimer">
+        Educational resources for thermodynamics learning.
+        Results should be independently verified
+        for professional applications.
+      </div>
+
+      <div class="footer-links">
+        <a href="../about.html">About</a>
+        <span>•</span>
+        <a href="../privacy-policy.html">Privacy Policy</a>
+        <span>•</span>
+        <a href="../terms.html">Terms of Use</a>
+        <span>•</span>
+        <a href="../disclaimer.html">Disclaimer</a>
+         <span>•</span>
+        <a href="../contact.html">Contact</a>        
+      </div>
+
+      <div class="footer-copy">
+        © <span id="year"></span> EasyTechCalculators. All rights reserved.
+      </div>
     </div>
 
-    <!-- HEADER -->
-    <h1>Learning Hub: Water &amp; Steam Properties</h1>
-    <p class="subtitle">
-      Educational resources designed to support understanding, verification,
-      and real-world application of water and steam thermodynamic and transport
-      properties.
-    </p>
+  </div>
+</footer>
 
-    <!-- CONCEPTS -->
-    <section class="learning-card">
-      <h3>Conceptual Foundations</h3>
-      <p>
-        Build a strong understanding of water and steam properties, phases,
-        trends, and thermodynamic reasoning through guided conceptual questions.
-      </p>
 
-      <a class="learning-button"
-         href="water-steam-concepts.html">
-        Explore Water &amp; Steam Concepts →
-      </a>
-    </section>
 
-    <!-- VERIFICATION -->
-    <section class="learning-card">
-      <h3>Instructor Verification Worksheet</h3>
-      <p>
-        A structured worksheet designed for instructors to verify student
-        calculations using multiple input pairs (TP, Ph, Ps, Tx, Px).
-      </p>
-
-      <a class="learning-button"
-         href="water-steam-verification-worksheet.html">
-        Open Verification Worksheet →
-      </a>
-    </section>
-
-    <!-- PROBLEM SOLVING -->
-    <section class="learning-card">
-      <h3>Problem-Solving Applications</h3>
-      <p>
-        Real-life and engineering application problems covering household,
-        HVAC, industrial, power, and safety systems involving water and steam.
-      </p>
-
-      <a class="learning-button"
-         href="water-steam-problem-solving.html">
-        Open Problem-Solving Worksheet →
-      </a>
-    </section>
-
-    <!-- Ad Slot: Learning Hub Bottom 
-    <section class="adsense-container">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-3341457826307951"
-           data-ad-slot="LEARN_HUB_BOTTOM"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
-    </section> -->
-    
-
-    <!-- FOOTER -->
-    <footer>
-      © easytechcalculators — Learning resources for water &amp; steam properties.
-      Results should be independently verified for professional applications.
-    </footer>
-
-  </main>
 </body>
 </html>
